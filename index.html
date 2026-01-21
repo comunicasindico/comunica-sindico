@@ -68,7 +68,6 @@
       display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
     .card h2{margin:0; font-size:18px;}
-
     .pill{
       font-size:12px; font-weight:800;
       padding:8px 10px;
@@ -88,7 +87,7 @@
       position:relative;
     }
 
-    /* progresso da rotação */
+    /* Progresso da rotação */
     .progressWrap{
       position:absolute;
       left:18px; right:18px; top:10px;
@@ -102,29 +101,25 @@
       height:100%;
       width:0%;
       background:rgba(119,182,255,.95);
-      transition:width .2s linear;
+      transition:width .12s linear;
     }
 
-    .aviso{
-      padding:16px 16px;
-      border:1px solid var(--line);
+    /* Banner de emergência */
+    .emgBanner{
+      padding:12px 14px;
       border-radius:14px;
-      background:rgba(7,20,34,.28);
-      animation:fadeIn .35s ease;
+      border:1px solid rgba(255,80,80,.55);
+      background:rgba(90,20,20,.55);
+      box-shadow: 0 0 0 1px rgba(255,80,80,.30) inset;
+      font-weight:900;
+      letter-spacing:.2px;
     }
-    @keyframes fadeIn{
-      from{opacity:0; transform:translateY(6px);}
-      to{opacity:1; transform:translateY(0);}
+    .emgBanner small{
+      display:block;
+      margin-top:4px;
+      font-weight:700;
+      color:rgba(255,255,255,.85);
     }
-    .aviso.alta{border-color: rgba(255,80,80,.55); box-shadow: 0 0 0 1px rgba(255,80,80,.35) inset;}
-    .aviso.media{border-color: rgba(255,200,70,.40); box-shadow: 0 0 0 1px rgba(255,200,70,.25) inset;}
-    .aviso.baixa{border-color: rgba(120,190,255,.35); box-shadow: 0 0 0 1px rgba(120,190,255,.18) inset;}
-
-    .aviso .t{margin:0 0 8px; font-weight:900; font-size:18px; letter-spacing:.15px;}
-    .aviso .d{margin:0; color:var(--muted); font-weight:650; line-height:1.35; font-size:15px;}
-
-    .meta{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:rgba(234,242,255,.82);}
-    .tag{padding:6px 8px; border-radius:999px; border:1px solid var(--line); background:rgba(12,35,56,.35);}
 
     .tema{
       padding:12px 14px;
@@ -135,6 +130,37 @@
     }
     .tema b{font-weight:900}
     .tema .small{display:block; margin-top:4px; color:var(--muted); font-weight:650}
+
+    .aviso{
+      padding:16px 16px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:rgba(7,20,34,.28);
+      animation:fadeIn .25s ease;
+    }
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(4px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+
+    .aviso.alta{border-color: rgba(255,80,80,.55); box-shadow: 0 0 0 1px rgba(255,80,80,.35) inset;}
+    .aviso.media{border-color: rgba(255,200,70,.40); box-shadow: 0 0 0 1px rgba(255,200,70,.25) inset;}
+    .aviso.baixa{border-color: rgba(120,190,255,.35); box-shadow: 0 0 0 1px rgba(120,190,255,.18) inset;}
+
+    /* Piscar suave em emergência */
+    .emgPulse{
+      animation:pulse 1s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ box-shadow: 0 0 0 1px rgba(255,80,80,.35) inset, 0 0 0 0 rgba(255,80,80,.0); }
+      50%{ box-shadow: 0 0 0 1px rgba(255,80,80,.55) inset, 0 0 0 8px rgba(255,80,80,.07); }
+    }
+
+    .aviso .t{margin:0 0 8px; font-weight:900; font-size:18px; letter-spacing:.15px;}
+    .aviso .d{margin:0; color:var(--muted); font-weight:650; line-height:1.35; font-size:15px;}
+
+    .meta{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:rgba(234,242,255,.82);}
+    .tag{padding:6px 8px; border-radius:999px; border:1px solid var(--line); background:rgba(12,35,56,.35);}
 
     .side{display:grid; gap:18px; align-content:start;}
     .mini{
@@ -183,15 +209,13 @@
       </div>
 
       <div class="grid">
-        <section class="card">
+        <section class="card" id="cardAvisos">
           <div class="head">
             <h2>Avisos do dia</h2>
             <div class="pill" id="refData">—</div>
           </div>
 
-          <div class="avisos" id="avisos">
-            <!-- progresso da rotação (opcional, criado via JS) -->
-          </div>
+          <div class="avisos" id="avisos"></div>
         </section>
 
         <aside class="side">
@@ -217,27 +241,22 @@
 <script>
   // ===== Estado global da rotação =====
   const ROT = {
-    enabled: false,
-    intervalMs: 12000,
-    pauseOnHover: true,
-    showProgress: true,
-    perScreen: 1,
+    enabled:false, intervalMs:12000, pauseOnHover:true, showProgress:true, perScreen:1,
+    timer:null, progressTimer:null, idx:0, paused:false, items:[]
+  };
 
-    timer: null,
-    progressTimer: null,
-    idx: 0,
-    paused: false,
-    items: []
+  // ===== Estado global emergência =====
+  const EMG = {
+    active:false, enabled:true, intervalMs:4000, blink:true, onlyHigh:true
   };
 
   // ===== Init =====
   window.addEventListener("DOMContentLoaded", () => {
     initClock();
     loadAll();
-    setInterval(loadAll, 60 * 1000); // revalida avisos e validade a cada 1 min
+    setInterval(loadAll, 60 * 1000);
   });
 
-  // ===== Relógio =====
   function initClock(){
     const elData = document.getElementById("dataAgora");
     const elHora = document.getElementById("horaAgora");
@@ -255,13 +274,13 @@
     tick(); setInterval(tick, 1000);
   }
 
-  // ===== Carrega JSON + renderiza =====
   async function loadAll(){
     const j = await loadJson();
     renderHeader(j);
+    configureEmergency(j);
     prepareRotation(j);
-    renderAvisos(j);            // renderiza 1º frame (ou lista inteira)
-    initWeatherOnce(j.clima);   // cria timer do clima só uma vez
+    renderAvisos(j);
+    initWeatherOnce(j.clima);
   }
 
   async function loadJson(){
@@ -283,6 +302,7 @@
         temaDoDia:{modo:"automatico",temasPorDiaSemana:{}},
         avisos:[],
         rotacao:{ativar:false},
+        emergencia:{ativar:false},
         clima:{cidade:"",latitude:-28.4767,longitude:-49.0144,timezone:"America/Sao_Paulo",alertaChuvaMin:50,horasAlerta:3}
       };
     }
@@ -294,7 +314,12 @@
     document.getElementById("refData").textContent = j.referencia ? ("Ref.: " + j.referencia) : "Atualizado hoje";
   }
 
-  // ===== Tema do dia =====
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[m]));
+  }
+
   function resolveTemaDoDia(td){
     if(!td || td.modo !== "automatico") return null;
     const map = td.temasPorDiaSemana || {};
@@ -305,7 +330,6 @@
     return map[dia] || null;
   }
 
-  // ===== Avisos: validade + prioridade =====
   function prioridadeRank(p){
     const s = String(p || "baixa").toLowerCase();
     if(s === "alta") return 0;
@@ -340,17 +364,32 @@
     }catch{ return ""; }
   }
 
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    }[m]));
+  // ===== EMERGÊNCIA 2.6 =====
+  function configureEmergency(j){
+    const cfg = j.emergencia || {};
+    EMG.enabled = cfg.ativar !== false;
+    EMG.intervalMs = Math.max(3000, Number(cfg.intervaloSeg || 4) * 1000);
+    EMG.blink = cfg.piscar !== false;
+    EMG.onlyHigh = cfg.somenteAlta !== false;
   }
 
-  // ===== Rotação (2.5) =====
+  function computeActiveEmergency(j){
+    if(!EMG.enabled) return { active:false, items:[] };
+
+    const now = new Date();
+    const items = (j.avisos || [])
+      .filter(a => isAtivoAgora(a, now))
+      .filter(a => String(a.prioridade || "").toLowerCase() === "alta")
+      .filter(a => a.emergencia === true);
+
+    return { active: items.length > 0, items };
+  }
+
+  // ===== Rotação 2.5 =====
   function prepareRotation(j){
     const cfg = j.rotacao || {};
     ROT.enabled = !!cfg.ativar;
-    ROT.intervalMs = Math.max(4000, Number(cfg.intervaloSeg || 12) * 1000);
+    ROT.intervalMs = Math.max(3000, Number(cfg.intervaloSeg || 12) * 1000);
     ROT.pauseOnHover = cfg.pausarNoMouse !== false;
     ROT.showProgress = cfg.mostrarProgresso !== false;
     ROT.perScreen = Math.max(1, Math.min(3, Number(cfg.quantidadePorTela || 1)));
@@ -360,7 +399,6 @@
       .filter(a => isAtivoAgora(a, now))
       .sort((a,b) => prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
 
-    // reinicia rotação quando o conjunto de avisos mudar (por validade / edição)
     ROT.idx = 0;
     stopRotation();
   }
@@ -370,22 +408,20 @@
     if(ROT.progressTimer){ clearInterval(ROT.progressTimer); ROT.progressTimer = null; }
   }
 
-  function startRotation(renderFn){
+  function startRotation(renderFn, intervalMs){
     stopRotation();
-    if(!ROT.enabled) return;
     if(ROT.items.length <= ROT.perScreen) return;
 
     ROT.paused = false;
 
-    // Avança slide
     ROT.timer = setInterval(()=>{
       if(ROT.paused) return;
       ROT.idx = (ROT.idx + ROT.perScreen) % ROT.items.length;
       renderFn();
-      resetProgress();
-    }, ROT.intervalMs);
+      resetProgress(intervalMs);
+    }, intervalMs);
 
-    resetProgress();
+    resetProgress(intervalMs);
   }
 
   function ensureProgressUI(){
@@ -393,7 +429,7 @@
     let wrap = document.getElementById("progressWrap");
     if(!ROT.showProgress){
       if(wrap) wrap.remove();
-      return null;
+      return;
     }
     if(!wrap){
       wrap = document.createElement("div");
@@ -402,95 +438,38 @@
       wrap.innerHTML = `<div class="progressBar" id="progressBar"></div>`;
       avisosEl.appendChild(wrap);
     }
-    return wrap;
   }
 
-  function resetProgress(){
+  function resetProgress(duration){
     if(!ROT.showProgress) return;
     const bar = document.getElementById("progressBar");
     if(!bar) return;
 
     bar.style.width = "0%";
     const start = Date.now();
-    const duration = ROT.intervalMs;
+    const ms = duration;
 
     if(ROT.progressTimer) clearInterval(ROT.progressTimer);
     ROT.progressTimer = setInterval(()=>{
       if(ROT.paused) return;
-      const p = Math.min(100, ((Date.now() - start) / duration) * 100);
+      const p = Math.min(100, ((Date.now() - start) / ms) * 100);
       bar.style.width = p.toFixed(1) + "%";
       if(p >= 100) clearInterval(ROT.progressTimer);
-    }, 200);
+    }, 120);
   }
 
-  // ===== Render avisos (com ou sem rotação) =====
-  function renderAvisos(j){
-    const avisosEl = document.getElementById("avisos");
-    avisosEl.innerHTML = "";
-
-    // tema do dia
-    const tema = resolveTemaDoDia(j.temaDoDia);
-    if(tema){
-      const divTema = document.createElement("div");
-      divTema.className = "tema";
-      divTema.innerHTML = `<b>Tema do dia:</b> ${escapeHtml(tema.titulo)}<span class="small">${escapeHtml(tema.frase || "")}</span>`;
-      avisosEl.appendChild(divTema);
-    }
-
-    // nenhum aviso
-    if(!ROT.items.length){
-      const div = document.createElement("div");
-      div.className = "aviso baixa";
-      div.innerHTML = `<p class="t">Sem avisos ativos</p><p class="d">Quando houver comunicados, eles aparecerão aqui automaticamente.</p>`;
-      avisosEl.appendChild(div);
-      ensureProgressUI();
-      return;
-    }
-
-    // modo rotação: mostra só o "frame" atual
-    if(ROT.enabled && ROT.items.length > ROT.perScreen){
-      const slice = getCurrentSlice();
-      slice.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-      ensureProgressUI();
-
-      // pausa no mouse
-      if(ROT.pauseOnHover){
-        avisosEl.onmouseenter = () => { ROT.paused = true; };
-        avisosEl.onmouseleave = () => { ROT.paused = false; };
-      }
-      startRotation(() => {
-        // re-render rápido do frame
-        avisosEl.innerHTML = "";
-        if(tema){
-          const divTema2 = document.createElement("div");
-          divTema2.className = "tema";
-          divTema2.innerHTML = `<b>Tema do dia:</b> ${escapeHtml(tema.titulo)}<span class="small">${escapeHtml(tema.frase || "")}</span>`;
-          avisosEl.appendChild(divTema2);
-        }
-        getCurrentSlice().forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-        ensureProgressUI();
-      });
-
-      return;
-    }
-
-    // modo normal: lista completa (sem rotação)
-    ROT.items.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-    ensureProgressUI();
-  }
-
-  function getCurrentSlice(){
+  function getCurrentSlice(list, per){
     const out = [];
-    for(let k=0; k<ROT.perScreen; k++){
-      out.push(ROT.items[(ROT.idx + k) % ROT.items.length]);
+    for(let k=0; k<per; k++){
+      out.push(list[(ROT.idx + k) % list.length]);
     }
     return out;
   }
 
-  function buildAvisoCard(a){
+  function buildAvisoCard(a, extraClass){
     const p = (a.prioridade || "baixa").toLowerCase();
     const div = document.createElement("div");
-    div.className = `aviso ${p}`;
+    div.className = `aviso ${p} ${extraClass || ""}`.trim();
 
     const janela = formatJanela(a);
     const tags = [];
@@ -506,7 +485,110 @@
     return div;
   }
 
-  // ===== Clima (uma vez) =====
+  // ===== Render avisos com Emergência =====
+  function renderAvisos(j){
+    const avisosEl = document.getElementById("avisos");
+    const card = document.getElementById("cardAvisos");
+    avisosEl.innerHTML = "";
+
+    const tema = resolveTemaDoDia(j.temaDoDia);
+
+    const emg = computeActiveEmergency(j);
+    EMG.active = emg.active;
+
+    // Se emergência ativa: mostra somente emergências
+    if(EMG.active){
+      // Card pisca (opcional)
+      card.classList.toggle("emgPulse", !!EMG.blink);
+
+      // Banner
+      const banner = document.createElement("div");
+      banner.className = "emgBanner";
+      banner.innerHTML = `🚨 MODO EMERGÊNCIA ATIVO<small>Exibindo apenas comunicados urgentes</small>`;
+      avisosEl.appendChild(banner);
+
+      // Lista emergências
+      const list = emg.items.sort((a,b)=> prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
+      ROT.items = list;     // reaproveita motor de rotação
+      ROT.idx = 0;
+
+      // Render inicial
+      getCurrentSlice(list, 1).forEach(a => avisosEl.appendChild(buildAvisoCard(a, "emgPulse")));
+      ensureProgressUI();
+
+      // Rotação ultra rápida na emergência (EMG.intervalMs)
+      startRotation(() => {
+        avisosEl.innerHTML = "";
+        avisosEl.appendChild(banner.cloneNode(true));
+        getCurrentSlice(list, 1).forEach(a => avisosEl.appendChild(buildAvisoCard(a, "emgPulse")));
+        ensureProgressUI();
+      }, EMG.intervalMs);
+
+      // sem pausa no mouse em emergência (TV)
+      ROT.paused = false;
+      avisosEl.onmouseenter = null;
+      avisosEl.onmouseleave = null;
+
+      return;
+    }
+
+    // Sem emergência: remove pisca do card
+    card.classList.remove("emgPulse");
+
+    // Tema do dia
+    if(tema){
+      const divTema = document.createElement("div");
+      divTema.className = "tema";
+      divTema.innerHTML = `<b>Tema do dia:</b> ${escapeHtml(tema.titulo)}<span class="small">${escapeHtml(tema.frase || "")}</span>`;
+      avisosEl.appendChild(divTema);
+    }
+
+    // Sem avisos
+    if(!ROT.items.length){
+      const div = document.createElement("div");
+      div.className = "aviso baixa";
+      div.innerHTML = `<p class="t">Sem avisos ativos</p><p class="d">Quando houver comunicados, eles aparecerão aqui automaticamente.</p>`;
+      avisosEl.appendChild(div);
+      ensureProgressUI();
+      stopRotation();
+      return;
+    }
+
+    // Com rotação
+    if(ROT.enabled && ROT.items.length > ROT.perScreen){
+      getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+      ensureProgressUI();
+
+      if(ROT.pauseOnHover){
+        avisosEl.onmouseenter = () => { ROT.paused = true; };
+        avisosEl.onmouseleave = () => { ROT.paused = false; };
+      }else{
+        avisosEl.onmouseenter = null;
+        avisosEl.onmouseleave = null;
+      }
+
+      startRotation(() => {
+        avisosEl.innerHTML = "";
+        if(tema){
+          const divTema2 = document.createElement("div");
+          divTema2.className = "tema";
+          divTema2.innerHTML = `<b>Tema do dia:</b> ${escapeHtml(tema.titulo)}<span class="small">${escapeHtml(tema.frase || "")}</span>`;
+          avisosEl.appendChild(divTema2);
+        }
+        getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+        ensureProgressUI();
+      }, ROT.intervalMs);
+
+      return;
+    }
+
+    // Sem rotação: lista tudo
+    stopRotation();
+    ROT.items.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+    ensureProgressUI();
+  }
+
+  // ===== Clima =====
   let wxTimer = null;
   function initWeatherOnce(cfg){
     if(wxTimer) return;
