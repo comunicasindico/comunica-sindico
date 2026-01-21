@@ -37,6 +37,25 @@
     }
   },
 
+  "publicidade": {
+  "ativar": true,
+  "intervaloSeg": 15,
+  "videos": [
+    {
+      "arquivo": "ads/anuncio_padaria.mp4",
+      "anunciante": "Padaria Central"
+    },
+    {
+      "arquivo": "ads/anuncio_farmacia.mp4",
+      "anunciante": "Farmácia Saúde"
+    },
+    {
+      "arquivo": "ads/anuncio_imobiliaria.mp4",
+      "anunciante": "Imobiliária Bem Viver"
+    }
+  ]
+}
+
   "avisos": [
     {
       "id": "EMERGENCIA-EXEMPLO",
