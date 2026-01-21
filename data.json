@@ -1,20 +1,27 @@
 {
   "titulo": "Comunica Síndico – Condomínio Bem Protegido",
+  "subtitulo": "Painel informativo • Atualização automática",
+  "referencia": "20/01/2026",
   "avisos": [
-    { "titulo": "Manutenção programada", "texto": "A manutenção do elevador ocorrerá hoje das 14h às 17h." },
-    { "titulo": "Coleta seletiva", "texto": "Lembre-se de separar corretamente os resíduos recicláveis." }
+    {
+      "titulo": "Manutenção programada",
+      "descricao": "A manutenção do elevador ocorrerá hoje das 14h às 17h.",
+      "inicio": "14:00",
+      "fim": "17:00",
+      "tipo": "Manutenção",
+      "local": "Elevador"
+    },
+    {
+      "titulo": "Coleta seletiva",
+      "descricao": "Lembre-se de separar corretamente os resíduos recicláveis.",
+      "tipo": "Convivência",
+      "local": "Lixeira/Coleta"
+    }
   ],
-  "rodape": {
-    "esquerdo": "Bem Protegido • Comunicação Oficial",
-    "direito": "Atualizado automaticamente"
-  },
   "clima": {
-    "modo": "fixo",
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
     "longitude": -49.0144,
-    "atualizarMin": 15,
-    "mostrarVento": true
-    "alertaChuva": true
+    "timezone": "America/Sao_Paulo"
   }
 }
