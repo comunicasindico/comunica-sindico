@@ -3,91 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <title>Comunica Síndico</title>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #0b1c2d;
-      color: #ffffff;
-    }
+    body { margin:0; font-family:"Segoe UI", Arial, sans-serif; background:#0b1c2d; color:#fff; }
+    .container { display:grid; grid-template-rows:auto 1fr auto; height:100vh; }
 
-    .container {
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      height: 100vh;
-    }
+    header { background:#102a43; padding:20px 40px; font-size:32px; font-weight:600; }
 
-    header {
-      background: #102a43;
-      padding: 20px 40px;
-      font-size: 32px;
-      font-weight: 600;
-    }
+    main { display:grid; grid-template-columns:2fr 1fr; gap:30px; padding:30px 40px; }
+    .avisos { background:#16324f; border-radius:12px; padding:25px; }
+    .avisos h2 { margin:0 0 20px 0; font-size:26px; }
+    .aviso { margin-bottom:18px; padding-bottom:18px; border-bottom:1px solid rgba(255,255,255,.15); }
+    .aviso:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+    .aviso h3 { margin:0 0 6px 0; font-size:20px; }
+    .aviso p { margin:0; font-size:17px; opacity:.9; }
 
-    main {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 30px;
-      padding: 30px 40px;
-    }
-
-    .avisos {
-      background: #16324f;
-      border-radius: 12px;
-      padding: 25px;
-    }
-
-    .avisos h2 {
-      margin-top: 0;
-      font-size: 26px;
-      margin-bottom: 20px;
-    }
-
-    .aviso {
-      margin-bottom: 18px;
-      padding-bottom: 18px;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-    }
-
-    .aviso:last-child {
-      border-bottom: none;
-    }
-
-    .aviso h3 {
-      margin: 0 0 6px 0;
-      font-size: 20px;
-    }
-
-    .aviso p {
-      margin: 0;
-      font-size: 17px;
-      opacity: 0.9;
-    }
-
-    .lateral {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .box {
-      background: #16324f;
-      border-radius: 12px;
-      padding: 20px;
-      font-size: 20px;
-    }
+    .lateral { display:flex; flex-direction:column; gap:20px; }
+    .box { background:#16324f; border-radius:12px; padding:20px; font-size:20px; }
 
     footer {
-      background: #102a43;
-      padding: 12px 40px;
-      font-size: 16px;
-      opacity: 0.85;
-      display: flex;
-      justify-content: space-between;
+      background:#102a43;
+      padding:12px 40px;
+      font-size:16px;
+      opacity:.9;
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items:center;
+      gap:12px;
     }
+    #rodape-esquerdo { justify-self:start; }
+    #rodape-clima { justify-self:center; white-space:nowrap; }
+    #rodape-direito { justify-self:end; }
+    .muted { opacity:.85; }
   </style>
 </head>
 
@@ -109,38 +57,151 @@
 
     <footer>
       <span id="rodape-esquerdo"></span>
+      <span id="rodape-clima" class="muted">Clima: carregando…</span>
       <span id="rodape-direito"></span>
     </footer>
   </div>
 
   <script>
-    async function carregarDados() {
-      const response = await fetch("data.json?_=" + new Date().getTime());
-      const data = await response.json();
+    let CONFIG = null;
 
-      document.getElementById("titulo").innerText = data.titulo;
-      document.getElementById("rodape-esquerdo").innerText = data.rodape.esquerdo;
-      document.getElementById("rodape-direito").innerText = data.rodape.direito;
+    function bustCache(url) {
+      const sep = url.includes("?") ? "&" : "?";
+      return url + sep + "_=" + Date.now();
+    }
+
+    async function carregarDados() {
+      const response = await fetch(bustCache("data.json"));
+      const data = await response.json();
+      CONFIG = data;
+
+      document.getElementById("titulo").innerText = data.titulo || "Comunica Síndico";
+      document.getElementById("rodape-esquerdo").innerText = data.rodape?.esquerdo || "";
+      document.getElementById("rodape-direito").innerText = data.rodape?.direito || "";
 
       const lista = document.getElementById("lista-avisos");
       lista.innerHTML = "";
-
-      data.avisos.forEach(a => {
+      (data.avisos || []).forEach(a => {
         const div = document.createElement("div");
         div.className = "aviso";
-        div.innerHTML = `<h3>${a.titulo}</h3><p>${a.texto}</p>`;
+        div.innerHTML = `<h3>${a.titulo || ""}</h3><p>${a.texto || ""}</p>`;
         lista.appendChild(div);
       });
+
+      // Clima: dispara carregamento após ter CONFIG
+      iniciarClima();
     }
 
     function atualizarHora() {
       const agora = new Date();
       document.getElementById("hora").innerText =
         agora.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-      document.getElementById("data").innerText =
-        agora.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" });
+
+      // Primeira letra maiúscula (fica mais bonito na TV)
+      const dataStr = agora.toLocaleDateString("pt-BR", {
+        weekday: "long", day: "2-digit", month: "long", year: "numeric"
+      });
+      document.getElementById("data").innerText = dataStr.charAt(0).toUpperCase() + dataStr.slice(1);
     }
 
+    // -------- CLIMA (Open-Meteo, sem API key) --------
+    const WMO_PT = {
+      0:"Céu limpo", 1:"Poucas nuvens", 2:"Parcialmente nublado", 3:"Nublado",
+      45:"Neblina", 48:"Nevoeiro",
+      51:"Garoa fraca", 53:"Garoa", 55:"Garoa forte",
+      56:"Garoa congelante fraca", 57:"Garoa congelante forte",
+      61:"Chuva fraca", 63:"Chuva", 65:"Chuva forte",
+      66:"Chuva congelante fraca", 67:"Chuva congelante forte",
+      71:"Neve fraca", 73:"Neve", 75:"Neve forte",
+      77:"Grãos de neve",
+      80:"Pancadas fracas", 81:"Pancadas", 82:"Pancadas fortes",
+      85:"Neve fraca (pancadas)", 86:"Neve forte (pancadas)",
+      95:"Tempestade", 96:"Tempestade com granizo", 99:"Tempestade forte com granizo"
+    };
+
+    let climaTimer = null;
+    let climaIniciado = false;
+
+    function iniciarClima() {
+      if (!CONFIG || !CONFIG.clima) return;
+
+      // Evita reiniciar timers toda vez que recarrega JSON
+      if (climaIniciado) return;
+      climaIniciado = true;
+
+      const min = Number(CONFIG.clima.atualizarMin || 15);
+      atualizarClima(); // já
+
+      climaTimer = setInterval(atualizarClima, Math.max(5, min) * 60 * 1000);
+    }
+
+    async function obterCoords() {
+      const modo = (CONFIG?.clima?.modo || "fixo").toLowerCase();
+
+      if (modo === "geo" && navigator.geolocation) {
+        // Em TV/kiosk às vezes a permissão não vem; se falhar, cai no fixo
+        try {
+          const pos = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: false,
+              timeout: 8000,
+              maximumAge: 600000
+            });
+          });
+          return { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        } catch (e) {
+          // fallback para fixo
+        }
+      }
+
+      const lat = Number(CONFIG?.clima?.latitude);
+      const lon = Number(CONFIG?.clima?.longitude);
+      if (Number.isFinite(lat) && Number.isFinite(lon)) return { lat, lon };
+
+      return null;
+    }
+
+    async function atualizarClima() {
+      const el = document.getElementById("rodape-clima");
+      if (!el || !CONFIG?.clima) return;
+
+      const coords = await obterCoords();
+      if (!coords) {
+        el.innerText = "Clima: configure latitude/longitude no data.json";
+        return;
+      }
+
+      const cidade = CONFIG.clima.cidade ? `${CONFIG.clima.cidade} • ` : "";
+      const mostrarVento = !!CONFIG.clima.mostrarVento;
+
+      try {
+        const url = bustCache(
+          `https://api.open-meteo.com/v1/forecast` +
+          `?latitude=${encodeURIComponent(coords.lat)}` +
+          `&longitude=${encodeURIComponent(coords.lon)}` +
+          `&current=temperature_2m,weather_code,wind_speed_10m` +
+          `&timezone=auto`
+        );
+
+        const r = await fetch(url);
+        if (!r.ok) throw new Error("Falha ao buscar clima");
+        const j = await r.json();
+
+        const temp = j?.current?.temperature_2m;
+        const code = j?.current?.weather_code;
+        const wind = j?.current?.wind_speed_10m;
+
+        const desc = WMO_PT.hasOwnProperty(code) ? WMO_PT[code] : "Tempo";
+        const tempTxt = (temp !== undefined && temp !== null) ? `${Math.round(temp)}°C` : "--°C";
+        const windTxt = (mostrarVento && wind !== undefined && wind !== null) ? ` • Vento ${Math.round(wind)} km/h` : "";
+
+        el.innerText = `${cidade}${desc} • ${tempTxt}${windTxt}`;
+      } catch (e) {
+        el.innerText = "Clima: indisponível no momento";
+      }
+    }
+
+    // init
     carregarDados();
     atualizarHora();
     setInterval(atualizarHora, 1000);
