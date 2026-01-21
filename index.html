@@ -22,440 +22,229 @@
     html,body{height:100%}
     body{
       margin:0;
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family:"Segoe UI",Arial,sans-serif;
       color:var(--txt);
-      background: radial-gradient(1200px 700px at 15% 10%, #10385b 0%, rgba(16,56,91,0) 55%),
-                  radial-gradient(900px 600px at 85% 15%, #0b3454 0%, rgba(11,52,84,0) 55%),
-                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      background:
+        radial-gradient(1200px 700px at 15% 10%, #10385b 0%, rgba(16,56,91,0) 55%),
+        radial-gradient(900px 600px at 85% 15%, #0b3454 0%, rgba(11,52,84,0) 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
     }
 
     .wrap{
       min-height:100%;
-      padding: 26px 26px 74px; /* espaço para o rodapé do clima */
+      padding:26px 26px 74px;
       display:flex;
       justify-content:center;
     }
-    .container{
-      width:min(1400px, 96vw);
-    }
+    .container{ width:min(1400px,96vw); }
 
     .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding: 18px 20px;
-      background: rgba(8,28,46,.55);
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding:18px 20px;
+      background:rgba(8,28,46,.55);
       border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(8px);
     }
-    .title{
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing:.2px;
-      margin:0;
-      line-height:1.15;
-    }
-    .subtitle{
-      margin:4px 0 0;
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 600;
-    }
+    .title{ margin:0; font-size:28px; font-weight:800; }
+    .subtitle{ margin:4px 0 0; font-size:13px; color:var(--muted); font-weight:600; }
+
     .badge{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding: 10px 12px;
-      border-radius: 999px;
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
       border:1px solid var(--line);
-      background: rgba(12,35,56,.55);
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 12px;
-      white-space: nowrap;
+      background:rgba(12,35,56,.55);
+      color:var(--muted);
+      font-weight:700; font-size:12px;
     }
     .dot{
       width:10px;height:10px;border-radius:50%;
-      background: #44d07a;
-      box-shadow: 0 0 0 4px rgba(68,208,122,.18);
+      background:#44d07a;
+      box-shadow:0 0 0 4px rgba(68,208,122,.18);
     }
 
     .grid{
-      margin-top: 18px;
+      margin-top:18px;
       display:grid;
-      grid-template-columns: 1.25fr .75fr;
+      grid-template-columns:1.25fr .75fr;
       gap:18px;
     }
 
     .card{
-      background: linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
+      background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
       border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
       overflow:hidden;
     }
     .card .head{
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
+      padding:16px 18px;
+      border-bottom:1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between;
     }
-    .card h2{
-      margin:0;
-      font-size: 18px;
-      letter-spacing:.2px;
-    }
+    .card h2{ margin:0; font-size:18px; }
+
     .pill{
-      font-size: 12px;
-      font-weight: 800;
-      padding: 8px 10px;
-      border-radius: 999px;
+      font-size:12px; font-weight:800;
+      padding:8px 10px;
+      border-radius:999px;
       border:1px solid var(--line);
-      color: var(--muted);
-      background: rgba(7,20,34,.25);
+      color:var(--muted);
+      background:rgba(7,20,34,.25);
     }
 
-    .avisos{
-      padding: 16px 18px 18px;
-      min-height: 520px;
-    }
+    .avisos{ padding:16px 18px 18px; min-height:520px; }
     .aviso{
-      padding: 14px 14px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(7,20,34,.28);
+      padding:14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:rgba(7,20,34,.28);
     }
-    .aviso + .aviso{ margin-top: 12px; }
-    .aviso .t{
-      margin:0 0 6px;
-      font-weight: 900;
-      font-size: 16px;
-    }
-    .aviso .d{
-      margin:0;
-      color: var(--muted);
-      font-weight: 650;
-      line-height: 1.35;
-    }
-    .aviso .meta{
-      margin-top: 10px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      color: rgba(234,242,255,.62);
-      font-weight: 700;
-      font-size: 12px;
-    }
+    .aviso + .aviso{ margin-top:12px; }
+    .aviso .t{ margin:0 0 6px; font-weight:900; font-size:16px; }
+    .aviso .d{ margin:0; color:var(--muted); font-weight:650; }
+
+    .meta{ margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; font-size:12px; }
     .tag{
-      padding: 6px 8px;
-      border-radius: 999px;
+      padding:6px 8px;
+      border-radius:999px;
       border:1px solid var(--line);
-      background: rgba(12,35,56,.35);
+      background:rgba(12,35,56,.35);
     }
 
-    .side{
-      display:grid;
-      gap:18px;
-      align-content:start;
-    }
+    .side{ display:grid; gap:18px; align-content:start; }
     .mini{
-      padding: 16px 18px;
-      background: linear-gradient(180deg, rgba(12,35,56,.95), rgba(9,26,44,.95));
+      padding:16px 18px;
+      background:linear-gradient(180deg, rgba(12,35,56,.95), rgba(9,26,44,.95));
       border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
     }
-    .mini .label{
-      color: var(--muted);
-      font-weight: 800;
-      font-size: 12px;
-      letter-spacing:.25px;
-      text-transform: uppercase;
-      margin:0 0 10px;
-    }
-    .mini .value{
-      font-size: 22px;
-      font-weight: 900;
-      margin:0;
-      letter-spacing:.2px;
-    }
-    .mini .value.big{
-      font-size: 34px;
-      letter-spacing:.3px;
-    }
+    .mini .label{ font-size:12px; font-weight:800; color:var(--muted); }
+    .mini .value{ font-size:22px; font-weight:900; }
+    .mini .value.big{ font-size:34px; }
 
-    /* Rodapé clima fixo */
+    /* Rodapé Clima */
     #wxbar{
       position:fixed; left:0; right:0; bottom:0;
       padding:10px 14px;
-      font:800 14px "Segoe UI", Arial, sans-serif;
-      display:flex; gap:12px;
-      align-items:center; justify-content:center;
-      background:#0b223a;
-      color:#fff;
+      font:800 14px "Segoe UI",Arial,sans-serif;
+      display:flex; gap:12px; justify-content:center; align-items:center;
+      background:#0b223a; color:#fff;
       z-index:999999;
       border-top:1px solid rgba(255,255,255,.12);
     }
-    #wxText{ font-weight:800; }
-    #wxIcon{ font-size: 16px; }
 
-    @media (max-width: 980px){
-      .grid{ grid-template-columns: 1fr; }
-      .avisos{ min-height: 420px; }
+    @media(max-width:980px){
+      .grid{ grid-template-columns:1fr; }
+      .avisos{ min-height:420px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="container">
+<div class="wrap">
+<div class="container">
 
-      <div class="topbar">
-        <div>
-          <h1 class="title" id="titulo">Comunica Síndico – Condomínio</h1>
-          <p class="subtitle" id="subtitulo">Painel informativo • Atualização automática</p>
-        </div>
-        <div class="badge">
-          <span class="dot"></span>
-          <span id="statusJson">Carregando conteúdo…</span>
-        </div>
-      </div>
-
-      <div class="grid">
-        <!-- Avisos -->
-        <section class="card">
-          <div class="head">
-            <h2>Avisos do dia</h2>
-            <div class="pill" id="refData">—</div>
-          </div>
-          <div class="avisos" id="avisos">
-            <!-- preenchido via JS -->
-          </div>
-        </section>
-
-        <!-- Data/Hora -->
-        <aside class="side">
-          <div class="mini">
-            <p class="label">Data</p>
-            <p class="value" id="dataAgora">—</p>
-          </div>
-          <div class="mini">
-            <p class="label">Hora</p>
-            <p class="value big" id="horaAgora">—</p>
-          </div>
-        </aside>
-      </div>
-
+  <div class="topbar">
+    <div>
+      <h1 class="title" id="titulo">Comunica Síndico – Condomínio</h1>
+      <p class="subtitle" id="subtitulo">Painel informativo • Atualização automática</p>
+    </div>
+    <div class="badge">
+      <span class="dot"></span>
+      <span id="statusJson">Carregando conteúdo…</span>
     </div>
   </div>
 
-  <!-- Rodapé do clima -->
-  <div id="wxbar">
-    <span id="wxIcon">⏳</span>
-    <span id="wxText">Clima: carregando…</span>
+  <div class="grid">
+    <section class="card">
+      <div class="head">
+        <h2>Avisos do dia</h2>
+        <div class="pill" id="refData">—</div>
+      </div>
+      <div class="avisos" id="avisos"></div>
+    </section>
+
+    <aside class="side">
+      <div class="mini">
+        <p class="label">Data</p>
+        <p class="value" id="dataAgora">—</p>
+      </div>
+      <div class="mini">
+        <p class="label">Hora</p>
+        <p class="value big" id="horaAgora">—</p>
+      </div>
+    </aside>
   </div>
 
-  <script>
-  window.addEventListener("DOMContentLoaded", () => {
-    initClock();
-    initContentFromJson();
-    initWeather();
-  });
+</div>
+</div>
 
-  // ====== DATA/HORA ======
-  function initClock(){
-    const elData = document.getElementById("dataAgora");
-    const elHora = document.getElementById("horaAgora");
+<div id="wxbar">
+  <span id="wxIcon">⏳</span>
+  <span id="wxText">Clima: carregando…</span>
+</div>
 
-    function tick(){
-      const now = new Date();
-      const fmtData = new Intl.DateTimeFormat("pt-BR", {
-        weekday:"long", day:"2-digit", month:"long", year:"numeric"
-      }).format(now);
-      const fmtHora = new Intl.DateTimeFormat("pt-BR", {
-        hour:"2-digit", minute:"2-digit"
-      }).format(now);
+<script>
+window.addEventListener("DOMContentLoaded",()=>{
+  initClock(); initContentFromJson(); initWeather();
+});
 
-      // capitaliza a primeira letra do dia da semana
-      elData.textContent = fmtData.charAt(0).toUpperCase() + fmtData.slice(1);
-      elHora.textContent = fmtHora;
-    }
-    tick();
-    setInterval(tick, 1000);
+function initClock(){
+  const d=document.getElementById("dataAgora"), h=document.getElementById("horaAgora");
+  function t(){
+    const n=new Date();
+    d.textContent=new Intl.DateTimeFormat("pt-BR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"}).format(n).replace(/^./,c=>c.toUpperCase());
+    h.textContent=new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(n);
   }
+  t(); setInterval(t,1000);
+}
 
-  // ====== CONTEÚDO (JSON externo) ======
-  async function initContentFromJson(){
-    const status = document.getElementById("statusJson");
-    const titulo = document.getElementById("titulo");
-    const subtitulo = document.getElementById("subtitulo");
-    const refData = document.getElementById("refData");
-    const avisosEl = document.getElementById("avisos");
+async function initContentFromJson(){
+  const status=document.getElementById("statusJson");
+  const avisosEl=document.getElementById("avisos");
+  const fallback={
+    avisos:[
+      {titulo:"Manutenção programada",descricao:"Manutenção do elevador das 14h às 17h."},
+      {titulo:"Coleta seletiva",descricao:"Separe corretamente os resíduos recicláveis."}
+    ],
+    clima:{latitude:-28.4767,longitude:-49.0144,timezone:"America/Sao_Paulo",cidade:"Tubarão/SC"}
+  };
+  try{
+    const r=await fetch("./data.json?ts="+Date.now(),{cache:"no-store"});
+    const j=await r.json();
+    window.__WXCFG__=j.clima||fallback.clima;
+    avisosEl.innerHTML="";
+    (j.avisos||fallback.avisos).forEach(a=>{
+      avisosEl.innerHTML+=`<div class="aviso"><p class="t">${a.titulo}</p><p class="d">${a.descricao}</p></div>`;
+    });
+    status.textContent="Conteúdo atualizado";
+  }catch{
+    window.__WXCFG__=fallback.clima;
+    status.textContent="Modo offline";
+  }
+}
 
-    function renderAvisos(items){
-      avisosEl.innerHTML = "";
-      if(!items || !items.length){
-        avisosEl.innerHTML = `<div class="aviso">
-          <p class="t">Sem avisos cadastrados</p>
-          <p class="d">Edite o arquivo <b>data.json</b> para publicar avisos diários.</p>
-        </div>`;
-        return;
-      }
-      for(const a of items){
-        const div = document.createElement("div");
-        div.className = "aviso";
-        div.innerHTML = `
-          <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
-          <p class="d">${escapeHtml(a.descricao || "")}</p>
-          <div class="meta">
-            ${a.inicio ? `<span class="tag">🕒 ${escapeHtml(a.inicio)}${a.fim ? "–"+escapeHtml(a.fim) : ""}</span>` : ""}
-            ${a.tipo ? `<span class="tag">🏷️ ${escapeHtml(a.tipo)}</span>` : ""}
-            ${a.local ? `<span class="tag">📍 ${escapeHtml(a.local)}</span>` : ""}
-          </div>
-        `;
-        avisosEl.appendChild(div);
-      }
-    }
-
-    // fallback padrão
-    const fallback = {
-      titulo: "Comunica Síndico – Condomínio",
-      subtitulo: "Painel informativo • Atualização automática",
-      referencia: "",
-      avisos: [
-        { titulo:"Manutenção programada", descricao:"A manutenção do elevador ocorrerá hoje das 14h às 17h.", inicio:"14:00", fim:"17:00", tipo:"Manutenção", local:"Elevador" },
-        { titulo:"Coleta seletiva", descricao:"Lembre-se de separar corretamente os resíduos recicláveis.", tipo:"Convivência", local:"Lixeira/Coleta" }
-      ],
-      clima: { cidade:"Tubarão/SC", latitude:-28.4767, longitude:-49.0144, timezone:"America/Sao_Paulo" }
-    };
-
+function initWeather(){
+  async function run(){
+    const c=window.__WXCFG__||{};
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${c.latitude}&longitude=${c.longitude}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=${c.timezone}`;
     try{
-      status.textContent = "Carregando conteúdo…";
-      // cache-buster para atualizar sem travar em cache
-      const r = await fetch("./data.json?ts=" + Date.now(), { cache:"no-store" });
-      if(!r.ok) throw new Error("HTTP " + r.status);
-      const j = await r.json();
-
-      titulo.textContent = j.titulo || fallback.titulo;
-      subtitulo.textContent = j.subtitulo || fallback.subtitulo;
-      refData.textContent = j.referencia ? `Ref.: ${j.referencia}` : "Atualizado hoje";
-      renderAvisos(j.avisos);
-
-      // guarda config do clima para usar no initWeather
-      window.__WXCFG__ = j.clima || fallback.clima;
-
-      status.textContent = "Conteúdo atualizado";
-    } catch(e){
-      console.error("Falha ao carregar data.json:", e);
-      titulo.textContent = fallback.titulo;
-      subtitulo.textContent = fallback.subtitulo;
-      refData.textContent = "Modo offline";
-      renderAvisos(fallback.avisos);
-      window.__WXCFG__ = fallback.clima;
-      status.textContent = "Sem JSON (usando padrão)";
+      const r=await fetch(url,{cache:"no-store"});
+      const d=await r.json();
+      document.getElementById("wxIcon").textContent="🌤️";
+      document.getElementById("wxText").textContent=
+        `Clima${c.cidade?` • ${c.cidade}`:""}: ${Math.round(d.current.temperature_2m)}°C | Máx/Mín: ${Math.round(d.daily.temperature_2m_max[0])}° / ${Math.round(d.daily.temperature_2m_min[0])}°`;
+    }catch{
+      document.getElementById("wxIcon").textContent="⚠️";
+      document.getElementById("wxText").textContent="Clima indisponível";
     }
-
-    // Atualiza o JSON a cada 5 min (opcional)
-    setInterval(initContentFromJson, 5 * 60 * 1000);
   }
-
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    }[m]));
-  }
-
-  // ====== CLIMA (Open-Meteo) ======
-  function initWeather(){
-    async function run(){
-      const cfg = window.__WXCFG__ || { latitude:-28.4767, longitude:-49.0144, timezone:"America/Sao_Paulo", cidade:"" };
-      const LAT = cfg.latitude ?? -28.4767;
-      const LON = cfg.longitude ?? -49.0144;
-      const TZ  = cfg.timezone || "America/Sao_Paulo";
-      const CITY = cfg.cidade ? ` • ${cfg.cidade}` : "";
-
-      const bar = document.getElementById("wxbar");
-      const iconEl = document.getElementById("wxIcon");
-      const textEl = document.getElementById("wxText");
-
-      function codeToEmoji(wmo) {
-        if ([0].includes(wmo)) return "☀️";
-        if ([1,2,3].includes(wmo)) return "⛅";
-        if ([45,48].includes(wmo)) return "🌫️";
-        if ([51,53,55,56,57].includes(wmo)) return "🌦️";
-        if ([61,63,65,66,67,80,81,82].includes(wmo)) return "🌧️";
-        if ([71,73,75,77,85,86].includes(wmo)) return "❄️";
-        if ([95,96,99].includes(wmo)) return "⛈️";
-        return "🌡️";
-      }
-
-      iconEl.textContent = "⏳";
-      textEl.textContent = "Clima: carregando…";
-
-      const controller = new AbortController();
-      const t = setTimeout(() => controller.abort(), 8000);
-
-      const url =
-        "https://api.open-meteo.com/v1/forecast"
-        + `?latitude=${LAT}&longitude=${LON}`
-        + `&current=temperature_2m,weather_code`
-        + `&hourly=precipitation_probability`
-        + `&daily=temperature_2m_max,temperature_2m_min`
-        + `&timezone=${encodeURIComponent(TZ)}`;
-
-      try {
-        const res = await fetch(url, { signal: controller.signal, cache:"no-store" });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-
-        const data = await res.json();
-
-        const temp = data?.current?.temperature_2m;
-        const wmo  = data?.current?.weather_code;
-
-        const dMax = data?.daily?.temperature_2m_max?.[0];
-        const dMin = data?.daily?.temperature_2m_min?.[0];
-
-        // alerta de chuva nas próximas 3 horas (prob >= 50%)
-        const times = data?.hourly?.time || [];
-        const probs = data?.hourly?.precipitation_probability || [];
-        const nowISO = data?.current?.time;
-        const idx = times.indexOf(nowISO);
-
-        let rainAlert = false;
-        if (idx >= 0) {
-          const next3 = probs.slice(idx, idx + 4);
-          rainAlert = next3.some(p => (typeof p === "number" && p >= 50));
-        }
-
-        iconEl.textContent = codeToEmoji(wmo);
-
-        const txt =
-          `Clima${CITY}: ${Math.round(temp)}°C  |  Máx/Mín: ${Math.round(dMax)}° / ${Math.round(dMin)}°`
-          + (rainAlert ? "  —  🌧️ ALERTA de chuva (próx. horas)" : "");
-
-        textEl.textContent = txt;
-
-        // cor do rodapé
-        bar.style.background = rainAlert ? "#5a1b1b" : "#0b223a";
-
-      } catch (e) {
-        console.error("Clima falhou:", e);
-        iconEl.textContent = "⚠️";
-        textEl.textContent = "Clima indisponível";
-        document.getElementById("wxbar").style.background = "#3a2a0b";
-      } finally {
-        clearTimeout(t);
-      }
-    }
-
-    run();
-    setInterval(run, 10 * 60 * 1000); // 10 min
-  }
-  </script>
+  run(); setInterval(run,600000);
+}
+</script>
 </body>
 </html>
