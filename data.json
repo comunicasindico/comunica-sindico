@@ -1,221 +1,64 @@
 {
   "titulo": "Comunica Síndico – Condomínio Bem Protegido",
   "subtitulo": "Painel informativo • Atualização automática",
-  "referencia": "2026-01-20",
+  "referencia": "20/01/2026",
 
   "temaDoDia": {
     "modo": "automatico",
     "temasPorDiaSemana": {
-      "domingo": {
-        "titulo": "Convivência e silêncio",
-        "frase": "Respeite o descanso e evite ruídos, especialmente à noite."
-      },
-      "segunda": {
-        "titulo": "Manutenção e prevenção",
-        "frase": "Relate problemas cedo: evita custos maiores e transtornos."
-      },
-      "terca": {
-        "titulo": "Segurança",
-        "frase": "Portões sempre fechados. Atenção a visitantes e entregas."
-      },
-      "quarta": {
-        "titulo": "Limpeza e organização",
-        "frase": "Áreas comuns limpas e organizadas melhoram a vida de todos."
-      },
-      "quinta": {
-        "titulo": "Economia",
-        "frase": "Evite desperdícios de água e energia. Pequenas ações fazem diferença."
-      },
-      "sexta": {
-        "titulo": "Comunicação e transparência",
-        "frase": "Dúvidas? Fale com a administração. Informação evita boatos."
-      },
-      "sabado": {
-        "titulo": "Lazer com responsabilidade",
-        "frase": "Use áreas comuns com cuidado e respeito aos demais moradores."
-      }
+      "segunda": { "titulo": "Organização", "frase": "Comece a semana com tudo no lugar." },
+      "terca": { "titulo": "Convivência", "frase": "Respeito e bom senso deixam o condomínio melhor." },
+      "quarta": { "titulo": "Segurança", "frase": "Feche portões e confirme visitantes." },
+      "quinta": { "titulo": "Manutenção", "frase": "Pequenos cuidados evitam grandes problemas." },
+      "sexta": { "titulo": "Comunicação", "frase": "Avisos claros evitam ruídos." },
+      "sabado": { "titulo": "Lazer", "frase": "Use as áreas comuns com responsabilidade." },
+      "domingo": { "titulo": "Tranquilidade", "frase": "Boa vizinhança é paz para todos." }
     }
   },
 
-  "publicidade": {
-  "ativar": true,
-  "intervaloSeg": 15,
-  "videos": [
-    {
-      "arquivo": "ads/anuncio_padaria.mp4",
-      "anunciante": "Padaria Central"
-    },
-    {
-      "arquivo": "ads/anuncio_farmacia.mp4",
-      "anunciante": "Farmácia Saúde"
-    },
-    {
-      "arquivo": "ads/anuncio_imobiliaria.mp4",
-      "anunciante": "Imobiliária Bem Viver"
-    }
-  ]
-}
-
   "avisos": [
     {
-      "id": "EMERGENCIA-EXEMPLO",
-      "titulo": "⚠️ Atenção: Comunicado urgente (exemplo)",
-      "descricao": "Use este modelo apenas quando houver situação urgente. Ajuste texto, data e validade.",
-      "tipo": "Emergência",
+      "titulo": "Manutenção programada",
+      "descricao": "A manutenção do elevador ocorrerá hoje das 14h às 17h.",
       "prioridade": "alta",
-      "inicio": "2026-01-20T00:00:00-03:00",
-      "fim": "2026-01-20T23:59:59-03:00",
-      "local": "Condomínio",
-      "fixoAteFim": true
-    },
-
-    {
-      "id": "manutencao-elevador",
-      "titulo": "Manutenção do elevador (Modelo)",
-      "descricao": "Manutenção programada. Evite uso durante o período informado.",
       "tipo": "Manutenção",
-      "prioridade": "alta",
+      "local": "Elevador",
       "inicio": "2026-01-20T14:00:00-03:00",
       "fim": "2026-01-20T17:00:00-03:00",
-      "local": "Elevador / Bloco A",
-      "fixoAteFim": true
+      "emergencia": false
     },
-{
-
-  "id": "ALERTA-GAS",
-  "titulo": "🚨 ALERTA: Vazamento de gás (exemplo)",
-  "descricao": "Evite acionar interruptores. Acione a administração/brigada.",
-  "tipo": "Emergência",
-  "prioridade": "alta",
-  "emergencia": true,
-  "inicio": "2026-01-20T10:00:00-03:00",
-  "fim": "2026-01-20T23:59:59-03:00",
-  "local": "Hall / Corredores",
-  "fixoAteFim": true
-}
-
     {
-      "id": "agua-economia",
-      "titulo": "Uso consciente de água",
-      "descricao": "Evite lavar calçadas com mangueira. Prefira balde e vassoura.",
-      "tipo": "Economia",
-      "prioridade": "media",
-      "inicio": "2026-01-01T00:00:00-03:00",
-      "fim": "2026-12-31T23:59:59-03:00",
-      "local": "Áreas comuns"
-    },
-
-    {
-  "id": "EMG-AGUA",
-  "titulo": "🚨 ALERTA: Interrupção no abastecimento de água",
-  "descricao": "Uso restrito de água até normalização. Evite lavar áreas e utilizar máquinas.",
-  "tipo": "Emergência",
-  "prioridade": "alta",
-  "emergencia": true,
-  "inicio": "2026-01-20T08:00:00-03:00",
-  "fim": "2026-01-20T20:00:00-03:00",
-  "local": "Todo o condomínio",
-  "fixoAteFim": true
-}
-
-    {
-  "id": "EMG-ENERGIA",
-  "titulo": "🚨 ALERTA: Falta de energia elétrica",
-  "descricao": "Elevadores temporariamente indisponíveis. Evite uso de escadas sem iluminação adequada.",
-  "tipo": "Emergência",
-  "prioridade": "alta",
-  "emergencia": true,
-  "inicio": "2026-01-20T19:30:00-03:00",
-  "fim": "2026-01-21T02:00:00-03:00",
-  "local": "Todo o condomínio",
-  "fixoAteFim": true
-}
-
-    {
-  "id": "EMG-ALAGAMENTO",
-  "titulo": "🚨 ALERTA: Risco de alagamento",
-  "descricao": "Evite áreas baixas e garagens. Retire veículos das vagas inferiores, se possível.",
-  "tipo": "Emergência",
-  "prioridade": "alta",
-  "emergencia": true,
-  "inicio": "2026-01-20T15:00:00-03:00",
-  "fim": "2026-01-20T23:59:59-03:00",
-  "local": "Garagem / Áreas baixas",
-  "fixoAteFim": true
-}
-
-    {
-  "id": "EMG-SEGURANCA",
-  "titulo": "🚨 ALERTA: Atenção à segurança",
-  "descricao": "Identificação obrigatória de visitantes. Não autorize acesso sem confirmação.",
-  "tipo": "Segurança",
-  "prioridade": "alta",
-  "emergencia": true,
-  "inicio": "2026-01-20T18:00:00-03:00",
-  "fim": "2026-01-21T06:00:00-03:00",
-  "local": "Portaria / Acessos",
-  "fixoAteFim": true
-}
-
-    {
-      "id": "coleta-seletiva",
       "titulo": "Coleta seletiva",
-      "descricao": "Separar recicláveis e orgânicos. Sacos bem fechados e horários respeitados.",
-      "tipo": "Convivência",
+      "descricao": "Lembre-se de separar corretamente os resíduos recicláveis.",
       "prioridade": "media",
-      "inicio": "2026-01-01T00:00:00-03:00",
-      "fim": "2026-12-31T23:59:59-03:00",
-      "local": "Lixeiras"
+      "tipo": "Convivência",
+      "local": "Lixeira/Coleta",
+      "emergencia": false
     },
-
     {
-      "id": "portaria-entregas",
-      "titulo": "Entregas e visitantes",
-      "descricao": "Entregas devem ser recebidas pelo morador. Visitantes sempre identificados.",
+      "titulo": "Alerta – Vazamento (atenção imediata)",
+      "descricao": "Evite usar o local até nova orientação. Equipe acionada.",
+      "prioridade": "alta",
       "tipo": "Segurança",
-      "prioridade": "media",
-      "inicio": "2026-01-01T00:00:00-03:00",
-      "fim": "2026-12-31T23:59:59-03:00",
-      "local": "Portaria"
-    },
-
-    {
-      "id": "garagem-velocidade",
-      "titulo": "Velocidade na garagem",
-      "descricao": "Transite devagar e com faróis acesos. Atenção a pedestres.",
-      "tipo": "Convivência",
-      "prioridade": "baixa",
-      "inicio": "2026-01-01T00:00:00-03:00",
-      "fim": "2026-12-31T23:59:59-03:00",
-      "local": "Garagem"
-    },
-
-    {
-      "id": "pets-areas-comuns",
-      "titulo": "Pets nas áreas comuns",
-      "descricao": "Use guia curta. Recolha dejetos. Evite acesso às áreas restritas.",
-      "tipo": "Convivência",
-      "prioridade": "baixa",
-      "inicio": "2026-01-01T00:00:00-03:00",
-      "fim": "2026-12-31T23:59:59-03:00",
-      "local": "Áreas comuns"
+      "local": "Hall / Corredor",
+      "emergencia": true
     }
   ],
 
   "rotacao": {
-  "ativar": true,
-  "intervaloSeg": 12,
-  "pausarNoMouse": true,
-  "mostrarProgresso": true,
-  "quantidadePorTela": 1
-},
+    "ativar": true,
+    "intervaloSeg": 12,
+    "pausarNoMouse": true,
+    "mostrarProgresso": true,
+    "quantidadePorTela": 1
+  },
 
   "emergencia": {
-  "ativar": true,
-  "intervaloSeg": 4,
-  "piscar": true,
-  "somenteAlta": true
-},
+    "ativar": true,
+    "intervaloSeg": 4,
+    "piscar": true,
+    "somenteAlta": true
+  },
 
   "clima": {
     "cidade": "Tubarão/SC",
@@ -224,5 +67,24 @@
     "timezone": "America/Sao_Paulo",
     "alertaChuvaMin": 50,
     "horasAlerta": 3
+  },
+
+  "publicidade": {
+    "ativar": true,
+    "intervaloSeg": 15,
+    "videos": [
+      {
+        "arquivo": "ads/anuncio_padaria.mp4",
+        "anunciante": "Padaria Central"
+      },
+      {
+        "arquivo": "ads/anuncio_farmacia.mp4",
+        "anunciante": "Farmácia Saúde"
+      },
+      {
+        "arquivo": "ads/anuncio_imobiliaria.mp4",
+        "anunciante": "Imobiliária Bem Viver"
+      }
+    ]
   }
 }
