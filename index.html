@@ -323,31 +323,49 @@
     initPublicidade(j.publicidade);
   }
 
-  async function loadJson(){
-    const status = document.getElementById("statusJson");
-    status.textContent = "Carregando conteúdo…";
-    try{
-      const r = await fetch("./data.json?ts=" + Date.now(), { cache:"no-store" });
-      if(!r.ok) throw new Error("HTTP " + r.status);
-      const j = await r.json();
-      status.textContent = "Conteúdo atualizado";
-      return j;
-    }catch(e){
-      console.error("Falha data.json:", e);
-      status.textContent = "Modo offline";
-      return {
-        titulo:"Comunica Síndico – Condomínio",
-        subtitulo:"Painel informativo • Atualização automática",
-        referencia:"",
-        temaDoDia:{modo:"automatico",temasPorDiaSemana:{}},
-        avisos:[],
-        rotacao:{ativar:false},
-        emergencia:{ativar:false},
-        publicidade:{ativar:false},
-        clima:{cidade:"",latitude:-28.4767,longitude:-49.0144,timezone:"America/Sao_Paulo",alertaChuvaMin:50,horasAlerta:3}
-      };
-    }
+ async function loadJson(){
+  const status = document.getElementById("statusJson");
+  status.textContent = "Carregando conteúdo…";
+  try{
+    const r = await fetch("./data.json?ts=" + Date.now(), { cache:"no-store" });
+    if(!r.ok) throw new Error("HTTP " + r.status);
+
+    const raw = await r.json();
+
+    // ✅ Se data.json vier como ARRAY, converte para o objeto padrão do painel
+    const j = Array.isArray(raw)
+      ? {
+          titulo:"Comunica Síndico",
+          subtitulo:"Painel informativo • Atualização automática",
+          referencia:"",
+          temaDoDia:{ modo:"automatico", temasPorDiaSemana:{} },
+          avisos: raw,
+          rotacao:{ ativar:false },
+          emergencia:{ ativar:true, intervaloSeg:4, piscar:true, somenteAlta:true },
+          publicidade:{ ativar:false, videos:[], intervaloSeg:15 },
+          clima:{ cidade:"", latitude:-28.4767, longitude:-49.0144, timezone:"America/Sao_Paulo", alertaChuvaMin:50, horasAlerta:3 }
+        }
+      : raw;
+
+    status.textContent = "Conteúdo atualizado";
+    return j;
+
+  }catch(e){
+    console.error("Falha data.json:", e);
+    status.textContent = "Modo offline";
+    return {
+      titulo:"Comunica Síndico – Condomínio",
+      subtitulo:"Painel informativo • Atualização automática",
+      referencia:"",
+      temaDoDia:{modo:"automatico",temasPorDiaSemana:{}},
+      avisos:[],
+      rotacao:{ativar:false},
+      emergencia:{ativar:false},
+      publicidade:{ativar:false},
+      clima:{cidade:"",latitude:-28.4767,longitude:-49.0144,timezone:"America/Sao_Paulo",alertaChuvaMin:50,horasAlerta:3}
+    };
   }
+}
 
   function renderHeader(j){
     document.getElementById("titulo").textContent = j.titulo || "Comunica Síndico";
