@@ -36,11 +36,18 @@
 
 .anuncio video{
   width:100%;
-  max-height:260px;
   border-radius:14px;
   border:1px solid rgba(255,255,255,.15);
   background:#000;
-  object-fit:cover;
+}
+
+.anuncio{
+  animation: fadeIn .6s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(8px)}
+  to{opacity:1; transform:translateY(0)}
 }
 
     .topbar{
@@ -280,6 +287,7 @@
     initClock();
     loadAll();
     setInterval(loadAll, 60 * 1000);
+    initPublicidade(j.publicidade);
   });
 
   function initClock(){
@@ -693,6 +701,32 @@
     atualizar();
     wxTimer = setInterval(atualizar, 10 * 60 * 1000);
   }
+  // ===== PUBLICIDADE EM VÍDEO =====
+let adIdx = 0;
+let adTimer = null;
+
+function initPublicidade(cfg){
+  if(!cfg || !cfg.ativar || !cfg.videos || !cfg.videos.length) return;
+
+  const box = document.getElementById("adBox");
+  const video = document.getElementById("adVideo");
+  const label = document.getElementById("adLabel");
+
+  box.style.display = "block";
+
+  function playAd(){
+    const ad = cfg.videos[adIdx];
+    label.textContent = "Publicidade • " + (ad.anunciante || "");
+    video.src = ad.arquivo;
+    video.load();
+    video.play().catch(()=>{});
+    adIdx = (adIdx + 1) % cfg.videos.length;
+  }
+
+  playAd();
+  adTimer = setInterval(playAd, Math.max(8, cfg.intervaloSeg) * 1000);
+}
+
 </script>
 
 </body>
