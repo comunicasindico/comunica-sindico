@@ -118,6 +118,14 @@
     }
   ],
 
+  "rotacao": {
+  "ativar": true,
+  "intervaloSeg": 12,
+  "pausarNoMouse": true,
+  "mostrarProgresso": true,
+  "quantidadePorTela": 1
+},
+
   "clima": {
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
