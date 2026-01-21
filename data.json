@@ -1,27 +1,61 @@
 {
   "titulo": "Comunica Síndico – Condomínio Bem Protegido",
   "subtitulo": "Painel informativo • Atualização automática",
-  "referencia": "20/01/2026",
+  "referencia": "2026-01-20",
+
+  "temaDoDia": {
+    "modo": "automatico",
+    "temasPorDiaSemana": {
+      "domingo":   { "titulo": "Convivência e silêncio", "frase": "Respeite o descanso e evite ruídos." },
+      "segunda":   { "titulo": "Manutenção e prevenção", "frase": "Avise problemas cedo: evita custos maiores." },
+      "terca":     { "titulo": "Segurança", "frase": "Portões fechados e atenção a visitantes." },
+      "quarta":    { "titulo": "Limpeza e organização", "frase": "Áreas comuns limpas = bem-estar para todos." },
+      "quinta":    { "titulo": "Economia", "frase": "Evite desperdícios de água e energia." },
+      "sexta":     { "titulo": "Comunicação", "frase": "Dúvidas? Fale com a administração." },
+      "sabado":    { "titulo": "Lazer com responsabilidade", "frase": "Use áreas comuns com cuidado e respeito." }
+    }
+  },
+
   "avisos": [
     {
-      "titulo": "Manutenção programada",
-      "descricao": "A manutenção do elevador ocorrerá hoje das 14h às 17h.",
-      "inicio": "14:00",
-      "fim": "17:00",
+      "id": "manut-elevador",
+      "titulo": "Manutenção do elevador (Bloco A)",
+      "descricao": "Hoje, das 14h às 17h. Pedimos compreensão.",
       "tipo": "Manutenção",
-      "local": "Elevador"
+      "prioridade": "alta",
+      "inicio": "2026-01-20T14:00:00-03:00",
+      "fim": "2026-01-20T17:00:00-03:00",
+      "local": "Bloco A",
+      "fixoAteFim": true
     },
     {
+      "id": "coleta-seletiva",
       "titulo": "Coleta seletiva",
-      "descricao": "Lembre-se de separar corretamente os resíduos recicláveis.",
+      "descricao": "Separar recicláveis e orgânicos. Sacos bem fechados.",
       "tipo": "Convivência",
-      "local": "Lixeira/Coleta"
+      "prioridade": "media",
+      "inicio": "2026-01-01T00:00:00-03:00",
+      "fim": "2026-12-31T23:59:59-03:00",
+      "local": "Lixeiras"
+    },
+    {
+      "id": "agua",
+      "titulo": "Uso consciente de água",
+      "descricao": "Evite lavar calçadas com mangueira. Prefira balde.",
+      "tipo": "Economia",
+      "prioridade": "baixa",
+      "inicio": "2026-01-15T00:00:00-03:00",
+      "fim": "2026-02-15T23:59:59-03:00",
+      "local": "Áreas comuns"
     }
   ],
+
   "clima": {
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
     "longitude": -49.0144,
-    "timezone": "America/Sao_Paulo"
+    "timezone": "America/Sao_Paulo",
+    "alertaChuvaMin": 50,
+    "horasAlerta": 3
   }
 }
