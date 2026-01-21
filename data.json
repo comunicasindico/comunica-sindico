@@ -1,17 +1,19 @@
 {
   "titulo": "Comunica Síndico – Condomínio Bem Protegido",
   "avisos": [
-    {
-      "titulo": "Manutenção programada",
-      "texto": "A manutenção do elevador ocorrerá hoje das 14h às 17h."
-    },
-    {
-      "titulo": "Coleta seletiva",
-      "texto": "Lembre-se de separar corretamente os resíduos recicláveis."
-    }
+    { "titulo": "Manutenção programada", "texto": "A manutenção do elevador ocorrerá hoje das 14h às 17h." },
+    { "titulo": "Coleta seletiva", "texto": "Lembre-se de separar corretamente os resíduos recicláveis." }
   ],
   "rodape": {
     "esquerdo": "Bem Protegido • Comunicação Oficial",
     "direito": "Atualizado automaticamente"
+  },
+  "clima": {
+    "modo": "fixo",
+    "cidade": "Tubarão/SC",
+    "latitude": -28.4767,
+    "longitude": -49.0144,
+    "atualizarMin": 15,
+    "mostrarVento": true
   }
 }
