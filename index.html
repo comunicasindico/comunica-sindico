@@ -536,7 +536,7 @@
 
     div.innerHTML = `
       <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
-      <p class="d">${escapeHtml(a.descricao || "")}</p>
+      <p class="d">${escapeHtml(a.descricao || a.mensagem || "")}</p>
       ${tags.length ? `<div class="meta">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>` : ""}
     `;
     return div;
