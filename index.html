@@ -30,25 +30,23 @@
     .wrap{min-height:100%; padding:26px 26px 90px; display:flex; justify-content:center;}
     .container{width:min(1400px,96vw);}
 
-  /* =========================
-   PUBLICIDADE EM VÍDEO
-   ========================= */
-
-.anuncio video{
-  width:100%;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.15);
-  background:#000;
-}
-
-.anuncio{
-  animation: fadeIn .6s ease;
-}
-
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(8px)}
-  to{opacity:1; transform:translateY(0)}
-}
+    /* =========================
+       PUBLICIDADE EM VÍDEO
+       ========================= */
+    .anuncio video{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.15);
+      background:#000;
+      display:block;
+    }
+    .anuncio{
+      animation: fadeInUp .6s ease;
+    }
+    @keyframes fadeInUp{
+      from{opacity:0; transform:translateY(8px)}
+      to{opacity:1; transform:translateY(0)}
+    }
 
     .topbar{
       display:flex; align-items:center; justify-content:space-between; gap:14px;
@@ -156,9 +154,9 @@
       border:1px solid var(--line);
       border-radius:14px;
       background:rgba(7,20,34,.28);
-      animation:fadeIn .25s ease;
+      animation:fadeInAviso .25s ease;
     }
-    @keyframes fadeIn{
+    @keyframes fadeInAviso{
       from{opacity:0; transform:translateY(4px);}
       to{opacity:1; transform:translateY(0);}
     }
@@ -243,21 +241,23 @@
             <p class="label">Data</p>
             <p class="value" id="dataAgora">—</p>
           </div>
+
           <div class="mini">
             <p class="label">Hora</p>
             <p class="value big" id="horaAgora">—</p>
           </div>
-       <div class="mini anuncio">
-  <p class="label">Publicidade</p>
-  <video
-    id="adVideo"
-    src="ads/anuncio1.mp4"
-    autoplay
-    muted
-    loop
-    playsinline
-  ></video>
-</div>
+
+          <!-- ✅ PUBLICIDADE (JS usa estes IDs) -->
+          <div class="mini anuncio" id="adBox" style="display:none">
+            <p class="label" id="adLabel">Publicidade</p>
+            <video
+              id="adVideo"
+              autoplay
+              muted
+              loop
+              playsinline
+            ></video>
+          </div>
 
         </aside>
       </div>
@@ -282,12 +282,16 @@
     active:false, enabled:true, intervalMs:4000, blink:true, onlyHigh:true
   };
 
+  // ===== PUBLICIDADE =====
+  let adIdx = 0;
+  let adTimer = null;
+  let adCfgKey = ""; // para não reiniciar com a mesma config
+
   // ===== Init =====
   window.addEventListener("DOMContentLoaded", () => {
     initClock();
     loadAll();
     setInterval(loadAll, 60 * 1000);
-    initPublicidade(j.publicidade);
   });
 
   function initClock(){
@@ -314,6 +318,9 @@
     prepareRotation(j);
     renderAvisos(j);
     initWeatherOnce(j.clima);
+
+    // ✅ inicializa/atualiza publicidade com o JSON
+    initPublicidade(j.publicidade);
   }
 
   async function loadJson(){
@@ -336,6 +343,7 @@
         avisos:[],
         rotacao:{ativar:false},
         emergencia:{ativar:false},
+        publicidade:{ativar:false},
         clima:{cidade:"",latitude:-28.4767,longitude:-49.0144,timezone:"America/Sao_Paulo",alertaChuvaMin:50,horasAlerta:3}
       };
     }
@@ -408,13 +416,11 @@
 
   function computeActiveEmergency(j){
     if(!EMG.enabled) return { active:false, items:[] };
-
     const now = new Date();
     const items = (j.avisos || [])
       .filter(a => isAtivoAgora(a, now))
       .filter(a => String(a.prioridade || "").toLowerCase() === "alta")
       .filter(a => a.emergencia === true);
-
     return { active: items.length > 0, items };
   }
 
@@ -531,25 +537,20 @@
 
     // Se emergência ativa: mostra somente emergências
     if(EMG.active){
-      // Card pisca (opcional)
       card.classList.toggle("emgPulse", !!EMG.blink);
 
-      // Banner
       const banner = document.createElement("div");
       banner.className = "emgBanner";
       banner.innerHTML = `🚨 MODO EMERGÊNCIA ATIVO<small>Exibindo apenas comunicados urgentes</small>`;
       avisosEl.appendChild(banner);
 
-      // Lista emergências
       const list = emg.items.sort((a,b)=> prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
-      ROT.items = list;     // reaproveita motor de rotação
+      ROT.items = list;
       ROT.idx = 0;
 
-      // Render inicial
       getCurrentSlice(list, 1).forEach(a => avisosEl.appendChild(buildAvisoCard(a, "emgPulse")));
       ensureProgressUI();
 
-      // Rotação ultra rápida na emergência (EMG.intervalMs)
       startRotation(() => {
         avisosEl.innerHTML = "";
         avisosEl.appendChild(banner.cloneNode(true));
@@ -557,18 +558,13 @@
         ensureProgressUI();
       }, EMG.intervalMs);
 
-      // sem pausa no mouse em emergência (TV)
-      ROT.paused = false;
       avisosEl.onmouseenter = null;
       avisosEl.onmouseleave = null;
-
       return;
     }
 
-    // Sem emergência: remove pisca do card
     card.classList.remove("emgPulse");
 
-    // Tema do dia
     if(tema){
       const divTema = document.createElement("div");
       divTema.className = "tema";
@@ -576,7 +572,6 @@
       avisosEl.appendChild(divTema);
     }
 
-    // Sem avisos
     if(!ROT.items.length){
       const div = document.createElement("div");
       div.className = "aviso baixa";
@@ -587,7 +582,6 @@
       return;
     }
 
-    // Com rotação
     if(ROT.enabled && ROT.items.length > ROT.perScreen){
       getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
       ensureProgressUI();
@@ -615,7 +609,6 @@
       return;
     }
 
-    // Sem rotação: lista tudo
     stopRotation();
     ROT.items.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
     ensureProgressUI();
@@ -701,31 +694,46 @@
     atualizar();
     wxTimer = setInterval(atualizar, 10 * 60 * 1000);
   }
-  // ===== PUBLICIDADE EM VÍDEO =====
-let adIdx = 0;
-let adTimer = null;
 
-function initPublicidade(cfg){
-  if(!cfg || !cfg.ativar || !cfg.videos || !cfg.videos.length) return;
+  // ===== PUBLICIDADE EM VÍDEO (com data.json.publicidade) =====
+  function initPublicidade(cfg){
+    const box = document.getElementById("adBox");
+    const video = document.getElementById("adVideo");
+    const label = document.getElementById("adLabel");
 
-  const box = document.getElementById("adBox");
-  const video = document.getElementById("adVideo");
-  const label = document.getElementById("adLabel");
+    // Se não tiver config, esconde e para
+    if(!cfg || !cfg.ativar || !cfg.videos || !cfg.videos.length){
+      box.style.display = "none";
+      if(adTimer){ clearInterval(adTimer); adTimer = null; }
+      adCfgKey = "";
+      return;
+    }
 
-  box.style.display = "block";
+    // evita reiniciar se a config for igual
+    const key = JSON.stringify({i:cfg.intervaloSeg, v:cfg.videos});
+    if(adCfgKey === key && adTimer) return;
+    adCfgKey = key;
 
-  function playAd(){
-    const ad = cfg.videos[adIdx];
-    label.textContent = "Publicidade • " + (ad.anunciante || "");
-    video.src = ad.arquivo;
-    video.load();
-    video.play().catch(()=>{});
-    adIdx = (adIdx + 1) % cfg.videos.length;
+    // reinicia timer se existia
+    if(adTimer){ clearInterval(adTimer); adTimer = null; }
+
+    box.style.display = "block";
+    adIdx = 0;
+
+    const intervalMs = Math.max(8, Number(cfg.intervaloSeg || 15)) * 1000;
+
+    function playAd(){
+      const ad = cfg.videos[adIdx];
+      label.textContent = "Publicidade" + (ad?.anunciante ? " • " + ad.anunciante : "");
+      video.src = ad?.arquivo || "";
+      video.load();
+      video.play().catch(()=>{});
+      adIdx = (adIdx + 1) % cfg.videos.length;
+    }
+
+    playAd();
+    adTimer = setInterval(playAd, intervalMs);
   }
-
-  playAd();
-  adTimer = setInterval(playAd, Math.max(8, cfg.intervaloSeg) * 1000);
-}
 
 </script>
 
