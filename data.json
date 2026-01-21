@@ -1,7 +1,7 @@
 [
   {
     "id": "633abfb3-d457-430f-bd82-a6b2104ad002",
-    "titulo": "Teste de Emerg?ncia",
+    "titulo": "Teste de Emergência",
     "descricao": "Urgente",
     "prioridade": "alta",
     "tipo": "Comunicado",
@@ -12,55 +12,69 @@
   },
   {
     "id": "fb4c0bd7-1646-4fbf-ac0b-09d25ff58b66",
-    "titulo": "teste com emergencia",
-    "mensagem": "urgente",
-    "prioridade": "Emerg?ncia",
+    "titulo": "Teste com emergência",
+    "descricao": "Urgente",
+    "prioridade": "alta",
+    "tipo": "Comunicado",
     "local": "Elevadores",
+    "inicio": "",
+    "fim": "",
+    "emergencia": true,
     "criadoEm": "2026-01-21T23:18:07.730Z",
     "ativo": true
   },
   {
     "id": "eb08c1ff-4054-4a3d-a455-f1b160f50be2",
-    "titulo": "teste com emergencia",
-    "mensagem": "urgente",
-    "prioridade": "Emerg?ncia",
+    "titulo": "Teste com emergência",
+    "descricao": "Urgente",
+    "prioridade": "alta",
+    "tipo": "Comunicado",
     "local": "Elevadores",
+    "inicio": "",
+    "fim": "",
+    "emergencia": true,
     "criadoEm": "2026-01-21T23:15:04.158Z",
     "ativo": true
   },
   {
     "id": "4b821c03-b67a-4400-a47a-9a7d2f340e38",
-    "titulo": "teste 2",
-    "mensagem": "alterado",
-    "prioridade": "M?dia",
+    "titulo": "Teste 2",
+    "descricao": "Alterado",
+    "prioridade": "media",
+    "tipo": "Comunicado",
     "local": "Garagem",
+    "inicio": "",
+    "fim": "",
+    "emergencia": false,
     "criadoEm": "2026-01-21T23:13:51.506Z",
     "ativo": true
   },
   {
-    "titulo": "Manuten??o programada",
-    "descricao": "A manuten??o do elevador ocorrer? hoje das 14h ?s 17h.",
+    "titulo": "Manutenção programada",
+    "descricao": "A manutenção do elevador ocorrerá hoje das 14h às 17h.",
     "prioridade": "alta",
-    "tipo": "Manuten??o",
+    "tipo": "Manutenção",
     "local": "Elevador",
     "inicio": "2026-01-21T14:00:00-03:00",
-    "fim": "2026-01-21T17:00:00-20:00",
-    "emergencia": false
+    "fim": "2026-01-21T17:00:00-03:00",
+    "emergencia": false,
+    "ativo": true
   },
   {
     "titulo": "Coleta seletiva",
-    "descricao": "Lembre-se de separar corretamente os res?duos recicl?veis.",
+    "descricao": "Lembre-se de separar corretamente os resíduos recicláveis.",
     "prioridade": "media",
-    "tipo": "Conviv?ncia",
+    "tipo": "Convivência",
     "local": "Lixeira/Coleta",
-    "emergencia": false
+    "inicio": "",
+    "fim": "",
+    "emergencia": false,
+    "ativo": true
   },
   {
-    "titulo": "Alerta ? Vazamento (aten??o imediata)",
-    "descricao": "Evite usar o local at? nova orienta??o. Equipe acionada.",
+    "titulo": "Alerta – Vazamento (atenção imediata)",
+    "descricao": "Evite usar o local até nova orientação. Equipe acionada.",
     "prioridade": "alta",
-    "tipo": "Seguran?a",
+    "tipo": "Segurança",
     "local": "Hall / Corredor",
-    "emergencia": true
-  }
-]
+    "in
