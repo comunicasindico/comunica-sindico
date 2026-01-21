@@ -1,90 +1,37 @@
-{
-  "titulo": "Comunica Síndico – Condomínio Bem Protegido",
-  "subtitulo": "Painel informativo • Atualização automática",
-  "referencia": "Programa no auxílio de informações do(a) Síndico(a) aos condôminos",
-
-  "temaDoDia": {
-    "modo": "automatico",
-    "temasPorDiaSemana": {
-      "segunda": { "titulo": "Organização", "frase": "Comece a semana com tudo no lugar." },
-      "terca": { "titulo": "Convivência", "frase": "Respeito e bom senso deixam o condomínio melhor." },
-      "quarta": { "titulo": "Segurança", "frase": "Feche portões e confirme visitantes." },
-      "quinta": { "titulo": "Manutenção", "frase": "Pequenos cuidados evitam grandes problemas." },
-      "sexta": { "titulo": "Comunicação", "frase": "Avisos claros evitam ruídos." },
-      "sabado": { "titulo": "Lazer", "frase": "Use as áreas comuns com responsabilidade." },
-      "domingo": { "titulo": "Tranquilidade", "frase": "Boa vizinhança é paz para todos." }
-    }
+[
+  {
+    "id": "4b821c03-b67a-4400-a47a-9a7d2f340e38",
+    "titulo": "teste 2",
+    "mensagem": "alterado",
+    "prioridade": "M?dia",
+    "local": "Garagem",
+    "criadoEm": "2026-01-21T23:13:51.506Z",
+    "ativo": true
   },
-
-  "avisos": [
-    {
-      "titulo": "Manutenção programada",
-      "descricao": "A manutenção do elevador ocorrerá hoje das 14h às 17h.",
-      "prioridade": "alta",
-      "tipo": "Manutenção",
-      "local": "Elevador",
-      "inicio": "2026-01-21T14:00:00-03:00",
-      "fim": "2026-01-21T17:00:00-20:00",
-      "emergencia": false
-    },
-    {
-      "titulo": "Coleta seletiva",
-      "descricao": "Lembre-se de separar corretamente os resíduos recicláveis.",
-      "prioridade": "media",
-      "tipo": "Convivência",
-      "local": "Lixeira/Coleta",
-      "emergencia": false
-    },
-    {
-      "titulo": "Alerta – Vazamento (atenção imediata)",
-      "descricao": "Evite usar o local até nova orientação. Equipe acionada.",
-      "prioridade": "alta",
-      "tipo": "Segurança",
-      "local": "Hall / Corredor",
-      "emergencia": true
-    }
-  ],
-
-  "rotacao": {
-    "ativar": true,
-    "intervaloSeg": 12,
-    "pausarNoMouse": true,
-    "mostrarProgresso": true,
-    "quantidadePorTela": 1
+  {
+    "titulo": "Manuten??o programada",
+    "descricao": "A manuten??o do elevador ocorrer? hoje das 14h ?s 17h.",
+    "prioridade": "alta",
+    "tipo": "Manuten??o",
+    "local": "Elevador",
+    "inicio": "2026-01-21T14:00:00-03:00",
+    "fim": "2026-01-21T17:00:00-20:00",
+    "emergencia": false
   },
-
-  "emergencia": {
-    "ativar": true,
-    "intervaloSeg": 4,
-    "piscar": true,
-    "somenteAlta": true
+  {
+    "titulo": "Coleta seletiva",
+    "descricao": "Lembre-se de separar corretamente os res?duos recicl?veis.",
+    "prioridade": "media",
+    "tipo": "Conviv?ncia",
+    "local": "Lixeira/Coleta",
+    "emergencia": false
   },
-
-  "clima": {
-    "cidade": "Tubarão/SC",
-    "latitude": -28.4767,
-    "longitude": -49.0144,
-    "timezone": "America/Sao_Paulo",
-    "alertaChuvaMin": 50,
-    "horasAlerta": 3
-  },
-
-  "publicidade": {
-    "ativar": true,
-    "intervaloSeg": 15,
-    "videos": [
-      {
-        "arquivo": "ads/anuncio_padaria.mp4",
-        "anunciante": "Livro SWOT Cristão"
-      },
-      {
-        "arquivo": "ads/anuncio_farmacia.MP4",
-        "anunciante": "Parque da Disney nos EUA"
-      },
-      {
-        "arquivo": "ads/anuncio_imobiliaria.mp4",
-        "anunciante": "Imobiliária Bem Viver"
-      }
-    ]
+  {
+    "titulo": "Alerta ? Vazamento (aten??o imediata)",
+    "descricao": "Evite usar o local at? nova orienta??o. Equipe acionada.",
+    "prioridade": "alta",
+    "tipo": "Seguran?a",
+    "local": "Hall / Corredor",
+    "emergencia": true
   }
-}
+]
