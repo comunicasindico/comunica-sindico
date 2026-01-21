@@ -30,6 +30,19 @@
     .wrap{min-height:100%; padding:26px 26px 90px; display:flex; justify-content:center;}
     .container{width:min(1400px,96vw);}
 
+  /* =========================
+   PUBLICIDADE EM VÍDEO
+   ========================= */
+
+.anuncio video{
+  width:100%;
+  max-height:260px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.15);
+  background:#000;
+  object-fit:cover;
+}
+
     .topbar{
       display:flex; align-items:center; justify-content:space-between; gap:14px;
       padding:18px 20px;
@@ -227,6 +240,18 @@
             <p class="label">Hora</p>
             <p class="value big" id="horaAgora">—</p>
           </div>
+       <div class="mini anuncio">
+  <p class="label">Publicidade</p>
+  <video
+    id="adVideo"
+    src="ads/anuncio1.mp4"
+    autoplay
+    muted
+    loop
+    playsinline
+  ></video>
+</div>
+
         </aside>
       </div>
 
