@@ -61,6 +61,19 @@
       "local": "Elevador / Bloco A",
       "fixoAteFim": true
     },
+{
+
+  "id": "ALERTA-GAS",
+  "titulo": "🚨 ALERTA: Vazamento de gás (exemplo)",
+  "descricao": "Evite acionar interruptores. Acione a administração/brigada.",
+  "tipo": "Emergência",
+  "prioridade": "alta",
+  "emergencia": true,
+  "inicio": "2026-01-20T10:00:00-03:00",
+  "fim": "2026-01-20T23:59:59-03:00",
+  "local": "Hall / Corredores",
+  "fixoAteFim": true
+}
 
     {
       "id": "agua-economia",
@@ -124,6 +137,13 @@
   "pausarNoMouse": true,
   "mostrarProgresso": true,
   "quantidadePorTela": 1
+},
+
+  "emergencia": {
+  "ativar": true,
+  "intervaloSeg": 4,
+  "piscar": true,
+  "somenteAlta": true
 },
 
   "clima": {
