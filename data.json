@@ -15,5 +15,6 @@
     "longitude": -49.0144,
     "atualizarMin": 15,
     "mostrarVento": true
+    "alertaChuva": true
   }
 }
