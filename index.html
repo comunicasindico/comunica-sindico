@@ -27,7 +27,7 @@
         linear-gradient(180deg, var(--bg1), var(--bg2));
     }
 
-    .wrap{min-height:100%; padding:26px 26px 74px; display:flex; justify-content:center;}
+    .wrap{min-height:100%; padding:26px 26px 90px; display:flex; justify-content:center;}
     .container{width:min(1400px,96vw);}
 
     .topbar{
@@ -78,25 +78,55 @@
       background:rgba(7,20,34,.25);
     }
 
-    .avisos{padding:16px 18px 18px; min-height:520px; display:flex; flex-direction:column; gap:12px;}
+    /* área de avisos */
+    .avisos{
+      padding:16px 18px 18px;
+      min-height:520px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      position:relative;
+    }
+
+    /* progresso da rotação */
+    .progressWrap{
+      position:absolute;
+      left:18px; right:18px; top:10px;
+      height:6px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+      background:rgba(0,0,0,.18);
+    }
+    .progressBar{
+      height:100%;
+      width:0%;
+      background:rgba(119,182,255,.95);
+      transition:width .2s linear;
+    }
+
     .aviso{
-      padding:14px;
+      padding:16px 16px;
       border:1px solid var(--line);
       border-radius:14px;
       background:rgba(7,20,34,.28);
+      animation:fadeIn .35s ease;
+    }
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(6px);}
+      to{opacity:1; transform:translateY(0);}
     }
     .aviso.alta{border-color: rgba(255,80,80,.55); box-shadow: 0 0 0 1px rgba(255,80,80,.35) inset;}
     .aviso.media{border-color: rgba(255,200,70,.40); box-shadow: 0 0 0 1px rgba(255,200,70,.25) inset;}
     .aviso.baixa{border-color: rgba(120,190,255,.35); box-shadow: 0 0 0 1px rgba(120,190,255,.18) inset;}
 
-    .aviso .t{margin:0 0 6px; font-weight:900; font-size:16px;}
-    .aviso .d{margin:0; color:var(--muted); font-weight:650; line-height:1.35;}
+    .aviso .t{margin:0 0 8px; font-weight:900; font-size:18px; letter-spacing:.15px;}
+    .aviso .d{margin:0; color:var(--muted); font-weight:650; line-height:1.35; font-size:15px;}
 
-    .meta{margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:rgba(234,242,255,.82);}
+    .meta{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:rgba(234,242,255,.82);}
     .tag{padding:6px 8px; border-radius:999px; border:1px solid var(--line); background:rgba(12,35,56,.35);}
 
     .tema{
-      margin-top:12px;
       padding:12px 14px;
       border-radius:14px;
       border:1px dashed rgba(255,255,255,.18);
@@ -131,6 +161,8 @@
     @media(max-width:980px){
       .grid{grid-template-columns:1fr;}
       .avisos{min-height:420px;}
+      .aviso .t{font-size:17px;}
+      .aviso .d{font-size:14px;}
     }
   </style>
 </head>
@@ -157,7 +189,9 @@
             <div class="pill" id="refData">—</div>
           </div>
 
-          <div class="avisos" id="avisos"></div>
+          <div class="avisos" id="avisos">
+            <!-- progresso da rotação (opcional, criado via JS) -->
+          </div>
         </section>
 
         <aside class="side">
@@ -181,12 +215,29 @@
   </div>
 
 <script>
+  // ===== Estado global da rotação =====
+  const ROT = {
+    enabled: false,
+    intervalMs: 12000,
+    pauseOnHover: true,
+    showProgress: true,
+    perScreen: 1,
+
+    timer: null,
+    progressTimer: null,
+    idx: 0,
+    paused: false,
+    items: []
+  };
+
+  // ===== Init =====
   window.addEventListener("DOMContentLoaded", () => {
     initClock();
     loadAll();
-    setInterval(loadAll, 60 * 1000); // revalida avisos a cada 1 min
+    setInterval(loadAll, 60 * 1000); // revalida avisos e validade a cada 1 min
   });
 
+  // ===== Relógio =====
   function initClock(){
     const elData = document.getElementById("dataAgora");
     const elHora = document.getElementById("horaAgora");
@@ -204,11 +255,13 @@
     tick(); setInterval(tick, 1000);
   }
 
+  // ===== Carrega JSON + renderiza =====
   async function loadAll(){
     const j = await loadJson();
     renderHeader(j);
-    renderAvisos(j);
-    initWeather(j.clima);
+    prepareRotation(j);
+    renderAvisos(j);            // renderiza 1º frame (ou lista inteira)
+    initWeatherOnce(j.clima);   // cria timer do clima só uma vez
   }
 
   async function loadJson(){
@@ -229,6 +282,7 @@
         referencia:"",
         temaDoDia:{modo:"automatico",temasPorDiaSemana:{}},
         avisos:[],
+        rotacao:{ativar:false},
         clima:{cidade:"",latitude:-28.4767,longitude:-49.0144,timezone:"America/Sao_Paulo",alertaChuvaMin:50,horasAlerta:3}
       };
     }
@@ -240,54 +294,18 @@
     document.getElementById("refData").textContent = j.referencia ? ("Ref.: " + j.referencia) : "Atualizado hoje";
   }
 
-  function renderAvisos(j){
-    const avisosEl = document.getElementById("avisos");
-    avisosEl.innerHTML = "";
-
-    // Tema do dia
-    const tema = resolveTemaDoDia(j.temaDoDia);
-    if(tema){
-      const divTema = document.createElement("div");
-      divTema.className = "tema";
-      divTema.innerHTML = `<b>Tema do dia:</b> ${escapeHtml(tema.titulo)}<span class="small">${escapeHtml(tema.frase || "")}</span>`;
-      avisosEl.appendChild(divTema);
-    }
-
-    // Filtra por validade
-    const now = new Date();
-    const ativos = (j.avisos || [])
-      .filter(a => isAtivoAgora(a, now))
-      .sort((a,b)=> prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade)); // alta primeiro
-
-    if(!ativos.length){
-      const div = document.createElement("div");
-      div.className = "aviso baixa";
-      div.innerHTML = `<p class="t">Sem avisos ativos</p><p class="d">Quando houver comunicados, eles aparecerão aqui automaticamente.</p>`;
-      avisosEl.appendChild(div);
-      return;
-    }
-
-    for(const a of ativos){
-      const p = (a.prioridade || "baixa").toLowerCase();
-      const div = document.createElement("div");
-      div.className = `aviso ${p}`;
-
-      const janela = formatJanela(a);
-      const tags = [];
-
-      if(a.tipo) tags.push(`🏷️ ${a.tipo}`);
-      if(a.local) tags.push(`📍 ${a.local}`);
-      if(janela) tags.push(`🕒 ${janela}`);
-
-      div.innerHTML = `
-        <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
-        <p class="d">${escapeHtml(a.descricao || "")}</p>
-        ${tags.length ? `<div class="meta">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>` : ""}
-      `;
-      avisosEl.appendChild(div);
-    }
+  // ===== Tema do dia =====
+  function resolveTemaDoDia(td){
+    if(!td || td.modo !== "automatico") return null;
+    const map = td.temasPorDiaSemana || {};
+    const dia = new Intl.DateTimeFormat("pt-BR",{weekday:"long"}).format(new Date())
+      .toLowerCase()
+      .replace("-feira","")
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    return map[dia] || null;
   }
 
+  // ===== Avisos: validade + prioridade =====
   function prioridadeRank(p){
     const s = String(p || "baixa").toLowerCase();
     if(s === "alta") return 0;
@@ -296,47 +314,30 @@
   }
 
   function isAtivoAgora(a, now){
-    // Se não tiver datas, considera sempre ativo
     const ini = a.inicio ? new Date(a.inicio) : null;
     const fim = a.fim ? new Date(a.fim) : null;
-
     if(ini && now < ini) return false;
     if(fim && now > fim) return false;
     return true;
   }
 
   function formatJanela(a){
-    // mostra HH:MM–HH:MM se datas forem do mesmo dia
     if(!a.inicio && !a.fim) return "";
     try{
       const ini = a.inicio ? new Date(a.inicio) : null;
       const fim = a.fim ? new Date(a.fim) : null;
-
-      const sameDay = ini && fim &&
-        ini.getFullYear()===fim.getFullYear() &&
-        ini.getMonth()===fim.getMonth() &&
-        ini.getDate()===fim.getDate();
-
       const fmtHM = (d)=> new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(d);
-
-      if(sameDay) return `${fmtHM(ini)}–${fmtHM(fim)}`;
-      if(ini && fim) return `${fmtHM(ini)} até ${fmtHM(fim)}`;
+      if(ini && fim){
+        const sameDay =
+          ini.getFullYear()===fim.getFullYear() &&
+          ini.getMonth()===fim.getMonth() &&
+          ini.getDate()===fim.getDate();
+        return sameDay ? `${fmtHM(ini)}–${fmtHM(fim)}` : `${fmtHM(ini)} até ${fmtHM(fim)}`;
+      }
       if(ini) return `a partir de ${fmtHM(ini)}`;
       if(fim) return `até ${fmtHM(fim)}`;
       return "";
     }catch{ return ""; }
-  }
-
-  function resolveTemaDoDia(td){
-    if(!td || td.modo !== "automatico") return null;
-    const map = td.temasPorDiaSemana || {};
-    const dia = new Intl.DateTimeFormat("pt-BR",{weekday:"long"}).format(new Date())
-      .toLowerCase()
-      .replace("-feira","")
-      .normalize("NFD").replace(/[\u0300-\u036f]/g,""); // remove acentos
-
-    // normaliza chaves esperadas (domingo, segunda, terca, quarta, quinta, sexta, sabado)
-    return map[dia] || null;
   }
 
   function escapeHtml(s){
@@ -345,10 +346,171 @@
     }[m]));
   }
 
-  // ===== CLIMA (com ícone + max/mín + alerta de chuva + cor) =====
+  // ===== Rotação (2.5) =====
+  function prepareRotation(j){
+    const cfg = j.rotacao || {};
+    ROT.enabled = !!cfg.ativar;
+    ROT.intervalMs = Math.max(4000, Number(cfg.intervaloSeg || 12) * 1000);
+    ROT.pauseOnHover = cfg.pausarNoMouse !== false;
+    ROT.showProgress = cfg.mostrarProgresso !== false;
+    ROT.perScreen = Math.max(1, Math.min(3, Number(cfg.quantidadePorTela || 1)));
+
+    const now = new Date();
+    ROT.items = (j.avisos || [])
+      .filter(a => isAtivoAgora(a, now))
+      .sort((a,b) => prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
+
+    // reinicia rotação quando o conjunto de avisos mudar (por validade / edição)
+    ROT.idx = 0;
+    stopRotation();
+  }
+
+  function stopRotation(){
+    if(ROT.timer){ clearInterval(ROT.timer); ROT.timer = null; }
+    if(ROT.progressTimer){ clearInterval(ROT.progressTimer); ROT.progressTimer = null; }
+  }
+
+  function startRotation(renderFn){
+    stopRotation();
+    if(!ROT.enabled) return;
+    if(ROT.items.length <= ROT.perScreen) return;
+
+    ROT.paused = false;
+
+    // Avança slide
+    ROT.timer = setInterval(()=>{
+      if(ROT.paused) return;
+      ROT.idx = (ROT.idx + ROT.perScreen) % ROT.items.length;
+      renderFn();
+      resetProgress();
+    }, ROT.intervalMs);
+
+    resetProgress();
+  }
+
+  function ensureProgressUI(){
+    const avisosEl = document.getElementById("avisos");
+    let wrap = document.getElementById("progressWrap");
+    if(!ROT.showProgress){
+      if(wrap) wrap.remove();
+      return null;
+    }
+    if(!wrap){
+      wrap = document.createElement("div");
+      wrap.className = "progressWrap";
+      wrap.id = "progressWrap";
+      wrap.innerHTML = `<div class="progressBar" id="progressBar"></div>`;
+      avisosEl.appendChild(wrap);
+    }
+    return wrap;
+  }
+
+  function resetProgress(){
+    if(!ROT.showProgress) return;
+    const bar = document.getElementById("progressBar");
+    if(!bar) return;
+
+    bar.style.width = "0%";
+    const start = Date.now();
+    const duration = ROT.intervalMs;
+
+    if(ROT.progressTimer) clearInterval(ROT.progressTimer);
+    ROT.progressTimer = setInterval(()=>{
+      if(ROT.paused) return;
+      const p = Math.min(100, ((Date.now() - start) / duration) * 100);
+      bar.style.width = p.toFixed(1) + "%";
+      if(p >= 100) clearInterval(ROT.progressTimer);
+    }, 200);
+  }
+
+  // ===== Render avisos (com ou sem rotação) =====
+  function renderAvisos(j){
+    const avisosEl = document.getElementById("avisos");
+    avisosEl.innerHTML = "";
+
+    // tema do dia
+    const tema = resolveTemaDoDia(j.temaDoDia);
+    if(tema){
+      const divTema = document.createElement("div");
+      divTema.className = "tema";
+      divTema.innerHTML = `<b>Tema do dia:</b> ${escapeHtml(tema.titulo)}<span class="small">${escapeHtml(tema.frase || "")}</span>`;
+      avisosEl.appendChild(divTema);
+    }
+
+    // nenhum aviso
+    if(!ROT.items.length){
+      const div = document.createElement("div");
+      div.className = "aviso baixa";
+      div.innerHTML = `<p class="t">Sem avisos ativos</p><p class="d">Quando houver comunicados, eles aparecerão aqui automaticamente.</p>`;
+      avisosEl.appendChild(div);
+      ensureProgressUI();
+      return;
+    }
+
+    // modo rotação: mostra só o "frame" atual
+    if(ROT.enabled && ROT.items.length > ROT.perScreen){
+      const slice = getCurrentSlice();
+      slice.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+      ensureProgressUI();
+
+      // pausa no mouse
+      if(ROT.pauseOnHover){
+        avisosEl.onmouseenter = () => { ROT.paused = true; };
+        avisosEl.onmouseleave = () => { ROT.paused = false; };
+      }
+      startRotation(() => {
+        // re-render rápido do frame
+        avisosEl.innerHTML = "";
+        if(tema){
+          const divTema2 = document.createElement("div");
+          divTema2.className = "tema";
+          divTema2.innerHTML = `<b>Tema do dia:</b> ${escapeHtml(tema.titulo)}<span class="small">${escapeHtml(tema.frase || "")}</span>`;
+          avisosEl.appendChild(divTema2);
+        }
+        getCurrentSlice().forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+        ensureProgressUI();
+      });
+
+      return;
+    }
+
+    // modo normal: lista completa (sem rotação)
+    ROT.items.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+    ensureProgressUI();
+  }
+
+  function getCurrentSlice(){
+    const out = [];
+    for(let k=0; k<ROT.perScreen; k++){
+      out.push(ROT.items[(ROT.idx + k) % ROT.items.length]);
+    }
+    return out;
+  }
+
+  function buildAvisoCard(a){
+    const p = (a.prioridade || "baixa").toLowerCase();
+    const div = document.createElement("div");
+    div.className = `aviso ${p}`;
+
+    const janela = formatJanela(a);
+    const tags = [];
+    if(a.tipo) tags.push(`🏷️ ${a.tipo}`);
+    if(a.local) tags.push(`📍 ${a.local}`);
+    if(janela) tags.push(`🕒 ${janela}`);
+
+    div.innerHTML = `
+      <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
+      <p class="d">${escapeHtml(a.descricao || "")}</p>
+      ${tags.length ? `<div class="meta">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>` : ""}
+    `;
+    return div;
+  }
+
+  // ===== Clima (uma vez) =====
   let wxTimer = null;
-  function initWeather(cfg){
-    if(wxTimer) return; // evita criar vários timers (pois loadAll roda a cada minuto)
+  function initWeatherOnce(cfg){
+    if(wxTimer) return;
+
     const bar  = document.getElementById("wxbar");
     const icon = document.getElementById("wxIcon");
     const text = document.getElementById("wxText");
