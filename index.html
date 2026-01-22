@@ -357,26 +357,39 @@
     }
   }
 
-  function renderHeader(j){
+ async function renderHeader(j){
   document.getElementById("titulo").textContent = j.titulo || "Comunica Síndico";
   document.getElementById("subtitulo").textContent = j.subtitulo || "Painel informativo";
 
   const refEl = document.getElementById("refData");
 
-  // Referência bíblica automática
-  if(j.referencia && typeof j.referencia === "object" && j.referencia.modo === "biblico-diario"){
-    const hoje = new Intl.DateTimeFormat("pt-BR",{weekday:"long"})
-      .format(new Date())
-      .toLowerCase()
-      .replace("-feira","")
-      .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  // Se não for modo bíblico anual, mantém comportamento atual
+  if(!(j.referencia && typeof j.referencia === "object" && j.referencia.modo === "biblico-anual")){
+    refEl.textContent = j.referencia ? ("Ref.: " + j.referencia) : "Atualizado hoje";
+    return;
+  }
 
-    const v = (j.referencia.versiculos || []).find(x => x.dia === hoje);
-    refEl.textContent = v ? v.texto : "“O Senhor é bom em todo o tempo.”";
-  } else {
-    refEl.textContent = j.referencia
-      ? ("Ref.: " + j.referencia)
-      : "Atualizado hoje";
+  // Modo bíblico anual: busca versículo do dia em versiculos.json
+  try{
+    const arquivo = j.referencia.arquivo || "./versiculos.json";
+    const fallback = j.referencia.fallback || "Versículo do dia";
+
+    const now = new Date();
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const dd = String(now.getDate()).padStart(2, "0");
+    const key = `${mm}-${dd}`;
+
+    const r = await fetch(arquivo + "?ts=" + Date.now(), { cache:"no-store" });
+    if(!r.ok) throw new Error("HTTP " + r.status);
+
+    const v = await r.json();
+    const texto = v?.versos?.[key] || fallback;
+
+    refEl.textContent = texto;
+
+  }catch(e){
+    console.error("Falha ao carregar versículos:", e);
+    refEl.textContent = j.referencia.fallback || "Versículo do dia";
   }
 }
 
