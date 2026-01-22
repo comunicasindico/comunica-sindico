@@ -2,10 +2,10 @@
   "titulo": "Comunica Síndico – Condomínio",
   "subtitulo": "Painel informativo • Atualização automática",
   "referencia": {
-  "modo": "biblico-anual",
-  "arquivo": "./versiculos.json",
-  "fallback": "Você tem valor. Valorize o que você tem."
-},
+    "modo": "biblico-anual",
+    "arquivo": "./versiculos.json",
+    "fallback": "Você tem valor. Valorize o que você tem."
+  },
   "rotacao": {
     "ativar": false,
     "intervaloSeg": 12,
@@ -24,17 +24,16 @@
     "temasPorDiaSemana": {}
   },
   "publicidade": {
-  "ativar": true,
-  "intervaloSeg": 15,
-  "videos": [
-    { "arquivo": "./ads/eua_larissa_luisa.mp4", "anunciante": "Parque da Disney - EUA" },
-    { "arquivo": "./ads/swotp.mp4", "anunciante": "SWOT Cristão – Português" },
-    { "arquivo": "./ads/paty_eua.mp4", "anunciante": "Paty nos EUA" },
-    { "arquivo": "./ads/disney_parque.mp4", "anunciante": "Disney Parque Larissa – 1 ano" },
-    { "arquivo": "./ads/swoth.mp4", "anunciante": "SWOT Cristão – Hebraico" },
-    { "arquivo": "./ads/swot_portugues.mp4", "anunciante": "SWOT Cristão – " }
-     ]
-},
+    "ativar": true,
+    "intervaloSeg": 15,
+    "videos": [
+      { "arquivo": "./ads/eua_larissa_luisa.mp4", "anunciante": "Parque da Disney - EUA" },
+      { "arquivo": "./ads/swot_portugues.mp4", "anunciante": "SWOT Cristão – Português" },
+      { "arquivo": "./ads/paty_eua.mp4", "anunciante": "Paty nos EUA" },
+      { "arquivo": "./ads/disney_parque.mp4", "anunciante": "Disney Parque" },
+      { "arquivo": "./ads/swot_hebraico.mp4", "anunciante": "SWOT Cristão – Hebraico" }
+    ]
+  },
   "clima": {
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
@@ -51,7 +50,7 @@
       "prioridade": "alta",
       "tipo": "Segurança",
       "local": "Área técnica / Central de gás",
-      "inicio": "2026-01-21T08:00:00-03:00",
+      "inicio": "2026-01-22T08:00:00-03:00",
       "fim": "2026-01-22T17:00:00-03:00",
       "emergencia": true
     },
@@ -62,7 +61,7 @@
       "prioridade": "media",
       "tipo": "Manutenção",
       "local": "Elevadores",
-      "inicio": "2026-01-21T08:00:00-03:00",
+      "inicio": "2026-01-25T08:00:00-03:00",
       "fim": "2026-01-25T17:00:00-03:00",
       "emergencia": false
     },
@@ -73,7 +72,7 @@
       "prioridade": "baixa",
       "tipo": "Lazer",
       "local": "Piscina e área de lazer",
-      "inicio": "2026-01-21T08:00:00-03:00",
+      "inicio": "2026-01-26T08:00:00-03:00",
       "fim": "2026-01-26T17:00:00-03:00",
       "emergencia": false
     },
@@ -84,7 +83,7 @@
       "prioridade": "baixa",
       "tipo": "Serviços",
       "local": "Hall de entrada e áreas externas",
-      "inicio": "2026-01-21T08:00:00-03:00",
+      "inicio": "2026-01-28T08:00:00-03:00",
       "fim": "2026-01-28T17:00:00-03:00",
       "emergencia": false
     }
