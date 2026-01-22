@@ -669,15 +669,37 @@
       avisosEl.appendChild(divTema);
     }
 
-    if(!ROT.items.length){
-      const div = document.createElement("div");
-      div.className = "aviso baixa";
-      div.innerHTML = `<p class="t">Sem avisos ativos</p><p class="d">Quando houver comunicados, eles aparecerão aqui automaticamente.</p>`;
-      avisosEl.appendChild(div);
-      ensureProgressUI();
-      stopRotation();
-      return;
-    }
+   if(!ROT.items.length){
+  const now = new Date();
+
+  // pega próximos avisos (começam no futuro)
+  const upcoming = (j.avisos || [])
+    .filter(a => a.inicio && !isNaN(new Date(a.inicio).getTime()))
+    .filter(a => new Date(a.inicio) > now)
+    .sort((a,b) => new Date(a.inicio) - new Date(b.inicio));
+
+  if(upcoming.length){
+    const divTema = document.createElement("div");
+    divTema.className = "tema";
+    divTema.innerHTML = `<b>Próximos avisos:</b><span class="small">Programados (ainda não iniciaram)</span>`;
+    avisosEl.appendChild(divTema);
+
+    upcoming.slice(0, 6).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+    ensureProgressUI();
+    stopRotation();
+    return;
+  }
+
+  // se nem próximos tiver, aí sim "sem avisos"
+  const div = document.createElement("div");
+  div.className = "aviso baixa";
+  div.innerHTML = `<p class="t">Sem avisos ativos</p><p class="d">Quando houver comunicados, eles aparecerão aqui automaticamente.</p>`;
+  avisosEl.appendChild(div);
+  ensureProgressUI();
+  stopRotation();
+  return;
+}
+
 
     if(ROT.enabled && ROT.items.length > ROT.perScreen){
       getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
