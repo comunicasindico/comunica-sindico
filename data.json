@@ -2,37 +2,9 @@
   "titulo": "Comunica Síndico – Condomínio",
   "subtitulo": "Painel informativo • Atualização automática",
   "referencia": {
-  "modo": "biblico-diario",
-  "versiculos": [
-    {
-      "dia": "domingo",
-      "texto": "“Este é o dia que o Senhor fez; regozijemo-nos e alegremo-nos nele.” (Salmos 118:24)"
-    },
-    {
-      "dia": "segunda",
-      "texto": "“Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.” (Provérbios 3:5)"
-    },
-    {
-      "dia": "terca",
-      "texto": "“O Senhor é a minha luz e a minha salvação; a quem temerei?” (Salmos 27:1)"
-    },
-    {
-      "dia": "quarta",
-      "texto": "“Entrega o teu caminho ao Senhor; confia nele, e ele tudo fará.” (Salmos 37:5)"
-    },
-    {
-      "dia": "quinta",
-      "texto": "“Tudo posso naquele que me fortalece.” (Filipenses 4:13)"
-    },
-    {
-      "dia": "sexta",
-      "texto": "“O Senhor te abençoe e te guarde.” (Números 6:24)"
-    },
-    {
-      "dia": "sabado",
-      "texto": "“Aquietai-vos e sabei que eu sou Deus.” (Salmos 46:10)"
-    }
-  ]
+  "modo": "biblico-anual",
+  "arquivo": "./versiculos.json",
+  "fallback": "“Este é o dia que o Senhor fez; regozijemo-nos e alegremo-nos nele.” (Salmos 118:24)"
 },
   "rotacao": {
     "ativar": false,
