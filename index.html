@@ -40,9 +40,7 @@
       background:#000;
       display:block;
     }
-    .anuncio{
-      animation: fadeInUp .6s ease;
-    }
+    .anuncio{ animation: fadeInUp .6s ease; }
     @keyframes fadeInUp{
       from{opacity:0; transform:translateY(8px)}
       to{opacity:1; transform:translateY(0)}
@@ -250,13 +248,7 @@
           <!-- ✅ PUBLICIDADE (JS usa estes IDs) -->
           <div class="mini anuncio" id="adBox" style="display:none">
             <p class="label" id="adLabel">Publicidade</p>
-            <video
-              id="adVideo"
-              autoplay
-              muted
-              loop
-              playsinline
-            ></video>
+            <video id="adVideo" autoplay muted loop playsinline></video>
           </div>
 
         </aside>
@@ -318,54 +310,52 @@
     prepareRotation(j);
     renderAvisos(j);
     initWeatherOnce(j.clima);
-
-    // ✅ inicializa/atualiza publicidade com o JSON
     initPublicidade(j.publicidade);
   }
 
- async function loadJson(){
-  const status = document.getElementById("statusJson");
-  status.textContent = "Carregando conteúdo…";
-  try{
-    const r = await fetch("./data.json?ts=" + Date.now(), { cache:"no-store" });
-    if(!r.ok) throw new Error("HTTP " + r.status);
+  async function loadJson(){
+    const status = document.getElementById("statusJson");
+    status.textContent = "Carregando conteúdo…";
+    try{
+      const r = await fetch("./data.json?ts=" + Date.now(), { cache:"no-store" });
+      if(!r.ok) throw new Error("HTTP " + r.status);
 
-    const raw = await r.json();
+      const raw = await r.json();
 
-    // ✅ Se data.json vier como ARRAY, converte para o objeto padrão do painel
-    const j = Array.isArray(raw)
-      ? {
-          titulo:"Comunica Síndico",
-          subtitulo:"Painel informativo • Atualização automática",
-          referencia:"",
-          temaDoDia:{ modo:"automatico", temasPorDiaSemana:{} },
-          avisos: raw,
-          rotacao:{ ativar:false },
-          emergencia:{ ativar:true, intervaloSeg:4, piscar:true, somenteAlta:true },
-          publicidade:{ ativar:false, videos:[], intervaloSeg:15 },
-          clima:{ cidade:"", latitude:-28.4767, longitude:-49.0144, timezone:"America/Sao_Paulo", alertaChuvaMin:50, horasAlerta:3 }
-        }
-      : raw;
+      // ✅ Se data.json vier como ARRAY, converte para o objeto padrão do painel
+      const j = Array.isArray(raw)
+        ? {
+            titulo:"Comunica Síndico",
+            subtitulo:"Painel informativo • Atualização automática",
+            referencia:"",
+            temaDoDia:{ modo:"automatico", temasPorDiaSemana:{} },
+            avisos: raw,
+            rotacao:{ ativar:false },
+            emergencia:{ ativar:true, intervaloSeg:4, piscar:true, somenteAlta:true },
+            publicidade:{ ativar:false, videos:[], intervaloSeg:15 },
+            clima:{ cidade:"", latitude:-28.4767, longitude:-49.0144, timezone:"America/Sao_Paulo", alertaChuvaMin:50, horasAlerta:3 }
+          }
+        : raw;
 
-    status.textContent = "Conteúdo atualizado";
-    return j;
+      status.textContent = "Conteúdo atualizado";
+      return j;
 
-  }catch(e){
-    console.error("Falha data.json:", e);
-    status.textContent = "Modo offline";
-    return {
-      titulo:"Comunica Síndico – Condomínio",
-      subtitulo:"Painel informativo • Atualização automática",
-      referencia:"",
-      temaDoDia:{modo:"automatico",temasPorDiaSemana:{}},
-      avisos:[],
-      rotacao:{ativar:false},
-      emergencia:{ativar:false},
-      publicidade:{ativar:false},
-      clima:{cidade:"",latitude:-28.4767,longitude:-49.0144,timezone:"America/Sao_Paulo",alertaChuvaMin:50,horasAlerta:3}
-    };
+    }catch(e){
+      console.error("Falha data.json:", e);
+      status.textContent = "Modo offline";
+      return {
+        titulo:"Comunica Síndico – Condomínio",
+        subtitulo:"Painel informativo • Atualização automática",
+        referencia:"",
+        temaDoDia:{modo:"automatico",temasPorDiaSemana:{}},
+        avisos:[],
+        rotacao:{ativar:false},
+        emergencia:{ativar:false},
+        publicidade:{ativar:false},
+        clima:{cidade:"",latitude:-28.4767,longitude:-49.0144,timezone:"America/Sao_Paulo",alertaChuvaMin:50,horasAlerta:3}
+      };
+    }
   }
-}
 
   function renderHeader(j){
     document.getElementById("titulo").textContent = j.titulo || "Comunica Síndico";
@@ -396,9 +386,16 @@
     return 2;
   }
 
+  // ✅ MAIS ROBUSTO: se a data vier inválida, não derruba o filtro
+  function safeDate(v){
+    if(!v) return null;
+    const d = new Date(v);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
   function isAtivoAgora(a, now){
-    const ini = a.inicio ? new Date(a.inicio) : null;
-    const fim = a.fim ? new Date(a.fim) : null;
+    const ini = safeDate(a.inicio);
+    const fim = safeDate(a.fim);
     if(ini && now < ini) return false;
     if(fim && now > fim) return false;
     return true;
@@ -407,8 +404,8 @@
   function formatJanela(a){
     if(!a.inicio && !a.fim) return "";
     try{
-      const ini = a.inicio ? new Date(a.inicio) : null;
-      const fim = a.fim ? new Date(a.fim) : null;
+      const ini = safeDate(a.inicio);
+      const fim = safeDate(a.fim);
       const fmtHM = (d)=> new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(d);
       if(ini && fim){
         const sameDay =
@@ -542,92 +539,66 @@
     return div;
   }
 
-  // ===== Render avisos com Emergência =====
+  // =========================================================
+  // ✅ ATUALIZAÇÃO PRINCIPAL:
+  // - Em modo emergência: mostra TODOS os avisos ativos juntos
+  //   (emergências no topo + demais abaixo), SEM rotação.
+  // - Fora da emergência: rotação segue normal (se ativada).
+  // =========================================================
   function renderAvisos(j){
     const avisosEl = document.getElementById("avisos");
     const card = document.getElementById("cardAvisos");
     avisosEl.innerHTML = "";
 
     const tema = resolveTemaDoDia(j.temaDoDia);
-
     const emg = computeActiveEmergency(j);
     EMG.active = emg.active;
 
-    // Se emergência ativa: mostra banner + emergências + (abaixo) avisos normais
-if(EMG.active){
-  card.classList.toggle("emgPulse", !!EMG.blink);
+    // Se emergência ativa: banner + emergências + demais avisos (todos juntos)
+    if(EMG.active){
+      card.classList.toggle("emgPulse", !!EMG.blink);
 
-  const banner = document.createElement("div");
-  banner.className = "emgBanner";
-  banner.innerHTML = `🚨 MODO EMERGÊNCIA ATIVO<small>Exibindo comunicados urgentes no topo</small>`;
-  avisosEl.appendChild(banner);
+      // ✅ em emergência: sem rotação (para não “sumir” avisos)
+      stopRotation();
 
-  // 1) Emergências (alta + emergencia=true + dentro da janela)
-  const emgList = emg.items
-    .slice()
-    .sort((a,b)=> prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
+      const banner = document.createElement("div");
+      banner.className = "emgBanner";
+      banner.innerHTML = `🚨 MODO EMERGÊNCIA ATIVO<small>Exibindo comunicados urgentes no topo</small>`;
+      avisosEl.appendChild(banner);
 
-  emgList.forEach(a => avisosEl.appendChild(buildAvisoCard(a, EMG.blink ? "emgPulse" : "")));
+      const emgList = emg.items
+        .slice()
+        .sort((a,b)=> prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
 
-  // separador simples
-  const sep = document.createElement("div");
-  sep.className = "tema";
-  sep.innerHTML = `<b>Demais avisos ativos:</b><span class="small">Comunicados gerais (não emergenciais)</span>`;
-  avisosEl.appendChild(sep);
+      emgList.forEach(a => avisosEl.appendChild(buildAvisoCard(a, EMG.blink ? "emgPulse" : "")));
 
-  // 2) Avisos normais (ativos agora) — exclui os que já são emergência
-  const now = new Date();
-  const normalList = (j.avisos || [])
-    .filter(a => isAtivoAgora(a, now))
-    .filter(a => !(String(a.prioridade || "").toLowerCase() === "alta" && a.emergencia === true))
-    .sort((a,b) => prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
+      const sep = document.createElement("div");
+      sep.className = "tema";
+      sep.innerHTML = `<b>Demais avisos ativos:</b><span class="small">Comunicados gerais (não emergenciais)</span>`;
+      avisosEl.appendChild(sep);
 
-  if(!normalList.length){
-    const div = document.createElement("div");
-    div.className = "aviso baixa";
-    div.innerHTML = `<p class="t">Sem avisos gerais ativos</p><p class="d">Somente comunicados de emergência estão ativos no momento.</p>`;
-    avisosEl.appendChild(div);
-    ensureProgressUI();
-    stopRotation();
-    return;
-  }
+      const now = new Date();
+      const normalList = (j.avisos || [])
+        .filter(a => isAtivoAgora(a, now))
+        .filter(a => !(String(a.prioridade || "").toLowerCase() === "alta" && a.emergencia === true))
+        .sort((a,b) => prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
 
-  // ✅ aqui você pode manter rotação normal (se quiser) só para os avisos gerais
-  ROT.items = normalList;
-  ROT.idx = 0;
-  stopRotation();
+      if(!normalList.length){
+        const div = document.createElement("div");
+        div.className = "aviso baixa";
+        div.innerHTML = `<p class="t">Sem avisos gerais ativos</p><p class="d">Somente comunicados de emergência estão ativos no momento.</p>`;
+        avisosEl.appendChild(div);
+        ensureProgressUI();
+        return;
+      }
 
-  if(ROT.enabled && ROT.items.length > ROT.perScreen){
-    getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-    ensureProgressUI();
-
-    if(ROT.pauseOnHover){
-      avisosEl.onmouseenter = () => { ROT.paused = true; };
-      avisosEl.onmouseleave = () => { ROT.paused = false; };
-    }else{
-      avisosEl.onmouseenter = null;
-      avisosEl.onmouseleave = null;
+      // ✅ MOSTRA TODOS (sem rotação)
+      normalList.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+      ensureProgressUI();
+      return;
     }
 
-    startRotation(() => {
-      avisosEl.innerHTML = "";
-      avisosEl.appendChild(banner.cloneNode(true));
-      emgList.forEach(a => avisosEl.appendChild(buildAvisoCard(a, EMG.blink ? "emgPulse" : "")));
-      avisosEl.appendChild(sep.cloneNode(true));
-      getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-      ensureProgressUI();
-    }, ROT.intervalMs);
-
-    return;
-  }
-
-  // Sem rotação: lista tudo
-  ROT.items.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-  ensureProgressUI();
-  return;
-}
-
-
+    // Sem emergência
     card.classList.remove("emgPulse");
 
     if(tema){
@@ -766,7 +737,6 @@ if(EMG.active){
     const video = document.getElementById("adVideo");
     const label = document.getElementById("adLabel");
 
-    // Se não tiver config, esconde e para
     if(!cfg || !cfg.ativar || !cfg.videos || !cfg.videos.length){
       box.style.display = "none";
       if(adTimer){ clearInterval(adTimer); adTimer = null; }
@@ -774,12 +744,10 @@ if(EMG.active){
       return;
     }
 
-    // evita reiniciar se a config for igual
     const key = JSON.stringify({i:cfg.intervaloSeg, v:cfg.videos});
     if(adCfgKey === key && adTimer) return;
     adCfgKey = key;
 
-    // reinicia timer se existia
     if(adTimer){ clearInterval(adTimer); adTimer = null; }
 
     box.style.display = "block";
@@ -799,7 +767,6 @@ if(EMG.active){
     playAd();
     adTimer = setInterval(playAd, intervalMs);
   }
-
 </script>
 
 </body>
