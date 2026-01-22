@@ -24,10 +24,18 @@
     "temasPorDiaSemana": {}
   },
   "publicidade": {
-    "ativar": false,
-    "intervaloSeg": 15,
-    "videos": []
-  },
+  "ativar": true,
+  "intervaloSeg": 15,
+  "videos": [
+    { "arquivo": "./ads/eua_larissa_luisa.mp4", "anunciante": "Parque da Disney - EUA" },
+    { "arquivo": "./ads/larissa_1ano.mp4", "anunciante": "Larissa – 1 ano" },
+    { "arquivo": "./ads/paty_eua.mp4", "anunciante": "Paty nos EUA" },
+    { "arquivo": "./ads/disney_parque.mp4", "anunciante": "Disney Parque" },
+    { "arquivo": "./ads/swot_portugues.mp4", "anunciante": "SWOT Cristão – Português" },
+    { "arquivo": "./ads/swot_hebraico.mp4", "anunciante": "SWOT Cristão – Hebraico" },
+     ]
+}
+,
   "clima": {
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
