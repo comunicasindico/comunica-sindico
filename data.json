@@ -1,63 +1,112 @@
 {
   "titulo": "Comunica Síndico – Condomínio",
   "subtitulo": "Painel informativo • Atualização automática",
-  "referencia": "Data de Hoje: 21/01/2026",
+  "referencia": {
+  "modo": "biblico-diario",
+  "versiculos": [
+    {
+      "dia": "domingo",
+      "texto": "“Este é o dia que o Senhor fez; regozijemo-nos e alegremo-nos nele.” (Salmos 118:24)"
+    },
+    {
+      "dia": "segunda",
+      "texto": "“Confia no Senhor de todo o teu coração e não te estribes no teu próprio entendimento.” (Provérbios 3:5)"
+    },
+    {
+      "dia": "terca",
+      "texto": "“O Senhor é a minha luz e a minha salvação; a quem temerei?” (Salmos 27:1)"
+    },
+    {
+      "dia": "quarta",
+      "texto": "“Entrega o teu caminho ao Senhor; confia nele, e ele tudo fará.” (Salmos 37:5)"
+    },
+    {
+      "dia": "quinta",
+      "texto": "“Tudo posso naquele que me fortalece.” (Filipenses 4:13)"
+    },
+    {
+      "dia": "sexta",
+      "texto": "“O Senhor te abençoe e te guarde.” (Números 6:24)"
+    },
+    {
+      "dia": "sabado",
+      "texto": "“Aquietai-vos e sabei que eu sou Deus.” (Salmos 46:10)"
+    }
+  ]
+},
   "rotacao": {
-    "ativar": true,
+    "ativar": false,
     "intervaloSeg": 12,
-    "quantidadePorTela": 4,
+    "quantidadePorTela": 1,
     "mostrarProgresso": true,
     "pausarNoMouse": true
   },
   "emergencia": {
     "ativar": true,
-    "intervaloSeg": 6,
+    "intervaloSeg": 4,
     "piscar": true,
     "somenteAlta": true
   },
+  "temaDoDia": {
+    "modo": "automatico",
+    "temasPorDiaSemana": {}
+  },
+  "publicidade": {
+    "ativar": false,
+    "intervaloSeg": 15,
+    "videos": []
+  },
+  "clima": {
+    "cidade": "Tubarão/SC",
+    "latitude": -28.4767,
+    "longitude": -49.0144,
+    "timezone": "America/Sao_Paulo",
+    "alertaChuvaMin": 50,
+    "horasAlerta": 3
+  },
   "avisos": [
     {
-      "id": "633abfb3-d457-430f-bd82-a6b2104ad002",
-      "titulo": "Teste de Emergência",
-      "descricao": "Urgente",
+      "id": "gas-20260122-0800",
+      "titulo": "Vazamento de gás – inspeção e correção",
+      "descricao": "Foi identificado um vazamento de gás em área técnica do condomínio. A equipe especializada realizará inspeção e correções preventivas para garantir a segurança de todos. Evite circular pela área isolada durante o período do serviço.",
       "prioridade": "alta",
-      "tipo": "Comunicado",
-      "local": "Elevadores",
-      "inicio": "2026-01-21T14:00:00-03:00",
-      "fim": "2026-01-23T17:00:00-03:00",
+      "tipo": "Segurança",
+      "local": "Área técnica / Central de gás",
+      "inicio": "2026-01-22T08:00:00-03:00",
+      "fim": "2026-01-22T17:00:00-03:00",
       "emergencia": true
     },
     {
-      "id": "4b821c03-b67a-4400-a47a-9a7d2f340e38",
-      "titulo": "Manutenção programada",
-      "descricao": "Elevador em manutenção das 14h às 17h.",
+      "id": "elevador-20260125-0800",
+      "titulo": "Elevador em manutenção (preventiva)",
+      "descricao": "O elevador passará por manutenção preventiva e ajustes técnicos. Durante o período, poderá haver interrupções temporárias no funcionamento.",
       "prioridade": "media",
       "tipo": "Manutenção",
-      "local": "Elevador",
-      "inicio": "2026-01-21T14:00:00-03:00",
-      "fim": "2026-01-23T17:00:00-03:00",
+      "local": "Elevadores",
+      "inicio": "2026-01-25T08:00:00-03:00",
+      "fim": "2026-01-25T17:00:00-03:00",
       "emergencia": false
     },
     {
-      "id": "teste-normal-01",
-      "titulo": "Manutenção preventiva na garagem",
-      "descricao": "Será realizada manutenção preventiva no portão da garagem. Pode haver lentidão no acesso.",
-      "prioridade": "media",
-      "tipo": "Comunicado",
-      "local": "Garagem",
-      "inicio": "",
-      "fim": "",
-      "emergencia": false
-    },
-    {
-      "id": "teste-normal-02",
-      "titulo": "Limpeza das áreas comuns",
-      "descricao": "A limpeza das áreas comuns será realizada amanhã pela manhã.",
+      "id": "piscina-20260126-0800",
+      "titulo": "Piscina e área de lazer – limpeza e organização",
+      "descricao": "A piscina e a área de lazer estarão em processo de limpeza, organização e manutenção preventiva para melhor conforto e segurança dos moradores.",
       "prioridade": "baixa",
-      "tipo": "Aviso",
-      "local": "Áreas comuns",
-      "inicio": "",
-      "fim": "",
+      "tipo": "Lazer",
+      "local": "Piscina e área de lazer",
+      "inicio": "2026-01-26T08:00:00-03:00",
+      "fim": "2026-01-26T17:00:00-03:00",
+      "emergencia": false
+    },
+    {
+      "id": "hall-20260128-0800",
+      "titulo": "Hall de entrada – poda, limpeza e drenagem urbana",
+      "descricao": "Serão realizados serviços de poda de galhos de árvores, limpeza geral e ações de drenagem urbana no hall de entrada, visando segurança, estética e prevenção de alagamentos.",
+      "prioridade": "baixa",
+      "tipo": "Serviços",
+      "local": "Hall de entrada e áreas externas",
+      "inicio": "2026-01-28T08:00:00-03:00",
+      "fim": "2026-01-28T17:00:00-03:00",
       "emergencia": false
     }
   ]
