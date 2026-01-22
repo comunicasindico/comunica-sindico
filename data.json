@@ -23,17 +23,36 @@
     "modo": "automatico",
     "temasPorDiaSemana": {}
   },
-  "publicidade": {
-    "ativar": true,
-    "intervaloSeg": 15,
-    "videos": [
-      { "arquivo": "./ads/eua_larissa_luisa.mp4", "anunciante": "Parque da Disney - EUA" },
-      { "arquivo": "./ads/swot_portugues.mp4", "anunciante": "SWOT Cristão – Português" },
-      { "arquivo": "./ads/paty_eua.mp4", "anunciante": "Paty nos EUA" },
-      { "arquivo": "./ads/disney_parque.mp4", "anunciante": "Disney Parque" },
-      { "arquivo": "./ads/swot_hebraico.mp4", "anunciante": "SWOT Cristão – Hebraico" }
-    ]
-  },
+ "publicidade": {
+  "ativar": true,
+  "intervaloSeg": 15,
+  "videos": [
+    {
+      "arquivo": "./ads/01castelo.MP4",
+      "anunciante": "Castelo – Experiência Especial"
+    },
+    {
+      "arquivo": "./ads/02parque.mp4",
+      "anunciante": "Parque – Lazer e Diversão"
+    },
+    {
+      "arquivo": "./ads/03larissa.mp4",
+      "anunciante": "Larissa – Momentos Especiais"
+    },
+    {
+      "arquivo": "./ads/04paty.MP4",
+      "anunciante": "Paty – Experiência Internacional"
+    },
+    {
+      "arquivo": "./ads/05port.mp4",
+      "anunciante": "SWOT Cristão – Português"
+    },
+    {
+      "arquivo": "./ads/07cafe.mp4",
+      "anunciante": "Café com SWOT Cristão"
+    }
+  ]
+},
   "clima": {
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
