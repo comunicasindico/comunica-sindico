@@ -305,7 +305,7 @@
 
   async function loadAll(){
     const j = await loadJson();
-    renderHeader(j);
+    await renderHeader(j);
     configureEmergency(j);
     prepareRotation(j);
     renderAvisos(j);
