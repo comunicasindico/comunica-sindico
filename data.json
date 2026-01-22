@@ -5,13 +5,13 @@
   "rotacao": {
     "ativar": true,
     "intervaloSeg": 12,
-    "quantidadePorTela": 1,
+    "quantidadePorTela": 4,
     "mostrarProgresso": true,
     "pausarNoMouse": true
   },
   "emergencia": {
     "ativar": true,
-    "intervaloSeg": 4,
+    "intervaloSeg": 6,
     "piscar": true,
     "somenteAlta": true
   },
