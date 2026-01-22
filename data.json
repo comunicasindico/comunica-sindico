@@ -40,5 +40,28 @@
       "fim": "2026-01-23T17:00:00-03:00",
       "emergencia": false
     }
+    {
+  "id": "teste-normal-01",
+  "titulo": "Manutenção preventiva na garagem",
+  "descricao": "Será realizada manutenção preventiva no portão da garagem. Pode haver lentidão no acesso.",
+  "prioridade": "media",
+  "tipo": "Comunicado",
+  "local": "Garagem",
+  "inicio": "",
+  "fim": "",
+  "emergencia": false
+},
+{
+  "id": "teste-normal-02",
+  "titulo": "Limpeza das áreas comuns",
+  "descricao": "A limpeza das áreas comuns será realizada amanhã pela manhã.",
+  "prioridade": "baixa",
+  "tipo": "Aviso",
+  "local": "Áreas comuns",
+  "inicio": "",
+  "fim": "",
+  "emergencia": false
+}
+
   ]
 }
