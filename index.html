@@ -914,6 +914,17 @@ try{
     playAd();
     adTimer = setInterval(playAd, intervalMs);
   }
+  /* ===============================
+     📦 REGISTRO DO SERVICE WORKER
+     =============================== */
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("./service-worker.js")
+        .then(() => console.log("Service Worker registrado com sucesso"))
+        .catch(err => console.error("Erro no Service Worker:", err));
+    });
+  }
 </script>
 
 </body>
