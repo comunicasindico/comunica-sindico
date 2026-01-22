@@ -631,6 +631,20 @@
     div.className = `aviso ${p} ${extraClass || ""}`.trim();
 
     const janela = formatJanela(a);
+
+// 📅 Data curta (SEM hora) para o canto superior
+let dataCurta = "";
+try{
+  const ini = safeDate(a.inicio);
+  if(ini){
+    dataCurta = new Intl.DateTimeFormat("pt-BR", {
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric"
+    }).format(ini);
+  }
+}catch{}
+
     const faixaData = formatDateRange(a);
 
     const tags = [];
@@ -639,11 +653,15 @@
     if(janela) tags.push(`🕒 ${janela}`);
 
     div.innerHTML = `
-      ${faixaData ? `<div class="dateRange">${escapeHtml(faixaData)}</div>` : ""}
-      <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
-      <p class="d">${escapeHtml(a.descricao || a.mensagem || "")}</p>
-      ${tags.length ? `<div class="meta">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>` : ""}
-    `;
+  ${dataCurta ? `<span class="dateRange">${dataCurta}</span>` : ""}
+  <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
+  <p class="d">${escapeHtml(a.descricao || "")}</p>
+  ${
+    janela
+      ? `<div class="meta"><span class="tag">🕒 ${escapeHtml(janela)}</span></div>`
+      : ""
+  }
+`;
     return div;
   }
 
