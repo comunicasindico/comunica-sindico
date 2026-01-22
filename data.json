@@ -34,8 +34,7 @@
     { "arquivo": "./ads/swoth.mp4", "anunciante": "SWOT Cristão – Hebraico" },
     { "arquivo": "./ads/swot_portugues.mp4", "anunciante": "SWOT Cristão – " },
      ]
-}
-,
+},
   "clima": {
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
