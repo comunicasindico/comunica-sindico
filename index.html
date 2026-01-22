@@ -553,33 +553,80 @@
     const emg = computeActiveEmergency(j);
     EMG.active = emg.active;
 
-    // Se emergência ativa: mostra somente emergências
-    if(EMG.active){
-      card.classList.toggle("emgPulse", !!EMG.blink);
+    // Se emergência ativa: mostra banner + emergências + (abaixo) avisos normais
+if(EMG.active){
+  card.classList.toggle("emgPulse", !!EMG.blink);
 
-      const banner = document.createElement("div");
-      banner.className = "emgBanner";
-      banner.innerHTML = `🚨 MODO EMERGÊNCIA ATIVO<small>Exibindo apenas comunicados urgentes</small>`;
-      avisosEl.appendChild(banner);
+  const banner = document.createElement("div");
+  banner.className = "emgBanner";
+  banner.innerHTML = `🚨 MODO EMERGÊNCIA ATIVO<small>Exibindo comunicados urgentes no topo</small>`;
+  avisosEl.appendChild(banner);
 
-      const list = emg.items.sort((a,b)=> prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
-      ROT.items = list;
-      ROT.idx = 0;
+  // 1) Emergências (alta + emergencia=true + dentro da janela)
+  const emgList = emg.items
+    .slice()
+    .sort((a,b)=> prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
 
-      getCurrentSlice(list, 1).forEach(a => avisosEl.appendChild(buildAvisoCard(a, "emgPulse")));
-      ensureProgressUI();
+  emgList.forEach(a => avisosEl.appendChild(buildAvisoCard(a, EMG.blink ? "emgPulse" : "")));
 
-      startRotation(() => {
-        avisosEl.innerHTML = "";
-        avisosEl.appendChild(banner.cloneNode(true));
-        getCurrentSlice(list, 1).forEach(a => avisosEl.appendChild(buildAvisoCard(a, "emgPulse")));
-        ensureProgressUI();
-      }, EMG.intervalMs);
+  // separador simples
+  const sep = document.createElement("div");
+  sep.className = "tema";
+  sep.innerHTML = `<b>Demais avisos ativos:</b><span class="small">Comunicados gerais (não emergenciais)</span>`;
+  avisosEl.appendChild(sep);
 
+  // 2) Avisos normais (ativos agora) — exclui os que já são emergência
+  const now = new Date();
+  const normalList = (j.avisos || [])
+    .filter(a => isAtivoAgora(a, now))
+    .filter(a => !(String(a.prioridade || "").toLowerCase() === "alta" && a.emergencia === true))
+    .sort((a,b) => prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
+
+  if(!normalList.length){
+    const div = document.createElement("div");
+    div.className = "aviso baixa";
+    div.innerHTML = `<p class="t">Sem avisos gerais ativos</p><p class="d">Somente comunicados de emergência estão ativos no momento.</p>`;
+    avisosEl.appendChild(div);
+    ensureProgressUI();
+    stopRotation();
+    return;
+  }
+
+  // ✅ aqui você pode manter rotação normal (se quiser) só para os avisos gerais
+  ROT.items = normalList;
+  ROT.idx = 0;
+  stopRotation();
+
+  if(ROT.enabled && ROT.items.length > ROT.perScreen){
+    getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+    ensureProgressUI();
+
+    if(ROT.pauseOnHover){
+      avisosEl.onmouseenter = () => { ROT.paused = true; };
+      avisosEl.onmouseleave = () => { ROT.paused = false; };
+    }else{
       avisosEl.onmouseenter = null;
       avisosEl.onmouseleave = null;
-      return;
     }
+
+    startRotation(() => {
+      avisosEl.innerHTML = "";
+      avisosEl.appendChild(banner.cloneNode(true));
+      emgList.forEach(a => avisosEl.appendChild(buildAvisoCard(a, EMG.blink ? "emgPulse" : "")));
+      avisosEl.appendChild(sep.cloneNode(true));
+      getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+      ensureProgressUI();
+    }, ROT.intervalMs);
+
+    return;
+  }
+
+  // Sem rotação: lista tudo
+  ROT.items.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+  ensureProgressUI();
+  return;
+}
+
 
     card.classList.remove("emgPulse");
 
