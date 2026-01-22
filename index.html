@@ -27,12 +27,22 @@
         linear-gradient(180deg, var(--bg1), var(--bg2));
     }
 
-   .wrap{
-  height:100vh;               /* ocupa a altura inteira da tela */
-  padding:26px 26px 60px;     /* diminui a sobra inferior */
-  display:flex;
-  justify-content:center;
-}
+    /* ✅ Layout: ocupa a tela e evita scroll da página */
+    .wrap{
+      height:100vh;
+      padding:26px 26px 60px;
+      display:flex;
+      justify-content:center;
+    }
+    .container{
+      width:min(1400px,96vw);
+      height:calc(100vh - 26px - 60px);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      min-height:0;
+    }
+
     /* =========================
        PUBLICIDADE EM VÍDEO
        ========================= */
@@ -72,22 +82,15 @@
     }
     .dot{width:10px;height:10px;border-radius:50%;background:#44d07a;box-shadow:0 0 0 4px rgba(68,208,122,.18);}
 
-   .container{
-  width:min(1400px,96vw);
-  height:calc(100vh - 26px - 60px - 46px);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
-
-.grid{
-  margin-top:0;               /* tira margem fixa */
-  flex:1;                     /* ocupa o resto da altura */
-  display:grid;
-  grid-template-columns:1.25fr .75fr;
-  gap:18px;
-  min-height:0;               /* IMPORTANTÍSSIMO pro scroll interno funcionar */
-}
+    /* ✅ Grid ocupa o restante da tela */
+    .grid{
+      margin-top:0;
+      flex:1;
+      display:grid;
+      grid-template-columns:1.25fr .75fr;
+      gap:18px;
+      min-height:0; /* IMPORTANTÍSSIMO pro scroll interno funcionar */
+    }
 
     .card{
       background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
@@ -95,13 +98,11 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       overflow:hidden;
-    }
-    .card{
-  display:flex;
-  flex-direction:column;
-  min-height:0;               /* IMPORTANTÍSSIMO */
-}
 
+      display:flex;
+      flex-direction:column;
+      min-height:0; /* IMPORTANTÍSSIMO */
+    }
     .card .head{
       padding:16px 18px;
       border-bottom:1px solid var(--line);
@@ -117,17 +118,17 @@
       background:rgba(7,20,34,.25);
     }
 
-    /* área de avisos */
- .avisos{
-  padding:16px 18px 18px;
-  flex:1;                     /* ocupa o espaço disponível do card */
-  min-height:0;               /* permite encolher */
-  overflow:auto;              /* rolagem interna quando precisar */
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  position:relative;
-}
+    /* ✅ Área de avisos vira “scroll interno” quando necessário */
+    .avisos{
+      padding:16px 18px 18px;
+      flex:1;
+      min-height:0;
+      overflow:auto;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      position:relative;
+    }
 
     /* Progresso da rotação */
     .progressWrap{
@@ -174,6 +175,7 @@
     .tema .small{display:block; margin-top:4px; color:var(--muted); font-weight:650}
 
     .aviso{
+      position:relative; /* ✅ necessário para data no canto */
       padding:16px 16px;
       border:1px solid var(--line);
       border-radius:14px;
@@ -204,12 +206,27 @@
     .meta{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:rgba(234,242,255,.82);}
     .tag{padding:6px 8px; border-radius:999px; border:1px solid var(--line); background:rgba(12,35,56,.35);}
 
-   .side{
-  display:grid;
-  gap:18px;
-  align-content:start;
-  min-height:0;
-}
+    /* ✅ Data do aviso (canto superior direito) */
+    .aviso .dateRange{
+      position:absolute;
+      top:10px;
+      right:12px;
+      font-size:11px;
+      font-weight:800;
+      color:rgba(234,242,255,.75);
+      background:rgba(12,35,56,.55);
+      padding:6px 8px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.15);
+      white-space:nowrap;
+    }
+
+    .side{
+      display:grid;
+      gap:18px;
+      align-content:start;
+      min-height:0;
+    }
     .mini{
       padding:16px 18px;
       background:linear-gradient(180deg, rgba(12,35,56,.95), rgba(9,26,44,.95));
@@ -231,12 +248,12 @@
       border-top:1px solid rgba(255,255,255,.12);
     }
 
- @media(max-width:980px){
-  .wrap{ padding:16px 16px 60px; }
-  .container{ height:calc(100vh - 16px - 60px); }
-  .grid{ grid-template-columns:1fr; }
-  .avisos{ min-height:0; }
-}
+    @media(max-width:980px){
+      .wrap{ padding:16px 16px 60px; }
+      .container{ height:calc(100vh - 16px - 60px); }
+      .grid{ grid-template-columns:1fr; }
+      .avisos{ min-height:0; }
+    }
   </style>
 </head>
 
@@ -361,7 +378,7 @@
             referencia:"",
             temaDoDia:{ modo:"automatico", temasPorDiaSemana:{} },
             avisos: raw,
-           "rotacao": { "ativar": false, "quantidadePorTela": 4 }
+            rotacao:{ ativar:false, quantidadePorTela:4 },
             emergencia:{ ativar:true, intervaloSeg:4, piscar:true, somenteAlta:true },
             publicidade:{ ativar:false, videos:[], intervaloSeg:15 },
             clima:{ cidade:"", latitude:-28.4767, longitude:-49.0144, timezone:"America/Sao_Paulo", alertaChuvaMin:50, horasAlerta:3 }
@@ -388,41 +405,41 @@
     }
   }
 
- async function renderHeader(j){
-  document.getElementById("titulo").textContent = j.titulo || "Comunica Síndico";
-  document.getElementById("subtitulo").textContent = j.subtitulo || "Painel informativo";
+  async function renderHeader(j){
+    document.getElementById("titulo").textContent = j.titulo || "Comunica Síndico";
+    document.getElementById("subtitulo").textContent = j.subtitulo || "Painel informativo";
 
-  const refEl = document.getElementById("refData");
+    const refEl = document.getElementById("refData");
 
-  // Se não for modo bíblico anual, mantém comportamento atual
-  if(!(j.referencia && typeof j.referencia === "object" && j.referencia.modo === "biblico-anual")){
-    refEl.textContent = j.referencia ? ("Ref.: " + j.referencia) : "Atualizado hoje";
-    return;
+    // Se não for modo bíblico anual, mantém comportamento atual
+    if(!(j.referencia && typeof j.referencia === "object" && j.referencia.modo === "biblico-anual")){
+      refEl.textContent = j.referencia ? ("Ref.: " + j.referencia) : "Atualizado hoje";
+      return;
+    }
+
+    // Modo bíblico anual: busca versículo do dia em versiculos.json
+    try{
+      const arquivo = j.referencia.arquivo || "./versiculos.json";
+      const fallback = j.referencia.fallback || "Versículo do dia";
+
+      const now = new Date();
+      const mm = String(now.getMonth() + 1).padStart(2, "0");
+      const dd = String(now.getDate()).padStart(2, "0");
+      const key = `${mm}-${dd}`;
+
+      const r = await fetch(arquivo + "?ts=" + Date.now(), { cache:"no-store" });
+      if(!r.ok) throw new Error("HTTP " + r.status);
+
+      const v = await r.json();
+      const texto = v?.versos?.[key] || fallback;
+
+      refEl.textContent = texto;
+
+    }catch(e){
+      console.error("Falha ao carregar versículos:", e);
+      refEl.textContent = (j.referencia && j.referencia.fallback) ? j.referencia.fallback : "Versículo do dia";
+    }
   }
-
-  // Modo bíblico anual: busca versículo do dia em versiculos.json
-  try{
-    const arquivo = j.referencia.arquivo || "./versiculos.json";
-    const fallback = j.referencia.fallback || "Versículo do dia";
-
-    const now = new Date();
-    const mm = String(now.getMonth() + 1).padStart(2, "0");
-    const dd = String(now.getDate()).padStart(2, "0");
-    const key = `${mm}-${dd}`;
-
-    const r = await fetch(arquivo + "?ts=" + Date.now(), { cache:"no-store" });
-    if(!r.ok) throw new Error("HTTP " + r.status);
-
-    const v = await r.json();
-    const texto = v?.versos?.[key] || fallback;
-
-    refEl.textContent = texto;
-
-  }catch(e){
-    console.error("Falha ao carregar versículos:", e);
-    refEl.textContent = j.referencia.fallback || "Versículo do dia";
-  }
-}
 
   function escapeHtml(s){
     return String(s).replace(/[&<>"']/g, m => ({
@@ -479,6 +496,32 @@
       if(fim) return `até ${fmtHM(fim)}`;
       return "";
     }catch{ return ""; }
+  }
+
+  // ✅ NOVO: Data curta no canto do aviso (DD/MM • HH:MM–HH:MM)
+  function formatDateRange(a){
+    const ini = safeDate(a.inicio);
+    const fim = safeDate(a.fim);
+    if(!ini && !fim) return "";
+
+    const d = (x)=> new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit"}).format(x);
+    const h = (x)=> new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(x);
+
+    if(ini && fim){
+      const sameDay =
+        ini.getFullYear()===fim.getFullYear() &&
+        ini.getMonth()===fim.getMonth() &&
+        ini.getDate()===fim.getDate();
+
+      return sameDay
+        ? `${d(ini)} • ${h(ini)}–${h(fim)}`
+        : `${d(ini)} • ${h(ini)} → ${d(fim)} • ${h(fim)}`;
+    }
+
+    if(ini) return `${d(ini)} • ${h(ini)}`;
+    if(fim) return `até ${d(fim)} • ${h(fim)}`;
+
+    return "";
   }
 
   // ===== EMERGÊNCIA 2.6 =====
@@ -581,18 +624,22 @@
     return out;
   }
 
+  // ✅ buildAvisoCard agora inclui data no canto superior direito
   function buildAvisoCard(a, extraClass){
     const p = (a.prioridade || "baixa").toLowerCase();
     const div = document.createElement("div");
     div.className = `aviso ${p} ${extraClass || ""}`.trim();
 
     const janela = formatJanela(a);
+    const faixaData = formatDateRange(a);
+
     const tags = [];
     if(a.tipo) tags.push(`🏷️ ${a.tipo}`);
     if(a.local) tags.push(`📍 ${a.local}`);
     if(janela) tags.push(`🕒 ${janela}`);
 
     div.innerHTML = `
+      ${faixaData ? `<div class="dateRange">${escapeHtml(faixaData)}</div>` : ""}
       <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
       <p class="d">${escapeHtml(a.descricao || a.mensagem || "")}</p>
       ${tags.length ? `<div class="meta">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>` : ""}
@@ -601,10 +648,9 @@
   }
 
   // =========================================================
-  // ✅ ATUALIZAÇÃO PRINCIPAL:
-  // - Em modo emergência: mostra TODOS os avisos ativos juntos
+  // ✅ Em modo emergência: mostra TODOS os avisos ativos juntos
   //   (emergências no topo + demais abaixo), SEM rotação.
-  // - Fora da emergência: rotação segue normal (se ativada).
+  // ✅ Sem emergência: se não houver ativos, mostra “próximos avisos”.
   // =========================================================
   function renderAvisos(j){
     const avisosEl = document.getElementById("avisos");
@@ -669,37 +715,35 @@
       avisosEl.appendChild(divTema);
     }
 
-   if(!ROT.items.length){
-  const now = new Date();
+    if(!ROT.items.length){
+      const now = new Date();
 
-  // pega próximos avisos (começam no futuro)
-  const upcoming = (j.avisos || [])
-    .filter(a => a.inicio && !isNaN(new Date(a.inicio).getTime()))
-    .filter(a => new Date(a.inicio) > now)
-    .sort((a,b) => new Date(a.inicio) - new Date(b.inicio));
+      // pega próximos avisos (começam no futuro)
+      const upcoming = (j.avisos || [])
+        .filter(a => a.inicio && !isNaN(new Date(a.inicio).getTime()))
+        .filter(a => new Date(a.inicio) > now)
+        .sort((a,b) => new Date(a.inicio) - new Date(b.inicio));
 
-  if(upcoming.length){
-    const divTema = document.createElement("div");
-    divTema.className = "tema";
-    divTema.innerHTML = `<b>Próximos avisos:</b><span class="small">Programados (ainda não iniciaram)</span>`;
-    avisosEl.appendChild(divTema);
+      if(upcoming.length){
+        const divTema = document.createElement("div");
+        divTema.className = "tema";
+        divTema.innerHTML = `<b>Próximos avisos:</b><span class="small">Programados (ainda não iniciaram)</span>`;
+        avisosEl.appendChild(divTema);
 
-    upcoming.slice(0, 6).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-    ensureProgressUI();
-    stopRotation();
-    return;
-  }
+        upcoming.slice(0, 6).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
+        ensureProgressUI();
+        stopRotation();
+        return;
+      }
 
-  // se nem próximos tiver, aí sim "sem avisos"
-  const div = document.createElement("div");
-  div.className = "aviso baixa";
-  div.innerHTML = `<p class="t">Sem avisos ativos</p><p class="d">Quando houver comunicados, eles aparecerão aqui automaticamente.</p>`;
-  avisosEl.appendChild(div);
-  ensureProgressUI();
-  stopRotation();
-  return;
-}
-
+      const div = document.createElement("div");
+      div.className = "aviso baixa";
+      div.innerHTML = `<p class="t">Sem avisos ativos</p><p class="d">Quando houver comunicados, eles aparecerão aqui automaticamente.</p>`;
+      avisosEl.appendChild(div);
+      ensureProgressUI();
+      stopRotation();
+      return;
+    }
 
     if(ROT.enabled && ROT.items.length > ROT.perScreen){
       getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
