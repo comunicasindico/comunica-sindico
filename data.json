@@ -4,7 +4,7 @@
   "referencia": {
   "modo": "biblico-anual",
   "arquivo": "./versiculos.json",
-  "fallback": "“Este é o dia que o Senhor fez; regozijemo-nos e alegremo-nos nele.” (Salmos 118:24)"
+  "fallback": "“Você tem valor. Valorize o que você tem."
 },
   "rotacao": {
     "ativar": false,
