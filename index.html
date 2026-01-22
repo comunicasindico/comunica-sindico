@@ -358,10 +358,27 @@
   }
 
   function renderHeader(j){
-    document.getElementById("titulo").textContent = j.titulo || "Comunica Síndico";
-    document.getElementById("subtitulo").textContent = j.subtitulo || "Painel informativo";
-    document.getElementById("refData").textContent = j.referencia ? ("Ref.: " + j.referencia) : "Atualizado hoje";
+  document.getElementById("titulo").textContent = j.titulo || "Comunica Síndico";
+  document.getElementById("subtitulo").textContent = j.subtitulo || "Painel informativo";
+
+  const refEl = document.getElementById("refData");
+
+  // Referência bíblica automática
+  if(j.referencia && typeof j.referencia === "object" && j.referencia.modo === "biblico-diario"){
+    const hoje = new Intl.DateTimeFormat("pt-BR",{weekday:"long"})
+      .format(new Date())
+      .toLowerCase()
+      .replace("-feira","")
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+
+    const v = (j.referencia.versiculos || []).find(x => x.dia === hoje);
+    refEl.textContent = v ? v.texto : "“O Senhor é bom em todo o tempo.”";
+  } else {
+    refEl.textContent = j.referencia
+      ? ("Ref.: " + j.referencia)
+      : "Atualizado hoje";
   }
+}
 
   function escapeHtml(s){
     return String(s).replace(/[&<>"']/g, m => ({
