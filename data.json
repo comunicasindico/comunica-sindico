@@ -9,7 +9,7 @@
   "rotacao": {
     "ativar": false,
     "intervaloSeg": 12,
-    "quantidadePorTela": 1,
+    "quantidadePorTela": 4,
     "mostrarProgresso": true,
     "pausarNoMouse": true
   },
