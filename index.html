@@ -347,6 +347,10 @@
     initClock();
     loadAll();
     setInterval(loadAll, 60 * 1000);
+    // ✅ Modo app: tela cheia automática
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(()=>{});
+  }
   });
 
   function initClock(){
@@ -939,6 +943,23 @@ try{
     });
   }
 </script>
+let deferredPrompt = null;
 
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  console.log("App pronto para instalar");
+});
+
+// botão invisível (atalho por gesto)
+document.addEventListener("dblclick", async () => {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log("Resultado instalação:", outcome);
+  deferredPrompt = null;
+});
+</script>
 </body>
 </html>
