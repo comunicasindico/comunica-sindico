@@ -1,4 +1,4 @@
-const CACHE_NAME = "comunica-sindico-v1";
+const CACHE_NAME = "comunica-sindico-v2";
 
 const ASSETS = [
   "./",
@@ -12,9 +12,7 @@ const ASSETS = [
 
 // Instala e guarda o essencial
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
   self.skipWaiting();
 });
 
@@ -28,46 +26,43 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Estratégia: Network-first para JSON, Cache-first para o resto
+// Fetch
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // só arquivos do próprio site
-  if (url.origin !== self.location.origin) return;
+  // Só controla o mesmo domínio
+  if (url.origin !== location.origin) return;
 
+  // ✅ 1) NÃO cachear vídeos (MP4) nem respostas parciais (Range/206)
+  const isVideo = url.pathname.toLowerCase().endsWith(".mp4");
+  const hasRange = req.headers.has("range");
+  if (isVideo || hasRange) {
+    event.respondWith(fetch(req));
+    return;
+  }
+
+  // ✅ 2) JSON: network-first (sempre tenta atualizar)
   const isJson =
     url.pathname.endsWith("/data.json") ||
     url.pathname.endsWith("/versiculos.json");
 
-  // JSON: tenta rede primeiro
   if (isJson) {
     event.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          // só salva no cache se for resposta "normal" (200)
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          }
           return res;
         })
-        .catch(async () => (await caches.match(req)) || new Response("{}", {
-          headers: { "Content-Type": "application/json" }
-        }))
+        .catch(() => caches.match(req))
     );
     return;
   }
 
-  // Demais arquivos: cache primeiro, depois rede, fallback no index.html
-  event.respondWith(
-    caches.match(req).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
-          return res;
-        })
-        .catch(() => caches.match("./index.html"));
-    })
-  );
+  // ✅ 3) Demais arquivos: cache-first
+  event.respondWith(caches.match(req).then((cached) => cached || fetch(req)));
 });
