@@ -898,17 +898,33 @@
     deferredPrompt = null;
     mostrarBotaoInstalar(false);
   }
+/* ===============================
+   📦 REGISTRO DO SERVICE WORKER + AUTO UPDATE
+   =============================== */
+if ("serviceWorker" in navigator) {
 
-  /* ===============================
-     📦 REGISTRO DO SERVICE WORKER
-     =============================== */
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js")
-        .then(() => console.log("Service Worker registrado com sucesso"))
-        .catch((err) => console.error("Erro no Service Worker:", err));
-    });
-  }
+  window.addEventListener("load", () => {
+
+    navigator.serviceWorker.register("sw.js")
+      .then((reg) => {
+        console.log("Service Worker registrado com sucesso");
+
+        // 🔄 força verificação de nova versão
+        if (reg.update) {
+          reg.update();
+        }
+      })
+      .catch((err) => console.error("Erro no Service Worker:", err));
+  });
+
+  // ✅ quando um novo SW assumir o controle, recarrega a página
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    console.log("Nova versão do app detectada. Recarregando...");
+    window.location.reload();
+  });
+
+}
+ 
 </script>
 
 </body>
