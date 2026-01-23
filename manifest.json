@@ -1,22 +1,24 @@
 {
-  "name": "Comunica Síndico",
+  "name": "Comunica Síndico – Condomínio",
   "short_name": "Síndico",
-  "description": "Painel oficial de avisos do condomínio",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#061726",
+  "background_color": "#0b223a",
   "theme_color": "#0b223a",
   "orientation": "portrait",
   "icons": [
     {
       "src": "./icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "./icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
