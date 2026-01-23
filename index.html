@@ -6,7 +6,9 @@
   <title>Comunica Síndico</title>
 
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#0b223a">
@@ -31,10 +33,6 @@
         radial-gradient(1200px 700px at 15% 10%, #10385b 0%, rgba(16,56,91,0) 55%),
         radial-gradient(900px 600px at 85% 15%, #0b3454 0%, rgba(11,52,84,0) 55%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
-
-      /* =========================
-         MODO APP (TELA CHEIA)
-         ========================= */
       overscroll-behavior:none;
       user-select:none;
       touch-action:manipulation;
@@ -94,9 +92,22 @@
       white-space:nowrap;
     }
     .dot{width:10px;height:10px;border-radius:50%;background:#44d07a;box-shadow:0 0 0 4px rgba(68,208,122,.18);}
-<button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">
-  📲 Instalar App
-</button>
+
+    /* ✅ Botão instalar (PWA) */
+    .btnInstall{
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(12,35,56,.55);
+      color:rgba(234,242,255,.92);
+      padding:10px 12px;
+      border-radius:999px;
+      font-weight:800;
+      cursor:pointer;
+      white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .btnInstall:hover{ filter:brightness(1.08); }
 
     /* ✅ Grid ocupa o restante da tela */
     .grid{
@@ -114,7 +125,6 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       overflow:hidden;
-
       display:flex;
       flex-direction:column;
       min-height:0;
@@ -123,8 +133,8 @@
       padding:16px 18px;
       border-bottom:1px solid var(--line);
       display:flex; align-items:center; justify-content:space-between; gap:12px;
+      flex-wrap:wrap;
     }
-    .card h2{margin:0; font-size:18px;}
     .pill{
       font-size:12px; font-weight:800;
       padding:8px 10px;
@@ -132,7 +142,7 @@
       border:1px solid var(--line);
       color:var(--muted);
       background:rgba(7,20,34,.25);
-      max-width: 62%;
+      max-width: 100%;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
@@ -224,21 +234,6 @@
     .meta{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:rgba(234,242,255,.82);}
     .tag{padding:6px 8px; border-radius:999px; border:1px solid var(--line); background:rgba(12,35,56,.35);}
 
-    /* ✅ Data do aviso (canto superior direito) — SEM HORA */
-    .aviso .dateRange{
-      position:absolute;
-      top:10px;
-      right:12px;
-      font-size:11px;
-      font-weight:800;
-      color:rgba(234,242,255,.75);
-      background:rgba(12,35,56,.55);
-      padding:6px 8px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,.15);
-      white-space:nowrap;
-    }
-
     .side{
       display:grid;
       gap:18px;
@@ -253,8 +248,6 @@
       box-shadow:var(--shadow);
     }
     .mini .label{font-size:12px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.25px; margin:0 0 10px;}
-    .mini .value{font-size:22px; font-weight:900; margin:0;}
-    .mini .value.big{font-size:34px;}
 
     #wxbar{
       position:fixed; left:0; right:0; bottom:0;
@@ -270,35 +263,17 @@
       .wrap{ padding:16px 16px 60px; }
       .container{ height:calc(100vh - 16px - 60px); }
       .grid{ grid-template-columns:1fr; }
-      .avisos{ min-height:0; }
-      .pill{ max-width: 100%; }
+      .pill{ white-space:normal; }
     }
-    /* ✅ MOBILE: permitir que o versículo/data quebrem linha e não sejam cortados */
-@media (max-width: 520px){
-  .card .head{
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: flex-start !important;
-  }
-  .card .head .pill{
-    white-space: normal;     /* permite quebrar linha */
-    line-height: 1.2;
-    width: 100%;             /* ocupa a largura no celular */
-    text-align: left;
-  }
-}
-    /* ✅ MOBILE: evitar que a data do aviso sobreponha o texto */
-@media (max-width: 520px){
-  .aviso{
-    padding-top: 44px; /* cria “espaço” para o badge da data */
-  }
-  .aviso .dateRange{
-    top: 10px;
-    right: 10px;
-    font-size: 10px;
-    padding: 5px 7px;
-  }
-}
+    @media (max-width: 520px){
+      .card .head{
+        justify-content:flex-start !important;
+      }
+      .card .head .pill{
+        width:100%;
+        text-align:left;
+      }
+    }
   </style>
 </head>
 
@@ -311,25 +286,30 @@
           <h1 class="title" id="titulo">Comunica Síndico</h1>
           <p class="subtitle" id="subtitulo">Painel informativo</p>
         </div>
-        <div class="badge">
-          <span class="dot"></span>
-          <span id="statusJson">Carregando conteúdo…</span>
+
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">
+            📲 Instalar App
+          </button>
+          <div class="badge">
+            <span class="dot"></span>
+            <span id="statusJson">Carregando conteúdo…</span>
+          </div>
         </div>
       </div>
 
       <div class="grid">
         <section class="card" id="cardAvisos">
           <div class="head" style="justify-content:center;">
-  <div style="display:flex; gap:6px; align-items:center;">
-    <div class="pill" id="refData">—</div>
-    <div class="pill" id="dataBiblica">—</div>
-  </div>
-</div>
+            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+              <div class="pill" id="refData">—</div>
+              <div class="pill" id="dataBiblica">—</div>
+            </div>
+          </div>
           <div class="avisos" id="avisos"></div>
         </section>
 
         <aside class="side">
-          <!-- ✅ PUBLICIDADE (JS usa estes IDs) -->
           <div class="mini anuncio" id="adBox" style="display:none">
             <p class="label" id="adLabel">Publicidade</p>
             <video id="adVideo" autoplay muted loop playsinline></video>
@@ -360,7 +340,7 @@
   // ===== PUBLICIDADE =====
   let adIdx = 0;
   let adTimer = null;
-  let adCfgKey = ""; // para não reiniciar com a mesma config
+  let adCfgKey = "";
 
   // ===== Init =====
   window.addEventListener("DOMContentLoaded", () => {
@@ -382,25 +362,11 @@
     const status = document.getElementById("statusJson");
     status.textContent = "Carregando conteúdo…";
     try{
-      const r = await fetch("./data.json?ts=" + Date.now(), { cache:"no-store" });
+      const r = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
       if(!r.ok) throw new Error("HTTP " + r.status);
 
       const raw = await r.json();
 
-.btnInstall{
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(12,35,56,.55);
-  color:rgba(234,242,255,.92);
-  padding:10px 12px;
-  border-radius:999px;
-  font-weight:800;
-  cursor:pointer;
-  white-space:nowrap;
-}
-.btnInstall:hover{ filter:brightness(1.08); }
-
-
-      
       // ✅ Se data.json vier como ARRAY, converte para o objeto padrão do painel
       const j = Array.isArray(raw)
         ? {
@@ -443,22 +409,19 @@
     const refEl  = document.getElementById("refData");
     const dataEl = document.getElementById("dataBiblica");
 
-    // ✅ DATA NO FINAL (mesma fonte/padrão do versículo)
     const hoje = new Date();
     const dataFmt = new Intl.DateTimeFormat("pt-BR", {
       weekday:"long", day:"2-digit", month:"long", year:"numeric"
     }).format(hoje);
     dataEl.textContent = dataFmt.charAt(0).toUpperCase() + dataFmt.slice(1);
 
-    // Se não for modo bíblico anual, mantém comportamento atual
     if(!(j.referencia && typeof j.referencia === "object" && j.referencia.modo === "biblico-anual")){
       refEl.textContent = j.referencia ? ("Ref.: " + j.referencia) : "Atualizado hoje";
       return;
     }
 
-    // Modo bíblico anual: busca versículo do dia em versiculos.json
     try{
-      const arquivo = j.referencia.arquivo || "./versiculos.json";
+      const arquivo = j.referencia.arquivo || "versiculos.json";
       const fallback = j.referencia.fallback || "Versículo do dia";
 
       const mm = String(hoje.getMonth() + 1).padStart(2, "0");
@@ -502,7 +465,6 @@
     return 2;
   }
 
-  // ✅ MAIS ROBUSTO: se a data vier inválida, não derruba o filtro
   function safeDate(v){
     if(!v) return null;
     const d = new Date(v);
@@ -636,46 +598,43 @@
     return out;
   }
 
-function buildAvisoCard(a, extraClass){
-  const p = (a.prioridade || "baixa").toLowerCase();
-  const div = document.createElement("div");
-  div.className = `aviso ${p} ${extraClass || ""}`.trim();
+  function buildAvisoCard(a, extraClass){
+    const p = (a.prioridade || "baixa").toLowerCase();
+    const div = document.createElement("div");
+    div.className = `aviso ${p} ${extraClass || ""}`.trim();
 
-  const janela = formatJanela(a);
+    const janela = formatJanela(a);
 
-  // 📅 Data curta (DD/MM/AAAA)
-  let dataCurta = "";
-  try{
-    const ini = safeDate(a.inicio);
-    if(ini){
-      dataCurta = new Intl.DateTimeFormat("pt-BR", {
-        day:"2-digit",
-        month:"2-digit",
-        year:"numeric"
-      }).format(ini);
-    }
-  }catch{}
+    let dataCurta = "";
+    try{
+      const ini = safeDate(a.inicio);
+      if(ini){
+        dataCurta = new Intl.DateTimeFormat("pt-BR", {
+          day:"2-digit",
+          month:"2-digit",
+          year:"numeric"
+        }).format(ini);
+      }
+    }catch{}
 
-  const tags = [];
+    const tags = [];
+    if(dataCurta) tags.push(`📅 ${dataCurta}`);
+    if(janela) tags.push(`🕒 ${janela}`);
+    if(a.tipo) tags.push(`🏷️ ${a.tipo}`);
+    if(a.local) tags.push(`📍 ${a.local}`);
 
-  if(dataCurta) tags.push(`📅 ${dataCurta}`);
-  if(janela) tags.push(`🕒 ${janela}`);
-  if(a.tipo) tags.push(`🏷️ ${a.tipo}`);
-  if(a.local) tags.push(`📍 ${a.local}`);
+    div.innerHTML = `
+      <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
+      <p class="d">${escapeHtml(a.descricao || "")}</p>
+      ${
+        tags.length
+          ? `<div class="meta">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>`
+          : ""
+      }
+    `;
+    return div;
+  }
 
-  div.innerHTML = `
-    <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
-    <p class="d">${escapeHtml(a.descricao || "")}</p>
-    ${
-      tags.length
-        ? `<div class="meta">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>`
-        : ""
-    }
-  `;
-  return div;
-}
-
-  // ✅ Render avisos
   function renderAvisos(j){
     const avisosEl = document.getElementById("avisos");
     const card = document.getElementById("cardAvisos");
@@ -685,7 +644,6 @@ function buildAvisoCard(a, extraClass){
     const emg = computeActiveEmergency(j);
     EMG.active = emg.active;
 
-    // Emergência: mostra tudo junto, sem rotação
     if(EMG.active){
       card.classList.toggle("emgPulse", !!EMG.blink);
       stopRotation();
@@ -723,7 +681,6 @@ function buildAvisoCard(a, extraClass){
       return;
     }
 
-    // Sem emergência
     card.classList.remove("emgPulse");
 
     if(tema){
@@ -912,49 +869,44 @@ function buildAvisoCard(a, extraClass){
     adTimer = setInterval(playAd, intervalMs);
   }
 
-/* ===============================
-   📲 PWA: BOTÃO DE INSTALAÇÃO
-   =============================== */
-let deferredPrompt = null;
+  /* ===============================
+     📲 PWA: BOTÃO DE INSTALAÇÃO
+     =============================== */
+  let deferredPrompt = null;
 
-function mostrarBotaoInstalar(show){
-  const btn = document.getElementById("btnInstalarApp");
-  if(!btn) return;
-  btn.style.display = show ? "inline-flex" : "none";
-}
+  function mostrarBotaoInstalar(show){
+    const btn = document.getElementById("btnInstalarApp");
+    if(!btn) return;
+    btn.style.display = show ? "inline-flex" : "none";
+  }
 
-// Chrome/Edge disparam isso quando o app é instalável
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  mostrarBotaoInstalar(true);
-});
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    mostrarBotaoInstalar(true);
+  });
 
-// Depois de instalar, esconde o botão
-window.addEventListener("appinstalled", () => {
-  deferredPrompt = null;
-  mostrarBotaoInstalar(false);
-});
+  window.addEventListener("appinstalled", () => {
+    deferredPrompt = null;
+    mostrarBotaoInstalar(false);
+  });
 
-// Clique do botão
-async function instalarApp(){
-  if(!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  mostrarBotaoInstalar(false);
-}
+  async function instalarApp(){
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    mostrarBotaoInstalar(false);
+  }
 
-  
   /* ===============================
      📦 REGISTRO DO SERVICE WORKER
      =============================== */
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker
-        .register("sw.js")
+      navigator.serviceWorker.register("sw.js")
         .then(() => console.log("Service Worker registrado com sucesso"))
-        .catch(err => console.error("Erro no Service Worker:", err));
+        .catch((err) => console.error("Erro no Service Worker:", err));
     });
   }
 </script>
