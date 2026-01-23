@@ -1,21 +1,22 @@
 {
   "name": "Comunica Síndico – Condomínio",
   "short_name": "Síndico",
-  "start_url": "./index.html",
-  "scope": "./",
+  "description": "Comunicados e avisos do condomínio",
+  "start_url": "/comunica-sindico/?source=pwa",
+  "scope": "/comunica-sindico/",
   "display": "standalone",
   "background_color": "#0b223a",
   "theme_color": "#0b223a",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "./icons/icon-192.png",
+      "src": "icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./icons/icon-512.png",
+      "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
