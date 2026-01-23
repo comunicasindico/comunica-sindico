@@ -1,13 +1,16 @@
-const CACHE_NAME = "comunica-sindico-v2";
+const CACHE_NAME = "comunica-sindico-v3";
+
+// Base do app no GitHub Pages
+const BASE = "/comunica-sindico/";
 
 const ASSETS = [
-  "./",
-  "./index.html",
-  "./data.json",
-  "./manifest.json",
-  "./versiculos.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  BASE,
+  BASE + "index.html",
+  BASE + "data.json",
+  BASE + "manifest.json",
+  BASE + "versiculos.json",
+  BASE + "icons/icon-192.png",
+  BASE + "icons/icon-512.png"
 ];
 
 // Instala e guarda o essencial
@@ -31,10 +34,11 @@ self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // Só controla o mesmo domínio
-  if (url.origin !== location.origin) return;
+  // Só controla mesmo domínio e apenas dentro do app
+  if (url.origin !== self.location.origin) return;
+  if (!url.pathname.startsWith(BASE)) return;
 
-  // ✅ 1) NÃO cachear vídeos (MP4) nem respostas parciais (Range/206)
+  // 1) NÃO cachear vídeos (MP4) nem respostas parciais (Range/206)
   const isVideo = url.pathname.toLowerCase().endsWith(".mp4");
   const hasRange = req.headers.has("range");
   if (isVideo || hasRange) {
@@ -42,16 +46,15 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // ✅ 2) JSON: network-first (sempre tenta atualizar)
+  // 2) JSON: network-first (sempre tenta atualizar)
   const isJson =
-    url.pathname.endsWith("/data.json") ||
-    url.pathname.endsWith("/versiculos.json");
+    url.pathname === BASE + "data.json" ||
+    url.pathname === BASE + "versiculos.json";
 
   if (isJson) {
     event.respondWith(
       fetch(req)
         .then((res) => {
-          // só salva no cache se for resposta "normal" (200)
           if (res && res.ok) {
             const copy = res.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
@@ -63,6 +66,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // ✅ 3) Demais arquivos: cache-first
-  event.respondWith(caches.match(req).then((cached) => cached || fetch(req)));
+  // 3) Demais: cache-first (com fallback para rede)
+  event.respondWith(
+    caches.match(req).then((cached) => cached || fetch(req))
+  );
 });
