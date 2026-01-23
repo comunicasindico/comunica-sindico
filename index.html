@@ -267,6 +267,20 @@
       .avisos{ min-height:0; }
       .pill{ max-width: 100%; }
     }
+    /* ✅ MOBILE: permitir que o versículo/data quebrem linha e não sejam cortados */
+@media (max-width: 520px){
+  .card .head{
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start !important;
+  }
+  .card .head .pill{
+    white-space: normal;     /* permite quebrar linha */
+    line-height: 1.2;
+    width: 100%;             /* ocupa a largura no celular */
+    text-align: left;
+  }
+}
   </style>
 </head>
 
