@@ -6,12 +6,11 @@ const ASSETS = [
   "./data.json",
   "./manifest.json",
   "./versiculos.json",
-  // (opcional, mas recomendado) se existirem:
   "./icons/icon-192.png",
   "./icons/icon-512.png"
 ];
 
-// Instala e guarda o “essencial”
+// Instala e guarda o essencial
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
@@ -34,14 +33,14 @@ self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // Só controla o mesmo domínio
+  // só arquivos do próprio site
   if (url.origin !== self.location.origin) return;
 
   const isJson =
     url.pathname.endsWith("/data.json") ||
     url.pathname.endsWith("/versiculos.json");
 
-  // JSON: tenta rede, se falhar usa cache
+  // JSON: tenta rede primeiro
   if (isJson) {
     event.respondWith(
       fetch(req)
@@ -50,12 +49,14 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
           return res;
         })
-        .catch(async () => (await caches.match(req)) || new Response("{}", { headers: { "Content-Type": "application/json" } }))
+        .catch(async () => (await caches.match(req)) || new Response("{}", {
+          headers: { "Content-Type": "application/json" }
+        }))
     );
     return;
   }
 
-  // Demais arquivos: cache primeiro, depois rede (com fallback no index)
+  // Demais arquivos: cache primeiro, depois rede, fallback no index.html
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;
