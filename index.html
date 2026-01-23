@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Comunica Síndico</title>
 
-  <link rel="manifest" href="./manifest.json">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#0b223a">
 
   <style>
@@ -91,6 +94,9 @@
       white-space:nowrap;
     }
     .dot{width:10px;height:10px;border-radius:50%;background:#44d07a;box-shadow:0 0 0 4px rgba(68,208,122,.18);}
+<button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">
+  📲 Instalar App
+</button>
 
     /* ✅ Grid ocupa o restante da tela */
     .grid{
@@ -381,6 +387,20 @@
 
       const raw = await r.json();
 
+.btnInstall{
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(12,35,56,.55);
+  color:rgba(234,242,255,.92);
+  padding:10px 12px;
+  border-radius:999px;
+  font-weight:800;
+  cursor:pointer;
+  white-space:nowrap;
+}
+.btnInstall:hover{ filter:brightness(1.08); }
+
+
+      
       // ✅ Se data.json vier como ARRAY, converte para o objeto padrão do painel
       const j = Array.isArray(raw)
         ? {
@@ -892,13 +912,47 @@ function buildAvisoCard(a, extraClass){
     adTimer = setInterval(playAd, intervalMs);
   }
 
+/* ===============================
+   📲 PWA: BOTÃO DE INSTALAÇÃO
+   =============================== */
+let deferredPrompt = null;
+
+function mostrarBotaoInstalar(show){
+  const btn = document.getElementById("btnInstalarApp");
+  if(!btn) return;
+  btn.style.display = show ? "inline-flex" : "none";
+}
+
+// Chrome/Edge disparam isso quando o app é instalável
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  mostrarBotaoInstalar(true);
+});
+
+// Depois de instalar, esconde o botão
+window.addEventListener("appinstalled", () => {
+  deferredPrompt = null;
+  mostrarBotaoInstalar(false);
+});
+
+// Clique do botão
+async function instalarApp(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  mostrarBotaoInstalar(false);
+}
+
+  
   /* ===============================
      📦 REGISTRO DO SERVICE WORKER
      =============================== */
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker
-        .register("./sw.js")
+        .register("sw.js")
         .then(() => console.log("Service Worker registrado com sucesso"))
         .catch(err => console.error("Erro no Service Worker:", err));
     });
