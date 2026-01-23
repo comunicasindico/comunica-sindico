@@ -281,6 +281,18 @@
     text-align: left;
   }
 }
+    /* ✅ MOBILE: evitar que a data do aviso sobreponha o texto */
+@media (max-width: 520px){
+  .aviso{
+    padding-top: 44px; /* cria “espaço” para o badge da data */
+  }
+  .aviso .dateRange{
+    top: 10px;
+    right: 10px;
+    font-size: 10px;
+    padding: 5px 7px;
+  }
+}
   </style>
 </head>
 
@@ -604,37 +616,44 @@
     return out;
   }
 
-  // ✅ buildAvisoCard: data no canto superior direito (SEM HORA) + hora fica só embaixo
-  function buildAvisoCard(a, extraClass){
-    const p = (a.prioridade || "baixa").toLowerCase();
-    const div = document.createElement("div");
-    div.className = `aviso ${p} ${extraClass || ""}`.trim();
+function buildAvisoCard(a, extraClass){
+  const p = (a.prioridade || "baixa").toLowerCase();
+  const div = document.createElement("div");
+  div.className = `aviso ${p} ${extraClass || ""}`.trim();
 
-    // 📅 data curta (DD/MM/AAAA) — sem hora
-    let dataCurta = "";
-    try{
-      const ini = safeDate(a.inicio);
-      if(ini){
-        dataCurta = new Intl.DateTimeFormat("pt-BR", {
-          day:"2-digit", month:"2-digit", year:"numeric"
-        }).format(ini);
-      }
-    }catch{}
+  const janela = formatJanela(a);
 
-    const janela = formatJanela(a);
+  // 📅 Data curta (DD/MM/AAAA)
+  let dataCurta = "";
+  try{
+    const ini = safeDate(a.inicio);
+    if(ini){
+      dataCurta = new Intl.DateTimeFormat("pt-BR", {
+        day:"2-digit",
+        month:"2-digit",
+        year:"numeric"
+      }).format(ini);
+    }
+  }catch{}
 
-    div.innerHTML = `
-      ${dataCurta ? `<span class="dateRange">${escapeHtml(dataCurta)}</span>` : ""}
-      <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
-      <p class="d">${escapeHtml(a.descricao || a.mensagem || "")}</p>
-      ${
-        janela
-          ? `<div class="meta"><span class="tag">🕒 ${escapeHtml(janela)}</span></div>`
-          : ""
-      }
-    `;
-    return div;
-  }
+  const tags = [];
+
+  if(dataCurta) tags.push(`📅 ${dataCurta}`);
+  if(janela) tags.push(`🕒 ${janela}`);
+  if(a.tipo) tags.push(`🏷️ ${a.tipo}`);
+  if(a.local) tags.push(`📍 ${a.local}`);
+
+  div.innerHTML = `
+    <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
+    <p class="d">${escapeHtml(a.descricao || "")}</p>
+    ${
+      tags.length
+        ? `<div class="meta">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>`
+        : ""
+    }
+  `;
+  return div;
+}
 
   // ✅ Render avisos
   function renderAvisos(j){
