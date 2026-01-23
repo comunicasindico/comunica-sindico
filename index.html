@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Comunica Síndico</title>
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0b223a">
+
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0b223a">
 
   <style>
     :root{
@@ -18,7 +19,7 @@
       --radius: 18px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
+    html,body{height:100%; width:100%}
     body{
       margin:0;
       font-family:"Segoe UI",Arial,sans-serif;
@@ -27,6 +28,13 @@
         radial-gradient(1200px 700px at 15% 10%, #10385b 0%, rgba(16,56,91,0) 55%),
         radial-gradient(900px 600px at 85% 15%, #0b3454 0%, rgba(11,52,84,0) 55%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
+
+      /* =========================
+         MODO APP (TELA CHEIA)
+         ========================= */
+      overscroll-behavior:none;
+      user-select:none;
+      touch-action:manipulation;
     }
 
     /* ✅ Layout: ocupa a tela e evita scroll da página */
@@ -91,7 +99,7 @@
       display:grid;
       grid-template-columns:1.25fr .75fr;
       gap:18px;
-      min-height:0; /* IMPORTANTÍSSIMO pro scroll interno funcionar */
+      min-height:0;
     }
 
     .card{
@@ -103,7 +111,7 @@
 
       display:flex;
       flex-direction:column;
-      min-height:0; /* IMPORTANTÍSSIMO */
+      min-height:0;
     }
     .card .head{
       padding:16px 18px;
@@ -118,6 +126,10 @@
       border:1px solid var(--line);
       color:var(--muted);
       background:rgba(7,20,34,.25);
+      max-width: 62%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
     }
 
     /* ✅ Área de avisos vira “scroll interno” quando necessário */
@@ -177,7 +189,7 @@
     .tema .small{display:block; margin-top:4px; color:var(--muted); font-weight:650}
 
     .aviso{
-      position:relative; /* ✅ necessário para data no canto */
+      position:relative;
       padding:16px 16px;
       border:1px solid var(--line);
       border-radius:14px;
@@ -194,9 +206,7 @@
     .aviso.baixa{border-color: rgba(120,190,255,.35); box-shadow: 0 0 0 1px rgba(120,190,255,.18) inset;}
 
     /* Piscar suave em emergência */
-    .emgPulse{
-      animation:pulse 1s ease-in-out infinite;
-    }
+    .emgPulse{ animation:pulse 1s ease-in-out infinite; }
     @keyframes pulse{
       0%,100%{ box-shadow: 0 0 0 1px rgba(255,80,80,.35) inset, 0 0 0 0 rgba(255,80,80,.0); }
       50%{ box-shadow: 0 0 0 1px rgba(255,80,80,.55) inset, 0 0 0 8px rgba(255,80,80,.07); }
@@ -208,7 +218,7 @@
     .meta{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:rgba(234,242,255,.82);}
     .tag{padding:6px 8px; border-radius:999px; border:1px solid var(--line); background:rgba(12,35,56,.35);}
 
-    /* ✅ Data do aviso (canto superior direito) */
+    /* ✅ Data do aviso (canto superior direito) — SEM HORA */
     .aviso .dateRange{
       position:absolute;
       top:10px;
@@ -255,20 +265,8 @@
       .container{ height:calc(100vh - 16px - 60px); }
       .grid{ grid-template-columns:1fr; }
       .avisos{ min-height:0; }
+      .pill{ max-width: 100%; }
     }
-    /* =========================
-     MODO APP (TELA CHEIA)
-     ========================= */
-  body {
-    overscroll-behavior: none;
-    user-select: none;
-    touch-action: manipulation;
-  }
-
-  html, body {
-    height: 100%;
-    width: 100%;
-  }
   </style>
 </head>
 
@@ -291,25 +289,21 @@
         <section class="card" id="cardAvisos">
           <div class="head">
             <h2>Avisos do dia</h2>
-            <div class="pill" id="refData">—</div>
+            <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap;">
+              <div class="pill" id="refData">—</div>
+              <div class="pill" id="dataBiblica">—</div>
+            </div>
           </div>
 
           <div class="avisos" id="avisos"></div>
         </section>
 
         <aside class="side">
-        
-          <div class="mini">
-            <p class="label">Hora</p>
-            <p class="value big" id="horaAgora">—</p>
-          </div>
-
           <!-- ✅ PUBLICIDADE (JS usa estes IDs) -->
           <div class="mini anuncio" id="adBox" style="display:none">
             <p class="label" id="adLabel">Publicidade</p>
             <video id="adVideo" autoplay muted loop playsinline></video>
           </div>
-
         </aside>
       </div>
 
@@ -340,31 +334,9 @@
 
   // ===== Init =====
   window.addEventListener("DOMContentLoaded", () => {
-    initClock();
     loadAll();
     setInterval(loadAll, 60 * 1000);
-    // ✅ Modo app: tela cheia automática
-  if (document.documentElement.requestFullscreen) {
-    document.documentElement.requestFullscreen().catch(()=>{});
-  }
   });
-
-  function initClock(){
-    const elData = document.getElementById("dataAgora");
-    const elHora = document.getElementById("horaAgora");
-    function tick(){
-      const now = new Date();
-      const fmtData = new Intl.DateTimeFormat("pt-BR", {
-        weekday:"long", day:"2-digit", month:"long", year:"numeric"
-      }).format(now);
-      const fmtHora = new Intl.DateTimeFormat("pt-BR", {
-        hour:"2-digit", minute:"2-digit"
-      }).format(now);
-      elData.textContent = fmtData.charAt(0).toUpperCase() + fmtData.slice(1);
-      elHora.textContent = fmtHora;
-    }
-    tick(); setInterval(tick, 1000);
-  }
 
   async function loadAll(){
     const j = await loadJson();
@@ -389,7 +361,7 @@
       const j = Array.isArray(raw)
         ? {
             titulo:"Comunica Síndico",
-            subtitulo:"•Painel informativo•",
+            subtitulo:"Painel informativo",
             referencia:"",
             temaDoDia:{ modo:"automatico", temasPorDiaSemana:{} },
             avisos: raw,
@@ -408,7 +380,7 @@
       status.textContent = "Modo offline";
       return {
         titulo:"Comunica Síndico – Condomínio",
-        subtitulo:"•Painel informativo•",
+        subtitulo:"Painel informativo",
         referencia:"",
         temaDoDia:{modo:"automatico",temasPorDiaSemana:{}},
         avisos:[],
@@ -422,9 +394,17 @@
 
   async function renderHeader(j){
     document.getElementById("titulo").textContent = j.titulo || "Comunica Síndico";
-    document.getElementById("subtitulo").textContent = j.subtitulo || "Painel informativo";
+    document.getElementById("subtitulo").textContent = (j.subtitulo || "Painel informativo").replace("• Atualização automática","").trim();
 
-    const refEl = document.getElementById("refData");
+    const refEl  = document.getElementById("refData");
+    const dataEl = document.getElementById("dataBiblica");
+
+    // ✅ DATA NO FINAL (mesma fonte/padrão do versículo)
+    const hoje = new Date();
+    const dataFmt = new Intl.DateTimeFormat("pt-BR", {
+      weekday:"long", day:"2-digit", month:"long", year:"numeric"
+    }).format(hoje);
+    dataEl.textContent = dataFmt.charAt(0).toUpperCase() + dataFmt.slice(1);
 
     // Se não for modo bíblico anual, mantém comportamento atual
     if(!(j.referencia && typeof j.referencia === "object" && j.referencia.modo === "biblico-anual")){
@@ -437,9 +417,8 @@
       const arquivo = j.referencia.arquivo || "./versiculos.json";
       const fallback = j.referencia.fallback || "Versículo do dia";
 
-      const now = new Date();
-      const mm = String(now.getMonth() + 1).padStart(2, "0");
-      const dd = String(now.getDate()).padStart(2, "0");
+      const mm = String(hoje.getMonth() + 1).padStart(2, "0");
+      const dd = String(hoje.getDate()).padStart(2, "0");
       const key = `${mm}-${dd}`;
 
       const r = await fetch(arquivo + "?ts=" + Date.now(), { cache:"no-store" });
@@ -513,33 +492,7 @@
     }catch{ return ""; }
   }
 
-  // ✅ NOVO: Data curta no canto do aviso (DD/MM • HH:MM–HH:MM)
-  function formatDateRange(a){
-    const ini = safeDate(a.inicio);
-    const fim = safeDate(a.fim);
-    if(!ini && !fim) return "";
-
-    const d = (x)=> new Intl.DateTimeFormat("pt-BR",{day:"2-digit",month:"2-digit"}).format(x);
-    const h = (x)=> new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(x);
-
-    if(ini && fim){
-      const sameDay =
-        ini.getFullYear()===fim.getFullYear() &&
-        ini.getMonth()===fim.getMonth() &&
-        ini.getDate()===fim.getDate();
-
-      return sameDay
-        ? `${d(ini)} • ${h(ini)}–${h(fim)}`
-        : `${d(ini)} • ${h(ini)} → ${d(fim)} • ${h(fim)}`;
-    }
-
-    if(ini) return `${d(ini)} • ${h(ini)}`;
-    if(fim) return `até ${d(fim)} • ${h(fim)}`;
-
-    return "";
-  }
-
-  // ===== EMERGÊNCIA 2.6 =====
+  // ===== EMERGÊNCIA =====
   function configureEmergency(j){
     const cfg = j.emergencia || {};
     EMG.enabled = cfg.ativar !== false;
@@ -558,7 +511,7 @@
     return { active: items.length > 0, items };
   }
 
-  // ===== Rotação 2.5 =====
+  // ===== Rotação =====
   function prepareRotation(j){
     const cfg = j.rotacao || {};
     ROT.enabled = !!cfg.ativar;
@@ -639,52 +592,39 @@
     return out;
   }
 
-  // ✅ buildAvisoCard agora inclui data no canto superior direito
+  // ✅ buildAvisoCard: data no canto superior direito (SEM HORA) + hora fica só embaixo
   function buildAvisoCard(a, extraClass){
     const p = (a.prioridade || "baixa").toLowerCase();
     const div = document.createElement("div");
     div.className = `aviso ${p} ${extraClass || ""}`.trim();
 
+    // 📅 data curta (DD/MM/AAAA) — sem hora
+    let dataCurta = "";
+    try{
+      const ini = safeDate(a.inicio);
+      if(ini){
+        dataCurta = new Intl.DateTimeFormat("pt-BR", {
+          day:"2-digit", month:"2-digit", year:"numeric"
+        }).format(ini);
+      }
+    }catch{}
+
     const janela = formatJanela(a);
 
-// 📅 Data curta (SEM hora) para o canto superior
-let dataCurta = "";
-try{
-  const ini = safeDate(a.inicio);
-  if(ini){
-    dataCurta = new Intl.DateTimeFormat("pt-BR", {
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric"
-    }).format(ini);
-  }
-}catch{}
-
-    const faixaData = formatDateRange(a);
-
-    const tags = [];
-    if(a.tipo) tags.push(`🏷️ ${a.tipo}`);
-    if(a.local) tags.push(`📍 ${a.local}`);
-    if(janela) tags.push(`🕒 ${janela}`);
-
     div.innerHTML = `
-  ${dataCurta ? `<span class="dateRange">${dataCurta}</span>` : ""}
-  <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
-  <p class="d">${escapeHtml(a.descricao || "")}</p>
-  ${
-    janela
-      ? `<div class="meta"><span class="tag">🕒 ${escapeHtml(janela)}</span></div>`
-      : ""
-  }
-`;
+      ${dataCurta ? `<span class="dateRange">${escapeHtml(dataCurta)}</span>` : ""}
+      <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
+      <p class="d">${escapeHtml(a.descricao || a.mensagem || "")}</p>
+      ${
+        janela
+          ? `<div class="meta"><span class="tag">🕒 ${escapeHtml(janela)}</span></div>`
+          : ""
+      }
+    `;
     return div;
   }
 
-  // =========================================================
-  // ✅ Em modo emergência: mostra TODOS os avisos ativos juntos
-  //   (emergências no topo + demais abaixo), SEM rotação.
-  // ✅ Sem emergência: se não houver ativos, mostra “próximos avisos”.
-  // =========================================================
+  // ✅ Render avisos
   function renderAvisos(j){
     const avisosEl = document.getElementById("avisos");
     const card = document.getElementById("cardAvisos");
@@ -694,11 +634,9 @@ try{
     const emg = computeActiveEmergency(j);
     EMG.active = emg.active;
 
-    // Se emergência ativa: banner + emergências + demais avisos (todos juntos)
+    // Emergência: mostra tudo junto, sem rotação
     if(EMG.active){
       card.classList.toggle("emgPulse", !!EMG.blink);
-
-      // ✅ em emergência: sem rotação (para não “sumir” avisos)
       stopRotation();
 
       const banner = document.createElement("div");
@@ -706,10 +644,7 @@ try{
       banner.innerHTML = `🚨 MODO EMERGÊNCIA ATIVO<small>Exibindo comunicados urgentes no topo</small>`;
       avisosEl.appendChild(banner);
 
-      const emgList = emg.items
-        .slice()
-        .sort((a,b)=> prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
-
+      const emgList = emg.items.slice().sort((a,b)=> prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
       emgList.forEach(a => avisosEl.appendChild(buildAvisoCard(a, EMG.blink ? "emgPulse" : "")));
 
       const sep = document.createElement("div");
@@ -732,7 +667,6 @@ try{
         return;
       }
 
-      // ✅ MOSTRA TODOS (sem rotação)
       normalList.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
       ensureProgressUI();
       return;
@@ -751,7 +685,6 @@ try{
     if(!ROT.items.length){
       const now = new Date();
 
-      // pega próximos avisos (começam no futuro)
       const upcoming = (j.avisos || [])
         .filter(a => a.inicio && !isNaN(new Date(a.inicio).getTime()))
         .filter(a => new Date(a.inicio) > now)
@@ -891,7 +824,7 @@ try{
     wxTimer = setInterval(atualizar, 10 * 60 * 1000);
   }
 
-  // ===== PUBLICIDADE EM VÍDEO (com data.json.publicidade) =====
+  // ===== PUBLICIDADE =====
   function initPublicidade(cfg){
     const box = document.getElementById("adBox");
     const video = document.getElementById("adVideo");
@@ -913,7 +846,7 @@ try{
     box.style.display = "block";
     adIdx = 0;
 
-    const intervalMs = Math.max(8, Number(cfg.intervaloSeg || 15)) * 1000;
+    const intervalMs = Math.max(6, Number(cfg.intervaloSeg || 15)) * 1000;
 
     function playAd(){
       const ad = cfg.videos[adIdx];
@@ -927,6 +860,7 @@ try{
     playAd();
     adTimer = setInterval(playAd, intervalMs);
   }
+
   /* ===============================
      📦 REGISTRO DO SERVICE WORKER
      =============================== */
@@ -939,23 +873,6 @@ try{
     });
   }
 </script>
-let deferredPrompt = null;
 
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  console.log("App pronto para instalar");
-});
-
-// botão invisível (atalho por gesto)
-document.addEventListener("dblclick", async () => {
-  if (!deferredPrompt) return;
-
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  console.log("Resultado instalação:", outcome);
-  deferredPrompt = null;
-});
-</script>
 </body>
 </html>
