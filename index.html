@@ -899,25 +899,39 @@
     mostrarBotaoInstalar(false);
   }
 /* ===============================
-   📦 REGISTRO DO SERVICE WORKER + AUTO UPDATE
+   📦 REGISTRO DO SERVICE WORKER + AUTO UPDATE (BLINDADO)
    =============================== */
 if ("serviceWorker" in navigator) {
 
-  window.addEventListener("load", () => {
+  window.addEventListener("load", async () => {
+    try {
+      const reg = await navigator.serviceWorker.register("sw.js");
+      console.log("Service Worker registrado com sucesso");
 
-    navigator.serviceWorker.register("sw.js")
-      .then((reg) => {
-        console.log("Service Worker registrado com sucesso");
+      // 🔄 força verificação de nova versão ao abrir
+      if (reg.update) reg.update();
 
-        // 🔄 força verificação de nova versão
-        if (reg.update) {
-          reg.update();
-        }
-      })
-      .catch((err) => console.error("Erro no Service Worker:", err));
+      // 🆕 quando encontrar atualização
+      reg.addEventListener("updatefound", () => {
+        const nw = reg.installing;
+        if (!nw) return;
+
+        nw.addEventListener("statechange", () => {
+          // se já existe um SW controlando a página e o novo terminou de instalar:
+          if (nw.state === "installed" && navigator.serviceWorker.controller) {
+            console.log("Nova versão baixada. Ativando agora...");
+            // pede para o novo SW ativar imediatamente
+            nw.postMessage("SKIP_WAITING");
+          }
+        });
+      });
+
+    } catch (err) {
+      console.error("Erro no Service Worker:", err);
+    }
   });
 
-  // ✅ quando um novo SW assumir o controle, recarrega a página
+  // ✅ quando o novo SW assumir o controle, recarrega a página
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     console.log("Nova versão do app detectada. Recarregando...");
     window.location.reload();
