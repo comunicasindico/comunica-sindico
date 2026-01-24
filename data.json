@@ -23,36 +23,40 @@
     "modo": "automatico",
     "temasPorDiaSemana": {}
   },
- "publicidade": {
-  "ativar": true,
-  "intervaloSeg": 7,
-  "videos": [
-    {
-      "arquivo": "./ads/01castelo.MP4",
-      "anunciante": "Castelo – Experiência Especial"
-    },
-    {
-      "arquivo": "./ads/02parque.mp4",
-      "anunciante": "Parque – Lazer e Diversão"
-    },
-    {
-      "arquivo": "./ads/03larissa.mp4",
-      "anunciante": "Larissa – Momentos Especiais"
-    },
-    {
-      "arquivo": "./ads/04paty.MP4",
-      "anunciante": "Paty – Experiência Internacional"
-    },
-    {
-      "arquivo": "./ads/05port.mp4",
-      "anunciante": "SWOT Cristão – Português"
-    },
-    {
-      "arquivo": "./ads/07cafe.mp4",
-      "anunciante": "Café com SWOT Cristão"
-    }
-  ]
-},
+  "publicidade": {
+    "ativar": true,
+    "intervaloSeg": 7,
+    "videos": [
+      {
+        "arquivo": "./ads/01castelo.MP4",
+        "anunciante": "Castelo – Experiência Especial"
+      },
+      {
+        "arquivo": "./ads/02parque.mp4",
+        "anunciante": "Parque – Lazer e Diversão"
+      },
+      {
+        "arquivo": "./ads/03larissa.mp4",
+        "anunciante": "Larissa – Momentos Especiais"
+      },
+      {
+        "arquivo": "./ads/04paty.MP4",
+        "anunciante": "Paty – Experiência Internacional"
+      },
+      {
+        "arquivo": "./ads/05port.mp4",
+        "anunciante": "SWOT Cristão – Português"
+      },
+      {
+        "arquivo": "./ads/05port.mp4",
+        "anunciante": "SWOT Cristão – Português"
+      },
+      {
+        "arquivo": "./ads/calibra.mp4",
+        "anunciante": "Melhor loja da região e do Brasil - Seu Caminhão merece o melhor"
+      }
+    ]
+  },
   "clima": {
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
@@ -69,8 +73,8 @@
       "prioridade": "alta",
       "tipo": "Segurança",
       "local": "Área técnica / Central de gás",
-      "inicio": "2026-01-22T08:00:00-03:00",
-      "fim": "2026-01-22T17:00:00-03:00",
+      "inicio": "2026-01-23T08:00:00-03:00",
+      "fim": "2026-01-29T17:00:00-03:00",
       "emergencia": true
     },
     {
