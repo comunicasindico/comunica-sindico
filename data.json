@@ -25,7 +25,7 @@
   },
   "publicidade": {
     "ativar": true,
-    "intervaloSeg": 7,
+    "intervaloSeg": 10,
     "videos": [
       {
         "arquivo": "./ads/rafinha_keyon.MP4",
