@@ -67,14 +67,14 @@
   },
   "avisos": [
     {
-      "titulo": "Barulho após às 22h",
-      "descricao": "Evitem barulho e poluição sonora após este horário. Reformas somente no horário comercial",
-      "prioridade": "alta",
-      "tipo": "Convivência",
-      "local": "Áreas Comuns e Apartamentos",
-      "inicio": "2026-01-24T02:19:00.000Z",
-      "fim": "2026-02-01T02:19:00.000Z",
-      "emergencia": true
+      "titulo": "Salão de Festas",
+      "descricao": "Usem, limpem e deixem fechadas todas as portas. Desliguem os ares-condicionados.",
+      "prioridade": "baixa",
+      "tipo": "Limpeza",
+      "local": "Salão de festas",
+      "inicio": "2026-01-24T11:00:00.000Z",
+      "fim": "2026-02-20T05:01:00.000Z",
+      "emergencia": false
     }
   ]
 }
