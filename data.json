@@ -54,7 +54,8 @@
       {
         "arquivo": "./ads/calibra02.mp4",
         "anunciante": "Visite-nos e veja o que temos de especial"
-      },{
+      },
+      {
         "arquivo": "./ads/rododis01.mp4",
         "anunciante": "Nosso diferencial é te atender cada vez melhor"
       },
@@ -74,13 +75,23 @@
   },
   "avisos": [
     {
-      "titulo": "Salão de Festas",
-      "descricao": "Usem, limpem e deixem fechadas todas as portas. Desliguem os ares-condicionados.",
+      "titulo": "Alarme",
+      "descricao": "Reforçamos a importância de alguns cuidados em relação ao alarme do residencial e das áreas comuns em horario de descanso.\n\nAo retornar, ao residencial e o alarme estar em horário de ativação é fundamental lembrar de desativa-lo, evitando que ele fique tocando e acabe incomodando outros moradores, principalmente em horários de descanso. (Se atentar ao alarme do hall).\n\nTambém lembramos que, ao autorizar a entrada de terceiros ( visitas, etc.) em horários de descanso, o morador responsável deve descer previamente para desativar o alarme, garantindo a tranquilidade de todos.",
       "prioridade": "baixa",
-      "tipo": "Limpeza",
-      "local": "Salão de festas",
-      "inicio": "2026-01-24T11:00:00.000Z",
-      "fim": "2026-02-20T05:01:00.000Z",
+      "tipo": "Uso do Alarme",
+      "local": "Hall de entrada",
+      "inicio": "2026-01-24T13:33",
+      "fim": "2026-01-31T13:33",
+      "emergencia": false
+    },
+    {
+      "titulo": "Máquina de lavar",
+      "descricao": "Informamos que a máquina da lavanderia apresentou uma falha técnica e, por esse motivo, foi desativada. \n\nNo momento, não há outras máquinas disponíveis no residencial para uso coletivo.\n\nPedimos desculpas pelo transtorno e agradecemos a compreensão de todos",
+      "prioridade": "baixa",
+      "tipo": "Máquina de Lavar",
+      "local": "Lavanderia",
+      "inicio": "2026-01-24T08:00",
+      "fim": "2026-01-31T01:00",
       "emergencia": false
     }
   ]
