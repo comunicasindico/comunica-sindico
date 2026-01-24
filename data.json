@@ -6,6 +6,10 @@
     "arquivo": "./versiculos.json",
     "fallback": "Você tem valor. Valorize o que você tem."
   },
+  "temaDoDia": {
+    "modo": "automatico",
+    "temasPorDiaSemana": {}
+  },
   "rotacao": {
     "ativar": false,
     "intervaloSeg": 12,
@@ -18,10 +22,6 @@
     "intervaloSeg": 4,
     "piscar": true,
     "somenteAlta": true
-  },
-  "temaDoDia": {
-    "modo": "automatico",
-    "temasPorDiaSemana": {}
   },
   "publicidade": {
     "ativar": true,
@@ -67,48 +67,14 @@
   },
   "avisos": [
     {
-      "id": "gas-20260122-0800",
-      "titulo": "Vazamento de gás – inspeção e correção",
-      "descricao": "Foi identificado um vazamento de gás em área técnica do condomínio. A equipe especializada realizará inspeção e correções preventivas para garantir a segurança de todos. Evite circular pela área isolada durante o período do serviço.",
+      "titulo": "Barulho após às 22h",
+      "descricao": "Evitem barulho e poluição sonora após este horário. Reformas somente no horário comercial",
       "prioridade": "alta",
-      "tipo": "Segurança",
-      "local": "Área técnica / Central de gás",
-      "inicio": "2026-01-23T08:00:00-03:00",
-      "fim": "2026-01-29T17:00:00-03:00",
+      "tipo": "Convivência",
+      "local": "Áreas Comuns e Apartamentos",
+      "inicio": "2026-01-24T02:19:00.000Z",
+      "fim": "2026-02-01T02:19:00.000Z",
       "emergencia": true
-    },
-    {
-      "id": "elevador-20260125-0800",
-      "titulo": "Elevador em manutenção (preventiva)",
-      "descricao": "O elevador passará por manutenção preventiva e ajustes técnicos. Durante o período, poderá haver interrupções temporárias no funcionamento.",
-      "prioridade": "media",
-      "tipo": "Manutenção",
-      "local": "Elevadores",
-      "inicio": "2026-01-25T08:00:00-03:00",
-      "fim": "2026-01-25T17:00:00-03:00",
-      "emergencia": false
-    },
-    {
-      "id": "piscina-20260126-0800",
-      "titulo": "Piscina e área de lazer – limpeza e organização",
-      "descricao": "A piscina e a área de lazer estarão em processo de limpeza, organização e manutenção preventiva para melhor conforto e segurança dos moradores.",
-      "prioridade": "baixa",
-      "tipo": "Lazer",
-      "local": "Piscina e área de lazer",
-      "inicio": "2026-01-26T08:00:00-03:00",
-      "fim": "2026-01-26T17:00:00-03:00",
-      "emergencia": false
-    },
-    {
-      "id": "hall-20260128-0800",
-      "titulo": "Hall de entrada – poda, limpeza e drenagem urbana",
-      "descricao": "Serão realizados serviços de poda de galhos de árvores, limpeza geral e ações de drenagem urbana no hall de entrada, visando segurança, estética e prevenção de alagamentos.",
-      "prioridade": "baixa",
-      "tipo": "Serviços",
-      "local": "Hall de entrada e áreas externas",
-      "inicio": "2026-01-28T08:00:00-03:00",
-      "fim": "2026-01-28T17:00:00-03:00",
-      "emergencia": false
     }
   ]
 }
