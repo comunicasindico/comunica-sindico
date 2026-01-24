@@ -5,33 +5,61 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Síndico(a) — Comunica Síndico</title>
 
-  <link rel="manifest" href="./manifest.json">
+  <!-- Manifest do Síndico -->
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0b223a">
 
-  <!-- opcional: mesmos ícones -->
-  <link rel="icon" href="../icons/icon-192.png">
-  <link rel="apple-touch-icon" href="../icons/icon-192.png">
+  <!-- Ícones próprios do Síndico -->
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
 
   <style>
-    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#061726;color:#eaf2ff;display:flex;min-height:100vh;align-items:center;justify-content:center}
-    .box{max-width:720px;padding:22px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(12,35,56,.45)}
+    body{
+      margin:0;
+      font-family:Segoe UI,Arial,sans-serif;
+      background:#061726;
+      color:#eaf2ff;
+      display:flex;
+      min-height:100vh;
+      align-items:center;
+      justify-content:center;
+    }
+    .box{
+      max-width:720px;
+      padding:22px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      background:rgba(12,35,56,.45);
+      text-align:center;
+    }
     h1{margin:0 0 10px}
     p{margin:0 0 14px;opacity:.85}
-    a,button{display:inline-flex;gap:8px;align-items:center;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(12,35,56,.65);color:#eaf2ff;padding:10px 12px;font-weight:800;text-decoration:none;cursor:pointer}
+    a{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(12,35,56,.65);
+      color:#eaf2ff;
+      padding:12px 16px;
+      font-weight:800;
+      text-decoration:none;
+      cursor:pointer;
+    }
   </style>
 </head>
+
 <body>
   <div class="box">
-    <h1>Síndico(a) — Comunica Síndico</h1>
-    <p>Abrindo o painel administrativo…</p>
-    <p><a id="go" href="https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec">➡️ Abrir Admin</a></p>
-  </div>
+    <h1>📋 Síndico(a) — Comunica Síndico</h1>
+    <p>Painel administrativo para gerenciar avisos do condomínio.</p>
 
-  <script>
-    // redireciona automaticamente
-    setTimeout(() => {
-      window.location.href = document.getElementById("go").href;
-    }, 600);
-  </script>
+    <p>
+      <a id="go" href="https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec">
+        ➡️ Abrir Painel do Síndico
+      </a>
+    </p>
+  </div>
 </body>
 </html>
