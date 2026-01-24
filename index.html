@@ -297,7 +297,12 @@
           </div>
         </div>
       </div>
-
+      
+<!-- ✅ AQUI entra o banner -->
+      <div id="updateBanner" class="updateBanner" style="display:none">
+        ⬆️ Nova versão disponível. Atualizando…
+      </div>
+      
       <div class="grid">
         <section class="card" id="cardAvisos">
           <div class="head" style="justify-content:center;">
@@ -931,11 +936,18 @@ if ("serviceWorker" in navigator) {
     }
   });
 
-  // ✅ quando o novo SW assumir o controle, recarrega a página
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    console.log("Nova versão do app detectada. Recarregando...");
+ // ✅ quando um novo SW assumir o controle, mostra banner e recarrega
+navigator.serviceWorker.addEventListener("controllerchange", () => {
+  const banner = document.getElementById("updateBanner");
+  if (banner) {
+    banner.style.display = "block";
+  }
+
+  console.log("Nova versão detectada. Atualizando...");
+  setTimeout(() => {
     window.location.reload();
-  });
+  }, 2000);
+});
 
 }
  
