@@ -7,7 +7,7 @@
    - HTML navegação: network-first (fallback offline)
    ========================================================== */
 
-const CACHE_VERSION = "v6"; // <- aumente (v7, v8...) sempre que quiser forçar refresh geral
+const CACHE_VERSION = "v7"; // <- aumente (v7, v8...) sempre que quiser forçar refresh geral
 const CACHE_NAME = `comunica-sindico-${CACHE_VERSION}`;
 
 // Arquivos essenciais (App Shell)
