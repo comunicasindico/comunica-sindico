@@ -247,7 +247,14 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
     }
-    .mini .label{font-size:12px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.25px; margin:0 0 10px;}
+    .mini .label{
+      font-size:12px;
+      font-weight:800;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.25px;
+      margin:0 0 10px;
+    }
 
     #wxbar{
       position:fixed; left:0; right:0; bottom:0;
@@ -297,12 +304,12 @@
           </div>
         </div>
       </div>
-      
-<!-- ✅ AQUI entra o banner -->
+
+      <!-- ✅ AQUI entra o banner -->
       <div id="updateBanner" class="updateBanner" style="display:none">
         ⬆️ Nova versão disponível. Atualizando…
       </div>
-      
+
       <div class="grid">
         <section class="card" id="cardAvisos">
           <div class="head" style="justify-content:center;">
@@ -316,8 +323,10 @@
 
         <aside class="side">
           <div class="mini anuncio" id="adBox" style="display:none">
-            <p class="label" id="adLabel">Publicidade</p>
-            <video id="adVideo" autoplay muted loop playsinline></video>
+            <!-- ✅ sem "Publicidade" -->
+            <p class="label" id="adLabel"></p>
+            <!-- ✅ sem loop: cada vídeo toca até o fim -->
+            <video id="adVideo" autoplay muted playsinline></video>
           </div>
         </aside>
       </div>
@@ -344,7 +353,6 @@
 
   // ===== PUBLICIDADE =====
   let adIdx = 0;
-  let adTimer = null;
   let adCfgKey = "";
 
   // ===== Init =====
@@ -837,7 +845,7 @@
     wxTimer = setInterval(atualizar, 10 * 60 * 1000);
   }
 
-  // ===== PUBLICIDADE =====
+  // ===== PUBLICIDADE (vídeo completo + rotação ao terminar) =====
   function initPublicidade(cfg){
     const box = document.getElementById("adBox");
     const video = document.getElementById("adVideo");
@@ -845,33 +853,50 @@
 
     if(!cfg || !cfg.ativar || !cfg.videos || !cfg.videos.length){
       box.style.display = "none";
-      if(adTimer){ clearInterval(adTimer); adTimer = null; }
       adCfgKey = "";
+      // limpa handlers para evitar acumular
+      if (video){
+        video.onended = null;
+        video.onerror = null;
+        video.src = "";
+      }
       return;
     }
 
-    const key = JSON.stringify({i:cfg.intervaloSeg, v:cfg.videos});
-    if(adCfgKey === key && adTimer) return;
+    // evita reinicializar sem necessidade
+    const key = JSON.stringify({ v: cfg.videos });
+    if(adCfgKey === key) return;
     adCfgKey = key;
-
-    if(adTimer){ clearInterval(adTimer); adTimer = null; }
 
     box.style.display = "block";
     adIdx = 0;
 
-    const intervalMs = Math.max(6, Number(cfg.intervaloSeg || 15)) * 1000;
+    // autoplay seguro
+    video.muted = true;
+    video.playsInline = true;
+    video.autoplay = true;
 
-    function playAd(){
-      const ad = cfg.videos[adIdx];
-      label.textContent = "Publicidade" + (ad?.anunciante ? " • " + ad.anunciante : "");
+    function playNext(){
+      const ad = cfg.videos[adIdx % cfg.videos.length];
+      adIdx++;
+
+      // ✅ sem "Publicidade": mostra só anunciante (ou vazio)
+      label.textContent = ad?.anunciante ? ad.anunciante : "";
+
       video.src = ad?.arquivo || "";
       video.load();
-      video.play().catch(()=>{});
-      adIdx = (adIdx + 1) % cfg.videos.length;
+      const p = video.play();
+      if(p && p.catch) p.catch(()=>{});
     }
 
-    playAd();
-    adTimer = setInterval(playAd, intervalMs);
+    // quando terminar → próximo
+    video.onended = () => playNext();
+
+    // se erro → pula
+    video.onerror = () => playNext();
+
+    // inicia
+    playNext();
   }
 
   /* ===============================
@@ -903,54 +928,50 @@
     deferredPrompt = null;
     mostrarBotaoInstalar(false);
   }
-/* ===============================
-   📦 REGISTRO DO SERVICE WORKER + AUTO UPDATE (BLINDADO)
-   =============================== */
-if ("serviceWorker" in navigator) {
 
-  window.addEventListener("load", async () => {
-    try {
-      const reg = await navigator.serviceWorker.register("sw.js");
-      console.log("Service Worker registrado com sucesso");
+  /* ===============================
+     📦 REGISTRO DO SERVICE WORKER + AUTO UPDATE (BLINDADO)
+     =============================== */
+  if ("serviceWorker" in navigator) {
 
-      // 🔄 força verificação de nova versão ao abrir
-      if (reg.update) reg.update();
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("sw.js");
+        console.log("Service Worker registrado com sucesso");
 
-      // 🆕 quando encontrar atualização
-      reg.addEventListener("updatefound", () => {
-        const nw = reg.installing;
-        if (!nw) return;
+        // 🔄 força verificação de nova versão ao abrir
+        if (reg.update) reg.update();
 
-        nw.addEventListener("statechange", () => {
-          // se já existe um SW controlando a página e o novo terminou de instalar:
-          if (nw.state === "installed" && navigator.serviceWorker.controller) {
-            console.log("Nova versão baixada. Ativando agora...");
-            // pede para o novo SW ativar imediatamente
-            nw.postMessage("SKIP_WAITING");
-          }
+        // 🆕 quando encontrar atualização
+        reg.addEventListener("updatefound", () => {
+          const nw = reg.installing;
+          if (!nw) return;
+
+          nw.addEventListener("statechange", () => {
+            // se já existe um SW controlando a página e o novo terminou de instalar:
+            if (nw.state === "installed" && navigator.serviceWorker.controller) {
+              console.log("Nova versão baixada. Ativando agora...");
+              // pede para o novo SW ativar imediatamente
+              nw.postMessage("SKIP_WAITING");
+            }
+          });
         });
-      });
 
-    } catch (err) {
-      console.error("Erro no Service Worker:", err);
-    }
-  });
+      } catch (err) {
+        console.error("Erro no Service Worker:", err);
+      }
+    });
 
- // ✅ quando um novo SW assumir o controle, mostra banner e recarrega
-navigator.serviceWorker.addEventListener("controllerchange", () => {
-  const banner = document.getElementById("updateBanner");
-  if (banner) {
-    banner.style.display = "block";
+    // ✅ quando um novo SW assumir o controle, mostra banner e recarrega
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      const banner = document.getElementById("updateBanner");
+      if (banner) banner.style.display = "block";
+
+      console.log("Nova versão detectada. Atualizando...");
+      setTimeout(() => window.location.reload(), 2000);
+    });
+
   }
-
-  console.log("Nova versão detectada. Atualizando...");
-  setTimeout(() => {
-    window.location.reload();
-  }, 2000);
-});
-
-}
- 
 </script>
 
 </body>
