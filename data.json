@@ -28,8 +28,8 @@
     "intervaloSeg": 7,
     "videos": [
       {
-        "arquivo": "./ads/01castelo.MP4",
-        "anunciante": "Castelo – Experiência Especial"
+        "arquivo": "./ads/rafinha_keyon.MP4",
+        "anunciante": "O melhor Corretor de Santa Catarina"
       },
       {
         "arquivo": "./ads/02parque.mp4",
@@ -48,12 +48,19 @@
         "anunciante": "SWOT Cristão – Português"
       },
       {
-        "arquivo": "./ads/05port.mp4",
-        "anunciante": "SWOT Cristão – Português"
+        "arquivo": "./ads/calibra01.mp4",
+        "anunciante": "Loja de Caminhões"
+      },
+      {
+        "arquivo": "./ads/calibra02.mp4",
+        "anunciante": "Visite-nos e veja o que temos de especial"
+      },{
+        "arquivo": "./ads/rododis01.mp4",
+        "anunciante": "Nosso diferencial é te atender cada vez melhor"
       },
       {
         "arquivo": "./ads/calibra.mp4",
-        "anunciante": "Melhor loja da região e do Brasil - Seu Caminhão merece o melhor"
+        "anunciante": "Melhor loja da região e do Brasil - Seu Caminhão merece"
       }
     ]
   },
