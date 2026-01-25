@@ -1,10 +1,11 @@
 {
+  "id": "comunica-sindico-sindico",
   "name": "Síndico(a) — Comunica Síndico",
   "short_name": "Síndico(a)",
   "description": "Painel administrativo do síndico para publicar avisos e enviar comunicados automáticos aos condôminos.",
   "lang": "pt-BR",
 
-  "start_url": "./index.html",
+  "start_url": "./?pwa=sindico",
   "scope": "./",
 
   "display": "standalone",
