@@ -2,16 +2,18 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Condôminos - Comunica Síndico(a)</title>
 
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icons/icon-192.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#0b223a">
+  <!-- Deixa mais “cara de app” no iPhone -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#061726">
 
   <style>
     :root{
@@ -22,9 +24,17 @@
       --muted:rgba(234,242,255,.75);
       --shadow: 0 14px 50px rgba(0,0,0,.35);
       --radius: 18px;
+
+      /* safe-area helpers */
+      --sat: env(safe-area-inset-top);
+      --sar: env(safe-area-inset-right);
+      --sab: env(safe-area-inset-bottom);
+      --sal: env(safe-area-inset-left);
     }
+
     *{box-sizing:border-box}
     html,body{height:100%; width:100%}
+
     body{
       margin:0;
       font-family:"Segoe UI",Arial,sans-serif;
@@ -36,18 +46,28 @@
       overscroll-behavior:none;
       user-select:none;
       touch-action:manipulation;
+
+      /* iPhone: altura real do viewport */
+      min-height:100dvh;
     }
 
-    /* ✅ Layout: ocupa a tela e evita scroll da página */
+    /* ✅ Tela cheia real + safe-area */
     .wrap{
-      height:100vh;
-      padding:26px 26px 60px;
+      min-height:100dvh;
+      width:100%;
+      padding:
+        calc(18px + var(--sat))
+        calc(18px + var(--sar))
+        calc(18px + var(--sab) + 58px) /* + espaço da wxbar */
+        calc(18px + var(--sal));
       display:flex;
       justify-content:center;
     }
+
+    /* ✅ Container cresce e ocupa tudo */
     .container{
-      width:min(1400px,96vw);
-      height:calc(100vh - 26px - 60px);
+      width:min(1400px, 100%);
+      min-height:calc(100dvh - var(--sat) - var(--sab) - 36px - 58px);
       display:flex;
       flex-direction:column;
       gap:18px;
@@ -93,7 +113,6 @@
     }
     .dot{width:10px;height:10px;border-radius:50%;background:#44d07a;box-shadow:0 0 0 4px rgba(68,208,122,.18);}
 
-    /* ✅ Botão instalar (PWA) */
     .btnInstall{
       border:1px solid rgba(255,255,255,.18);
       background:rgba(12,35,56,.55);
@@ -106,8 +125,19 @@
       display:inline-flex;
       align-items:center;
       gap:8px;
+      font-size:16px; /* evita zoom iOS */
     }
     .btnInstall:hover{ filter:brightness(1.08); }
+
+    /* ✅ Banner update (faltava CSS) */
+    .updateBanner{
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(120,190,255,.35);
+      background:rgba(7,20,34,.28);
+      box-shadow:var(--shadow);
+      font-weight:900;
+    }
 
     /* ✅ Grid ocupa o restante da tela */
     .grid{
@@ -148,7 +178,7 @@
       white-space:nowrap;
     }
 
-    /* ✅ Área de avisos vira “scroll interno” quando necessário */
+    /* ✅ Área de avisos com scroll interno */
     .avisos{
       padding:16px 18px 18px;
       flex:1;
@@ -158,9 +188,9 @@
       flex-direction:column;
       gap:12px;
       position:relative;
+      -webkit-overflow-scrolling:touch;
     }
 
-    /* Progresso da rotação */
     .progressWrap{
       position:absolute;
       left:18px; right:18px; top:10px;
@@ -177,7 +207,6 @@
       transition:width .12s linear;
     }
 
-    /* Banner de emergência */
     .emgBanner{
       padding:12px 14px;
       border-radius:14px;
@@ -221,7 +250,6 @@
     .aviso.media{border-color: rgba(255,200,70,.40); box-shadow: 0 0 0 1px rgba(255,200,70,.25) inset;}
     .aviso.baixa{border-color: rgba(120,190,255,.35); box-shadow: 0 0 0 1px rgba(120,190,255,.18) inset;}
 
-    /* Piscar suave em emergência */
     .emgPulse{ animation:pulse 1s ease-in-out infinite; }
     @keyframes pulse{
       0%,100%{ box-shadow: 0 0 0 1px rgba(255,80,80,.35) inset, 0 0 0 0 rgba(255,80,80,.0); }
@@ -256,9 +284,16 @@
       margin:0 0 10px;
     }
 
+    /* ✅ wxbar respeita safe-area */
     #wxbar{
-      position:fixed; left:0; right:0; bottom:0;
-      padding:10px 14px;
+      position:fixed;
+      left:0; right:0;
+      bottom:0;
+      padding:
+        10px
+        calc(14px + var(--sar))
+        calc(10px + var(--sab))
+        calc(14px + var(--sal));
       font:800 14px "Segoe UI",Arial,sans-serif;
       display:flex; gap:12px; align-items:center; justify-content:center;
       background:#0b223a; color:#fff;
@@ -267,19 +302,19 @@
     }
 
     @media(max-width:980px){
-      .wrap{ padding:16px 16px 60px; }
-      .container{ height:calc(100vh - 16px - 60px); }
+      .wrap{
+        padding:
+          calc(14px + var(--sat))
+          calc(14px + var(--sar))
+          calc(14px + var(--sab) + 58px)
+          calc(14px + var(--sal));
+      }
       .grid{ grid-template-columns:1fr; }
       .pill{ white-space:normal; }
     }
     @media (max-width: 520px){
-      .card .head{
-        justify-content:flex-start !important;
-      }
-      .card .head .pill{
-        width:100%;
-        text-align:left;
-      }
+      .card .head{ justify-content:flex-start !important; }
+      .card .head .pill{ width:100%; text-align:left; }
     }
   </style>
 </head>
@@ -305,7 +340,6 @@
         </div>
       </div>
 
-      <!-- ✅ AQUI entra o banner -->
       <div id="updateBanner" class="updateBanner" style="display:none">
         ⬆️ Nova versão disponível. Atualizando…
       </div>
@@ -323,9 +357,7 @@
 
         <aside class="side">
           <div class="mini anuncio" id="adBox" style="display:none">
-            <!-- ✅ sem "Publicidade" -->
             <p class="label" id="adLabel"></p>
-            <!-- ✅ sem loop: cada vídeo toca até o fim -->
             <video id="adVideo" autoplay muted playsinline></video>
           </div>
         </aside>
@@ -380,7 +412,6 @@
 
       const raw = await r.json();
 
-      // ✅ Se data.json vier como ARRAY, converte para o objeto padrão do painel
       const j = Array.isArray(raw)
         ? {
             titulo:"Comunica Síndico",
@@ -511,7 +542,6 @@
     }catch{ return ""; }
   }
 
-  // ===== EMERGÊNCIA =====
   function configureEmergency(j){
     const cfg = j.emergencia || {};
     EMG.enabled = cfg.ativar !== false;
@@ -530,7 +560,6 @@
     return { active: items.length > 0, items };
   }
 
-  // ===== Rotação =====
   function prepareRotation(j){
     const cfg = j.rotacao || {};
     ROT.enabled = !!cfg.ativar;
@@ -845,7 +874,7 @@
     wxTimer = setInterval(atualizar, 10 * 60 * 1000);
   }
 
-  // ===== PUBLICIDADE (vídeo completo + rotação ao terminar) =====
+  // ===== PUBLICIDADE =====
   function initPublicidade(cfg){
     const box = document.getElementById("adBox");
     const video = document.getElementById("adVideo");
@@ -854,7 +883,6 @@
     if(!cfg || !cfg.ativar || !cfg.videos || !cfg.videos.length){
       box.style.display = "none";
       adCfgKey = "";
-      // limpa handlers para evitar acumular
       if (video){
         video.onended = null;
         video.onerror = null;
@@ -863,7 +891,6 @@
       return;
     }
 
-    // evita reinicializar sem necessidade
     const key = JSON.stringify({ v: cfg.videos });
     if(adCfgKey === key) return;
     adCfgKey = key;
@@ -871,7 +898,6 @@
     box.style.display = "block";
     adIdx = 0;
 
-    // autoplay seguro
     video.muted = true;
     video.playsInline = true;
     video.autoplay = true;
@@ -879,48 +905,34 @@
     function playNext(){
       const ad = cfg.videos[adIdx % cfg.videos.length];
       adIdx++;
-
-      // ✅ sem "Publicidade": mostra só anunciante (ou vazio)
       label.textContent = ad?.anunciante ? ad.anunciante : "";
-
       video.src = ad?.arquivo || "";
       video.load();
       const p = video.play();
       if(p && p.catch) p.catch(()=>{});
     }
 
-    // quando terminar → próximo
     video.onended = () => playNext();
-
-    // se erro → pula
     video.onerror = () => playNext();
-
-    // inicia
     playNext();
   }
 
-  /* ===============================
-     📲 PWA: BOTÃO DE INSTALAÇÃO
-     =============================== */
+  /* PWA install */
   let deferredPrompt = null;
-
   function mostrarBotaoInstalar(show){
     const btn = document.getElementById("btnInstalarApp");
     if(!btn) return;
     btn.style.display = show ? "inline-flex" : "none";
   }
-
   window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
     mostrarBotaoInstalar(true);
   });
-
   window.addEventListener("appinstalled", () => {
     deferredPrompt = null;
     mostrarBotaoInstalar(false);
   });
-
   async function instalarApp(){
     if(!deferredPrompt) return;
     deferredPrompt.prompt();
@@ -929,29 +941,18 @@
     mostrarBotaoInstalar(false);
   }
 
-  /* ===============================
-     📦 REGISTRO DO SERVICE WORKER + AUTO UPDATE (BLINDADO)
-     =============================== */
+  /* Service worker */
   if ("serviceWorker" in navigator) {
-
     window.addEventListener("load", async () => {
       try {
         const reg = await navigator.serviceWorker.register("sw.js");
-        console.log("Service Worker registrado com sucesso");
-
-        // 🔄 força verificação de nova versão ao abrir
         if (reg.update) reg.update();
 
-        // 🆕 quando encontrar atualização
         reg.addEventListener("updatefound", () => {
           const nw = reg.installing;
           if (!nw) return;
-
           nw.addEventListener("statechange", () => {
-            // se já existe um SW controlando a página e o novo terminou de instalar:
             if (nw.state === "installed" && navigator.serviceWorker.controller) {
-              console.log("Nova versão baixada. Ativando agora...");
-              // pede para o novo SW ativar imediatamente
               nw.postMessage("SKIP_WAITING");
             }
           });
@@ -962,17 +963,12 @@
       }
     });
 
-    // ✅ quando um novo SW assumir o controle, mostra banner e recarrega
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       const banner = document.getElementById("updateBanner");
       if (banner) banner.style.display = "block";
-
-      console.log("Nova versão detectada. Atualizando...");
       setTimeout(() => window.location.reload(), 2000);
     });
-
   }
 </script>
-
 </body>
 </html>
