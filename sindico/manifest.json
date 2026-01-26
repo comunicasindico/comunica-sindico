@@ -5,7 +5,7 @@
   "description": "Painel administrativo do síndico para publicar avisos e enviar comunicados automáticos aos condôminos.",
   "lang": "pt-BR",
 
-  "start_url": "./index.html?pwa=sindico",
+  "start_url": "./",
   "scope": "./",
 
   "display": "standalone",
