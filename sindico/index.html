@@ -115,12 +115,12 @@ p{margin:0 0 14px;opacity:.9;font-size:16px;line-height:1.35}
     <a class="btn" id="go" rel="noopener" href="https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec">
       ➡️ Abrir Painel do Síndico
     </a>
-    <button class="btn" id="cancel" type="button" style="opacity:.9">
+    <button class="btn" id="cancel" type="button" style="opacity:.9; display:none">
       ⏸️ Não redirecionar
     </button>
   </div>
 
-  <p class="mini">
+  <p class="mini" id="hint">
     Dica: instale este app na Tela de Início para acesso rápido (FaceID/TouchID no aparelho).
   </p>
 </div>
@@ -130,13 +130,7 @@ p{margin:0 0 14px;opacity:.9;font-size:16px;line-height:1.35}
 const targetUrl = document.getElementById("go").href;
 const mode = document.getElementById("mode");
 const cancelBtn = document.getElementById("cancel");
-let canceled = false;
-
-cancelBtn.addEventListener("click", () => {
-  canceled = true;
-  mode.textContent = "Redirecionamento pausado";
-  cancelBtn.style.display = "none";
-});
+const hint = document.getElementById("hint");
 
 /* Detecta se está rodando como app instalado */
 const isStandalone =
@@ -145,18 +139,37 @@ const isStandalone =
 
 mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
 
+/* No app instalado: NÃO auto-redireciona (evita “abre e sai do app”) */
+if (isStandalone) {
+  hint.textContent = "Abra o painel pelo botão acima. (O painel é online no Apps Script.)";
+} else {
+  // No navegador: pode redirecionar automático, mas dá opção de cancelar
+  cancelBtn.style.display = "inline-flex";
+
+  let canceled = false;
+  cancelBtn.addEventListener("click", () => {
+    canceled = true;
+    mode.textContent = "Redirecionamento pausado";
+    cancelBtn.style.display = "none";
+  });
+
+  setTimeout(() => {
+    if (canceled) return;
+    mode.textContent = "Abrindo painel…";
+    window.location.assign(targetUrl);
+  }, 900);
+}
+
 /* ===== Service Worker — PWA Síndico (escopo /sindico/) ===== */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
       const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
-
       try { await reg.update(); } catch {}
 
       reg.addEventListener("updatefound", () => {
         const nw = reg.installing;
         if (!nw) return;
-
         nw.addEventListener("statechange", () => {
           if (nw.state === "installed" && navigator.serviceWorker.controller) {
             reg.waiting?.postMessage("SKIP_WAITING");
@@ -173,13 +186,6 @@ if ("serviceWorker" in navigator) {
     setTimeout(() => window.location.reload(), 800);
   });
 }
-
-/* ===== Auto-redirect suave (somente se não cancelado) ===== */
-setTimeout(() => {
-  if (canceled) return;
-  mode.textContent = "Abrindo painel…";
-  window.location.assign(targetUrl);
-}, 900);
 </script>
 
 </body>
