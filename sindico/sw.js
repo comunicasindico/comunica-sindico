@@ -75,6 +75,11 @@ self.addEventListener("activate", (event) => {
       await Promise.all(
         keys.map((k) => (k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME ? caches.delete(k) : null))
       );
+
+      // ✅ opcional: limpa cache antigo do Condôminos que esteja “misturado” com nome errado
+      // (NÃO ativa nada aqui — só se você souber o prefixo do outro e quiser limpar)
+      // ex: if (k.startsWith("comunica-sindico-") ... )  <-- NÃO recomendo mexer agora.
+
       await self.clients.claim();
     })()
   );
@@ -99,11 +104,13 @@ self.addEventListener("fetch", (event) => {
         try {
           const fresh = await fetch(req, { cache: "no-store" });
           cache.put(req, fresh.clone());
+
           // mantém shell atualizado
           try {
             const shell = await fetch("./index.html", { cache: "no-store" });
             if (shell && shell.ok) cache.put("./index.html", shell.clone());
           } catch {}
+
           return fresh;
         } catch {
           const cachedNav = await cache.match(req);
