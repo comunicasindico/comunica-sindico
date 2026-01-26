@@ -1,973 +1,283 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Condôminos - Comunica Síndico(a)</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Condôminos - Comunica Síndico(a)</title>
 
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icons/icon-192.png">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <!-- Deixa mais “cara de app” no iPhone -->
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#061726">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#061726">
 
-  <style>
-    :root{
-      --bg1:#061726;
-      --bg2:#0b1f33;
-      --line:rgba(255,255,255,.10);
-      --txt:#eaf2ff;
-      --muted:rgba(234,242,255,.75);
-      --shadow: 0 14px 50px rgba(0,0,0,.35);
-      --radius: 18px;
+<!-- 🔒 Canonical URL: evita instalar 2 versões (com/sem ?pwa=) -->
+<script>
+(function(){
+  const url = new URL(window.location.href);
+  const pwa = url.searchParams.get("pwa");
 
-      /* safe-area helpers */
-      --sat: env(safe-area-inset-top);
-      --sar: env(safe-area-inset-right);
-      --sab: env(safe-area-inset-bottom);
-      --sal: env(safe-area-inset-left);
-    }
+  if (pwa !== "condominos" && url.search) {
+    url.search = "";
+    window.location.replace(url.toString());
+  }
 
-    *{box-sizing:border-box}
-    html,body{height:100%; width:100%}
+  if (!url.pathname.endsWith("/index.html") && !url.pathname.endsWith("/")) {
+    window.location.replace("./index.html");
+  }
+})();
+</script>
 
-    body{
-      margin:0;
-      font-family:"Segoe UI",Arial,sans-serif;
-      color:var(--txt);
-      background:
-        radial-gradient(1200px 700px at 15% 10%, #10385b 0%, rgba(16,56,91,0) 55%),
-        radial-gradient(900px 600px at 85% 15%, #0b3454 0%, rgba(11,52,84,0) 55%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-      overscroll-behavior:none;
-      user-select:none;
-      touch-action:manipulation;
-
-      /* iPhone: altura real do viewport */
-      min-height:100dvh;
-    }
-
-    /* ✅ Tela cheia real + safe-area */
-    .wrap{
-      min-height:100dvh;
-      width:100%;
-      padding:
-        calc(18px + var(--sat))
-        calc(18px + var(--sar))
-        calc(18px + var(--sab) + 58px) /* + espaço da wxbar */
-        calc(18px + var(--sal));
-      display:flex;
-      justify-content:center;
-    }
-
-    /* ✅ Container cresce e ocupa tudo */
-    .container{
-      width:min(1400px, 100%);
-      min-height:calc(100dvh - var(--sat) - var(--sab) - 36px - 58px);
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-      min-height:0;
-    }
-
-    /* =========================
-       PUBLICIDADE EM VÍDEO
-       ========================= */
-    .anuncio video{
-      width:100%;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.15);
-      background:#000;
-      display:block;
-    }
-    .anuncio{ animation: fadeInUp .6s ease; }
-    @keyframes fadeInUp{
-      from{opacity:0; transform:translateY(8px)}
-      to{opacity:1; transform:translateY(0)}
-    }
-
-    .topbar{
-      display:flex; align-items:center; justify-content:space-between; gap:14px;
-      padding:18px 20px;
-      background:rgba(8,28,46,.55);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(8px);
-    }
-    .title{margin:0; font-size:28px; font-weight:800;}
-    .subtitle{margin:4px 0 0; font-size:13px; color:var(--muted); font-weight:600;}
-    .badge{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(12,35,56,.55);
-      color:var(--muted);
-      font-weight:700; font-size:12px;
-      white-space:nowrap;
-    }
-    .dot{width:10px;height:10px;border-radius:50%;background:#44d07a;box-shadow:0 0 0 4px rgba(68,208,122,.18);}
-
-    .btnInstall{
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(12,35,56,.55);
-      color:rgba(234,242,255,.92);
-      padding:10px 12px;
-      border-radius:999px;
-      font-weight:800;
-      cursor:pointer;
-      white-space:nowrap;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size:16px; /* evita zoom iOS */
-    }
-    .btnInstall:hover{ filter:brightness(1.08); }
-
-    /* ✅ Banner update (faltava CSS) */
-    .updateBanner{
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(120,190,255,.35);
-      background:rgba(7,20,34,.28);
-      box-shadow:var(--shadow);
-      font-weight:900;
-    }
-
-    /* ✅ Grid ocupa o restante da tela */
-    .grid{
-      margin-top:0;
-      flex:1;
-      display:grid;
-      grid-template-columns:1.25fr .75fr;
-      gap:18px;
-      min-height:0;
-    }
-
-    .card{
-      background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      min-height:0;
-    }
-    .card .head{
-      padding:16px 18px;
-      border-bottom:1px solid var(--line);
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      flex-wrap:wrap;
-    }
-    .pill{
-      font-size:12px; font-weight:800;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--muted);
-      background:rgba(7,20,34,.25);
-      max-width: 100%;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-    }
-
-    /* ✅ Área de avisos com scroll interno */
-    .avisos{
-      padding:16px 18px 18px;
-      flex:1;
-      min-height:0;
-      overflow:auto;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      position:relative;
-      -webkit-overflow-scrolling:touch;
-    }
-
-    .progressWrap{
-      position:absolute;
-      left:18px; right:18px; top:10px;
-      height:6px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      overflow:hidden;
-      background:rgba(0,0,0,.18);
-    }
-    .progressBar{
-      height:100%;
-      width:0%;
-      background:rgba(119,182,255,.95);
-      transition:width .12s linear;
-    }
-
-    .emgBanner{
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,80,80,.55);
-      background:rgba(90,20,20,.55);
-      box-shadow: 0 0 0 1px rgba(255,80,80,.30) inset;
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .emgBanner small{
-      display:block;
-      margin-top:4px;
-      font-weight:700;
-      color:rgba(255,255,255,.85);
-    }
-
-    .tema{
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px dashed rgba(255,255,255,.18);
-      background: rgba(7,20,34,.20);
-      color: rgba(234,242,255,.92);
-    }
-    .tema b{font-weight:900}
-    .tema .small{display:block; margin-top:4px; color:var(--muted); font-weight:650}
-
-    .aviso{
-      position:relative;
-      padding:16px 16px;
-      border:1px solid var(--line);
-      border-radius:14px;
-      background:rgba(7,20,34,.28);
-      animation:fadeInAviso .25s ease;
-    }
-    @keyframes fadeInAviso{
-      from{opacity:0; transform:translateY(4px);}
-      to{opacity:1; transform:translateY(0);}
-    }
-
-    .aviso.alta{border-color: rgba(255,80,80,.55); box-shadow: 0 0 0 1px rgba(255,80,80,.35) inset;}
-    .aviso.media{border-color: rgba(255,200,70,.40); box-shadow: 0 0 0 1px rgba(255,200,70,.25) inset;}
-    .aviso.baixa{border-color: rgba(120,190,255,.35); box-shadow: 0 0 0 1px rgba(120,190,255,.18) inset;}
-
-    .emgPulse{ animation:pulse 1s ease-in-out infinite; }
-    @keyframes pulse{
-      0%,100%{ box-shadow: 0 0 0 1px rgba(255,80,80,.35) inset, 0 0 0 0 rgba(255,80,80,.0); }
-      50%{ box-shadow: 0 0 0 1px rgba(255,80,80,.55) inset, 0 0 0 8px rgba(255,80,80,.07); }
-    }
-
-    .aviso .t{margin:0 0 8px; font-weight:900; font-size:18px; letter-spacing:.15px;}
-    .aviso .d{margin:0; color:var(--muted); font-weight:650; line-height:1.35; font-size:15px;}
-
-    .meta{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; font-size:12px; color:rgba(234,242,255,.82);}
-    .tag{padding:6px 8px; border-radius:999px; border:1px solid var(--line); background:rgba(12,35,56,.35);}
-
-    .side{
-      display:grid;
-      gap:18px;
-      align-content:start;
-      min-height:0;
-    }
-    .mini{
-      padding:16px 18px;
-      background:linear-gradient(180deg, rgba(12,35,56,.95), rgba(9,26,44,.95));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-    .mini .label{
-      font-size:12px;
-      font-weight:800;
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.25px;
-      margin:0 0 10px;
-    }
-
-    /* ✅ wxbar respeita safe-area */
-    #wxbar{
-      position:fixed;
-      left:0; right:0;
-      bottom:0;
-      padding:
-        10px
-        calc(14px + var(--sar))
-        calc(10px + var(--sab))
-        calc(14px + var(--sal));
-      font:800 14px "Segoe UI",Arial,sans-serif;
-      display:flex; gap:12px; align-items:center; justify-content:center;
-      background:#0b223a; color:#fff;
-      z-index:999999;
-      border-top:1px solid rgba(255,255,255,.12);
-    }
-
-    @media(max-width:980px){
-      .wrap{
-        padding:
-          calc(14px + var(--sat))
-          calc(14px + var(--sar))
-          calc(14px + var(--sab) + 58px)
-          calc(14px + var(--sal));
-      }
-      .grid{ grid-template-columns:1fr; }
-      .pill{ white-space:normal; }
-    }
-    @media (max-width: 520px){
-      .card .head{ justify-content:flex-start !important; }
-      .card .head .pill{ width:100%; text-align:left; }
-    }
-  </style>
+<style>
+:root{
+  --bg1:#061726;
+  --bg2:#0b1f33;
+  --line:rgba(255,255,255,.10);
+  --txt:#eaf2ff;
+  --muted:rgba(234,242,255,.75);
+  --shadow: 0 14px 50px rgba(0,0,0,.35);
+  --radius: 18px;
+  --sat: env(safe-area-inset-top);
+  --sar: env(safe-area-inset-right);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+}
+*{box-sizing:border-box}
+html,body{height:100%;width:100%}
+body{
+  margin:0;
+  font-family:"Segoe UI",Arial,sans-serif;
+  color:var(--txt);
+  background:
+    radial-gradient(1200px 700px at 15% 10%, #10385b 0%, rgba(16,56,91,0) 55%),
+    radial-gradient(900px 600px at 85% 15%, #0b3454 0%, rgba(11,52,84,0) 55%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+  overscroll-behavior:none;
+  user-select:none;
+  touch-action:manipulation;
+  min-height:100dvh;
+}
+.wrap{
+  min-height:100dvh;
+  width:100%;
+  padding:
+    calc(18px + var(--sat))
+    calc(18px + var(--sar))
+    calc(18px + var(--sab) + 58px)
+    calc(18px + var(--sal));
+  display:flex;
+  justify-content:center;
+}
+.container{
+  width:min(1400px, 100%);
+  min-height:calc(100dvh - var(--sat) - var(--sab) - 36px - 58px);
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:18px 20px;
+  background:rgba(8,28,46,.55);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.title{margin:0;font-size:28px;font-weight:800}
+.subtitle{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}
+.badge{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(12,35,56,.55);
+  color:var(--muted);font-weight:700;font-size:12px;
+}
+.dot{width:10px;height:10px;border-radius:50%;background:#44d07a}
+.btnInstall{
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(12,35,56,.55);
+  color:rgba(234,242,255,.92);
+  padding:10px 12px;
+  border-radius:999px;
+  font-weight:800;
+  cursor:pointer;
+  font-size:16px;
+}
+.updateBanner{
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid rgba(120,190,255,.35);
+  background:rgba(7,20,34,.28);
+  box-shadow:var(--shadow);
+  font-weight:900;
+}
+.grid{
+  flex:1;
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:18px;
+}
+.card{
+  background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+}
+.card .head{
+  padding:16px 18px;
+  border-bottom:1px solid var(--line);
+  display:flex;justify-content:center;
+}
+.pill{
+  font-size:12px;font-weight:800;
+  padding:8px 10px;border-radius:999px;
+  border:1px solid var(--line);
+  color:var(--muted);
+}
+.avisos{
+  padding:16px;
+  flex:1;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.aviso{
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(7,20,34,.28);
+}
+.aviso.alta{border-color:rgba(255,80,80,.55)}
+.aviso.media{border-color:rgba(255,200,70,.40)}
+.aviso.baixa{border-color:rgba(120,190,255,.35)}
+.aviso .t{margin:0 0 8px;font-weight:900;font-size:18px}
+.aviso .d{margin:0;color:var(--muted)}
+.side{display:grid;gap:18px}
+.mini{
+  padding:16px;
+  background:linear-gradient(180deg, rgba(12,35,56,.95), rgba(9,26,44,.95));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+}
+#wxbar{
+  position:fixed;left:0;right:0;bottom:0;
+  padding:
+    10px
+    calc(14px + var(--sar))
+    calc(10px + var(--sab))
+    calc(14px + var(--sal));
+  font:800 14px "Segoe UI",Arial,sans-serif;
+  display:flex;gap:12px;align-items:center;justify-content:center;
+  background:#0b223a;color:#fff;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+@media(max-width:980px){
+  .grid{grid-template-columns:1fr;}
+}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="container">
+<div class="wrap">
+<div class="container">
 
-      <div class="topbar">
-        <div>
-          <h1 class="title" id="titulo">Comunica Síndico</h1>
-          <p class="subtitle" id="subtitulo">Painel informativo</p>
-        </div>
-
-        <div style="display:flex; align-items:center; gap:10px;">
-          <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">
-            📲 Instalar App
-          </button>
-          <div class="badge">
-            <span class="dot"></span>
-            <span id="statusJson">Carregando conteúdo…</span>
-          </div>
-        </div>
-      </div>
-
-      <div id="updateBanner" class="updateBanner" style="display:none">
-        ⬆️ Nova versão disponível. Atualizando…
-      </div>
-
-      <div class="grid">
-        <section class="card" id="cardAvisos">
-          <div class="head" style="justify-content:center;">
-            <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-              <div class="pill" id="refData">—</div>
-              <div class="pill" id="dataBiblica">—</div>
-            </div>
-          </div>
-          <div class="avisos" id="avisos"></div>
-        </section>
-
-        <aside class="side">
-          <div class="mini anuncio" id="adBox" style="display:none">
-            <p class="label" id="adLabel"></p>
-            <video id="adVideo" autoplay muted playsinline></video>
-          </div>
-        </aside>
-      </div>
-
-    </div>
+<div class="topbar">
+  <div>
+    <h1 class="title" id="titulo">Comunica Síndico</h1>
+    <p class="subtitle" id="subtitulo">Painel informativo</p>
   </div>
-
-  <div id="wxbar">
-    <span id="wxIcon">⏳</span>
-    <span id="wxText">Clima: carregando…</span>
+  <div style="display:flex;gap:10px;">
+    <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">📲 Instalar App</button>
+    <div class="badge"><span class="dot"></span><span id="statusJson">Carregando…</span></div>
   </div>
+</div>
+
+<div id="updateBanner" class="updateBanner" style="display:none">
+⬆️ Nova versão disponível. Atualizando…
+</div>
+
+<div class="grid">
+<section class="card">
+  <div class="head">
+    <div class="pill" id="dataBiblica">—</div>
+  </div>
+  <div class="avisos" id="avisos"></div>
+</section>
+
+<aside class="side">
+  <div class="mini anuncio" id="adBox" style="display:none">
+    <p id="adLabel"></p>
+    <video id="adVideo" autoplay muted playsinline></video>
+  </div>
+</aside>
+</div>
+
+</div>
+</div>
+
+<div id="wxbar">
+<span id="wxIcon">⏳</span>
+<span id="wxText">Clima: carregando…</span>
+</div>
 
 <script>
-  // ===== Estado global da rotação =====
-  const ROT = {
-    enabled:false, intervalMs:12000, pauseOnHover:true, showProgress:true, perScreen:1,
-    timer:null, progressTimer:null, idx:0, paused:false, items:[]
-  };
-
-  // ===== Estado global emergência =====
-  const EMG = {
-    active:false, enabled:true, intervalMs:4000, blink:true, onlyHigh:true
-  };
-
-  // ===== PUBLICIDADE =====
-  let adIdx = 0;
-  let adCfgKey = "";
-
-  // ===== Init =====
-  window.addEventListener("DOMContentLoaded", () => {
-    loadAll();
-    setInterval(loadAll, 60 * 1000);
-  });
-
-  async function loadAll(){
-    const j = await loadJson();
-    await renderHeader(j);
-    configureEmergency(j);
-    prepareRotation(j);
-    renderAvisos(j);
-    initWeatherOnce(j.clima);
-    initPublicidade(j.publicidade);
-  }
-
-  async function loadJson(){
-    const status = document.getElementById("statusJson");
-    status.textContent = "Carregando conteúdo…";
-    try{
-      const r = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
-      if(!r.ok) throw new Error("HTTP " + r.status);
-
-      const raw = await r.json();
-
-      const j = Array.isArray(raw)
-        ? {
-            titulo:"Comunica Síndico",
-            subtitulo:"Painel informativo",
-            referencia:"",
-            temaDoDia:{ modo:"automatico", temasPorDiaSemana:{} },
-            avisos: raw,
-            rotacao:{ ativar:false, quantidadePorTela:4 },
-            emergencia:{ ativar:true, intervaloSeg:4, piscar:true, somenteAlta:true },
-            publicidade:{ ativar:false, videos:[], intervaloSeg:15 },
-            clima:{ cidade:"", latitude:-28.4767, longitude:-49.0144, timezone:"America/Sao_Paulo", alertaChuvaMin:50, horasAlerta:3 }
-          }
-        : raw;
-
-      status.textContent = "Conteúdo atualizado";
-      return j;
-
-    }catch(e){
-      console.error("Falha data.json:", e);
-      status.textContent = "Modo offline";
-      return {
-        titulo:"Comunica Síndico – Condomínio",
-        subtitulo:"Painel informativo",
-        referencia:"",
-        temaDoDia:{modo:"automatico",temasPorDiaSemana:{}},
-        avisos:[],
-        rotacao:{ativar:false},
-        emergencia:{ativar:false},
-        publicidade:{ativar:false},
-        clima:{cidade:"",latitude:-28.4767,longitude:-49.0144,timezone:"America/Sao_Paulo",alertaChuvaMin:50,horasAlerta:3}
-      };
-    }
-  }
-
-  async function renderHeader(j){
-    document.getElementById("titulo").textContent = j.titulo || "Comunica Síndico";
-    document.getElementById("subtitulo").textContent = (j.subtitulo || "Painel informativo").replace("• Atualização automática","").trim();
-
-    const refEl  = document.getElementById("refData");
-    const dataEl = document.getElementById("dataBiblica");
-
-    const hoje = new Date();
-    const dataFmt = new Intl.DateTimeFormat("pt-BR", {
-      weekday:"long", day:"2-digit", month:"long", year:"numeric"
-    }).format(hoje);
-    dataEl.textContent = dataFmt.charAt(0).toUpperCase() + dataFmt.slice(1);
-
-    if(!(j.referencia && typeof j.referencia === "object" && j.referencia.modo === "biblico-anual")){
-      refEl.textContent = j.referencia ? ("Ref.: " + j.referencia) : "Atualizado hoje";
-      return;
-    }
-
-    try{
-      const arquivo = j.referencia.arquivo || "versiculos.json";
-      const fallback = j.referencia.fallback || "Versículo do dia";
-
-      const mm = String(hoje.getMonth() + 1).padStart(2, "0");
-      const dd = String(hoje.getDate()).padStart(2, "0");
-      const key = `${mm}-${dd}`;
-
-      const r = await fetch(arquivo + "?ts=" + Date.now(), { cache:"no-store" });
-      if(!r.ok) throw new Error("HTTP " + r.status);
-
-      const v = await r.json();
-      const texto = v?.versos?.[key] || fallback;
-
-      refEl.textContent = texto;
-
-    }catch(e){
-      console.error("Falha ao carregar versículos:", e);
-      refEl.textContent = (j.referencia && j.referencia.fallback) ? j.referencia.fallback : "Versículo do dia";
-    }
-  }
-
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    }[m]));
-  }
-
-  function resolveTemaDoDia(td){
-    if(!td || td.modo !== "automatico") return null;
-    const map = td.temasPorDiaSemana || {};
-    const dia = new Intl.DateTimeFormat("pt-BR",{weekday:"long"}).format(new Date())
-      .toLowerCase()
-      .replace("-feira","")
-      .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-    return map[dia] || null;
-  }
-
-  function prioridadeRank(p){
-    const s = String(p || "baixa").toLowerCase();
-    if(s === "alta") return 0;
-    if(s === "media") return 1;
-    return 2;
-  }
-
-  function safeDate(v){
-    if(!v) return null;
-    const d = new Date(v);
-    return isNaN(d.getTime()) ? null : d;
-  }
-
-  function isAtivoAgora(a, now){
-    const ini = safeDate(a.inicio);
-    const fim = safeDate(a.fim);
-    if(ini && now < ini) return false;
-    if(fim && now > fim) return false;
-    return true;
-  }
-
-  function formatJanela(a){
-    if(!a.inicio && !a.fim) return "";
-    try{
-      const ini = safeDate(a.inicio);
-      const fim = safeDate(a.fim);
-      const fmtHM = (d)=> new Intl.DateTimeFormat("pt-BR",{hour:"2-digit",minute:"2-digit"}).format(d);
-      if(ini && fim){
-        const sameDay =
-          ini.getFullYear()===fim.getFullYear() &&
-          ini.getMonth()===fim.getMonth() &&
-          ini.getDate()===fim.getDate();
-        return sameDay ? `${fmtHM(ini)}–${fmtHM(fim)}` : `${fmtHM(ini)} até ${fmtHM(fim)}`;
-      }
-      if(ini) return `a partir de ${fmtHM(ini)}`;
-      if(fim) return `até ${fmtHM(fim)}`;
-      return "";
-    }catch{ return ""; }
-  }
-
-  function configureEmergency(j){
-    const cfg = j.emergencia || {};
-    EMG.enabled = cfg.ativar !== false;
-    EMG.intervalMs = Math.max(3000, Number(cfg.intervaloSeg || 4) * 1000);
-    EMG.blink = cfg.piscar !== false;
-    EMG.onlyHigh = cfg.somenteAlta !== false;
-  }
-
-  function computeActiveEmergency(j){
-    if(!EMG.enabled) return { active:false, items:[] };
-    const now = new Date();
-    const items = (j.avisos || [])
-      .filter(a => isAtivoAgora(a, now))
-      .filter(a => String(a.prioridade || "").toLowerCase() === "alta")
-      .filter(a => a.emergencia === true);
-    return { active: items.length > 0, items };
-  }
-
-  function prepareRotation(j){
-    const cfg = j.rotacao || {};
-    ROT.enabled = !!cfg.ativar;
-    ROT.intervalMs = Math.max(3000, Number(cfg.intervaloSeg || 12) * 1000);
-    ROT.pauseOnHover = cfg.pausarNoMouse !== false;
-    ROT.showProgress = cfg.mostrarProgresso !== false;
-    ROT.perScreen = Math.max(1, Math.min(3, Number(cfg.quantidadePorTela || 1)));
-
-    const now = new Date();
-    ROT.items = (j.avisos || [])
-      .filter(a => isAtivoAgora(a, now))
-      .sort((a,b) => prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
-
-    ROT.idx = 0;
-    stopRotation();
-  }
-
-  function stopRotation(){
-    if(ROT.timer){ clearInterval(ROT.timer); ROT.timer = null; }
-    if(ROT.progressTimer){ clearInterval(ROT.progressTimer); ROT.progressTimer = null; }
-  }
-
-  function startRotation(renderFn, intervalMs){
-    stopRotation();
-    if(ROT.items.length <= ROT.perScreen) return;
-
-    ROT.paused = false;
-
-    ROT.timer = setInterval(()=>{
-      if(ROT.paused) return;
-      ROT.idx = (ROT.idx + ROT.perScreen) % ROT.items.length;
-      renderFn();
-      resetProgress(intervalMs);
-    }, intervalMs);
-
-    resetProgress(intervalMs);
-  }
-
-  function ensureProgressUI(){
-    const avisosEl = document.getElementById("avisos");
-    let wrap = document.getElementById("progressWrap");
-    if(!ROT.showProgress){
-      if(wrap) wrap.remove();
-      return;
-    }
-    if(!wrap){
-      wrap = document.createElement("div");
-      wrap.className = "progressWrap";
-      wrap.id = "progressWrap";
-      wrap.innerHTML = `<div class="progressBar" id="progressBar"></div>`;
-      avisosEl.appendChild(wrap);
-    }
-  }
-
-  function resetProgress(duration){
-    if(!ROT.showProgress) return;
-    const bar = document.getElementById("progressBar");
-    if(!bar) return;
-
-    bar.style.width = "0%";
-    const start = Date.now();
-    const ms = duration;
-
-    if(ROT.progressTimer) clearInterval(ROT.progressTimer);
-    ROT.progressTimer = setInterval(()=>{
-      if(ROT.paused) return;
-      const p = Math.min(100, ((Date.now() - start) / ms) * 100);
-      bar.style.width = p.toFixed(1) + "%";
-      if(p >= 100) clearInterval(ROT.progressTimer);
-    }, 120);
-  }
-
-  function getCurrentSlice(list, per){
-    const out = [];
-    for(let k=0; k<per; k++){
-      out.push(list[(ROT.idx + k) % list.length]);
-    }
-    return out;
-  }
-
-  function buildAvisoCard(a, extraClass){
-    const p = (a.prioridade || "baixa").toLowerCase();
-    const div = document.createElement("div");
-    div.className = `aviso ${p} ${extraClass || ""}`.trim();
-
-    const janela = formatJanela(a);
-
-    let dataCurta = "";
-    try{
-      const ini = safeDate(a.inicio);
-      if(ini){
-        dataCurta = new Intl.DateTimeFormat("pt-BR", {
-          day:"2-digit",
-          month:"2-digit",
-          year:"numeric"
-        }).format(ini);
-      }
-    }catch{}
-
-    const tags = [];
-    if(dataCurta) tags.push(`📅 ${dataCurta}`);
-    if(janela) tags.push(`🕒 ${janela}`);
-    if(a.tipo) tags.push(`🏷️ ${a.tipo}`);
-    if(a.local) tags.push(`📍 ${a.local}`);
-
-    div.innerHTML = `
-      <p class="t">${escapeHtml(a.titulo || "Aviso")}</p>
-      <p class="d">${escapeHtml(a.descricao || "")}</p>
-      ${
-        tags.length
-          ? `<div class="meta">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>`
-          : ""
-      }
-    `;
-    return div;
-  }
-
-  function renderAvisos(j){
-    const avisosEl = document.getElementById("avisos");
-    const card = document.getElementById("cardAvisos");
-    avisosEl.innerHTML = "";
-
-    const tema = resolveTemaDoDia(j.temaDoDia);
-    const emg = computeActiveEmergency(j);
-    EMG.active = emg.active;
-
-    if(EMG.active){
-      card.classList.toggle("emgPulse", !!EMG.blink);
-      stopRotation();
-
-      const banner = document.createElement("div");
-      banner.className = "emgBanner";
-      banner.innerHTML = `🚨 MODO EMERGÊNCIA ATIVO<small>Exibindo comunicados urgentes no topo</small>`;
-      avisosEl.appendChild(banner);
-
-      const emgList = emg.items.slice().sort((a,b)=> prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
-      emgList.forEach(a => avisosEl.appendChild(buildAvisoCard(a, EMG.blink ? "emgPulse" : "")));
-
-      const sep = document.createElement("div");
-      sep.className = "tema";
-      sep.innerHTML = `<b>Demais avisos ativos:</b><span class="small">Comunicados gerais (não emergenciais)</span>`;
-      avisosEl.appendChild(sep);
-
-      const now = new Date();
-      const normalList = (j.avisos || [])
-        .filter(a => isAtivoAgora(a, now))
-        .filter(a => !(String(a.prioridade || "").toLowerCase() === "alta" && a.emergencia === true))
-        .sort((a,b) => prioridadeRank(a.prioridade) - prioridadeRank(b.prioridade));
-
-      if(!normalList.length){
-        const div = document.createElement("div");
-        div.className = "aviso baixa";
-        div.innerHTML = `<p class="t">Sem avisos gerais ativos</p><p class="d">Somente comunicados de emergência estão ativos no momento.</p>`;
-        avisosEl.appendChild(div);
-        ensureProgressUI();
-        return;
-      }
-
-      normalList.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-      ensureProgressUI();
-      return;
-    }
-
-    card.classList.remove("emgPulse");
-
-    if(tema){
-      const divTema = document.createElement("div");
-      divTema.className = "tema";
-      divTema.innerHTML = `<b>Tema do dia:</b> ${escapeHtml(tema.titulo)}<span class="small">${escapeHtml(tema.frase || "")}</span>`;
-      avisosEl.appendChild(divTema);
-    }
-
-    if(!ROT.items.length){
-      const now = new Date();
-
-      const upcoming = (j.avisos || [])
-        .filter(a => a.inicio && !isNaN(new Date(a.inicio).getTime()))
-        .filter(a => new Date(a.inicio) > now)
-        .sort((a,b) => new Date(a.inicio) - new Date(b.inicio));
-
-      if(upcoming.length){
-        const divTema = document.createElement("div");
-        divTema.className = "tema";
-        divTema.innerHTML = `<b>Próximos avisos:</b><span class="small">Programados (ainda não iniciaram)</span>`;
-        avisosEl.appendChild(divTema);
-
-        upcoming.slice(0, 6).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-        ensureProgressUI();
-        stopRotation();
-        return;
-      }
-
-      const div = document.createElement("div");
-      div.className = "aviso baixa";
-      div.innerHTML = `<p class="t">Sem avisos ativos</p><p class="d">Quando houver comunicados, eles aparecerão aqui automaticamente.</p>`;
-      avisosEl.appendChild(div);
-      ensureProgressUI();
-      stopRotation();
-      return;
-    }
-
-    if(ROT.enabled && ROT.items.length > ROT.perScreen){
-      getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-      ensureProgressUI();
-
-      if(ROT.pauseOnHover){
-        avisosEl.onmouseenter = () => { ROT.paused = true; };
-        avisosEl.onmouseleave = () => { ROT.paused = false; };
-      }else{
-        avisosEl.onmouseenter = null;
-        avisosEl.onmouseleave = null;
-      }
-
-      startRotation(() => {
-        avisosEl.innerHTML = "";
-        if(tema){
-          const divTema2 = document.createElement("div");
-          divTema2.className = "tema";
-          divTema2.innerHTML = `<b>Tema do dia:</b> ${escapeHtml(tema.titulo)}<span class="small">${escapeHtml(tema.frase || "")}</span>`;
-          avisosEl.appendChild(divTema2);
-        }
-        getCurrentSlice(ROT.items, ROT.perScreen).forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-        ensureProgressUI();
-      }, ROT.intervalMs);
-
-      return;
-    }
-
-    stopRotation();
-    ROT.items.forEach(a => avisosEl.appendChild(buildAvisoCard(a)));
-    ensureProgressUI();
-  }
-
-  // ===== Clima =====
-  let wxTimer = null;
-  function initWeatherOnce(cfg){
-    if(wxTimer) return;
-
-    const bar  = document.getElementById("wxbar");
-    const icon = document.getElementById("wxIcon");
-    const text = document.getElementById("wxText");
-
-    async function atualizar(){
-      const LAT = cfg?.latitude ?? -28.4767;
-      const LON = cfg?.longitude ?? -49.0144;
-      const TZ  = cfg?.timezone || "America/Sao_Paulo";
-      const ALERTA_MIN = cfg?.alertaChuvaMin ?? 50;
-      const HORAS = cfg?.horasAlerta ?? 3;
-      const CITY = cfg?.cidade ? ` • ${cfg.cidade}` : "";
-
-      function codeToEmoji(wmo){
-        if([0].includes(wmo)) return "☀️";
-        if([1,2,3].includes(wmo)) return "⛅";
-        if([45,48].includes(wmo)) return "🌫️";
-        if([51,53,55,56,57].includes(wmo)) return "🌦️";
-        if([61,63,65,66,67,80,81,82].includes(wmo)) return "🌧️";
-        if([71,73,75,77,85,86].includes(wmo)) return "❄️";
-        if([95,96,99].includes(wmo)) return "⛈️";
-        return "🌡️";
-      }
-
-      icon.textContent = "⏳";
-      text.textContent = "Clima: carregando…";
-
-      const controller = new AbortController();
-      const t = setTimeout(()=>controller.abort(), 8000);
-
-      const url =
-        "https://api.open-meteo.com/v1/forecast"
-        + `?latitude=${LAT}&longitude=${LON}`
-        + `&current=temperature_2m,weather_code`
-        + `&hourly=precipitation_probability`
-        + `&daily=temperature_2m_max,temperature_2m_min`
-        + `&timezone=${encodeURIComponent(TZ)}`;
-
-      try{
-        const r = await fetch(url, { signal: controller.signal, cache:"no-store" });
-        if(!r.ok) throw new Error("HTTP " + r.status);
-        const j = await r.json();
-
-        const temp = Math.round(j.current.temperature_2m);
-        const wmo  = j.current.weather_code;
-        const max  = Math.round(j.daily.temperature_2m_max[0]);
-        const min  = Math.round(j.daily.temperature_2m_min[0]);
-
-        const times = j.hourly.time || [];
-        const probs = j.hourly.precipitation_probability || [];
-        const nowISO = j.current.time;
-        const idx = times.indexOf(nowISO);
-
-        let alerta = false;
-        if(idx >= 0){
-          const proximas = probs.slice(idx, idx + HORAS + 1);
-          alerta = proximas.some(p => typeof p === "number" && p >= ALERTA_MIN);
-        }
-
-        icon.textContent = codeToEmoji(wmo);
-        text.textContent = `Clima${CITY}: ${temp}°C | Máx/Mín: ${max}° / ${min}°` + (alerta ? " — 🌧️ ALERTA de chuva" : "");
-        bar.style.background = alerta ? "#7a1f1f" : "#0b223a";
-
-      }catch(e){
-        console.error("Clima falhou:", e);
-        icon.textContent = "⚠️";
-        text.textContent = "Clima indisponível";
-        bar.style.background = "#3a2a0b";
-      }finally{
-        clearTimeout(t);
-      }
-    }
-
-    atualizar();
-    wxTimer = setInterval(atualizar, 10 * 60 * 1000);
-  }
-
-  // ===== PUBLICIDADE =====
-  function initPublicidade(cfg){
-    const box = document.getElementById("adBox");
-    const video = document.getElementById("adVideo");
-    const label = document.getElementById("adLabel");
-
-    if(!cfg || !cfg.ativar || !cfg.videos || !cfg.videos.length){
-      box.style.display = "none";
-      adCfgKey = "";
-      if (video){
-        video.onended = null;
-        video.onerror = null;
-        video.src = "";
-      }
-      return;
-    }
-
-    const key = JSON.stringify({ v: cfg.videos });
-    if(adCfgKey === key) return;
-    adCfgKey = key;
-
-    box.style.display = "block";
-    adIdx = 0;
-
-    video.muted = true;
-    video.playsInline = true;
-    video.autoplay = true;
-
-    function playNext(){
-      const ad = cfg.videos[adIdx % cfg.videos.length];
-      adIdx++;
-      label.textContent = ad?.anunciante ? ad.anunciante : "";
-      video.src = ad?.arquivo || "";
-      video.load();
-      const p = video.play();
-      if(p && p.catch) p.catch(()=>{});
-    }
-
-    video.onended = () => playNext();
-    video.onerror = () => playNext();
-    playNext();
-  }
-
-  /* PWA install */
-  let deferredPrompt = null;
-  function mostrarBotaoInstalar(show){
-    const btn = document.getElementById("btnInstalarApp");
-    if(!btn) return;
-    btn.style.display = show ? "inline-flex" : "none";
-  }
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    mostrarBotaoInstalar(true);
-  });
-  window.addEventListener("appinstalled", () => {
-    deferredPrompt = null;
-    mostrarBotaoInstalar(false);
-  });
-  async function instalarApp(){
-    if(!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    mostrarBotaoInstalar(false);
-  }
+let deferredPrompt=null;
+function mostrarBotaoInstalar(s){document.getElementById("btnInstalarApp").style.display=s?"inline-flex":"none";}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;mostrarBotaoInstalar(true);});
+window.addEventListener("appinstalled",()=>{deferredPrompt=null;mostrarBotaoInstalar(false);});
+async function instalarApp(){if(!deferredPrompt)return;await deferredPrompt.prompt();deferredPrompt=null;mostrarBotaoInstalar(false);}
+
+async function loadAll(){
+const status=document.getElementById("statusJson");
+try{
+const r=await fetch("data.json?ts="+Date.now(),{cache:"no-store"});
+const j=await r.json();
+status.textContent="Atualizado";
+renderAvisos(j);
+}catch{
+status.textContent="Offline";
+}
+}
+function renderAvisos(j){
+const el=document.getElementById("avisos");
+el.innerHTML="";
+(j.avisos||[]).forEach(a=>{
+const d=document.createElement("div");
+d.className="aviso "+(a.prioridade||"baixa");
+d.innerHTML=`<p class="t">${a.titulo}</p><p class="d">${a.descricao}</p>`;
+el.appendChild(d);
+});
+}
+loadAll();
+setInterval(loadAll,60000);
+</script>
 
 <script>
-/* Service worker (único na raiz do /comunica-sindico/) */
+/* Service Worker + update control */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
       const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
-
-      // força checar update imediatamente
       try { await reg.update(); } catch {}
 
-      // se houver SW novo, manda assumir o controle
       reg.addEventListener("updatefound", () => {
         const nw = reg.installing;
         if (!nw) return;
-
         nw.addEventListener("statechange", () => {
           if (nw.state === "installed" && navigator.serviceWorker.controller) {
-            // faz o novo SW assumir agora
             reg.waiting?.postMessage("SKIP_WAITING");
             nw.postMessage("SKIP_WAITING");
           }
         });
       });
 
-    } catch (err) {
-      console.error("Erro no Service Worker:", err);
-    }
+    } catch {}
   });
 
   navigator.serviceWorker.addEventListener("controllerchange", () => {
@@ -977,5 +287,6 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
+
 </body>
 </html>
