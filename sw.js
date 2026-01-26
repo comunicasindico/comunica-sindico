@@ -1,6 +1,6 @@
 /* ==========================================================
    Comunica Síndico — sw.js BLINDADO (GitHub Pages / PWA)
-   - 1 SW para 2 telas: Condôminos (index.html) + Síndico (sindico/admin_simple.html)
+   - 1 SW para 2 telas: Condôminos (index.html) + Síndico (sindico/*)
    - Atualiza sozinho (skipWaiting + clientsClaim)
    - Não trava em cache velho (cache versionado + limpeza)
    - JSON sempre atualizado (network-first com fallback cache)
@@ -8,7 +8,7 @@
    - HTML navegação: network-first (fallback offline)
    ========================================================== */
 
-const CACHE_VERSION = "v8"; // <- aumente (v8, v9...) quando quiser forçar refresh geral
+const CACHE_VERSION = "v9"; // <- suba para forçar refresh geral
 const CACHE_NAME = `comunica-sindico-${CACHE_VERSION}`;
 
 // Arquivos essenciais (App Shell) — 2 telas
@@ -21,11 +21,13 @@ const ASSETS = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
 
-  // Síndico (seu admin fica aqui)
+  // Síndico
+  "./sindico/",
+  "./sindico/index.html",
   "./sindico/admin_simple.html",
   "./sindico/manifest.json",
 
-  // se existir, ok; se não existir, o addAllSafe ignora
+  // opcional: se existir, cacheia; se não existir, ignora
   "./icons/icon-512-maskable.png"
 ];
 
@@ -62,10 +64,20 @@ function isNavigation(req) {
 function sameOrigin(url) {
   return url.origin === self.location.origin;
 }
+
 function chooseShell(url) {
-  // Se estiver acessando a área do síndico, use o admin como shell offline
-  if (url.pathname.includes("/sindico/")) return "./sindico/admin_simple.html";
-  if (url.searchParams.get("pwa") === "sindico") return "./sindico/admin_simple.html";
+  const p = url.pathname;
+
+  // Síndico: qualquer coisa dentro de /sindico/
+  if (p.includes("/sindico/")) {
+    // se existir index.html, ele é o shell mais natural
+    return "./sindico/index.html";
+  }
+
+  // caso especial por query
+  if (url.searchParams.get("pwa") === "sindico") return "./sindico/index.html";
+
+  // padrão: condôminos
   return "./index.html";
 }
 
@@ -76,9 +88,7 @@ async function addAllSafe(cache, assets) {
       try {
         const res = await fetch(new Request(path, { cache: "reload" }));
         if (res && res.ok) await cache.put(path, res.clone());
-      } catch (_) {
-        // ignora
-      }
+      } catch (_) {}
     })
   );
 }
@@ -89,10 +99,10 @@ self.addEventListener("install", (event) => {
     (async () => {
       const cache = await caches.open(CACHE_NAME);
 
-      // ✅ não use cache.addAll aqui (pode quebrar se faltar 1 arquivo)
+      // ✅ não use cache.addAll (pode quebrar se faltar 1 arquivo)
       await addAllSafe(cache, ASSETS);
 
-      // guarda também o offline.html “virtual”
+      // offline.html “virtual”
       await cache.put(
         "./offline.html",
         new Response(OFFLINE_HTML, {
@@ -115,7 +125,7 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// ===== MESSAGE (forçar update manual, opcional) =====
+// ===== MESSAGE =====
 self.addEventListener("message", (event) => {
   if (event.data === "SKIP_WAITING") self.skipWaiting();
 });
@@ -134,15 +144,22 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // ✅ Navegação: network-first + fallback cache + offline
+  // ✅ Navegação (HTML): network-first + fallback shell + offline
   if (isNavigation(req)) {
     event.respondWith(
       (async () => {
         const shell = chooseShell(url);
+
         try {
           const fresh = await fetch(req, { cache: "no-store" });
 
-          // atualiza o shell correspondente para abrir offline
+          // ✅ salva a própria navegação (melhora offline/back/forward)
+          try {
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(req, fresh.clone());
+          } catch {}
+
+          // ✅ mantém o shell atualizado (pra abrir offline)
           try {
             const freshShell = await fetch(shell, { cache: "no-store" });
             if (freshShell && freshShell.ok) {
@@ -153,6 +170,10 @@ self.addEventListener("fetch", (event) => {
 
           return fresh;
         } catch {
+          // tenta a página pedida -> shell -> offline
+          const cachedNav = await caches.match(req);
+          if (cachedNav) return cachedNav;
+
           const cachedShell = await caches.match(shell);
           return cachedShell || (await caches.match("./offline.html"));
         }
