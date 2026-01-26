@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <script>
+/* Anti-duplicação PWA (condôminos): remove ?pwa= e fixa URL canônica */
+(function () {
+  try {
+    const u = new URL(location.href);
+    if (u.searchParams.has("pwa")) {
+      u.searchParams.delete("pwa");
+      history.replaceState(null, "", u.pathname + u.search + u.hash);
+    }
+  } catch(e) {}
+})();
+</script>
+<link rel="canonical" href="./">
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Condôminos - Comunica Síndico(a)</title>
