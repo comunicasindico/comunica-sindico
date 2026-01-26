@@ -1,5 +1,6 @@
 /* ==========================================================
    Comunica Síndico — sw.js BLINDADO (GitHub Pages / PWA)
+   - 1 SW para 2 telas: Condôminos (index.html) + Síndico (sindico/admin_simple.html)
    - Atualiza sozinho (skipWaiting + clientsClaim)
    - Não trava em cache velho (cache versionado + limpeza)
    - JSON sempre atualizado (network-first com fallback cache)
@@ -7,10 +8,10 @@
    - HTML navegação: network-first (fallback offline)
    ========================================================== */
 
-const CACHE_VERSION = "v7"; // <- aumente (v7, v8...) sempre que quiser forçar refresh geral
+const CACHE_VERSION = "v8"; // <- aumente (v8, v9...) quando quiser forçar refresh geral
 const CACHE_NAME = `comunica-sindico-${CACHE_VERSION}`;
 
-// Arquivos essenciais (App Shell)
+// Arquivos essenciais (App Shell) — 2 telas
 const ASSETS = [
   "./",
   "./index.html",
@@ -18,7 +19,14 @@ const ASSETS = [
   "./data.json",
   "./versiculos.json",
   "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icons/icon-512.png",
+
+  // Síndico (seu admin fica aqui)
+  "./sindico/admin_simple.html",
+  "./sindico/manifest.json",
+
+  // se existir, ok; se não existir, o addAllSafe ignora
+  "./icons/icon-512-maskable.png"
 ];
 
 // Página simples offline (fallback)
@@ -54,15 +62,43 @@ function isNavigation(req) {
 function sameOrigin(url) {
   return url.origin === self.location.origin;
 }
+function chooseShell(url) {
+  // Se estiver acessando a área do síndico, use o admin como shell offline
+  if (url.pathname.includes("/sindico/")) return "./sindico/admin_simple.html";
+  if (url.searchParams.get("pwa") === "sindico") return "./sindico/admin_simple.html";
+  return "./index.html";
+}
+
+// addAll robusto: não falha se algum asset não existir
+async function addAllSafe(cache, assets) {
+  await Promise.all(
+    assets.map(async (path) => {
+      try {
+        const res = await fetch(new Request(path, { cache: "reload" }));
+        if (res && res.ok) await cache.put(path, res.clone());
+      } catch (_) {
+        // ignora
+      }
+    })
+  );
+}
 
 // ===== INSTALL =====
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
-      await cache.addAll(ASSETS);
+
+      // ✅ não use cache.addAll aqui (pode quebrar se faltar 1 arquivo)
+      await addAllSafe(cache, ASSETS);
+
       // guarda também o offline.html “virtual”
-      await cache.put("./offline.html", new Response(OFFLINE_HTML, { headers: { "Content-Type": "text/html; charset=utf-8" } }));
+      await cache.put(
+        "./offline.html",
+        new Response(OFFLINE_HTML, {
+          headers: { "Content-Type": "text/html; charset=utf-8" }
+        })
+      );
     })()
   );
   self.skipWaiting();
@@ -72,10 +108,8 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      // limpa caches antigos
       const keys = await caches.keys();
       await Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)));
-
       await self.clients.claim();
     })()
   );
@@ -91,7 +125,7 @@ self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // Só controla mesmo domínio (GitHub Pages)
+  // Só controla mesmo domínio
   if (!sameOrigin(url)) return;
 
   // ❌ Não cachear MP4 nem Range/206
@@ -100,28 +134,34 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // ✅ Navegação (abrir página): network-first + fallback cache + offline
+  // ✅ Navegação: network-first + fallback cache + offline
   if (isNavigation(req)) {
     event.respondWith(
       (async () => {
+        const shell = chooseShell(url);
         try {
-          // tenta rede primeiro (pega versão mais nova do index)
           const fresh = await fetch(req, { cache: "no-store" });
-          // atualiza cache do index.html
-          const cache = await caches.open(CACHE_NAME);
-          cache.put("./index.html", fresh.clone());
+
+          // atualiza o shell correspondente para abrir offline
+          try {
+            const freshShell = await fetch(shell, { cache: "no-store" });
+            if (freshShell && freshShell.ok) {
+              const cache = await caches.open(CACHE_NAME);
+              cache.put(shell, freshShell.clone());
+            }
+          } catch {}
+
           return fresh;
         } catch {
-          // fallback para cache
-          const cached = await caches.match(req) || await caches.match("./index.html");
-          return cached || (await caches.match("./offline.html"));
+          const cachedShell = await caches.match(shell);
+          return cachedShell || (await caches.match("./offline.html"));
         }
       })()
     );
     return;
   }
 
-  // ✅ JSON: network-first (sempre tenta atualizar) + fallback cache
+  // ✅ JSON: network-first + fallback cache
   if (isJSON(url)) {
     event.respondWith(
       (async () => {
@@ -141,12 +181,11 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // ✅ Demais (CSS/JS/Ícones): cache-first + atualiza em background quando possível
+  // ✅ Demais (CSS/JS/Ícones): cache-first + atualiza em background
   event.respondWith(
     (async () => {
       const cached = await caches.match(req);
       if (cached) {
-        // tenta atualizar em background (não bloqueia)
         event.waitUntil(
           (async () => {
             try {
@@ -161,7 +200,6 @@ self.addEventListener("fetch", (event) => {
         return cached;
       }
 
-      // sem cache -> rede
       try {
         const fresh = await fetch(req);
         if (fresh && fresh.ok) {
@@ -170,7 +208,6 @@ self.addEventListener("fetch", (event) => {
         }
         return fresh;
       } catch {
-        // fallback geral: tenta algo no cache, senão 503
         const fallback = await caches.match(req);
         return fallback || new Response("Offline", { status: 503, statusText: "Offline" });
       }
