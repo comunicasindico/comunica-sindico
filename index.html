@@ -1,19 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <script>
-/* Anti-duplicação PWA (condôminos): remove ?pwa= e fixa URL canônica */
+
+<link rel="canonical" href="./">
+
+<script>
+/* 🔒 Canonical definitivo (RAIZ / Condôminos)
+   - remove QUALQUER query (?pwa=, ?ts= etc)
+   - força URL canônica em "./"
+*/
 (function () {
   try {
     const u = new URL(location.href);
-    if (u.searchParams.has("pwa")) {
-      u.searchParams.delete("pwa");
-      history.replaceState(null, "", u.pathname + u.search + u.hash);
+
+    // remove qualquer query
+    if (u.search) {
+      u.search = "";
+      location.replace(u.toString());
+      return;
     }
+
+    // se abriu /index.html, manda para "./"
+    if (u.pathname.endsWith("/index.html")) {
+      location.replace("./");
+      return;
+    }
+
   } catch(e) {}
 })();
 </script>
-<link rel="canonical" href="./">
+
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Condôminos - Comunica Síndico(a)</title>
@@ -26,23 +42,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#061726">
-
-<!-- 🔒 Canonical URL: evita instalar 2 versões (com/sem ?pwa=) -->
-<script>
-(function(){
-  const url = new URL(window.location.href);
-  const pwa = url.searchParams.get("pwa");
-
-  if (pwa !== "condominos" && url.search) {
-    url.search = "";
-    window.location.replace(url.toString());
-  }
-
-  if (!url.pathname.endsWith("/index.html") && !url.pathname.endsWith("/")) {
-    window.location.replace("./index.html");
-  }
-})();
-</script>
 
 <style>
 :root{
@@ -244,7 +243,13 @@ let deferredPrompt=null;
 function mostrarBotaoInstalar(s){document.getElementById("btnInstalarApp").style.display=s?"inline-flex":"none";}
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;mostrarBotaoInstalar(true);});
 window.addEventListener("appinstalled",()=>{deferredPrompt=null;mostrarBotaoInstalar(false);});
-async function instalarApp(){if(!deferredPrompt)return;await deferredPrompt.prompt();deferredPrompt=null;mostrarBotaoInstalar(false);}
+
+async function instalarApp(){
+  if(!deferredPrompt)return;
+  await deferredPrompt.prompt();
+  deferredPrompt=null;
+  mostrarBotaoInstalar(false);
+}
 
 async function loadAll(){
 const status=document.getElementById("statusJson");
@@ -257,6 +262,7 @@ renderAvisos(j);
 status.textContent="Offline";
 }
 }
+
 function renderAvisos(j){
 const el=document.getElementById("avisos");
 el.innerHTML="";
@@ -267,6 +273,7 @@ d.innerHTML=`<p class="t">${a.titulo}</p><p class="d">${a.descricao}</p>`;
 el.appendChild(d);
 });
 }
+
 loadAll();
 setInterval(loadAll,60000);
 </script>
