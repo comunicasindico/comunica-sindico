@@ -1,13 +1,14 @@
 /* ==========================================================
    Comunica Síndico — sw.js (SÍNDICO) BLINDADO — PWA Launcher
    - Escopo exclusivo: /sindico/
-   - Cache versionado independente
+   - Cache versionado independente (não apaga caches do Condôminos)
    - HTML: network-first + fallback offline
    - Não cacheia requests cross-domain (script.google.com)
    ========================================================== */
 
-const CACHE_VERSION = "v3";
-const CACHE_NAME = `cs-sindico-${CACHE_VERSION}`;
+const CACHE_VERSION = "v4";
+const CACHE_PREFIX  = "cs-sindico-";
+const CACHE_NAME    = `${CACHE_PREFIX}${CACHE_VERSION}`;
 
 const ASSETS = [
   "./",
@@ -40,6 +41,7 @@ function isNavigation(req) {
   return req.mode === "navigate";
 }
 
+// addAll robusto: não falha se algum asset não existir
 async function addAllSafe(cache, assets) {
   await Promise.all(
     assets.map(async (path) => {
@@ -68,11 +70,19 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
+      // ✅ apaga SOMENTE caches do Síndico (não mexe no PWA Condôminos)
       const keys = await caches.keys();
-      await Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)));
+      await Promise.all(
+        keys.map((k) => (k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME ? caches.delete(k) : null))
+      );
       await self.clients.claim();
     })()
   );
+});
+
+// ✅ opcional: permite forçar atualização via postMessage
+self.addEventListener("message", (event) => {
+  if (event.data === "SKIP_WAITING") self.skipWaiting();
 });
 
 self.addEventListener("fetch", (event) => {
@@ -85,17 +95,22 @@ self.addEventListener("fetch", (event) => {
   if (isNavigation(req)) {
     event.respondWith(
       (async () => {
+        const cache = await caches.open(CACHE_NAME);
         try {
           const fresh = await fetch(req, { cache: "no-store" });
-          const cache = await caches.open(CACHE_NAME);
           cache.put(req, fresh.clone());
+          // mantém shell atualizado
+          try {
+            const shell = await fetch("./index.html", { cache: "no-store" });
+            if (shell && shell.ok) cache.put("./index.html", shell.clone());
+          } catch {}
           return fresh;
         } catch {
-          const cachedNav = await caches.match(req);
+          const cachedNav = await cache.match(req);
           if (cachedNav) return cachedNav;
 
-          const cachedShell = await caches.match("./index.html");
-          return cachedShell || (await caches.match("./offline.html"));
+          const cachedShell = await cache.match("./index.html");
+          return cachedShell || (await cache.match("./offline.html"));
         }
       })()
     );
@@ -107,6 +122,7 @@ self.addEventListener("fetch", (event) => {
     (async () => {
       const cache = await caches.open(CACHE_NAME);
       const cached = await cache.match(req);
+
       if (cached) {
         event.waitUntil(
           (async () => {
