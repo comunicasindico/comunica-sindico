@@ -941,34 +941,41 @@
     mostrarBotaoInstalar(false);
   }
 
-  /* Service worker */
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", async () => {
-      try {
-        const reg = await navigator.serviceWorker.register("sw.js");
-        if (reg.update) reg.update();
+/* Service worker (único, raiz do /comunica-sindico/) */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
 
-        reg.addEventListener("updatefound", () => {
-          const nw = reg.installing;
-          if (!nw) return;
-          nw.addEventListener("statechange", () => {
-            if (nw.state === "installed" && navigator.serviceWorker.controller) {
+      // força checar update
+      try { await reg.update(); } catch {}
+
+      reg.addEventListener("updatefound", () => {
+        const nw = reg.installing;
+        if (!nw) return;
+
+        nw.addEventListener("statechange", () => {
+          if (nw.state === "installed") {
+            // se já existia SW controlando, faz o novo assumir
+            if (navigator.serviceWorker.controller) {
               nw.postMessage("SKIP_WAITING");
             }
-          });
+          }
         });
+      });
 
-      } catch (err) {
-        console.error("Erro no Service Worker:", err);
-      }
-    });
+    } catch (err) {
+      console.error("Erro no Service Worker:", err);
+    }
+  });
 
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-      const banner = document.getElementById("updateBanner");
-      if (banner) banner.style.display = "block";
-      setTimeout(() => window.location.reload(), 2000);
-    });
-  }
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    const banner = document.getElementById("updateBanner");
+    if (banner) banner.style.display = "block";
+    setTimeout(() => window.location.reload(), 1200);
+  });
+}
+
 </script>
 </body>
 </html>
