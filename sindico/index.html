@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+<meta name="format-detection" content="telephone=no,date=no,address=no,email=no"/>
 
 <title>Síndico(a) — Comunica Síndico</title>
 
@@ -11,47 +12,49 @@
 <meta name="theme-color" content="#0b223a">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-
 <!-- iOS -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Síndico(a)">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
 
 <style>
+:root{
+  --bg:#061726;
+  --card:rgba(12,35,56,.55);
+  --txt:#eaf2ff;
+  --line:rgba(255,255,255,.15);
+}
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Segoe UI,Arial,sans-serif;
-  background:#061726;
-  color:#eaf2ff;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--txt);
   display:flex;
   min-height:100vh;
   align-items:center;
   justify-content:center;
+  padding:18px;
 }
-
 .box{
-  max-width:720px;
+  width:min(720px, 100%);
   padding:26px;
-  border:1px solid rgba(255,255,255,.15);
+  border:1px solid var(--line);
   border-radius:18px;
-  background:rgba(12,35,56,.55);
+  background:var(--card);
   text-align:center;
   box-shadow:0 14px 40px rgba(0,0,0,.4);
 }
-
-h1{
-  margin:0 0 12px;
-  font-size:26px;
+h1{margin:0 0 10px;font-size:24px}
+p{margin:0 0 14px;opacity:.9;font-size:16px;line-height:1.35}
+.actions{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:6px;
 }
-
-p{
-  margin:0 0 16px;
-  opacity:.9;
-  font-size:16px;
-}
-
-a{
+.btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -59,16 +62,24 @@ a{
   border-radius:999px;
   border:1px solid rgba(255,255,255,.18);
   background:rgba(12,35,56,.75);
-  color:#eaf2ff;
-  padding:14px 22px;
+  color:var(--txt);
+  padding:14px 20px;
   font-weight:800;
-  font-size:16px;
+  font-size:15px;
   text-decoration:none;
   cursor:pointer;
+  user-select:none;
 }
-
-a:hover{
-  filter:brightness(1.08);
+.btn:hover{filter:brightness(1.08)}
+.mini{font-size:13px;opacity:.75;margin-top:10px}
+.badge{
+  display:inline-block;
+  font-size:12px;
+  padding:6px 10px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;
+  opacity:.85;
+  margin:0 0 12px;
 }
 </style>
 </head>
@@ -76,26 +87,55 @@ a:hover{
 <body>
 
 <div class="box">
-  <h1>📋 Síndico(a) — Comunica Síndico</h1>
+  <div class="badge" id="mode">Abrindo…</div>
 
+  <h1>📋 Síndico(a) — Comunica Síndico</h1>
   <p>Painel administrativo para gerenciar avisos e e-mails dos condôminos.</p>
 
-  <p>
-    <a id="go" href="https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec">
+  <div class="actions">
+    <a class="btn" id="go" rel="noopener" href="https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec">
       ➡️ Abrir Painel do Síndico
     </a>
-  </p>
+    <button class="btn" id="cancel" type="button" style="opacity:.9">
+      ⏸️ Não redirecionar
+    </button>
+  </div>
 
-  <p style="font-size:13px;opacity:.75">
-    Instale este app no iPhone para acesso rápido com FaceID.
+  <p class="mini">
+    Dica: instale este app na Tela de Início para acesso rápido (FaceID/TouchID no aparelho).
   </p>
 </div>
 
 <script>
-  // Redireciona automaticamente após 1s
-  setTimeout(()=>{
-    window.location.href = document.getElementById("go").href;
-  }, 1000);
+  const url = document.getElementById("go").href;
+  const mode = document.getElementById("mode");
+  const cancelBtn = document.getElementById("cancel");
+
+  let canceled = false;
+  cancelBtn.addEventListener("click", () => {
+    canceled = true;
+    mode.textContent = "Redirecionamento pausado";
+    cancelBtn.style.display = "none";
+  });
+
+  // Detecta se está rodando como app instalado
+  const isStandalone =
+    window.matchMedia && window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
+
+  // Registro do SW (escopo /sindico/)
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  }
+
+  // Auto-redirect suave (somente se não cancelado)
+  setTimeout(() => {
+    if (canceled) return;
+    mode.textContent = "Abrindo painel…";
+    window.location.assign(url);
+  }, 900);
 </script>
 
 </body>
