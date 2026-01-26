@@ -1,19 +1,22 @@
 {
-  "id": "./?app=condominos",
+  "id": "./",
   "name": "Condôminos — Comunica Síndico",
   "short_name": "Condôminos",
   "description": "Painel de avisos do condomínio (para condôminos).",
   "lang": "pt-BR",
-  // "start_url": "./index.html?pwa=condominos",
-  "start_url": "./",
 
+  "start_url": "./",
   "scope": "./",
+
   "display": "standalone",
+  "orientation": "portrait",
+
   "background_color": "#061726",
   "theme_color": "#0b223a",
-  "orientation": "portrait",
+
   "categories": ["productivity", "utilities"],
   "prefer_related_applications": false,
+
   "icons": [
     {
       "src": "icons/icon-192.png",
