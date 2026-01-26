@@ -1,14 +1,16 @@
 /* ==========================================================
-   Comunica Síndico — sw.js (RAIZ) BLINDADO — PWA Condôminos
+   Comunica Síndico — sw.js (RAIZ) BLINDADO — PWA Condôminos (FIX)
    - Atualiza sozinho (skipWaiting + clientsClaim)
-   - Não trava em cache velho (cache versionado + limpeza)
-   - JSON sempre atualizado (network-first com fallback cache)
-   - Vídeos MP4 e requests com Range NÃO entram no cache
-   - HTML navegação: network-first (fallback offline)
+   - Cache versionado + limpeza APENAS do app Condôminos (não apaga cache do Síndico)
+   - JSON crítico (data.json/versiculos.json): network-first + fallback cache
+   - NÃO cacheia MP4 nem requests com Range (206)
+   - HTML navegação: network-first + fallback offline
+   - Escopo raiz NÃO controla /sindico/
    ========================================================== */
 
-const CACHE_VERSION = "v10"; // <- suba para forçar refresh geral
-const CACHE_NAME = `cs-condominos-${CACHE_VERSION}`;
+const CACHE_VERSION = "v11"; // <- SUBA quando quiser forçar refresh geral
+const CACHE_PREFIX  = "cs-condominos-";
+const CACHE_NAME    = `${CACHE_PREFIX}${CACHE_VERSION}`;
 
 // App Shell (somente Condôminos)
 const ASSETS = [
@@ -19,7 +21,7 @@ const ASSETS = [
   "./versiculos.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
-  "./icons/icon-512-maskable.png" // se existir, cacheia; se não existir, ignora (via addAllSafe)
+  "./icons/icon-512-maskable.png" // se existir, cacheia; se não existir, ignora
 ];
 
 // Página offline (fallback)
@@ -39,25 +41,29 @@ const OFFLINE_HTML = `<!doctype html>
 </div></html>`;
 
 // ===== Helpers =====
-function isVideoRequest(req, url) {
-  return url.pathname.toLowerCase().endsWith(".mp4") || req.destination === "video";
-}
-function hasRangeHeader(req) {
-  return req.headers.has("range");
-}
-function isJSON(url) {
-  const p = url.pathname.toLowerCase();
-  return p.endsWith("/data.json") || p.endsWith("/versiculos.json") || p.endsWith(".json");
-}
-function isNavigation(req) {
-  return req.mode === "navigate";
-}
 function sameOrigin(url) {
   return url.origin === self.location.origin;
 }
 function isInSindicoScope(url) {
   // ✅ garante isolamento: SW da raiz NÃO controla /sindico/
   return url.pathname.includes("/sindico/");
+}
+function isNavigation(req) {
+  return req.mode === "navigate";
+}
+function isVideoRequest(req, url) {
+  const p = url.pathname.toLowerCase();
+  return p.endsWith(".mp4") || req.destination === "video";
+}
+function hasRangeHeader(req) {
+  return req.headers && req.headers.has("range");
+}
+function isCriticalJson(url) {
+  const p = url.pathname.toLowerCase();
+  return p.endsWith("/data.json") || p.endsWith("/versiculos.json");
+}
+function isAnyJson(url) {
+  return url.pathname.toLowerCase().endsWith(".json");
 }
 
 // addAll robusto: não falha se algum asset não existir
@@ -74,28 +80,27 @@ async function addAllSafe(cache, assets) {
 
 // ===== INSTALL =====
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      await addAllSafe(cache, ASSETS);
-      await cache.put(
-        "./offline.html",
-        new Response(OFFLINE_HTML, { headers: { "Content-Type": "text/html; charset=utf-8" } })
-      );
-    })()
-  );
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    await addAllSafe(cache, ASSETS);
+    await cache.put(
+      "./offline.html",
+      new Response(OFFLINE_HTML, { headers: { "Content-Type": "text/html; charset=utf-8" } })
+    );
+  })());
   self.skipWaiting();
 });
 
 // ===== ACTIVATE =====
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    (async () => {
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => (k !== CACHE_NAME ? caches.delete(k) : null)));
-      await self.clients.claim();
-    })()
-  );
+  event.waitUntil((async () => {
+    // ✅ apaga SOMENTE caches do Condôminos (não mexe no cache do Síndico)
+    const keys = await caches.keys();
+    await Promise.all(
+      keys.map((k) => (k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME ? caches.delete(k) : null))
+    );
+    await self.clients.claim();
+  })());
 });
 
 // ===== MESSAGE =====
@@ -111,7 +116,7 @@ self.addEventListener("fetch", (event) => {
   // Só controla mesmo domínio
   if (!sameOrigin(url)) return;
 
-  // ✅ isolamento: ignora tudo de /sindico/ (outro PWA terá seu próprio SW)
+  // ✅ isolamento: ignora tudo de /sindico/
   if (isInSindicoScope(url)) return;
 
   // ❌ Não cachear MP4 nem Range/206
@@ -122,92 +127,83 @@ self.addEventListener("fetch", (event) => {
 
   // ✅ Navegação (HTML): network-first + fallback offline
   if (isNavigation(req)) {
-    event.respondWith(
-      (async () => {
-        try {
-          const fresh = await fetch(req, { cache: "no-store" });
-
-          // salva a navegação (melhora offline/back/forward)
-          try {
-            const cache = await caches.open(CACHE_NAME);
-            cache.put(req, fresh.clone());
-          } catch {}
-
-          // mantém o shell atualizado
-          try {
-            const freshShell = await fetch("./index.html", { cache: "no-store" });
-            if (freshShell && freshShell.ok) {
-              const cache = await caches.open(CACHE_NAME);
-              cache.put("./index.html", freshShell.clone());
-            }
-          } catch {}
-
-          return fresh;
-        } catch {
-          const cachedNav = await caches.match(req);
-          if (cachedNav) return cachedNav;
-
-          const cachedShell = await caches.match("./index.html");
-          return cachedShell || (await caches.match("./offline.html"));
-        }
-      })()
-    );
-    return;
-  }
-
-  // ✅ JSON: network-first + fallback cache
-  if (isJSON(url)) {
-    event.respondWith(
-      (async () => {
-        try {
-          const fresh = await fetch(req, { cache: "no-store" });
-          if (fresh && fresh.ok) {
-            const cache = await caches.open(CACHE_NAME);
-            cache.put(req, fresh.clone());
-          }
-          return fresh;
-        } catch {
-          const cached = await caches.match(req);
-          return (
-            cached ||
-            new Response("{}", { headers: { "Content-Type": "application/json; charset=utf-8" } })
-          );
-        }
-      })()
-    );
-    return;
-  }
-
-  // ✅ Demais (CSS/JS/Ícones): cache-first + atualiza em background
-  event.respondWith(
-    (async () => {
-      const cached = await caches.match(req);
-      if (cached) {
-        event.waitUntil(
-          (async () => {
-            try {
-              const fresh = await fetch(req);
-              if (fresh && fresh.ok) {
-                const cache = await caches.open(CACHE_NAME);
-                cache.put(req, fresh.clone());
-              }
-            } catch {}
-          })()
-        );
-        return cached;
-      }
-
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
       try {
-        const fresh = await fetch(req);
-        if (fresh && fresh.ok) {
-          const cache = await caches.open(CACHE_NAME);
-          cache.put(req, fresh.clone());
-        }
+        const fresh = await fetch(req, { cache: "no-store" });
+        if (fresh && fresh.ok) cache.put(req, fresh.clone());
+
+        // mantém o shell atualizado
+        try {
+          const freshShell = await fetch("./index.html", { cache: "no-store" });
+          if (freshShell && freshShell.ok) cache.put("./index.html", freshShell.clone());
+        } catch {}
+
         return fresh;
       } catch {
-        const fallback = await caches.match(req);
-        return fallback || new Response("Offline", { status: 503, statusText: "Offline" });
+        const cachedNav = await cache.match(req);
+        if (cachedNav) return cachedNav;
+
+        const cachedShell = await cache.match("./index.html");
+        return cachedShell || (await cache.match("./offline.html"));
       }
-    })()
-  );
+    })());
+    return;
+  }
+
+  // ✅ JSON CRÍTICO (data/versículos): network-first + fallback cache
+  if (isCriticalJson(url)) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try {
+        const fresh = await fetch(req, { cache: "no-store" });
+        if (fresh && fresh.ok) cache.put(req, fresh.clone());
+        return fresh;
+      } catch {
+        return (await cache.match(req)) ||
+          new Response("{}", { headers: { "Content-Type": "application/json; charset=utf-8" } });
+      }
+    })());
+    return;
+  }
+
+  // ✅ Outros JSON (.json): network-first também (evita ficar velho)
+  if (isAnyJson(url)) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      try {
+        const fresh = await fetch(req, { cache: "no-store" });
+        if (fresh && fresh.ok) cache.put(req, fresh.clone());
+        return fresh;
+      } catch {
+        return (await cache.match(req)) ||
+          new Response("{}", { headers: { "Content-Type": "application/json; charset=utf-8" } });
+      }
+    })());
+    return;
+  }
+
+  // ✅ Demais (CSS/JS/Ícones): cache-first + refresh em background
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(req);
+
+    if (cached) {
+      event.waitUntil((async () => {
+        try {
+          const fresh = await fetch(req);
+          if (fresh && fresh.ok) cache.put(req, fresh.clone());
+        } catch {}
+      })());
+      return cached;
+    }
+
+    try {
+      const fresh = await fetch(req);
+      if (fresh && fresh.ok) cache.put(req, fresh.clone());
+      return fresh;
+    } catch {
+      return new Response("Offline", { status: 503, statusText: "Offline" });
+    }
+  })());
 });
