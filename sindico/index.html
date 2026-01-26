@@ -125,10 +125,47 @@ p{margin:0 0 14px;opacity:.9;font-size:16px;line-height:1.35}
 
   mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
 
-  // Registro do SW (escopo /sindico/)
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+ <script>
+/* 🔒 Canonical URL (evita duplicar app com query) */
+(function(){
+  const url = new URL(window.location.href);
+  if (url.search) {
+    url.search = "";
+    window.location.replace(url.toString());
   }
+})();
+
+/* Service Worker — PWA Síndico */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+
+      try { await reg.update(); } catch {}
+
+      reg.addEventListener("updatefound", () => {
+        const nw = reg.installing;
+        if (!nw) return;
+
+        nw.addEventListener("statechange", () => {
+          if (nw.state === "installed" && navigator.serviceWorker.controller) {
+            reg.waiting?.postMessage("SKIP_WAITING");
+            nw.postMessage("SKIP_WAITING");
+          }
+        });
+      });
+
+    } catch (err) {
+      console.error("Erro no Service Worker (Síndico):", err);
+    }
+  });
+
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    setTimeout(() => window.location.reload(), 800);
+  });
+}
+</script>
+
 
   // Auto-redirect suave (somente se não cancelado)
   setTimeout(() => {
