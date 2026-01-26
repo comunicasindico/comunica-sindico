@@ -941,25 +941,26 @@
     mostrarBotaoInstalar(false);
   }
 
-/* Service worker (único, raiz do /comunica-sindico/) */
+<script>
+/* Service worker (único na raiz do /comunica-sindico/) */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
       const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
 
-      // força checar update
+      // força checar update imediatamente
       try { await reg.update(); } catch {}
 
+      // se houver SW novo, manda assumir o controle
       reg.addEventListener("updatefound", () => {
         const nw = reg.installing;
         if (!nw) return;
 
         nw.addEventListener("statechange", () => {
-          if (nw.state === "installed") {
-            // se já existia SW controlando, faz o novo assumir
-            if (navigator.serviceWorker.controller) {
-              nw.postMessage("SKIP_WAITING");
-            }
+          if (nw.state === "installed" && navigator.serviceWorker.controller) {
+            // faz o novo SW assumir agora
+            reg.waiting?.postMessage("SKIP_WAITING");
+            nw.postMessage("SKIP_WAITING");
           }
         });
       });
@@ -975,7 +976,6 @@ if ("serviceWorker" in navigator) {
     setTimeout(() => window.location.reload(), 1200);
   });
 }
-
 </script>
 </body>
 </html>
