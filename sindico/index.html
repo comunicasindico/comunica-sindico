@@ -139,16 +139,20 @@ p{margin:0 0 14px;opacity:.9;font-size:16px;line-height:1.35}
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
+      // ✅ escopo correto do /sindico/
       const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
 
+      // ✅ força checar update imediatamente
       try { await reg.update(); } catch {}
 
+      // ✅ se houver SW novo, manda assumir o controle
       reg.addEventListener("updatefound", () => {
         const nw = reg.installing;
         if (!nw) return;
 
         nw.addEventListener("statechange", () => {
           if (nw.state === "installed" && navigator.serviceWorker.controller) {
+            // faz o novo SW assumir agora
             reg.waiting?.postMessage("SKIP_WAITING");
             nw.postMessage("SKIP_WAITING");
           }
@@ -160,12 +164,12 @@ if ("serviceWorker" in navigator) {
     }
   });
 
+  // ✅ quando o SW novo assumir, recarrega a tela (pega assets novos)
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     setTimeout(() => window.location.reload(), 800);
   });
 }
 </script>
-
 
   // Auto-redirect suave (somente se não cancelado)
   setTimeout(() => {
