@@ -1,6 +1,5 @@
 /* ==========================================================
-   Comunica Síndico — sw.js BLINDADO (GitHub Pages / PWA)
-   - 1 SW para 2 telas: Condôminos (index.html) + Síndico (sindico/*)
+   Comunica Síndico — sw.js (RAIZ) BLINDADO — PWA Condôminos
    - Atualiza sozinho (skipWaiting + clientsClaim)
    - Não trava em cache velho (cache versionado + limpeza)
    - JSON sempre atualizado (network-first com fallback cache)
@@ -8,10 +7,10 @@
    - HTML navegação: network-first (fallback offline)
    ========================================================== */
 
-const CACHE_VERSION = "v9"; // <- suba para forçar refresh geral
-const CACHE_NAME = `comunica-sindico-${CACHE_VERSION}`;
+const CACHE_VERSION = "v10"; // <- suba para forçar refresh geral
+const CACHE_NAME = `cs-condominos-${CACHE_VERSION}`;
 
-// Arquivos essenciais (App Shell) — 2 telas
+// App Shell (somente Condôminos)
 const ASSETS = [
   "./",
   "./index.html",
@@ -20,22 +19,14 @@ const ASSETS = [
   "./versiculos.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
-
-  // Síndico
-  "./sindico/",
-  "./sindico/index.html",
-  "./sindico/admin_simple.html",
-  "./sindico/manifest.json",
-
-  // opcional: se existir, cacheia; se não existir, ignora
-  "./icons/icon-512-maskable.png"
+  "./icons/icon-512-maskable.png" // se existir, cacheia; se não existir, ignora (via addAllSafe)
 ];
 
-// Página simples offline (fallback)
+// Página offline (fallback)
 const OFFLINE_HTML = `<!doctype html>
 <html lang="pt-BR"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Comunica Síndico — Offline</title>
+<title>Condôminos — Offline</title>
 <style>
   body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#061726;color:#eaf2ff;display:flex;min-height:100vh;align-items:center;justify-content:center}
   .c{max-width:520px;padding:22px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(12,35,56,.35)}
@@ -44,7 +35,7 @@ const OFFLINE_HTML = `<!doctype html>
 </style>
 <div class="c">
   <h1>Sem internet no momento</h1>
-  <p>O painel pode funcionar parcialmente com dados em cache. Assim que a conexão voltar, ele se atualiza automaticamente.</p>
+  <p>O app pode abrir parcialmente com dados em cache. Assim que a conexão voltar, ele se atualiza sozinho.</p>
 </div></html>`;
 
 // ===== Helpers =====
@@ -64,21 +55,9 @@ function isNavigation(req) {
 function sameOrigin(url) {
   return url.origin === self.location.origin;
 }
-
-function chooseShell(url) {
-  const p = url.pathname;
-
-  // Síndico: qualquer coisa dentro de /sindico/
-  if (p.includes("/sindico/")) {
-    // se existir index.html, ele é o shell mais natural
-    return "./sindico/index.html";
-  }
-
-  // caso especial por query
-  if (url.searchParams.get("pwa") === "sindico") return "./sindico/index.html";
-
-  // padrão: condôminos
-  return "./index.html";
+function isInSindicoScope(url) {
+  // ✅ garante isolamento: SW da raiz NÃO controla /sindico/
+  return url.pathname.includes("/sindico/");
 }
 
 // addAll robusto: não falha se algum asset não existir
@@ -98,16 +77,10 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
-
-      // ✅ não use cache.addAll (pode quebrar se faltar 1 arquivo)
       await addAllSafe(cache, ASSETS);
-
-      // offline.html “virtual”
       await cache.put(
         "./offline.html",
-        new Response(OFFLINE_HTML, {
-          headers: { "Content-Type": "text/html; charset=utf-8" }
-        })
+        new Response(OFFLINE_HTML, { headers: { "Content-Type": "text/html; charset=utf-8" } })
       );
     })()
   );
@@ -138,43 +111,43 @@ self.addEventListener("fetch", (event) => {
   // Só controla mesmo domínio
   if (!sameOrigin(url)) return;
 
+  // ✅ isolamento: ignora tudo de /sindico/ (outro PWA terá seu próprio SW)
+  if (isInSindicoScope(url)) return;
+
   // ❌ Não cachear MP4 nem Range/206
   if (isVideoRequest(req, url) || hasRangeHeader(req)) {
     event.respondWith(fetch(req));
     return;
   }
 
-  // ✅ Navegação (HTML): network-first + fallback shell + offline
+  // ✅ Navegação (HTML): network-first + fallback offline
   if (isNavigation(req)) {
     event.respondWith(
       (async () => {
-        const shell = chooseShell(url);
-
         try {
           const fresh = await fetch(req, { cache: "no-store" });
 
-          // ✅ salva a própria navegação (melhora offline/back/forward)
+          // salva a navegação (melhora offline/back/forward)
           try {
             const cache = await caches.open(CACHE_NAME);
             cache.put(req, fresh.clone());
           } catch {}
 
-          // ✅ mantém o shell atualizado (pra abrir offline)
+          // mantém o shell atualizado
           try {
-            const freshShell = await fetch(shell, { cache: "no-store" });
+            const freshShell = await fetch("./index.html", { cache: "no-store" });
             if (freshShell && freshShell.ok) {
               const cache = await caches.open(CACHE_NAME);
-              cache.put(shell, freshShell.clone());
+              cache.put("./index.html", freshShell.clone());
             }
           } catch {}
 
           return fresh;
         } catch {
-          // tenta a página pedida -> shell -> offline
           const cachedNav = await caches.match(req);
           if (cachedNav) return cachedNav;
 
-          const cachedShell = await caches.match(shell);
+          const cachedShell = await caches.match("./index.html");
           return cachedShell || (await caches.match("./offline.html"));
         }
       })()
@@ -195,7 +168,10 @@ self.addEventListener("fetch", (event) => {
           return fresh;
         } catch {
           const cached = await caches.match(req);
-          return cached || new Response("{}", { headers: { "Content-Type": "application/json; charset=utf-8" } });
+          return (
+            cached ||
+            new Response("{}", { headers: { "Content-Type": "application/json; charset=utf-8" } })
+          );
         }
       })()
     );
