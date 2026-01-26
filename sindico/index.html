@@ -5,6 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no"/>
 
+<!-- 🔒 Canonical (evita duplicar app com query ?pwa= / ?app=) -->
+<link rel="canonical" href="./">
+<script>
+(function(){
+  try{
+    const u = new URL(location.href);
+    if(u.search){
+      u.search = "";
+      location.replace(u.toString());
+      return;
+    }
+    if(u.pathname.endsWith("/index.html")){
+      location.replace("./");
+      return;
+    }
+  }catch(e){}
+})();
+</script>
+
 <title>Síndico(a) — Comunica Síndico</title>
 
 <!-- PWA -->
@@ -31,7 +50,7 @@ body{
   background:var(--bg);
   color:var(--txt);
   display:flex;
-  min-height:100vh;
+  min-height:100dvh;
   align-items:center;
   justify-content:center;
   padding:18px;
@@ -107,76 +126,60 @@ p{margin:0 0 14px;opacity:.9;font-size:16px;line-height:1.35}
 </div>
 
 <script>
-  const url = document.getElementById("go").href;
-  const mode = document.getElementById("mode");
-  const cancelBtn = document.getElementById("cancel");
+/* ===== Estado ===== */
+const targetUrl = document.getElementById("go").href;
+const mode = document.getElementById("mode");
+const cancelBtn = document.getElementById("cancel");
+let canceled = false;
 
-  let canceled = false;
-  cancelBtn.addEventListener("click", () => {
-    canceled = true;
-    mode.textContent = "Redirecionamento pausado";
-    cancelBtn.style.display = "none";
-  });
+cancelBtn.addEventListener("click", () => {
+  canceled = true;
+  mode.textContent = "Redirecionamento pausado";
+  cancelBtn.style.display = "none";
+});
 
-  // Detecta se está rodando como app instalado
-  const isStandalone =
-    window.matchMedia && window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true;
+/* Detecta se está rodando como app instalado */
+const isStandalone =
+  (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+  window.navigator.standalone === true;
 
-  mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
+mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
 
- <script>
-/* 🔒 Canonical URL (evita duplicar app com query) */
-(function(){
-  const url = new URL(window.location.href);
-  if (url.search) {
-    url.search = "";
-    window.location.replace(url.toString());
-  }
-})();
-
-/* Service Worker — PWA Síndico */
+/* ===== Service Worker — PWA Síndico (escopo /sindico/) ===== */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     try {
-      // ✅ escopo correto do /sindico/
       const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
 
-      // ✅ força checar update imediatamente
       try { await reg.update(); } catch {}
 
-      // ✅ se houver SW novo, manda assumir o controle
       reg.addEventListener("updatefound", () => {
         const nw = reg.installing;
         if (!nw) return;
 
         nw.addEventListener("statechange", () => {
           if (nw.state === "installed" && navigator.serviceWorker.controller) {
-            // faz o novo SW assumir agora
             reg.waiting?.postMessage("SKIP_WAITING");
             nw.postMessage("SKIP_WAITING");
           }
         });
       });
-
     } catch (err) {
       console.error("Erro no Service Worker (Síndico):", err);
     }
   });
 
-  // ✅ quando o SW novo assumir, recarrega a tela (pega assets novos)
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     setTimeout(() => window.location.reload(), 800);
   });
 }
-</script>
 
-  // Auto-redirect suave (somente se não cancelado)
-  setTimeout(() => {
-    if (canceled) return;
-    mode.textContent = "Abrindo painel…";
-    window.location.assign(url);
-  }, 900);
+/* ===== Auto-redirect suave (somente se não cancelado) ===== */
+setTimeout(() => {
+  if (canceled) return;
+  mode.textContent = "Abrindo painel…";
+  window.location.assign(targetUrl);
+}, 900);
 </script>
 
 </body>
