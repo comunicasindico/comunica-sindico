@@ -121,53 +121,48 @@
       gap:18px;
       min-height:0;
     }
-    ./* =========================
-   CARD / CABEÇALHO (compacto)
-   ========================= */
 
-.card{
-  background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-}
+    /* =========================
+       CARD / CABEÇALHO (compacto)
+       ========================= */
+    .card{
+      background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+    .card .head{
+      padding:8px 12px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:8px;
+    }
+    .pill{
+      font-size:12px;
+      font-weight:700;
+      padding:4px 8px;
+      border-radius:12px;
+      line-height:1.25;
+      max-width:100%;
+      white-space:normal;
 
-/* ✅ diminui altura do cabeçalho e não força espaço extra */
-.card .head{
-  padding:8px 12px;
-  border-bottom:1px solid var(--line);
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:8px;
-}
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(12,35,56,.35);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    #ref{
+      font-size:12.5px;
+      line-height:1.25;
+    }
 
-/* ✅ pill compacto e quebra linha conforme o versículo */
-.pill{
-  font-size:12px;
-  font-weight:700;
-  padding:4px 8px;
-  border-radius:12px;
-  line-height:1.25;
-  max-width:100%;
-  white-space:normal;
-
-  border:1px solid var(--line);
-  color:var(--muted);
-  background:rgba(12,35,56,.35);
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-}
-
-/* ✅ o texto do versículo (id="ref") fica um pouco mais “justo” */
-#ref{
-  font-size:12.5px;
-  line-height:1.25;
-}
     .avisos{
       padding:16px;
       overflow:auto;
@@ -215,6 +210,8 @@
       gap:10px;
       min-height:0;
     }
+
+    /* ✅ Vídeo: preencher o espaço (pode cortar um pouco) */
     .miniAnuncio .videoWrap{
       width:100%;
       aspect-ratio:16/9;
@@ -222,15 +219,23 @@
       border:1px solid var(--line);
       overflow:hidden;
       background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
     .miniAnuncio video{
       width:100%;
       height:100%;
       display:block;
-      object-fit:cover;
+      object-fit:cover;      /* ✅ preenche tudo (aceita corte) */
       object-position:center;
       background:#000;
     }
+    /* ✅ Quando o vídeo for vertical, usamos contain (sem cortar demais) */
+    .miniAnuncio video.fit-contain{
+      object-fit:contain;
+    }
+
     .wxbar{
       position:fixed;left:0;right:0;bottom:0;
       padding:
@@ -438,6 +443,16 @@
       }
     }
 
+    // ========= PUBLICIDADE: RANDOM + "HÍBRIDO" (preenche; vertical = contain)
+    function shuffleArray(arr){
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
     function iniciarPublicidade(data){
       const pub = data?.publicidade;
       const adBox = document.getElementById("adBox");
@@ -449,31 +464,67 @@
         return;
       }
 
-      const list = pub.videos.slice();
+      const intervalMs = Math.max(3, Number(pub.intervaloSeg || 10)) * 1000;
+
+      // fila randômica sem repetir até terminar
+      let queue = shuffleArray(pub.videos);
       let idx = 0;
+      let timer = null;
 
-      function next(){
-        if (!list.length) return;
-
-        const item = list[idx % list.length];
+      function pickNext(){
+        if (!queue.length) return null;
+        const item = queue[idx];
         idx++;
+        if (idx >= queue.length){
+          queue = shuffleArray(pub.videos);
+          idx = 0;
+        }
+        return item;
+      }
+
+      function playItem(item){
+        if (!item) return;
 
         adLabel.textContent = String(item.anunciante || "Anúncio");
 
+        // cache-busting
         const src = String(item.arquivo || "");
         const sep = src.includes("?") ? "&" : "?";
-        adVideo.src = src ? (src + sep + "ts=" + Date.now()) : "";
+        const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+
+        // reset total (evita "vídeo teimoso")
+        adVideo.pause();
+        adVideo.classList.remove("fit-contain");
+        adVideo.removeAttribute("src");
+        adVideo.load();
+
+        adVideo.src = finalSrc;
+        adVideo.load();
+
+        // fallback: se não terminar, troca pelo timer
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          playItem(pickNext());
+        }, intervalMs);
 
         adVideo.play().catch(() => {
-          setTimeout(next, 400);
+          // se falhar, tenta próximo
+          setTimeout(() => playItem(pickNext()), 350);
         });
       }
 
-      adVideo.onended = next;
-      adVideo.onerror = () => setTimeout(next, 400);
+      // Híbrido: horizontal enche (cover); vertical contém (sem cortar muito)
+      adVideo.onloadedmetadata = () => {
+        const isVertical = adVideo.videoHeight > adVideo.videoWidth;
+        if (isVertical) adVideo.classList.add("fit-contain");
+        else adVideo.classList.remove("fit-contain");
+      };
+
+      adVideo.onended = () => playItem(pickNext());
+      adVideo.onerror = () => setTimeout(() => playItem(pickNext()), 350);
 
       adBox.style.display = "flex";
-      next();
+      playItem(pickNext());
     }
 
     async function loadAll(){
