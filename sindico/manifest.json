@@ -4,19 +4,14 @@
   "short_name": "Síndico(a)",
   "description": "Painel administrativo do síndico para publicar avisos e enviar comunicados aos condôminos.",
   "lang": "pt-BR",
-
   "start_url": "./",
   "scope": "./",
-
   "display": "standalone",
   "orientation": "portrait",
-
   "background_color": "#061726",
   "theme_color": "#0b223a",
-
   "categories": ["productivity", "utilities"],
   "prefer_related_applications": false,
-
   "icons": [
     {
       "src": "icons/icon-192.png",
