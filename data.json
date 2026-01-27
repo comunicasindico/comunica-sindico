@@ -74,7 +74,18 @@
   },
   "avisos": [
     {
-      "id": "",
+      "id": "ac4d47ad-mkwqtjdz",
+      "titulo": "Lixeira",
+      "descricao": "Teste de limpeza",
+      "prioridade": "Alta",
+      "tipo": "",
+      "local": "",
+      "inicio": "",
+      "fim": "",
+      "emergencia": false
+    },
+    {
+      "id": "1cd29c98-mkw2yv8t",
       "titulo": "Limpeza",
       "descricao": "Vidros devem ser descartados dentro de garrafas PET ou caixas de leite, devidamente identificados com aviso de “VIDRO QUEBRADO”, para evitar que a prestadora de serviços ou os lixeiros se machuquem. Leve direto as lixeiras, não deixe na porta da unidade nos corredores",
       "prioridade": "Baixa",
