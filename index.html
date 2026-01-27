@@ -343,6 +343,22 @@
     function safeText(v){ return (v == null ? "" : String(v)); }
     function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
 
+    function pad2(n){ return String(n).padStart(2,"0"); }
+
+function formatDT_BR(v){
+  if(!v) return "";
+  const d = new Date(v);
+  if(isNaN(d.getTime())) return String(v);
+
+  const dd = pad2(d.getDate());
+  const mm = pad2(d.getMonth()+1);
+  const aa = String(d.getFullYear()).slice(-2);
+  const HH = pad2(d.getHours());
+  const MM = pad2(d.getMinutes());
+  return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
+}
+
+    
     // =========================================================
     // ✅ AVISOS: 4 por tela + rotação quando houver mais
     // Controlado por data.json -> rotacao.{ativar,intervaloSeg,quantidadePorTela,pausarNoMouse}
@@ -388,8 +404,8 @@
           const desc = safeText(a.descricao || "");
           const tipo = safeText(a.tipo || "");
           const local = safeText(a.local || "");
-          const ini = safeText(a.inicio || "");
-          const fim = safeText(a.fim || "");
+          const ini = formatDT_BR(a.inicio || "");
+          const fim = formatDT_BR(a.fim || "");
 
           const tags = [];
           if(tipo) tags.push(`<span class="tag">🏷️ ${tipo}</span>`);
