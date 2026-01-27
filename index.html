@@ -86,18 +86,18 @@
     }
     .title{margin:0;font-size:22px;font-weight:800}
     .subtitle{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}
-    .titleSmall{
-  font-size:16px;       /* menor que o versículo */
-  font-weight:900;     /* negrito */
-  line-height:1.2;
-}
 
-.updated{
-  margin-top:2px;
-  font-size:11px;
-  font-weight:700;
-  color:var(--muted);
-}
+    .titleSmall{
+      font-size:16px;
+      font-weight:900;
+      line-height:1.2;
+    }
+    .updated{
+      margin-top:2px;
+      font-size:11px;
+      font-weight:700;
+      color:var(--muted);
+    }
 
     .badge{
       display:flex;align-items:center;gap:10px;
@@ -236,12 +236,12 @@
       width:100%;
       height:100%;
       display:block;
-      object-fit:cover;      /* preenche (pode cortar um pouco) */
+      object-fit:cover;
       object-position:center;
       background:#000;
     }
     .miniAnuncio video.fit-contain{
-      object-fit:contain;     /* vertical: evita corte excessivo */
+      object-fit:contain;
     }
 
     .wxbar{
@@ -269,10 +269,10 @@
 
       <div class="topbar">
         <div>
-  <div class="titleSmall" id="titulo">Comunica Síndico - Condôminos</div>
-  <div class="subtitle" id="subtitulo">Painel informativo</div>
-  <div class="updated" id="statusJson">Atualizado</div>
-</div>
+          <div class="titleSmall" id="titulo">Comunica Síndico - Condôminos</div>
+          <div class="subtitle" id="subtitulo">Painel informativo</div>
+          <div class="updated" id="statusJson">Carregando...</div>
+        </div>
         <div style="display:flex;gap:10px;align-items:center;">
           <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">⬇️ Instalar App</button>
         </div>
@@ -343,43 +343,88 @@
     function safeText(v){ return (v == null ? "" : String(v)); }
     function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
 
+    // =========================================================
+    // ✅ AVISOS: 4 por tela + rotação quando houver mais
+    // Controlado por data.json -> rotacao.{ativar,intervaloSeg,quantidadePorTela,pausarNoMouse}
+    // =========================================================
+    let ROT_TIMER = null;
+    let ROT_STATE = { page: 0, totalPages: 1, paused: false };
+
     function renderAvisos(data){
       const root = document.getElementById("avisos");
       root.innerHTML = "";
 
-      const avisos = Array.isArray(data.avisos) ? data.avisos : [];
-      if(!avisos.length){
+      if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
+
+      const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
+      const rot = data?.rotacao || {};
+      const ativar = !!rot.ativar;
+      const qtd = Math.max(1, Number(rot.quantidadePorTela || 4));
+      const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
+
+      if(!avisosAll.length){
         const div = document.createElement("div");
         div.className = "aviso baixa";
         div.innerHTML = `<p class="t">Sem avisos no momento</p><p class="d">${safeText(data.fallback || "—")}</p>`;
         root.appendChild(div);
+        ROT_STATE = { page: 0, totalPages: 1, paused: false };
         return;
       }
 
-      avisos.forEach(a=>{
-        const el = document.createElement("div");
-        el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+      const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
+      ROT_STATE = { page: 0, totalPages, paused: false };
 
-        const titulo = safeText(a.titulo || "Aviso");
-        const desc = safeText(a.descricao || "");
-        const tipo = safeText(a.tipo || "");
-        const local = safeText(a.local || "");
-        const ini = safeText(a.inicio || "");
-        const fim = safeText(a.fim || "");
+      function renderPage(pageIdx){
+        root.innerHTML = "";
 
-        const tags = [];
-        if(tipo) tags.push(`<span class="tag">🏷️ ${tipo}</span>`);
-        if(local) tags.push(`<span class="tag">📍 ${local}</span>`);
-        if(ini || fim) tags.push(`<span class="tag">🗓️ ${ini}${fim ? " → " + fim : ""}</span>`);
-        tags.push(`<span class="tag">⚡ ${safeText(a.prioridade || "Baixa")}</span>`);
+        const start = pageIdx * qtd;
+        const slice = avisosAll.slice(start, start + qtd);
 
-        el.innerHTML = `
-          <p class="t">${titulo}</p>
-          ${desc ? `<p class="d">${desc}</p>` : ""}
-          <div class="meta">${tags.join("")}</div>
-        `;
-        root.appendChild(el);
-      });
+        slice.forEach(a=>{
+          const el = document.createElement("div");
+          el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+
+          const titulo = safeText(a.titulo || "Aviso");
+          const desc = safeText(a.descricao || "");
+          const tipo = safeText(a.tipo || "");
+          const local = safeText(a.local || "");
+          const ini = safeText(a.inicio || "");
+          const fim = safeText(a.fim || "");
+
+          const tags = [];
+          if(tipo) tags.push(`<span class="tag">🏷️ ${tipo}</span>`);
+          if(local) tags.push(`<span class="tag">📍 ${local}</span>`);
+          if(ini || fim) tags.push(`<span class="tag">🗓️ ${ini}${fim ? " → " + fim : ""}</span>`);
+          tags.push(`<span class="tag">⚡ ${safeText(a.prioridade || "Baixa")}</span>`);
+
+          el.innerHTML = `
+            <p class="t">${titulo}</p>
+            ${desc ? `<p class="d">${desc}</p>` : ""}
+            <div class="meta">${tags.join("")}</div>
+          `;
+          root.appendChild(el);
+        });
+      }
+
+      renderPage(0);
+
+      // rotaciona só se ativado e houver mais de 1 "página"
+      if (ativar && totalPages > 1){
+        // pausa no mouse (desktop) e no toque (celular)
+        if (rot.pausarNoMouse){
+          root.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
+          root.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
+          root.addEventListener("touchstart", ()=>{
+            ROT_STATE.paused = !ROT_STATE.paused;
+          }, {passive:true});
+        }
+
+        ROT_TIMER = setInterval(()=>{
+          if (ROT_STATE.paused) return;
+          ROT_STATE.page = (ROT_STATE.page + 1) % totalPages;
+          renderPage(ROT_STATE.page);
+        }, intervaloMs);
+      }
     }
 
     function hojeKeyMMDD() {
@@ -451,7 +496,7 @@
       }
     }
 
-    // ✅ PUBLICIDADE: SEQUENCIAL (como antes) + ajuste vertical/horizontal
+    // ✅ PUBLICIDADE: SEQUENCIAL (sem random) + vertical/horizontal
     function iniciarPublicidade(data){
       const pub = data?.publicidade;
       const adBox = document.getElementById("adBox");
@@ -485,7 +530,6 @@
         adVideo.load();
 
         adVideo.play().catch(() => {
-          // se falhar, tenta próximo em seguida
           setTimeout(playNext, 800);
         });
 
@@ -493,14 +537,12 @@
         if(idx >= pub.videos.length) idx = 0;
       }
 
-      // Híbrido: vertical = contain / horizontal = cover
       adVideo.onloadedmetadata = () => {
         const isVertical = adVideo.videoHeight > adVideo.videoWidth;
         if (isVertical) adVideo.classList.add("fit-contain");
         else adVideo.classList.remove("fit-contain");
       };
 
-      // ao terminar, espera um pouco e vai pro próximo
       adVideo.onended = () => setTimeout(playNext, intervalMs);
       adVideo.onerror = () => setTimeout(playNext, 1000);
 
@@ -515,8 +557,10 @@
         const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
         const data = await res.json();
 
-        setText("titulo", safeText(data.titulo || "Comunica Síndico"));
-        setText("subtitulo", safeText(data.subtitulo || "Painel informativo"));
+        // Se quiser manter "Comunica Síndico - Condôminos" fixo, pode remover estas 2 linhas:
+        // setText("titulo", safeText(data.titulo || "Comunica Síndico"));
+        // setText("subtitulo", safeText(data.subtitulo || "Painel informativo"));
+
         status.textContent = "Atualizado";
 
         if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
