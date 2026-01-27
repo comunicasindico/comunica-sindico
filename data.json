@@ -105,6 +105,39 @@
       "inicio": "2026-01-26T23:52",
       "fim": "2026-01-27T23:52",
       "emergencia": false
+    },
+    {
+      "id": "ec1fa376-mkw2yv8s",
+      "titulo": "Carrinho interno",
+      "descricao": "Caso optem por colocar várias sacolas menores dentro de um saco grande de lixo, pedimos que levem esse saco diretamente até a lixeira externa, e não ao carrinho que fica dentro do prédio (ele é exclusivo para sacolas menores). O excesso de peso acaba rasgando as sacolas dentro do carrinho, dificultando bastante o manuseio pela prestadora de serviços e os sacos maiores \"trancam\" ali dentro ocupando muito mais espaço do que um descarte do dia a dia.",
+      "prioridade": "Baixa",
+      "tipo": "Serviços",
+      "local": "Garagem",
+      "inicio": "2026-01-27T04:09:00.000Z",
+      "fim": "2026-01-28T04:09:00.000Z",
+      "emergencia": false
+    },
+    {
+      "id": "a8444681-mkw2yv8t",
+      "titulo": "Limpeza",
+      "descricao": "Utilizem, por favor, sacolas reforçadas, próprias para lixo, e evitem sacolas finas de mercado, pois elas rasgam com facilidade.",
+      "prioridade": "Baixa",
+      "tipo": "Serviços",
+      "local": "Lixeira",
+      "inicio": "2026-01-27T04:07:00.000Z",
+      "fim": "2026-01-28T04:07:00.000Z",
+      "emergencia": false
+    },
+    {
+      "id": "1cd29c98-mkw2yv8t",
+      "titulo": "Limpeza",
+      "descricao": "Vidros devem ser descartados dentro de garrafas PET ou caixas de leite, devidamente identificados com aviso de “VIDRO QUEBRADO”, para evitar que a prestadora de serviços ou os lixeiros se machuquem. Leve direto as lixeiras, não deixe na porta da unidade nos corredores",
+      "prioridade": "Baixa",
+      "tipo": "Limpeza",
+      "local": "Corredores",
+      "inicio": "2026-01-26T23:52",
+      "fim": "2026-01-27T23:52",
+      "emergencia": false
     }
   ]
 }
