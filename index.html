@@ -121,31 +121,53 @@
       gap:18px;
       min-height:0;
     }
-    .card{
-      background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      display:flex;
-      flex-direction:column;
-      min-height:0;
-    }
-    .card .head{
-      padding:16px 18px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-    }
-    .pill{
-      font-size:12px;font-weight:900;
-      padding:8px 10px;border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--muted);
-      background:rgba(12,35,56,.35);
-      display:inline-flex;align-items:center;gap:8px;
-    }
+    ./* =========================
+   CARD / CABEÇALHO (compacto)
+   ========================= */
+
+.card{
+  background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+
+/* ✅ diminui altura do cabeçalho e não força espaço extra */
+.card .head{
+  padding:8px 12px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:8px;
+}
+
+/* ✅ pill compacto e quebra linha conforme o versículo */
+.pill{
+  font-size:12px;
+  font-weight:700;
+  padding:4px 8px;
+  border-radius:12px;
+  line-height:1.25;
+  max-width:100%;
+  white-space:normal;
+
+  border:1px solid var(--line);
+  color:var(--muted);
+  background:rgba(12,35,56,.35);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+/* ✅ o texto do versículo (id="ref") fica um pouco mais “justo” */
+#ref{
+  font-size:12.5px;
+  line-height:1.25;
+}
     .avisos{
       padding:16px;
       overflow:auto;
