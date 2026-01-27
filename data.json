@@ -80,8 +80,8 @@
       "prioridade": "Baixa",
       "tipo": "Serviços",
       "local": "Lixeira",
-      "inicio": "2026-01-27T04:07",
-      "fim": "2026-01-28T04:07",
+      "inicio": "27/01/26 - 04:07",
+      "fim": "28/01/26 - 04:07",
       "emergencia": false
     },
     {
@@ -91,8 +91,8 @@
       "prioridade": "Baixa",
       "tipo": "Serviços",
       "local": "Garagem",
-      "inicio": "2026-01-27T04:09",
-      "fim": "2026-01-28T04:09",
+      "inicio": "27/01/26 - 04:09",
+      "fim": "28/01/26 - 04:09",
       "emergencia": false
     },
     {
@@ -102,8 +102,19 @@
       "prioridade": "Baixa",
       "tipo": "Informativo",
       "local": "Piscina",
-      "inicio": "2026-01-27T15:50",
-      "fim": "2026-01-28T15:50",
+      "inicio": "27/01/26 - 15:50",
+      "fim": "28/01/26 - 15:50",
+      "emergencia": false
+    },
+    {
+      "id": "004",
+      "titulo": "Lixo",
+      "descricao": "Teste inclusão lixo e resíduos sólidos",
+      "prioridade": "Baixa",
+      "tipo": "Resíduos sólidos",
+      "local": "Garagem",
+      "inicio": "27/01/26 - 15:58",
+      "fim": "28/01/26 - 15:58",
       "emergencia": false
     }
   ]
