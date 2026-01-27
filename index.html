@@ -257,7 +257,8 @@
         <aside class="side">
           <div class="miniAnuncio" id="adBox" style="display:none">
             <div class="pill" id="adLabel">Anúncio</div>
-            <video id="adVideo" autoplay muted playsinline></video>
+            <div class="videoWrap">
+               <video id="adVideo" autoplay muted playsinline></video>
           </div>
         </aside>
       </div>
@@ -345,13 +346,135 @@
     }
 
     function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
+function hojeKeyMMDD() {
+  const d = new Date();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${mm}-${dd}`;
+}
+
+async function carregarVersiculo(data) {
+  // só mostra se estiver em modo bíblico
+  if (!data?.temaDoDia || data.temaDoDia.modo !== "biblico-anual") return;
+
+  try {
+    const res = await fetch("versiculos.json?ts=" + Date.now(), { cache: "no-store" });
+    const v = await res.json();
+
+    const key = hojeKeyMMDD();
+    const texto = v?.versos?.[key];
+
+    if (texto) {
+      // Mostra no topo (ref) e também no pill
+      setText("dataBiblica", "📖 Versículo do dia");
+      setText("ref", texto);
+    } else {
+      setText("dataBiblica", "📖 Versículo do dia");
+      setText("ref", v?.titulo ? v.titulo : "Versículo não encontrado");
+    }
+  } catch (e) {
+    // Falhou? mantém o que já tem sem quebrar tela
+  }
+}
+
+function wxEmojiFromCode(code){
+  // mapeamento simples (Open-Meteo)
+  if (code === 0) return "☀️";
+  if ([1,2,3].includes(code)) return "⛅";
+  if ([45,48].includes(code)) return "🌫️";
+  if ([51,53,55,56,57].includes(code)) return "🌦️";
+  if ([61,63,65,66,67].includes(code)) return "🌧️";
+  if ([71,73,75,77,85,86].includes(code)) return "❄️";
+  if ([80,81,82].includes(code)) return "🌧️";
+  if ([95,96,99].includes(code)) return "⛈️";
+  return "🌦️";
+}
+
+async function carregarClima(data){
+  const c = data?.clima;
+  if (!c?.latitude || !c?.longitude) {
+    setText("wxText", "Clima: configure latitude/longitude no data.json");
+    return;
+  }
+
+  try {
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      `?latitude=${encodeURIComponent(c.latitude)}` +
+      `&longitude=${encodeURIComponent(c.longitude)}` +
+      `&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m` +
+      `&timezone=${encodeURIComponent(c.timezone || "America/Sao_Paulo")}`;
+
+    const res = await fetch(url, { cache: "no-store" });
+    const j = await res.json();
+
+    const cur = j?.current;
+    if (!cur) throw new Error("Sem current");
+
+    const emoji = wxEmojiFromCode(cur.weather_code);
+    const t = Math.round(cur.temperature_2m);
+    const w = Math.round(cur.wind_speed_10m);
+    const p = cur.precipitation;
+
+    document.getElementById("wxIcon").textContent = emoji;
+    setText("wxText", `Clima: ${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
+  } catch (e) {
+    // fallback: pelo menos mostra a cidade
+    document.getElementById("wxIcon").textContent = "🌦️";
+    setText("wxText", `Clima: ${data?.clima?.cidade || "—"} (offline)`);
+  }
+}
+
+function iniciarPublicidade(data){
+  const pub = data?.publicidade;
+  const adBox = document.getElementById("adBox");
+  const adVideo = document.getElementById("adVideo");
+  const adLabel = document.getElementById("adLabel");
+
+  if (!(pub?.ativar && Array.isArray(pub.videos) && pub.videos.length)) {
+    adBox.style.display = "none";
+    return;
+  }
+
+  const list = pub.videos.slice();
+  let idx = 0;
+
+  function next(){
+    if (!list.length) return;
+
+    const item = list[idx % list.length];
+    idx++;
+
+    adLabel.textContent = String(item.anunciante || "Anúncio");
+
+    // cache-busting para evitar vídeo “teimoso”
+    const src = String(item.arquivo || "");
+    const sep = src.includes("?") ? "&" : "?";
+    adVideo.src = src ? (src + sep + "ts=" + Date.now()) : "";
+
+    // tenta tocar; se falhar, passa para o próximo
+    adVideo.play().catch(() => {
+      setTimeout(next, 400);
+    });
+  }
+
+  adVideo.onended = next;
+  adVideo.onerror = () => {
+    setTimeout(next, 400);
+  };
+
+  adBox.style.display = "flex";
+  next();
+}
 
     async function loadAll(){
       const status = document.getElementById("statusJson");
       try{
         const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
         const data = await res.json();
-
+      await carregarVersiculo(data);
+      await carregarClima(data);
+      iniciarPublicidade(data);
         setText("titulo", safeText(data.titulo || "Comunica Síndico"));
         setText("subtitulo", safeText(data.subtitulo || "Painel informativo"));
         setText("ref", safeText(data.referencia || "Atualizado"));
