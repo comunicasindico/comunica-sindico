@@ -223,12 +223,12 @@
       width:100%;
       height:100%;
       display:block;
-      object-fit:cover;
+      object-fit:cover;      /* preenche (pode cortar um pouco) */
       object-position:center;
       background:#000;
     }
     .miniAnuncio video.fit-contain{
-      object-fit:contain;
+      object-fit:contain;     /* vertical: evita corte excessivo */
     }
 
     .wxbar{
@@ -438,15 +438,7 @@
       }
     }
 
-    function shuffleArray(arr){
-      const a = arr.slice();
-      for (let i = a.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-
+    // ✅ PUBLICIDADE: SEQUENCIAL (como antes) + ajuste vertical/horizontal
     function iniciarPublicidade(data){
       const pub = data?.publicidade;
       const adBox = document.getElementById("adBox");
@@ -459,24 +451,11 @@
       }
 
       const intervalMs = Math.max(3, Number(pub.intervaloSeg || 10)) * 1000;
-
-      let queue = shuffleArray(pub.videos);
       let idx = 0;
-      let timer = null;
 
-      function pickNext(){
-        if (!queue.length) return null;
-        const item = queue[idx];
-        idx++;
-        if (idx >= queue.length){
-          queue = shuffleArray(pub.videos);
-          idx = 0;
-        }
-        return item;
-      }
-
-      function playItem(item){
-        if (!item) return;
+      function playNext(){
+        const item = pub.videos[idx];
+        if(!item) return;
 
         adLabel.textContent = String(item.anunciante || "Anúncio");
 
@@ -492,25 +471,28 @@
         adVideo.src = finalSrc;
         adVideo.load();
 
-        clearTimeout(timer);
-        timer = setTimeout(() => playItem(pickNext()), intervalMs);
-
         adVideo.play().catch(() => {
-          setTimeout(() => playItem(pickNext()), 350);
+          // se falhar, tenta próximo em seguida
+          setTimeout(playNext, 800);
         });
+
+        idx++;
+        if(idx >= pub.videos.length) idx = 0;
       }
 
+      // Híbrido: vertical = contain / horizontal = cover
       adVideo.onloadedmetadata = () => {
         const isVertical = adVideo.videoHeight > adVideo.videoWidth;
         if (isVertical) adVideo.classList.add("fit-contain");
         else adVideo.classList.remove("fit-contain");
       };
 
-      adVideo.onended = () => playItem(pickNext());
-      adVideo.onerror = () => setTimeout(() => playItem(pickNext()), 350);
+      // ao terminar, espera um pouco e vai pro próximo
+      adVideo.onended = () => setTimeout(playNext, intervalMs);
+      adVideo.onerror = () => setTimeout(playNext, 1000);
 
       adBox.style.display = "flex";
-      playItem(pickNext());
+      playNext();
     }
 
     async function loadAll(){
