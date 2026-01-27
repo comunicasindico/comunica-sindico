@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <link rel="canonical" href="./">
@@ -8,11 +8,11 @@
       const u = new URL(location.href);
       if (u.search) { u.search = ""; location.replace(u.toString()); return; }
       if (u.pathname.endsWith("/index.html")) { location.replace("./"); return; }
-    } catch (e) {}
+    } catch(e){}
   })();
   </script>
 
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Condôminos - Comunica Síndico(a)</title>
 
@@ -31,9 +31,8 @@
       --line:rgba(255,255,255,.10);
       --txt:#eaf2ff;
       --muted:rgba(234,242,255,.75);
-      --shadow: 0 14px 38px rgba(0,0,0,.35);
+      --shadow: 0 14px 50px rgba(0,0,0,.35);
       --radius: 18px;
-
       --sat: env(safe-area-inset-top);
       --sar: env(safe-area-inset-right);
       --sab: env(safe-area-inset-bottom);
@@ -46,32 +45,33 @@
       font-family:"Segoe UI",Arial,sans-serif;
       color:var(--txt);
       background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(16,56,91,.55), transparent 55%),
-        radial-gradient(900px 620px at 85% 15%, rgba(11,52,84,.55), transparent 55%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
+        radial-gradient(1200px 700px at 15% 10%, rgba(16,56,91,0.55), transparent 60%),
+        radial-gradient(900px 600px at 85% 15%, rgba(11,52,84,0.55), transparent 60%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
       overflow-x:hidden;
-      -webkit-text-size-adjust:100%;
+      overscroll-behavior:none;
       touch-action:manipulation;
-      min-height:100dvh;
+      min-height:100vh;
     }
     .wrap{
-      min-height:100dvh;
+      min-height:100vh;
       width:100%;
       padding:
         calc(18px + var(--sat))
         calc(18px + var(--sar))
         calc(18px + var(--sab) + 58px)
         calc(18px + var(--sal));
+      display:flex;
+      justify-content:center;
     }
     .container{
+      width:100%;
       max-width:1400px;
-      margin:0 auto;
       min-height:calc(100dvh - var(--sat) - var(--sab) - 36px - 58px);
       display:flex;
       flex-direction:column;
       gap:18px;
     }
-
     .topbar{
       display:flex;
       align-items:center;
@@ -82,21 +82,16 @@
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
     }
     .title{margin:0;font-size:22px;font-weight:800}
     .subtitle{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}
     .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:999px;
       border:1px solid var(--line);
       background:rgba(12,35,56,.55);
-      color:var(--muted);
-      font-weight:700;
-      font-size:12px;
+      color:var(--muted);font-weight:700;font-size:12px;
       white-space:nowrap;
     }
     .dot{width:10px;height:10px;border-radius:50%;background:#44d07a}
@@ -109,127 +104,117 @@
       font-weight:800;
       cursor:pointer;
       font-size:14px;
+      white-space:nowrap;
     }
-
     .updateBanner{
       padding:12px 14px;
       border-radius:14px;
       border:1px solid rgba(120,190,255,.35);
       background:rgba(7,20,34,.28);
       box-shadow:var(--shadow);
-      font-weight:800;
-      display:none;
+      font-weight:900;
     }
-
     .grid{
       flex:1;
       display:grid;
       grid-template-columns:1.25fr .75fr;
       gap:18px;
+      min-height:0;
     }
-    @media (max-width:980px){
-      .grid{grid-template-columns:1fr}
-    }
-
     .card{
       background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
     }
     .card .head{
       padding:16px 18px;
       border-bottom:1px solid var(--line);
       display:flex;
-      justify-content:center;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
     }
     .pill{
-      font-size:12px;
-      font-weight:900;
-      padding:8px 10px;
-      border-radius:999px;
+      font-size:12px;font-weight:900;
+      padding:8px 10px;border-radius:999px;
       border:1px solid var(--line);
       color:var(--muted);
-      background:rgba(7,20,34,.28);
-      text-align:center;
-      width:100%;
-      max-width:560px;
+      background:rgba(12,35,56,.35);
+      display:inline-flex;align-items:center;gap:8px;
     }
     .avisos{
       padding:16px;
+      overflow:auto;
       display:flex;
       flex-direction:column;
       gap:12px;
-      max-height:60dvh;
-      overflow:auto;
+      min-height:0;
     }
     .aviso{
       padding:14px 14px;
-      border-radius:14px;
       border:1px solid var(--line);
+      border-radius:14px;
       background:rgba(7,20,34,.28);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
     }
     .aviso.alta{border-color:rgba(255,80,80,.55)}
     .aviso.media{border-color:rgba(255,200,70,.40)}
     .aviso.baixa{border-color:rgba(120,190,255,.35)}
-    .aviso .t{margin:0 0 6px 0;font-weight:900;font-size:16px}
-    .aviso .d{margin:0;color:var(--muted);line-height:1.35;font-size:13px}
-    .metaRow{
-      margin-top:10px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      align-items:center;
-    }
+    .aviso .t{margin:0;font-weight:900;font-size:16px}
+    .aviso .d{margin:0;color:var(--muted);line-height:1.35}
+    .aviso .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
     .tag{
-      font-size:11px;
-      font-weight:900;
-      padding:6px 8px;
-      border-radius:999px;
+      font-size:11px;font-weight:800;
+      padding:6px 8px;border-radius:999px;
       border:1px solid var(--line);
-      color:rgba(234,242,255,.88);
-      background:rgba(12,35,56,.40);
+      background:rgba(12,35,56,.35);
+      color:rgba(234,242,255,.9);
     }
-
     .side{
       display:flex;
       flex-direction:column;
       gap:18px;
+      min-height:0;
     }
-    .miniAd{
+    .miniAnuncio{
       padding:16px;
-      border-radius:var(--radius);
       border:1px solid var(--line);
+      border-radius:var(--radius);
       background:rgba(7,20,34,.28);
-      display:none;
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-height:0;
     }
-    .miniAd p{margin:0 0 10px 0;font-weight:900}
-    .miniAd video{
+    .miniAnuncio video{
       width:100%;
       border-radius:14px;
       border:1px solid var(--line);
       background:#000;
-      display:block;
+      max-height:280px;
     }
-
     .wxbar{
-      position:fixed;
-      left:0;right:0;bottom:0;
+      position:fixed;left:0;right:0;bottom:0;
       padding:
         10px
         calc(14px + var(--sar))
         calc(10px + var(--sab))
         calc(14px + var(--sal));
-      font:800 14px "Segoe UI",Arial,sans-serif;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:center;
-      background:#0b223a;
-      color:#fff;
+      font:800 13px "Segoe UI",Arial,sans-serif;
+      display:flex;gap:10px;align-items:center;justify-content:center;
+      background:#0b223a;color:#fff;
       border-top:1px solid rgba(255,255,255,.12);
-      z-index:50;
+      z-index:9;
+    }
+    @media (max-width:980px){
+      .grid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -237,59 +222,60 @@
 <body>
   <div class="wrap">
     <div class="container">
+
       <div class="topbar">
         <div>
           <h1 class="title" id="titulo">Comunica Síndico</h1>
           <p class="subtitle" id="subtitulo">Painel informativo</p>
         </div>
-
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+        <div style="display:flex;gap:10px;align-items:center;">
           <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">⬇️ Instalar App</button>
           <div class="badge"><span class="dot"></span><span id="statusJson">Carregando...</span></div>
         </div>
       </div>
 
-      <div id="updateBanner" class="updateBanner">⬇️ Nova versão disponível. Atualizando...</div>
+      <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
       <div class="grid">
         <section class="card">
           <div class="head">
-            <div class="pill" id="dataBiblica">Carregando versículo...</div>
+            <div class="pill" id="dataBiblica">—</div>
+            <div class="pill" id="ref">—</div>
           </div>
           <div class="avisos" id="avisos"></div>
         </section>
 
         <aside class="side">
-          <div class="miniAd" id="adBox">
-            <p id="adLabel"></p>
-            <video id="adVideo" autoplay muted playsinline loop></video>
+          <div class="miniAnuncio" id="adBox" style="display:none">
+            <div class="pill" id="adLabel">Anúncio</div>
+            <video id="adVideo" autoplay muted playsinline></video>
           </div>
         </aside>
       </div>
+
     </div>
   </div>
 
-  <div class="wxbar" id="wxbar">
-    <span id="wxIcon">⛅</span>
-    <span id="wxText">Clima: carregando...</span>
+  <div class="wxbar">
+    <span id="wxIcon">🌦️</span>
+    <span id="wxText">Clima: carregando…</span>
   </div>
 
   <script>
     let deferredPrompt = null;
 
-    function mostrarBotaoInstalar(s){
+    function mostrarBotaoInstalar(show){
       const b = document.getElementById("btnInstalarApp");
-      if (!b) return;
-      b.style.display = s ? "inline-flex" : "none";
+      b.style.display = show ? "inline-flex" : "none";
     }
 
-    window.addEventListener("beforeinstallprompt", (e) => {
+    window.addEventListener("beforeinstallprompt", (e)=>{
       e.preventDefault();
       deferredPrompt = e;
       mostrarBotaoInstalar(true);
     });
 
-    window.addEventListener("appinstalled", () => {
+    window.addEventListener("appinstalled", ()=>{
       deferredPrompt = null;
       mostrarBotaoInstalar(false);
     });
@@ -301,198 +287,118 @@
       mostrarBotaoInstalar(false);
     }
 
-    function pad2(n){ return String(n).padStart(2,"0"); }
-
-    async function fetchJson(url){
-      const r = await fetch(url + (url.includes("?") ? "&" : "?") + "ts=" + Date.now(), { cache:"no-store" });
-      return await r.json();
-    }
-
     function prioridadeClass(p){
-      p = (p||"").toLowerCase();
-      if (p === "alta") return "alta";
-      if (p === "média" || p === "media") return "media";
+      const x = String(p || "").toLowerCase();
+      if (x === "alta") return "alta";
+      if (x === "média" || x === "media") return "media";
       return "baixa";
     }
 
-    function safeText(v){
-      return (v==null ? "" : String(v)).replace(/\s+/g," ").trim();
-    }
+    function safeText(v){ return (v == null ? "" : String(v)); }
 
-    function renderAvisos(avisos){
-      const el = document.getElementById("avisos");
-      el.innerHTML = "";
-      (avisos || []).forEach(a => {
-        const box = document.createElement("div");
-        box.className = "aviso " + prioridadeClass(a.prioridade);
-        const t = document.createElement("p");
-        t.className = "t";
-        t.textContent = safeText(a.titulo || "Aviso");
-        const d = document.createElement("p");
-        d.className = "d";
-        d.textContent = safeText(a.descricao || "");
-        const meta = document.createElement("div");
-        meta.className = "metaRow";
+    function renderAvisos(data){
+      const root = document.getElementById("avisos");
+      root.innerHTML = "";
 
-        const tipo = safeText(a.tipo || "");
-        const local = safeText(a.local || "");
-        const prio = safeText(a.prioridade || "");
-        const emer = !!a.emergencia;
-
-        if (tipo) {
-          const tag = document.createElement("span");
-          tag.className = "tag";
-          tag.textContent = tipo;
-          meta.appendChild(tag);
-        }
-        if (local) {
-          const tag = document.createElement("span");
-          tag.className = "tag";
-          tag.textContent = local;
-          meta.appendChild(tag);
-        }
-        if (prio) {
-          const tag = document.createElement("span");
-          tag.className = "tag";
-          tag.textContent = "Prioridade: " + prio;
-          meta.appendChild(tag);
-        }
-        if (emer) {
-          const tag = document.createElement("span");
-          tag.className = "tag";
-          tag.textContent = "🚨 Emergência";
-          meta.appendChild(tag);
-        }
-
-        box.appendChild(t);
-        if (d.textContent) box.appendChild(d);
-        if (meta.childNodes.length) box.appendChild(meta);
-        el.appendChild(box);
-      });
-
-      if (!avisos || !avisos.length) {
-        const v = document.createElement("div");
-        v.className = "aviso baixa";
-        v.innerHTML = '<p class="t">Sem avisos no momento</p><p class="d">Quando houver comunicados, eles aparecerão aqui.</p>';
-        el.appendChild(v);
-      }
-    }
-
-    function escolherVideo(videos){
-      if(!Array.isArray(videos) || !videos.length) return null;
-      return videos[Math.floor(Math.random() * videos.length)];
-    }
-
-    function setupPublicidade(cfg){
-      const box = document.getElementById("adBox");
-      const label = document.getElementById("adLabel");
-      const vid = document.getElementById("adVideo");
-      if(!cfg || !cfg.ativar) { box.style.display = "none"; return; }
-
-      const escolhido = escolherVideo(cfg.videos);
-      if(!escolhido || !escolhido.arquivo) { box.style.display = "none"; return; }
-
-      label.textContent = safeText(escolhido.anunciante || "Anúncio");
-      vid.src = escolhido.arquivo;
-      box.style.display = "block";
-
-      const tentar = () => {
-        try {
-          const p = vid.play();
-          if(p && typeof p.catch === "function") p.catch(()=>{});
-        } catch(e){}
-      };
-      vid.addEventListener("loadeddata", tentar, { once:true });
-      setTimeout(tentar, 800);
-    }
-
-    function versiculoDoDia(versos, fallback){
-      const hoje = new Date();
-      const k = pad2(hoje.getMonth()+1) + "-" + pad2(hoje.getDate());
-      const v = versos && versos[k];
-      return v ? v : fallback;
-    }
-
-    async function setupBiblico(cfg, fallback){
-      const el = document.getElementById("dataBiblica");
-      if(!cfg || !cfg.arquivo) { el.textContent = fallback || ""; return; }
-      try{
-        const vj = await fetchJson(cfg.arquivo);
-        const texto = versiculoDoDia(vj.versos, vj.fallback || fallback || "");
-        el.textContent = texto || (fallback || "");
-      }catch(e){
-        el.textContent = fallback || "";
-      }
-    }
-
-    async function atualizarClima(cfg){
-      const wxText = document.getElementById("wxText");
-      if(!cfg || cfg.latitude==null || cfg.longitude==null){
-        wxText.textContent = "Clima: não configurado";
+      const avisos = Array.isArray(data.avisos) ? data.avisos : [];
+      if(!avisos.length){
+        const div = document.createElement("div");
+        div.className = "aviso baixa";
+        div.innerHTML = `<p class="t">Sem avisos no momento</p><p class="d">${safeText(data.fallback || "—")}</p>`;
+        root.appendChild(div);
         return;
       }
-      const lat = Number(cfg.latitude);
-      const lon = Number(cfg.longitude);
-      const tz = encodeURIComponent(cfg.timezone || "America/Sao_Paulo");
 
-      try{
-        const url = "https://api.open-meteo.com/v1/forecast"
-          + "?latitude=" + lat
-          + "&longitude=" + lon
-          + "&current=temperature_2m,precipitation,weather_code"
-          + "&hourly=precipitation_probability"
-          + "&timezone=" + tz;
+      avisos.forEach(a=>{
+        const el = document.createElement("div");
+        el.className = `aviso ${prioridadeClass(a.prioridade)}`;
 
-        const r = await fetch(url, { cache:"no-store" });
-        const j = await r.json();
+        const titulo = safeText(a.titulo || "Aviso");
+        const desc = safeText(a.descricao || "");
+        const tipo = safeText(a.tipo || "");
+        const local = safeText(a.local || "");
+        const ini = safeText(a.inicio || "");
+        const fim = safeText(a.fim || "");
 
-        const c = j.current || {};
-        const temp = (c.temperature_2m!=null) ? Math.round(c.temperature_2m) + "°C" : "--";
-        const pr = (c.precipitation!=null) ? c.precipitation : null;
+        const tags = [];
+        if(tipo) tags.push(`<span class="tag">🏷️ ${tipo}</span>`);
+        if(local) tags.push(`<span class="tag">📍 ${local}</span>`);
+        if(ini || fim) tags.push(`<span class="tag">🗓️ ${ini}${fim ? " → " + fim : ""}</span>`);
+        tags.push(`<span class="tag">⚡ ${safeText(a.prioridade || "Baixa")}</span>`);
 
-        let chuvaTxt = "";
-        if (pr != null) {
-          chuvaTxt = pr > 0 ? " • Chuva: " + pr + "mm" : " • Sem chuva agora";
-        }
-
-        const cidade = cfg.cidade ? (cfg.cidade + " • ") : "";
-        wxText.textContent = cidade + temp + chuvaTxt;
-      } catch(e){
-        wxText.textContent = "Clima: indisponível";
-      }
+        el.innerHTML = `
+          <p class="t">${titulo}</p>
+          ${desc ? `<p class="d">${desc}</p>` : ""}
+          <div class="meta">${tags.join("")}</div>
+        `;
+        root.appendChild(el);
+      });
     }
+
+    function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
 
     async function loadAll(){
       const status = document.getElementById("statusJson");
       try{
-        const data = await fetchJson("data.json");
+        const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
+        const data = await res.json();
+
+        setText("titulo", safeText(data.titulo || "Comunica Síndico"));
+        setText("subtitulo", safeText(data.subtitulo || "Painel informativo"));
+        setText("ref", safeText(data.referencia || "Atualizado"));
         status.textContent = "Atualizado";
 
-        if (data && data.titulo) document.getElementById("titulo").textContent = data.titulo;
-        if (data && data.subtitulo) document.getElementById("subtitulo").textContent = data.subtitulo;
+        if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
+          setText("dataBiblica", "📖 Versículo do dia");
+        } else {
+          setText("dataBiblica", "📌 Avisos");
+        }
 
-        await setupBiblico(data.biblico, data?.biblico?.fallback || "");
-        setupPublicidade(data.publicidade);
-        renderAvisos(data.avisos || []);
-        atualizarClima(data.clima);
-      }catch(e){
+        renderAvisos(data);
+
+        if (data.publicidade && data.publicidade.ativar && Array.isArray(data.publicidade.videos) && data.publicidade.videos.length){
+          const adBox = document.getElementById("adBox");
+          const adVideo = document.getElementById("adVideo");
+          const adLabel = document.getElementById("adLabel");
+
+          let idx = 0;
+          const list = data.publicidade.videos.slice();
+
+          const play = ()=>{
+            const item = list[idx % list.length];
+            idx++;
+            adLabel.textContent = safeText(item.anunciante || "Anúncio");
+            adVideo.src = safeText(item.arquivo || "");
+            adVideo.play().catch(()=>{});
+          };
+
+          adVideo.onended = play;
+          adBox.style.display = "flex";
+          play();
+        } else {
+          document.getElementById("adBox").style.display = "none";
+        }
+
+        if (data.clima && data.clima.cidade){
+          setText("wxText", `Clima: ${data.clima.cidade}`);
+        } else {
+          setText("wxText", "Clima: configurado no data.json");
+        }
+      } catch(e){
         status.textContent = "Offline";
-        renderAvisos([]);
       }
     }
 
     loadAll();
     setInterval(loadAll, 60000);
-    setInterval(() => atualizarClima(window.__climaCfg), 20 * 60 * 1000);
   </script>
 
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
-        try{
+        try {
           const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
           try { await reg.update(); } catch(e){}
-
           reg.addEventListener("updatefound", () => {
             const nw = reg.installing;
             if(!nw) return;
@@ -502,13 +408,13 @@
               }
             });
           });
-        }catch(e){}
+        } catch(e){}
       });
 
       navigator.serviceWorker.addEventListener("controllerchange", () => {
         const banner = document.getElementById("updateBanner");
-        if (banner) banner.style.display = "block";
-        setTimeout(() => window.location.reload(), 1200);
+        if(banner) banner.style.display = "block";
+        setTimeout(()=>window.location.reload(), 1200);
       });
     }
   </script>
