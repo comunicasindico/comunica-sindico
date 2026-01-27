@@ -1,312 +1,516 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
+  <link rel="canonical" href="./">
+  <script>
+  (function () {
+    try {
+      const u = new URL(location.href);
+      if (u.search) { u.search = ""; location.replace(u.toString()); return; }
+      if (u.pathname.endsWith("/index.html")) { location.replace("./"); return; }
+    } catch (e) {}
+  })();
+  </script>
 
-<link rel="canonical" href="./">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Condôminos - Comunica Síndico(a)</title>
 
-<script>
-/* 🔒 Canonical definitivo (RAIZ / Condôminos)
-   - remove QUALQUER query (?pwa=, ?ts= etc)
-   - força URL canônica em "./"
-*/
-(function () {
-  try {
-    const u = new URL(location.href);
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#0b223a">
 
-    // remove qualquer query
-    if (u.search) {
-      u.search = "";
-      location.replace(u.toString());
-      return;
+  <style>
+    :root{
+      --bg1:#061726;
+      --bg2:#0b1f33;
+      --line:rgba(255,255,255,.10);
+      --txt:#eaf2ff;
+      --muted:rgba(234,242,255,.75);
+      --shadow: 0 14px 38px rgba(0,0,0,.35);
+      --radius: 18px;
+
+      --sat: env(safe-area-inset-top);
+      --sar: env(safe-area-inset-right);
+      --sab: env(safe-area-inset-bottom);
+      --sal: env(safe-area-inset-left);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;width:100%}
+    body{
+      margin:0;
+      font-family:"Segoe UI",Arial,sans-serif;
+      color:var(--txt);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(16,56,91,.55), transparent 55%),
+        radial-gradient(900px 620px at 85% 15%, rgba(11,52,84,.55), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+      -webkit-text-size-adjust:100%;
+      touch-action:manipulation;
+      min-height:100dvh;
+    }
+    .wrap{
+      min-height:100dvh;
+      width:100%;
+      padding:
+        calc(18px + var(--sat))
+        calc(18px + var(--sar))
+        calc(18px + var(--sab) + 58px)
+        calc(18px + var(--sal));
+    }
+    .container{
+      max-width:1400px;
+      margin:0 auto;
+      min-height:calc(100dvh - var(--sat) - var(--sab) - 36px - 58px);
+      display:flex;
+      flex-direction:column;
+      gap:18px;
     }
 
-    // se abriu /index.html, manda para "./"
-    if (u.pathname.endsWith("/index.html")) {
-      location.replace("./");
-      return;
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:18px 20px;
+      background:rgba(8,28,46,.55);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+    .title{margin:0;font-size:22px;font-weight:800}
+    .subtitle{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(12,35,56,.55);
+      color:var(--muted);
+      font-weight:700;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .dot{width:10px;height:10px;border-radius:50%;background:#44d07a}
+    .btnInstall{
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(12,35,56,.55);
+      color:rgba(234,242,255,.92);
+      padding:10px 12px;
+      border-radius:999px;
+      font-weight:800;
+      cursor:pointer;
+      font-size:14px;
     }
 
-  } catch(e) {}
-})();
-</script>
+    .updateBanner{
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(120,190,255,.35);
+      background:rgba(7,20,34,.28);
+      box-shadow:var(--shadow);
+      font-weight:800;
+      display:none;
+    }
 
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Condôminos - Comunica Síndico(a)</title>
+    .grid{
+      flex:1;
+      display:grid;
+      grid-template-columns:1.25fr .75fr;
+      gap:18px;
+    }
+    @media (max-width:980px){
+      .grid{grid-template-columns:1fr}
+    }
 
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+    .card{
+      background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card .head{
+      padding:16px 18px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      justify-content:center;
+    }
+    .pill{
+      font-size:12px;
+      font-weight:900;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(7,20,34,.28);
+      text-align:center;
+      width:100%;
+      max-width:560px;
+    }
+    .avisos{
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      max-height:60dvh;
+      overflow:auto;
+    }
+    .aviso{
+      padding:14px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(7,20,34,.28);
+    }
+    .aviso.alta{border-color:rgba(255,80,80,.55)}
+    .aviso.media{border-color:rgba(255,200,70,.40)}
+    .aviso.baixa{border-color:rgba(120,190,255,.35)}
+    .aviso .t{margin:0 0 6px 0;font-weight:900;font-size:16px}
+    .aviso .d{margin:0;color:var(--muted);line-height:1.35;font-size:13px}
+    .metaRow{
+      margin-top:10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+    .tag{
+      font-size:11px;
+      font-weight:900;
+      padding:6px 8px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:rgba(234,242,255,.88);
+      background:rgba(12,35,56,.40);
+    }
 
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#061726">
+    .side{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .miniAd{
+      padding:16px;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:rgba(7,20,34,.28);
+      display:none;
+    }
+    .miniAd p{margin:0 0 10px 0;font-weight:900}
+    .miniAd video{
+      width:100%;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#000;
+      display:block;
+    }
 
-<style>
-:root{
-  --bg1:#061726;
-  --bg2:#0b1f33;
-  --line:rgba(255,255,255,.10);
-  --txt:#eaf2ff;
-  --muted:rgba(234,242,255,.75);
-  --shadow: 0 14px 50px rgba(0,0,0,.35);
-  --radius: 18px;
-  --sat: env(safe-area-inset-top);
-  --sar: env(safe-area-inset-right);
-  --sab: env(safe-area-inset-bottom);
-  --sal: env(safe-area-inset-left);
-}
-*{box-sizing:border-box}
-html,body{height:100%;width:100%}
-body{
-  margin:0;
-  font-family:"Segoe UI",Arial,sans-serif;
-  color:var(--txt);
-  background:
-    radial-gradient(1200px 700px at 15% 10%, #10385b 0%, rgba(16,56,91,0) 55%),
-    radial-gradient(900px 600px at 85% 15%, #0b3454 0%, rgba(11,52,84,0) 55%),
-    linear-gradient(180deg, var(--bg1), var(--bg2));
-  overscroll-behavior:none;
-  user-select:none;
-  touch-action:manipulation;
-  min-height:100dvh;
-}
-.wrap{
-  min-height:100dvh;
-  width:100%;
-  padding:
-    calc(18px + var(--sat))
-    calc(18px + var(--sar))
-    calc(18px + var(--sab) + 58px)
-    calc(18px + var(--sal));
-  display:flex;
-  justify-content:center;
-}
-.container{
-  width:min(1400px, 100%);
-  min-height:calc(100dvh - var(--sat) - var(--sab) - 36px - 58px);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;gap:14px;
-  padding:18px 20px;
-  background:rgba(8,28,46,.55);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-}
-.title{margin:0;font-size:28px;font-weight:800}
-.subtitle{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}
-.badge{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid var(--line);
-  background:rgba(12,35,56,.55);
-  color:var(--muted);font-weight:700;font-size:12px;
-}
-.dot{width:10px;height:10px;border-radius:50%;background:#44d07a}
-.btnInstall{
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(12,35,56,.55);
-  color:rgba(234,242,255,.92);
-  padding:10px 12px;
-  border-radius:999px;
-  font-weight:800;
-  cursor:pointer;
-  font-size:16px;
-}
-.updateBanner{
-  padding:12px 14px;
-  border-radius:14px;
-  border:1px solid rgba(120,190,255,.35);
-  background:rgba(7,20,34,.28);
-  box-shadow:var(--shadow);
-  font-weight:900;
-}
-.grid{
-  flex:1;
-  display:grid;
-  grid-template-columns:1.25fr .75fr;
-  gap:18px;
-}
-.card{
-  background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-}
-.card .head{
-  padding:16px 18px;
-  border-bottom:1px solid var(--line);
-  display:flex;justify-content:center;
-}
-.pill{
-  font-size:12px;font-weight:800;
-  padding:8px 10px;border-radius:999px;
-  border:1px solid var(--line);
-  color:var(--muted);
-}
-.avisos{
-  padding:16px;
-  flex:1;
-  overflow:auto;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.aviso{
-  padding:16px;
-  border:1px solid var(--line);
-  border-radius:14px;
-  background:rgba(7,20,34,.28);
-}
-.aviso.alta{border-color:rgba(255,80,80,.55)}
-.aviso.media{border-color:rgba(255,200,70,.40)}
-.aviso.baixa{border-color:rgba(120,190,255,.35)}
-.aviso .t{margin:0 0 8px;font-weight:900;font-size:18px}
-.aviso .d{margin:0;color:var(--muted)}
-.side{display:grid;gap:18px}
-.mini{
-  padding:16px;
-  background:linear-gradient(180deg, rgba(12,35,56,.95), rgba(9,26,44,.95));
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-}
-#wxbar{
-  position:fixed;left:0;right:0;bottom:0;
-  padding:
-    10px
-    calc(14px + var(--sar))
-    calc(10px + var(--sab))
-    calc(14px + var(--sal));
-  font:800 14px "Segoe UI",Arial,sans-serif;
-  display:flex;gap:12px;align-items:center;justify-content:center;
-  background:#0b223a;color:#fff;
-  border-top:1px solid rgba(255,255,255,.12);
-}
-@media(max-width:980px){
-  .grid{grid-template-columns:1fr;}
-}
-</style>
+    .wxbar{
+      position:fixed;
+      left:0;right:0;bottom:0;
+      padding:
+        10px
+        calc(14px + var(--sar))
+        calc(10px + var(--sab))
+        calc(14px + var(--sal));
+      font:800 14px "Segoe UI",Arial,sans-serif;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      background:#0b223a;
+      color:#fff;
+      border-top:1px solid rgba(255,255,255,.12);
+      z-index:50;
+    }
+  </style>
 </head>
 
 <body>
-<div class="wrap">
-<div class="container">
+  <div class="wrap">
+    <div class="container">
+      <div class="topbar">
+        <div>
+          <h1 class="title" id="titulo">Comunica Síndico</h1>
+          <p class="subtitle" id="subtitulo">Painel informativo</p>
+        </div>
 
-<div class="topbar">
-  <div>
-    <h1 class="title" id="titulo">Comunica Síndico</h1>
-    <p class="subtitle" id="subtitulo">Painel informativo</p>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end">
+          <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">⬇️ Instalar App</button>
+          <div class="badge"><span class="dot"></span><span id="statusJson">Carregando...</span></div>
+        </div>
+      </div>
+
+      <div id="updateBanner" class="updateBanner">⬇️ Nova versão disponível. Atualizando...</div>
+
+      <div class="grid">
+        <section class="card">
+          <div class="head">
+            <div class="pill" id="dataBiblica">Carregando versículo...</div>
+          </div>
+          <div class="avisos" id="avisos"></div>
+        </section>
+
+        <aside class="side">
+          <div class="miniAd" id="adBox">
+            <p id="adLabel"></p>
+            <video id="adVideo" autoplay muted playsinline loop></video>
+          </div>
+        </aside>
+      </div>
+    </div>
   </div>
-  <div style="display:flex;gap:10px;">
-    <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">📲 Instalar App</button>
-    <div class="badge"><span class="dot"></span><span id="statusJson">Carregando…</span></div>
+
+  <div class="wxbar" id="wxbar">
+    <span id="wxIcon">⛅</span>
+    <span id="wxText">Clima: carregando...</span>
   </div>
-</div>
 
-<div id="updateBanner" class="updateBanner" style="display:none">
-⬆️ Nova versão disponível. Atualizando…
-</div>
+  <script>
+    let deferredPrompt = null;
 
-<div class="grid">
-<section class="card">
-  <div class="head">
-    <div class="pill" id="dataBiblica">—</div>
-  </div>
-  <div class="avisos" id="avisos"></div>
-</section>
+    function mostrarBotaoInstalar(s){
+      const b = document.getElementById("btnInstalarApp");
+      if (!b) return;
+      b.style.display = s ? "inline-flex" : "none";
+    }
 
-<aside class="side">
-  <div class="mini anuncio" id="adBox" style="display:none">
-    <p id="adLabel"></p>
-    <video id="adVideo" autoplay muted playsinline></video>
-  </div>
-</aside>
-</div>
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      mostrarBotaoInstalar(true);
+    });
 
-</div>
-</div>
+    window.addEventListener("appinstalled", () => {
+      deferredPrompt = null;
+      mostrarBotaoInstalar(false);
+    });
 
-<div id="wxbar">
-<span id="wxIcon">⏳</span>
-<span id="wxText">Clima: carregando…</span>
-</div>
+    async function instalarApp(){
+      if(!deferredPrompt) return;
+      await deferredPrompt.prompt();
+      deferredPrompt = null;
+      mostrarBotaoInstalar(false);
+    }
 
-<script>
-let deferredPrompt=null;
-function mostrarBotaoInstalar(s){document.getElementById("btnInstalarApp").style.display=s?"inline-flex":"none";}
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;mostrarBotaoInstalar(true);});
-window.addEventListener("appinstalled",()=>{deferredPrompt=null;mostrarBotaoInstalar(false);});
+    function pad2(n){ return String(n).padStart(2,"0"); }
 
-async function instalarApp(){
-  if(!deferredPrompt)return;
-  await deferredPrompt.prompt();
-  deferredPrompt=null;
-  mostrarBotaoInstalar(false);
-}
+    async function fetchJson(url){
+      const r = await fetch(url + (url.includes("?") ? "&" : "?") + "ts=" + Date.now(), { cache:"no-store" });
+      return await r.json();
+    }
 
-async function loadAll(){
-const status=document.getElementById("statusJson");
-try{
-const r=await fetch("data.json?ts="+Date.now(),{cache:"no-store"});
-const j=await r.json();
-status.textContent="Atualizado";
-renderAvisos(j);
-}catch{
-status.textContent="Offline";
-}
-}
+    function prioridadeClass(p){
+      p = (p||"").toLowerCase();
+      if (p === "alta") return "alta";
+      if (p === "média" || p === "media") return "media";
+      return "baixa";
+    }
 
-function renderAvisos(j){
-const el=document.getElementById("avisos");
-el.innerHTML="";
-(j.avisos||[]).forEach(a=>{
-const d=document.createElement("div");
-d.className="aviso "+(a.prioridade||"baixa");
-d.innerHTML=`<p class="t">${a.titulo}</p><p class="d">${a.descricao}</p>`;
-el.appendChild(d);
-});
-}
+    function safeText(v){
+      return (v==null ? "" : String(v)).replace(/\s+/g," ").trim();
+    }
 
-loadAll();
-setInterval(loadAll,60000);
-</script>
+    function renderAvisos(avisos){
+      const el = document.getElementById("avisos");
+      el.innerHTML = "";
+      (avisos || []).forEach(a => {
+        const box = document.createElement("div");
+        box.className = "aviso " + prioridadeClass(a.prioridade);
+        const t = document.createElement("p");
+        t.className = "t";
+        t.textContent = safeText(a.titulo || "Aviso");
+        const d = document.createElement("p");
+        d.className = "d";
+        d.textContent = safeText(a.descricao || "");
+        const meta = document.createElement("div");
+        meta.className = "metaRow";
 
-<script>
-/* Service Worker + update control */
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", async () => {
-    try {
-      const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
-      try { await reg.update(); } catch {}
+        const tipo = safeText(a.tipo || "");
+        const local = safeText(a.local || "");
+        const prio = safeText(a.prioridade || "");
+        const emer = !!a.emergencia;
 
-      reg.addEventListener("updatefound", () => {
-        const nw = reg.installing;
-        if (!nw) return;
-        nw.addEventListener("statechange", () => {
-          if (nw.state === "installed" && navigator.serviceWorker.controller) {
-            reg.waiting?.postMessage("SKIP_WAITING");
-            nw.postMessage("SKIP_WAITING");
-          }
-        });
+        if (tipo) {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = tipo;
+          meta.appendChild(tag);
+        }
+        if (local) {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = local;
+          meta.appendChild(tag);
+        }
+        if (prio) {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = "Prioridade: " + prio;
+          meta.appendChild(tag);
+        }
+        if (emer) {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = "🚨 Emergência";
+          meta.appendChild(tag);
+        }
+
+        box.appendChild(t);
+        if (d.textContent) box.appendChild(d);
+        if (meta.childNodes.length) box.appendChild(meta);
+        el.appendChild(box);
       });
 
-    } catch {}
-  });
+      if (!avisos || !avisos.length) {
+        const v = document.createElement("div");
+        v.className = "aviso baixa";
+        v.innerHTML = '<p class="t">Sem avisos no momento</p><p class="d">Quando houver comunicados, eles aparecerão aqui.</p>';
+        el.appendChild(v);
+      }
+    }
 
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    const banner = document.getElementById("updateBanner");
-    if (banner) banner.style.display = "block";
-    setTimeout(() => window.location.reload(), 1200);
-  });
-}
-</script>
+    function escolherVideo(videos){
+      if(!Array.isArray(videos) || !videos.length) return null;
+      return videos[Math.floor(Math.random() * videos.length)];
+    }
 
+    function setupPublicidade(cfg){
+      const box = document.getElementById("adBox");
+      const label = document.getElementById("adLabel");
+      const vid = document.getElementById("adVideo");
+      if(!cfg || !cfg.ativar) { box.style.display = "none"; return; }
+
+      const escolhido = escolherVideo(cfg.videos);
+      if(!escolhido || !escolhido.arquivo) { box.style.display = "none"; return; }
+
+      label.textContent = safeText(escolhido.anunciante || "Anúncio");
+      vid.src = escolhido.arquivo;
+      box.style.display = "block";
+
+      const tentar = () => {
+        try {
+          const p = vid.play();
+          if(p && typeof p.catch === "function") p.catch(()=>{});
+        } catch(e){}
+      };
+      vid.addEventListener("loadeddata", tentar, { once:true });
+      setTimeout(tentar, 800);
+    }
+
+    function versiculoDoDia(versos, fallback){
+      const hoje = new Date();
+      const k = pad2(hoje.getMonth()+1) + "-" + pad2(hoje.getDate());
+      const v = versos && versos[k];
+      return v ? v : fallback;
+    }
+
+    async function setupBiblico(cfg, fallback){
+      const el = document.getElementById("dataBiblica");
+      if(!cfg || !cfg.arquivo) { el.textContent = fallback || ""; return; }
+      try{
+        const vj = await fetchJson(cfg.arquivo);
+        const texto = versiculoDoDia(vj.versos, vj.fallback || fallback || "");
+        el.textContent = texto || (fallback || "");
+      }catch(e){
+        el.textContent = fallback || "";
+      }
+    }
+
+    async function atualizarClima(cfg){
+      const wxText = document.getElementById("wxText");
+      if(!cfg || cfg.latitude==null || cfg.longitude==null){
+        wxText.textContent = "Clima: não configurado";
+        return;
+      }
+      const lat = Number(cfg.latitude);
+      const lon = Number(cfg.longitude);
+      const tz = encodeURIComponent(cfg.timezone || "America/Sao_Paulo");
+
+      try{
+        const url = "https://api.open-meteo.com/v1/forecast"
+          + "?latitude=" + lat
+          + "&longitude=" + lon
+          + "&current=temperature_2m,precipitation,weather_code"
+          + "&hourly=precipitation_probability"
+          + "&timezone=" + tz;
+
+        const r = await fetch(url, { cache:"no-store" });
+        const j = await r.json();
+
+        const c = j.current || {};
+        const temp = (c.temperature_2m!=null) ? Math.round(c.temperature_2m) + "°C" : "--";
+        const pr = (c.precipitation!=null) ? c.precipitation : null;
+
+        let chuvaTxt = "";
+        if (pr != null) {
+          chuvaTxt = pr > 0 ? " • Chuva: " + pr + "mm" : " • Sem chuva agora";
+        }
+
+        const cidade = cfg.cidade ? (cfg.cidade + " • ") : "";
+        wxText.textContent = cidade + temp + chuvaTxt;
+      } catch(e){
+        wxText.textContent = "Clima: indisponível";
+      }
+    }
+
+    async function loadAll(){
+      const status = document.getElementById("statusJson");
+      try{
+        const data = await fetchJson("data.json");
+        status.textContent = "Atualizado";
+
+        if (data && data.titulo) document.getElementById("titulo").textContent = data.titulo;
+        if (data && data.subtitulo) document.getElementById("subtitulo").textContent = data.subtitulo;
+
+        await setupBiblico(data.biblico, data?.biblico?.fallback || "");
+        setupPublicidade(data.publicidade);
+        renderAvisos(data.avisos || []);
+        atualizarClima(data.clima);
+      }catch(e){
+        status.textContent = "Offline";
+        renderAvisos([]);
+      }
+    }
+
+    loadAll();
+    setInterval(loadAll, 60000);
+    setInterval(() => atualizarClima(window.__climaCfg), 20 * 60 * 1000);
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        try{
+          const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+          try { await reg.update(); } catch(e){}
+
+          reg.addEventListener("updatefound", () => {
+            const nw = reg.installing;
+            if(!nw) return;
+            nw.addEventListener("statechange", () => {
+              if (nw.state === "installed" && navigator.serviceWorker.controller) {
+                nw.postMessage("SKIP_WAITING");
+              }
+            });
+          });
+        }catch(e){}
+      });
+
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        const banner = document.getElementById("updateBanner");
+        if (banner) banner.style.display = "block";
+        setTimeout(() => window.location.reload(), 1200);
+      });
+    }
+  </script>
 </body>
 </html>
