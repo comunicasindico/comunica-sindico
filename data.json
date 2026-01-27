@@ -28,31 +28,40 @@
     "videos": [
       {
         "arquivo": "./ads/rafinha_keyon.mp4",
-        "anunciante": "O melhor Corretor de Santa Catarina"      },
+        "anunciante": "O melhor Corretor de Santa Catarina"
+      },
       {
         "arquivo": "./ads/02parque.mp4",
-        "anunciante": "Parque — Lazer e Diversão"      },
+        "anunciante": "Parque — Lazer e Diversão"
+      },
       {
         "arquivo": "./ads/03larissa.mp4",
-        "anunciante": "Larissa — Momentos Especiais"      },
+        "anunciante": "Larissa — Momentos Especiais"
+      },
       {
         "arquivo": "./ads/04paty.mp4",
-        "anunciante": "Paty — Experiência Internacional"      },
+        "anunciante": "Paty — Experiência Internacional"
+      },
       {
         "arquivo": "./ads/05port.mp4",
-        "anunciante": "SWOT Cristão — Português"      },
+        "anunciante": "SWOT Cristão — Português"
+      },
       {
         "arquivo": "./ads/calibra01.mp4",
-        "anunciante": "Loja de Caminhões"      },
+        "anunciante": "Loja de Caminhões"
+      },
       {
         "arquivo": "./ads/calibra02.mp4",
-        "anunciante": "Visite-nos e veja o que temos de especial"      },
+        "anunciante": "Visite-nos e veja o que temos de especial"
+      },
       {
         "arquivo": "./ads/rododis01.mp4",
-        "anunciante": "Nosso diferencial é te atender cada vez melhor"      },
+        "anunciante": "Nosso diferencial é te atender cada vez melhor"
+      },
       {
         "arquivo": "./ads/06heb.mp4",
-        "anunciante": "Em breve, Israel receberá a Palavra"      }
+        "anunciante": "Em breve, Israel receberá a Palavra"
+      }
     ]
   },
   "clima": {
@@ -65,6 +74,29 @@
   },
   "avisos": [
     {
+      "id": "",
+      "titulo": "Limpeza",
+      "descricao": "Vidros devem ser descartados dentro de garrafas PET ou caixas de leite, devidamente identificados com aviso de “VIDRO QUEBRADO”, para evitar que a prestadora de serviços ou os lixeiros se machuquem. Leve direto as lixeiras, não deixe na porta da unidade nos corredores",
+      "prioridade": "Baixa",
+      "tipo": "Limpeza",
+      "local": "Corredores",
+      "inicio": "2026-01-26T23:52",
+      "fim": "2026-01-27T23:52",
+      "emergencia": false
+    },
+    {
+      "id": "05939919-mkw2ua59",
+      "titulo": "Limpeza",
+      "descricao": "Utilizem, por favor, sacolas reforçadas, próprias para lixo, e evitem sacolas finas de mercado, pois elas rasgam com facilidade.",
+      "prioridade": "Baixa",
+      "tipo": "Serviços",
+      "local": "Lixeira",
+      "inicio": "2026-01-27T04:07:00.000Z",
+      "fim": "2026-01-28T04:07:00.000Z",
+      "emergencia": false
+    },
+    {
+      "id": "f30e2638-mkw2ua5d",
       "titulo": "Limpeza",
       "descricao": "Vidros devem ser descartados dentro de garrafas PET ou caixas de leite, devidamente identificados com aviso de “VIDRO QUEBRADO”, para evitar que a prestadora de serviços ou os lixeiros se machuquem. Leve direto as lixeiras, não deixe na porta da unidade nos corredores",
       "prioridade": "Baixa",
