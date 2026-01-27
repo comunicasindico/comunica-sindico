@@ -149,6 +149,17 @@
       "inicio": "2026-01-26T23:52",
       "fim": "2026-01-27T23:52",
       "emergencia": false
+    },
+    {
+      "id": "725f1177-mkws5tsz",
+      "titulo": "Piscina",
+      "descricao": "Evite nadar sozinho, qualquer anormalidade, sempre uma pessoa próxima, poderá auxiliar.",
+      "prioridade": "Baixa",
+      "tipo": "Informativo",
+      "local": "Piscina",
+      "inicio": "2026-01-27T15:50:00.000Z",
+      "fim": "2026-01-28T15:50:00.000Z",
+      "emergencia": false
     }
   ]
 }
