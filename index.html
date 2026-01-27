@@ -122,9 +122,6 @@
       min-height:0;
     }
 
-    /* =========================
-       CARD / CABEÇALHO (compacto)
-       ========================= */
     .card{
       background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
       border:1px solid var(--line);
@@ -211,7 +208,6 @@
       min-height:0;
     }
 
-    /* ✅ Vídeo: preencher o espaço (pode cortar um pouco) */
     .miniAnuncio .videoWrap{
       width:100%;
       aspect-ratio:16/9;
@@ -227,11 +223,10 @@
       width:100%;
       height:100%;
       display:block;
-      object-fit:cover;      /* ✅ preenche tudo (aceita corte) */
+      object-fit:cover;
       object-position:center;
       background:#000;
     }
-    /* ✅ Quando o vídeo for vertical, usamos contain (sem cortar demais) */
     .miniAnuncio video.fit-contain{
       object-fit:contain;
     }
@@ -443,7 +438,6 @@
       }
     }
 
-    // ========= PUBLICIDADE: RANDOM + "HÍBRIDO" (preenche; vertical = contain)
     function shuffleArray(arr){
       const a = arr.slice();
       for (let i = a.length - 1; i > 0; i--){
@@ -466,7 +460,6 @@
 
       const intervalMs = Math.max(3, Number(pub.intervaloSeg || 10)) * 1000;
 
-      // fila randômica sem repetir até terminar
       let queue = shuffleArray(pub.videos);
       let idx = 0;
       let timer = null;
@@ -487,12 +480,10 @@
 
         adLabel.textContent = String(item.anunciante || "Anúncio");
 
-        // cache-busting
         const src = String(item.arquivo || "");
         const sep = src.includes("?") ? "&" : "?";
         const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
 
-        // reset total (evita "vídeo teimoso")
         adVideo.pause();
         adVideo.classList.remove("fit-contain");
         adVideo.removeAttribute("src");
@@ -501,19 +492,14 @@
         adVideo.src = finalSrc;
         adVideo.load();
 
-        // fallback: se não terminar, troca pelo timer
         clearTimeout(timer);
-        timer = setTimeout(() => {
-          playItem(pickNext());
-        }, intervalMs);
+        timer = setTimeout(() => playItem(pickNext()), intervalMs);
 
         adVideo.play().catch(() => {
-          // se falhar, tenta próximo
           setTimeout(() => playItem(pickNext()), 350);
         });
       }
 
-      // Híbrido: horizontal enche (cover); vertical contém (sem cortar muito)
       adVideo.onloadedmetadata = () => {
         const isVertical = adVideo.videoHeight > adVideo.videoWidth;
         if (isVertical) adVideo.classList.add("fit-contain");
