@@ -41,7 +41,6 @@ function isNavigation(req) {
   return req.mode === "navigate";
 }
 
-// addAll robusto: não falha se algum asset não existir
 async function addAllSafe(cache, assets) {
   await Promise.all(
     assets.map(async (path) => {
@@ -70,22 +69,15 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      // ✅ apaga SOMENTE caches do Síndico (não mexe no PWA Condôminos)
       const keys = await caches.keys();
       await Promise.all(
         keys.map((k) => (k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME ? caches.delete(k) : null))
       );
-
-      // ✅ opcional: limpa cache antigo do Condôminos que esteja “misturado” com nome errado
-      // (NÃO ativa nada aqui — só se você souber o prefixo do outro e quiser limpar)
-      // ex: if (k.startsWith("comunica-sindico-") ... )  <-- NÃO recomendo mexer agora.
-
       await self.clients.claim();
     })()
   );
 });
 
-// ✅ opcional: permite forçar atualização via postMessage
 self.addEventListener("message", (event) => {
   if (event.data === "SKIP_WAITING") self.skipWaiting();
 });
@@ -94,7 +86,6 @@ self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
-  // ✅ Somente mesmo domínio (GitHub Pages). Apps Script é outro domínio -> deixa passar.
   if (!sameOrigin(url)) return;
 
   if (isNavigation(req)) {
@@ -105,7 +96,6 @@ self.addEventListener("fetch", (event) => {
           const fresh = await fetch(req, { cache: "no-store" });
           cache.put(req, fresh.clone());
 
-          // mantém shell atualizado
           try {
             const shell = await fetch("./index.html", { cache: "no-store" });
             if (shell && shell.ok) cache.put("./index.html", shell.clone());
@@ -124,7 +114,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Assets: cache-first + refresh em background
   event.respondWith(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
