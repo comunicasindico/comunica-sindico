@@ -86,6 +86,19 @@
     }
     .title{margin:0;font-size:22px;font-weight:800}
     .subtitle{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}
+    .titleSmall{
+  font-size:16px;       /* menor que o versículo */
+  font-weight:900;     /* negrito */
+  line-height:1.2;
+}
+
+.updated{
+  margin-top:2px;
+  font-size:11px;
+  font-weight:700;
+  color:var(--muted);
+}
+
     .badge{
       display:flex;align-items:center;gap:10px;
       padding:10px 12px;border-radius:999px;
@@ -256,12 +269,12 @@
 
       <div class="topbar">
         <div>
-          <h1 class="title" id="titulo">Comunica Síndico</h1>
-          <p class="subtitle" id="subtitulo">Painel informativo</p>
-        </div>
+  <div class="titleSmall" id="titulo">Comunica Síndico - Condôminos</div>
+  <div class="subtitle" id="subtitulo">Painel informativo</div>
+  <div class="updated" id="statusJson">Atualizado</div>
+</div>
         <div style="display:flex;gap:10px;align-items:center;">
           <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">⬇️ Instalar App</button>
-          <div class="badge"><span class="dot"></span><span id="statusJson">Carregando...</span></div>
         </div>
       </div>
 
