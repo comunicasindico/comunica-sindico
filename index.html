@@ -193,13 +193,22 @@
       gap:10px;
       min-height:0;
     }
-    .miniAnuncio video{
-      width:100%;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:#000;
-      max-height:280px;
-    }
+    .miniAnuncio .videoWrap{
+  width:100%;
+  aspect-ratio: 16 / 9;
+  border-radius:14px;
+  border:1px solid var(--line);
+  overflow:hidden;
+  background:#000;
+}
+.miniAnuncio video{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;      /* ✅ preenche sem barras pretas (corta o excedente) */
+  object-position:center;
+  background:#000;
+}
     .wxbar{
       position:fixed;left:0;right:0;bottom:0;
       padding:
