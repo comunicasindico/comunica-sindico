@@ -2,13 +2,11 @@
   "titulo": "Comunica Síndico — Condôminos",
   "subtitulo": "Painel informativo",
   "referencia": "",
-
   "temaDoDia": {
     "modo": "biblico-anual",
     "arquivo": "./versiculos.json",
     "fallback": "Você tem valor. Valorize o que você tem."
   },
-
   "rotacao": {
     "ativar": false,
     "intervaloSeg": 12,
@@ -16,32 +14,56 @@
     "mostrarProgresso": true,
     "pausarNoMouse": true
   },
-
   "emergencia": {
     "ativar": true,
     "intervaloSeg": 4,
     "piscar": true,
     "somenteAlta": true
   },
-
   "publicidade": {
     "ativar": true,
     "intervaloSeg": 10,
     "shuffle": true,
     "fit": "contain",
     "videos": [
-      { "arquivo": "./ads/rafinha_keyon.mp4", "anunciante": "O melhor Corretor de Santa Catarina" },
-      { "arquivo": "./ads/02parque.mp4",      "anunciante": "Parque — Lazer e Diversão" },
-      { "arquivo": "./ads/03larissa.mp4",     "anunciante": "Larissa — Momentos Especiais" },
-      { "arquivo": "./ads/04paty.mp4",        "anunciante": "Paty — Experiência Internacional" },
-      { "arquivo": "./ads/05port.mp4",        "anunciante": "SWOT Cristão — Português" },
-      { "arquivo": "./ads/calibra01.mp4",     "anunciante": "Loja de Caminhões" },
-      { "arquivo": "./ads/calibra02.mp4",     "anunciante": "Visite-nos e veja o que temos de especial" },
-      { "arquivo": "./ads/rododis01.mp4",     "anunciante": "Nosso diferencial é te atender cada vez melhor" },
-      { "arquivo": "./ads/06heb.mp4",       "anunciante": "Em breve, Israel receberá a Palavra" }
+      {
+        "arquivo": "./ads/rafinha_keyon.mp4",
+        "anunciante": "O melhor Corretor de Santa Catarina"
+      },
+      {
+        "arquivo": "./ads/02parque.mp4",
+        "anunciante": "Parque — Lazer e Diversão"
+      },
+      {
+        "arquivo": "./ads/03larissa.mp4",
+        "anunciante": "Larissa — Momentos Especiais"
+      },
+      {
+        "arquivo": "./ads/04paty.mp4",
+        "anunciante": "Paty — Experiência Internacional"
+      },
+      {
+        "arquivo": "./ads/05port.mp4",
+        "anunciante": "SWOT Cristão — Português"
+      },
+      {
+        "arquivo": "./ads/calibra01.mp4",
+        "anunciante": "Loja de Caminhões"
+      },
+      {
+        "arquivo": "./ads/calibra02.mp4",
+        "anunciante": "Visite-nos e veja o que temos de especial"
+      },
+      {
+        "arquivo": "./ads/rododis01.mp4",
+        "anunciante": "Nosso diferencial é te atender cada vez melhor"
+      },
+      {
+        "arquivo": "./ads/06heb.mp4",
+        "anunciante": "Em breve, Israel receberá a Palavra"
+      }
     ]
   },
-
   "clima": {
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
@@ -50,16 +72,15 @@
     "alertaChuvaMin": 50,
     "horasAlerta": 3
   },
-
   "avisos": [
     {
-      "titulo": "Limpeza",
-      "descricao": "Utilizem, por favor, sacolas reforçadas próprias para lixo e evitem sacolas finas, pois rasgam com facilidade.",
+      "titulo": "Comunicado",
+      "descricao": "Caso optem por colocar várias sacolas menores dentro de um saco grande de lixo, pedimos que levem esse saco diretamente até a lixeira externa, e não ao carrinho que fica dentro do prédio (ele é exclusivo para sacolas menores). O excesso de peso acaba rasgando as sacolas dentro do carrinho, dificultando bastante o manuseio pela prestadora de serviços e os sacos maiores \"trancam\" ali dentro ocupando muito mais espaço do que um descarte do dia a dia.",
       "prioridade": "Baixa",
-      "tipo": "Serviços",
+      "tipo": "Limpeza",
       "local": "Lixeira",
-      "inicio": "2026-01-26T16:05",
-      "fim": "2026-01-31T16:05",
+      "inicio": "2026-01-26T22:41",
+      "fim": "2026-01-27T22:41",
       "emergencia": false
     }
   ]
