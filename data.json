@@ -28,40 +28,31 @@
     "videos": [
       {
         "arquivo": "./ads/rafinha_keyon.mp4",
-        "anunciante": "O melhor Corretor de Santa Catarina"
-      },
+        "anunciante": "O melhor Corretor de Santa Catarina"      },
       {
         "arquivo": "./ads/02parque.mp4",
-        "anunciante": "Parque — Lazer e Diversão"
-      },
+        "anunciante": "Parque — Lazer e Diversão"      },
       {
         "arquivo": "./ads/03larissa.mp4",
-        "anunciante": "Larissa — Momentos Especiais"
-      },
+        "anunciante": "Larissa — Momentos Especiais"      },
       {
         "arquivo": "./ads/04paty.mp4",
-        "anunciante": "Paty — Experiência Internacional"
-      },
+        "anunciante": "Paty — Experiência Internacional"      },
       {
         "arquivo": "./ads/05port.mp4",
-        "anunciante": "SWOT Cristão — Português"
-      },
+        "anunciante": "SWOT Cristão — Português"      },
       {
         "arquivo": "./ads/calibra01.mp4",
-        "anunciante": "Loja de Caminhões"
-      },
+        "anunciante": "Loja de Caminhões"      },
       {
         "arquivo": "./ads/calibra02.mp4",
-        "anunciante": "Visite-nos e veja o que temos de especial"
-      },
+        "anunciante": "Visite-nos e veja o que temos de especial"      },
       {
         "arquivo": "./ads/rododis01.mp4",
-        "anunciante": "Nosso diferencial é te atender cada vez melhor"
-      },
+        "anunciante": "Nosso diferencial é te atender cada vez melhor"      },
       {
         "arquivo": "./ads/06heb.mp4",
-        "anunciante": "Em breve, Israel receberá a Palavra"
-      }
+        "anunciante": "Em breve, Israel receberá a Palavra"      }
     ]
   },
   "clima": {
