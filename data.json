@@ -8,7 +8,7 @@
     "fallback": "Você tem valor. Valorize o que você tem."
   },
   "rotacao": {
-    "ativar": false,
+    "ativar": true,
     "intervaloSeg": 12,
     "quantidadePorTela": 4,
     "mostrarProgresso": true,
@@ -16,7 +16,7 @@
   },
   "emergencia": {
     "ativar": true,
-    "intervaloSeg": 4,
+    "intervaloSeg": 5,
     "piscar": true,
     "somenteAlta": true
   },
