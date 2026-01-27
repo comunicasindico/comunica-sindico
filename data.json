@@ -116,6 +116,17 @@
       "inicio": "27/01/26 - 15:58",
       "fim": "28/01/26 - 15:58",
       "emergencia": false
+    },
+    {
+      "id": "005",
+      "titulo": "Resíduos Sólidos",
+      "descricao": "Teste Pelo PC",
+      "prioridade": "Baixa",
+      "tipo": "Lixo",
+      "local": "Lixeira",
+      "inicio": "27/01/26 - 16:03",
+      "fim": "28/01/26 - 16:03",
+      "emergencia": false
     }
   ]
 }
