@@ -2,15 +2,12 @@
   "titulo": "Comunica Síndico — Condôminos",
   "subtitulo": "Painel informativo",
   "referencia": "",
-  "biblico": {
-    "modo": "biblico-anual",
-    "arquivo": "./versiculos.json",
-    "fallback": "Você tem valor. Valorize o que você tem."
-  },
-  "temaDoDia": {
-    "modo": "automatico",
-    "temasPorDiaSemana": {}
-  },
+ "temaDoDia": {
+  "modo": "biblico-anual",
+  "arquivo": "./versiculos.json",
+  "fallback": "Você tem valor. Valorize o que você tem."
+},
+
   "rotacao": {
     "ativar": false,
     "intervaloSeg": 12,
