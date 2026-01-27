@@ -74,13 +74,13 @@
   },
   "avisos": [
     {
-      "titulo": "Comunicado",
-      "descricao": "Caso optem por colocar várias sacolas menores dentro de um saco grande de lixo, pedimos que levem esse saco diretamente até a lixeira externa, e não ao carrinho que fica dentro do prédio (ele é exclusivo para sacolas menores). O excesso de peso acaba rasgando as sacolas dentro do carrinho, dificultando bastante o manuseio pela prestadora de serviços e os sacos maiores \"trancam\" ali dentro ocupando muito mais espaço do que um descarte do dia a dia.",
+      "titulo": "Limpeza",
+      "descricao": "Vidros devem ser descartados dentro de garrafas PET ou caixas de leite, devidamente identificados com aviso de “VIDRO QUEBRADO”, para evitar que a prestadora de serviços ou os lixeiros se machuquem. Leve direto as lixeiras, não deixe na porta da unidade nos corredores",
       "prioridade": "Baixa",
       "tipo": "Limpeza",
-      "local": "Lixeira",
-      "inicio": "2026-01-26T22:41",
-      "fim": "2026-01-27T22:41",
+      "local": "Corredores",
+      "inicio": "2026-01-26T23:52",
+      "fim": "2026-01-27T23:52",
       "emergencia": false
     }
   ]
