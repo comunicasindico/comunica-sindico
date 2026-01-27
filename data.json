@@ -1,7 +1,8 @@
 {
-  "titulo": "Comunica Síndico – Condomínio",
-  "subtitulo": "• Painel informativo •",
-  "referencia": {
+  "titulo": "Comunica Síndico — Condôminos",
+  "subtitulo": "Painel informativo",
+  "referencia": "",
+  "biblico": {
     "modo": "biblico-anual",
     "arquivo": "./versiculos.json",
     "fallback": "Você tem valor. Valorize o que você tem."
@@ -27,42 +28,16 @@
     "ativar": true,
     "intervaloSeg": 10,
     "videos": [
-      {
-        "arquivo": "./ads/rafinha_keyon.mp4",
-        "anunciante": "O melhor Corretor de Santa Catarina"
-      },
-      {
-        "arquivo": "./ads/02parque.mp4",
-        "anunciante": "Parque – Lazer e Diversão"
-      },
-      {
-        "arquivo": "./ads/03larissa.mp4",
-        "anunciante": "Larissa – Momentos Especiais"
-      },
-      {
-        "arquivo": "./ads/04paty.mp4",
-        "anunciante": "Paty – Experiência Internacional"
-      },
-      {
-        "arquivo": "./ads/05port.mp4",
-        "anunciante": "SWOT Cristão – Português"
-      },
-      {
-        "arquivo": "./ads/calibra01.mp4",
-        "anunciante": "Loja de Caminhões"
-      },
-      {
-        "arquivo": "./ads/calibra02.mp4",
-        "anunciante": "Visite-nos e veja o que temos de especial"
-      },
-      {
-        "arquivo": "./ads/rododis01.mp4",
-        "anunciante": "Nosso diferencial é te atender cada vez melhor"
-      },
-      {
-        "arquivo": "./ads/calibra.mp4",
-        "anunciante": "Melhor loja da região e do Brasil - Seu Caminhão merece"
-      }
+     { "arquivo": "./ads/02parque.mp4", "anunciante": "Parque — Lazer e Diversão" },
+     { "arquivo": "./ads/rafinha_keyon.mp4",  "anunciante": "O melhor Corretor de Santa Catarina"  },
+     { "arquivo": "./ads/02parque.mp4",        "anunciante": "Parque – Lazer e Diversão"      },
+     { "arquivo": "./ads/03larissa.mp4",        "anunciante": "Larissa – Momentos Especiais"      },
+     { "arquivo": "./ads/04paty.mp4",        "anunciante": "Paty – Experiência Internacional"      },
+     { "arquivo": "./ads/05port.mp4",        "anunciante": "SWOT Cristão – Português"      },
+     { "arquivo": "./ads/calibra01.mp4",        "anunciante": "Loja de Caminhões"      },
+     { "arquivo": "./ads/calibra02.mp4",  "anunciante": "Visite-nos e veja o que temos de especial"    },
+     { "arquivo": "./ads/rododis01.mp4",  "anunciante": "Nosso diferencial é te atender cada vez melhor"   },
+     { "arquivo": "./ads/calibra.mp4",  "anunciante": "Melhor loja da região e do Brasil - Seu Caminhão merece" }
     ]
   },
   "clima": {
@@ -76,7 +51,7 @@
   "avisos": [
     {
       "titulo": "Limpeza",
-      "descricao": "Utilizem, por favor, sacolas reforçadas, próprias para lixo, e evitem sacolas finas de mercado, pois elas rasgam com facilidade.",
+      "descricao": "Utilizem, por favor, sacolas reforçadas próprias para lixo e evitem sacolas finas, pois rasgam com facilidade.",
       "prioridade": "Baixa",
       "tipo": "Serviços",
       "local": "Lixeira",
@@ -86,3 +61,4 @@
     }
   ]
 }
+  
