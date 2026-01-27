@@ -97,17 +97,6 @@
     },
     {
       "id": "003",
-      "titulo": "Repetidos 2",
-      "descricao": "Utilizem, por favor, sacolas reforçadas, próprias para lixo, e evitem sacolas finas de mercado, pois elas rasgam com facilidade.",
-      "prioridade": "Baixa",
-      "tipo": "Serviços",
-      "local": "Lixeira",
-      "inicio": "2026-01-27T04:07",
-      "fim": "2026-01-28T04:07",
-      "emergencia": false
-    },
-    {
-      "id": "004",
       "titulo": "Repetidos 3",
       "descricao": "Vidros devem ser descartados dentro de garrafas PET ou caixas de leite, devidamente identificados com aviso de “VIDRO QUEBRADO”, para evitar que a prestadora de serviços ou os lixeiros se machuquem. Leve direto as lixeiras, não deixe na porta da unidade nos corredores",
       "prioridade": "Baixa",
@@ -118,7 +107,7 @@
       "emergencia": false
     },
     {
-      "id": "005",
+      "id": "004",
       "titulo": "Piscina",
       "descricao": "Evite nadar sozinho, qualquer anormalidade, sempre uma pessoa próxima, poderá auxiliar.",
       "prioridade": "Baixa",
