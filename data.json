@@ -138,6 +138,17 @@
       "inicio": "27/01/26 - 17:06",
       "fim": "31/01/26 - 17:06",
       "emergencia": false
+    },
+    {
+      "id": "007",
+      "titulo": "Resíduos Sólidos",
+      "descricao": "teste lixo resíduos sólidos",
+      "prioridade": "Baixa",
+      "tipo": "Lixo",
+      "local": "Garagem",
+      "inicio": "27/01/26 - 18:02",
+      "fim": "28/01/26 - 18:02",
+      "emergencia": false
     }
   ]
 }
