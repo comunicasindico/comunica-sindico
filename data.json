@@ -127,6 +127,17 @@
       "inicio": "27/01/26 - 16:03",
       "fim": "28/01/26 - 16:03",
       "emergencia": false
+    },
+    {
+      "id": "006",
+      "titulo": "Resíduos",
+      "descricao": "Teste lixeira",
+      "prioridade": "Baixa",
+      "tipo": "Sólidos",
+      "local": "Lixo",
+      "inicio": "27/01/26 - 17:06",
+      "fim": "31/01/26 - 17:06",
+      "emergencia": false
     }
   ]
 }
