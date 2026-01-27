@@ -1,192 +1,167 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
-<meta name="format-detection" content="telephone=no,date=no,address=no,email=no"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
 
-<!-- 🔒 Canonical (evita duplicar app com query ?pwa= / ?app=) -->
-<link rel="canonical" href="./">
-<script>
-(function(){
-  try{
-    const u = new URL(location.href);
-    if(u.search){
-      u.search = "";
-      location.replace(u.toString());
-      return;
+  <link rel="canonical" href="./">
+  <script>
+  (function(){
+    try{
+      const u = new URL(location.href);
+      if(u.search){ u.search=""; location.replace(u.toString()); return; }
+      if(u.pathname.endsWith("/index.html")){ location.replace("./"); return; }
+    }catch(e){}
+  })();
+  </script>
+
+  <title>Síndico(a) — Comunica Síndico</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#0b223a">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Síndico(a)">
+
+  <style>
+    :root{
+      --bg:#061726;
+      --card:rgba(12,35,56,.55);
+      --txt:#eaf2ff;
+      --line:rgba(255,255,255,.15);
     }
-    if(u.pathname.endsWith("/index.html")){
-      location.replace("./");
-      return;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--txt);
+      display:flex;
+      min-height:100dvh;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
     }
-  }catch(e){}
-})();
-</script>
-
-<title>Síndico(a) — Comunica Síndico</title>
-
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0b223a">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-
-<!-- iOS -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Síndico(a)">
-
-<style>
-:root{
-  --bg:#061726;
-  --card:rgba(12,35,56,.55);
-  --txt:#eaf2ff;
-  --line:rgba(255,255,255,.15);
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--txt);
-  display:flex;
-  min-height:100dvh;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
-}
-.box{
-  width:min(720px, 100%);
-  padding:26px;
-  border:1px solid var(--line);
-  border-radius:18px;
-  background:var(--card);
-  text-align:center;
-  box-shadow:0 14px 40px rgba(0,0,0,.4);
-}
-h1{margin:0 0 10px;font-size:24px}
-p{margin:0 0 14px;opacity:.9;font-size:16px;line-height:1.35}
-.actions{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:6px;
-}
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.18);
-  background:rgba(12,35,56,.75);
-  color:var(--txt);
-  padding:14px 20px;
-  font-weight:800;
-  font-size:15px;
-  text-decoration:none;
-  cursor:pointer;
-  user-select:none;
-}
-.btn:hover{filter:brightness(1.08)}
-.mini{font-size:13px;opacity:.75;margin-top:10px}
-.badge{
-  display:inline-block;
-  font-size:12px;
-  padding:6px 10px;
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:999px;
-  opacity:.85;
-  margin:0 0 12px;
-}
-</style>
+    .box{
+      width:min(720px,100%);
+      padding:26px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:var(--card);
+      text-align:center;
+      box-shadow:0 14px 40px rgba(0,0,0,.4);
+    }
+    h1{margin:0 0 10px 0;font-size:24px}
+    p{margin:0 0 14px 0;opacity:.9;font-size:16px;line-height:1.35}
+    .actions{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:6px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(12,35,56,.75);
+      color:var(--txt);
+      padding:14px 20px;
+      font-weight:800;
+      font-size:15px;
+      text-decoration:none;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{filter:brightness(1.08)}
+    .mini{font-size:13px;opacity:.75;margin-top:10px}
+    .badge{
+      display:inline-block;
+      font-size:12px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      opacity:.85;
+      margin-bottom:12px;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="box">
+    <div class="badge" id="mode">Abrindo...</div>
 
-<div class="box">
-  <div class="badge" id="mode">Abrindo…</div>
+    <h1>📣 Síndico(a) — Comunica Síndico</h1>
+    <p>Painel administrativo para gerenciar avisos e e-mails dos condôminos.</p>
 
-  <h1>📋 Síndico(a) — Comunica Síndico</h1>
-  <p>Painel administrativo para gerenciar avisos e e-mails dos condôminos.</p>
+    <div class="actions">
+      <a class="btn" id="go" rel="noopener" href="https://script.google.com/macros/s/AKfycbyBHEhubiPa50If5T68PzrahDbYHpw5LDfZo0HD_E7ozCYE6k2cXVGk648TIzH-eehQ/exec">🚀 Abrir Painel do Síndico</a>
+      <button class="btn" id="cancel" type="button" style="opacity:.9;display:none">⏸️ Não redirecionar</button>
+    </div>
 
-  <div class="actions">
-    <a class="btn" id="go" rel="noopener" href="https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec">
-      ➡️ Abrir Painel do Síndico
-    </a>
-    <button class="btn" id="cancel" type="button" style="opacity:.9; display:none">
-      ⏸️ Não redirecionar
-    </button>
+    <p class="mini" id="hint">Dica: instale este app na Tela de Início para acesso rápido (FaceID/TouchID no aparelho).</p>
   </div>
 
-  <p class="mini" id="hint">
-    Dica: instale este app na Tela de Início para acesso rápido (FaceID/TouchID no aparelho).
-  </p>
-</div>
+  <script>
+    const targetUrl = document.getElementById("go").href;
+    const mode = document.getElementById("mode");
+    const cancelBtn = document.getElementById("cancel");
+    const hint = document.getElementById("hint");
 
-<script>
-/* ===== Estado ===== */
-const targetUrl = document.getElementById("go").href;
-const mode = document.getElementById("mode");
-const cancelBtn = document.getElementById("cancel");
-const hint = document.getElementById("hint");
+    const isStandalone =
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      (window.navigator.standalone === true);
 
-/* Detecta se está rodando como app instalado */
-const isStandalone =
-  (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
-  window.navigator.standalone === true;
+    mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
 
-mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
+    if (isStandalone) {
+      hint.textContent = "Abra o painel pelo botão acima (o painel é online no Apps Script).";
+    } else {
+      cancelBtn.style.display = "inline-flex";
+      let canceled = false;
 
-/* No app instalado: NÃO auto-redireciona (evita “abre e sai do app”) */
-if (isStandalone) {
-  hint.textContent = "Abra o painel pelo botão acima. (O painel é online no Apps Script.)";
-} else {
-  // No navegador: pode redirecionar automático, mas dá opção de cancelar
-  cancelBtn.style.display = "inline-flex";
-
-  let canceled = false;
-  cancelBtn.addEventListener("click", () => {
-    canceled = true;
-    mode.textContent = "Redirecionamento pausado";
-    cancelBtn.style.display = "none";
-  });
-
-  setTimeout(() => {
-    if (canceled) return;
-    mode.textContent = "Abrindo painel…";
-    window.location.assign(targetUrl);
-  }, 900);
-}
-
-/* ===== Service Worker — PWA Síndico (escopo /sindico/) ===== */
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", async () => {
-    try {
-      const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
-      try { await reg.update(); } catch {}
-
-      reg.addEventListener("updatefound", () => {
-        const nw = reg.installing;
-        if (!nw) return;
-        nw.addEventListener("statechange", () => {
-          if (nw.state === "installed" && navigator.serviceWorker.controller) {
-            reg.waiting?.postMessage("SKIP_WAITING");
-            nw.postMessage("SKIP_WAITING");
-          }
-        });
+      cancelBtn.addEventListener("click", () => {
+        canceled = true;
+        mode.textContent = "Redirecionamento pausado";
+        cancelBtn.style.display = "none";
       });
-    } catch (err) {
-      console.error("Erro no Service Worker (Síndico):", err);
+
+      setTimeout(() => {
+        if (canceled) return;
+        mode.textContent = "Abrindo painel...";
+        window.location.assign(targetUrl);
+      }, 900);
     }
-  });
 
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    setTimeout(() => window.location.reload(), 800);
-  });
-}
-</script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", async () => {
+        try{
+          const reg = await navigator.serviceWorker.register("./sw.js", { scope:"./" });
+          try { await reg.update(); } catch(e){}
 
+          reg.addEventListener("updatefound", () => {
+            const nw = reg.installing;
+            if(!nw) return;
+            nw.addEventListener("statechange", () => {
+              if (nw.state === "installed" && navigator.serviceWorker.controller) {
+                nw.postMessage("SKIP_WAITING");
+              }
+            });
+          });
+        }catch(e){}
+      });
+
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        setTimeout(() => window.location.reload(), 800);
+      });
+    }
+  </script>
 </body>
 </html>
