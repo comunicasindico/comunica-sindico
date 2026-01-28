@@ -1061,6 +1061,31 @@ video.fit-contain{ object-fit:contain; }
       }
     }
 
+async function applyCityMessagesToData_(data, mode="replace"){
+  data.publicidade = data.publicidade || {};
+  if(!Array.isArray(data.publicidade.mensagens)) data.publicidade.mensagens = [];
+
+  const cityMsgs = await loadCityMessages_();
+
+  if(cityMsgs.length){
+    if(mode === "merge"){
+      // coloca as mensagens da cidade na frente e mantém as antigas depois
+      data.publicidade.mensagens = [...cityMsgs, ...data.publicidade.mensagens];
+    }else{
+      // substitui totalmente pelo feed da cidade
+      data.publicidade.mensagens = cityMsgs;
+    }
+  }else{
+    // fallback mínimo se vier vazio
+    if(!data.publicidade.mensagens.length){
+      data.publicidade.mensagens = [{ titulo:"Cidade", texto:"Sem notícias no momento." }];
+    }
+  }
+
+  return data;
+}
+
+    
     async function loadAll(){
       const status = document.getElementById("statusJson");
       const dot = document.getElementById("dotOnline");
@@ -1072,7 +1097,9 @@ video.fit-contain{ object-fit:contain; }
         const ct = (res.headers.get("content-type") || "").toLowerCase();
         if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
         const data = await res.json();
-
+// ✅ AQUI:
+        data = await applyCityMessagesToData_(data, "replace");
+        
         setText("condoCenter", safeText(data.condominio || "—"));
 
         if (status) status.textContent = "Atualizado";
@@ -1104,6 +1131,51 @@ video.fit-contain{ object-fit:contain; }
       }
     }
 
+
+// ==========================================================
+// MENSAGENS DA CIDADE (mensagens_cidade.json) -> publicidade.mensagens
+// - Busca o arquivo separado no GitHub
+// - Faz fallback se não existir / der erro
+// - Pode "substituir" ou "mesclar" com mensagens já existentes
+// ==========================================================
+
+const CITY_JSON_URL = "./mensagens_cidade.json"; // mesmo nível do index.html
+
+async function loadCityMessages_(){
+  try{
+    // cache-buster pra evitar pegar versão velha do GitHub Pages
+    const url = CITY_JSON_URL + (CITY_JSON_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
+
+    const res = await fetch(url, { cache: "no-store" });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+
+    const j = await res.json();
+    const items = Array.isArray(j?.items) ? j.items : [];
+
+    // converte para o formato que o seu app já entende (titulo/texto)
+    const msgs = items.map(x => ({
+      titulo: (x.titulo || "Cidade").trim(),
+      texto: [
+        (x.texto || "").trim(),
+        x.fonte ? `Fonte: ${x.fonte}` : "",
+        x.data ? `Data: ${x.data}` : "",
+        x.link ? `${x.link}` : ""
+      ].filter(Boolean).join(" — ")
+    }));
+
+    return msgs.filter(m => (m.titulo || m.texto));
+  } catch(e){
+    return []; // silêncio e fallback será aplicado no merge
+  }
+}
+
+/**
+ * Aplica mensagens da cidade dentro do objeto data já carregado do data.json
+ * @param {object} data
+ * @param {"replace"|"merge"} mode
+ */
+
+    
     loadAll();
     setInterval(loadAll, 60000);
   </script>
@@ -1178,6 +1250,7 @@ video.fit-contain{ object-fit:contain; }
   });
 
   setInterval(fundoAleatorio, 300000); // 5 min
+
 </script>
 
 
