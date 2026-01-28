@@ -1109,31 +1109,33 @@ video.fit-contain{ object-fit:contain; }
   </script>
 
   <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", async () => {
-        try {
-          const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
-          try { await reg.update(); } catch(e){}
-          reg.addEventListener("updatefound", () => {
-            const nw = reg.installing;
-            if(!nw) return;
-            nw.addEventListener("statechange", () => {
-              if (nw.state === "installed" && navigator.serviceWorker.controller) {
-                nw.postMessage("SKIP_WAITING");
-              }
-            });
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+        try { await reg.update(); } catch(e){}
+        reg.addEventListener("updatefound", () => {
+          const nw = reg.installing;
+          if(!nw) return;
+          nw.addEventListener("statechange", () => {
+            if (nw.state === "installed" && navigator.serviceWorker.controller) {
+              nw.postMessage("SKIP_WAITING");
+            }
           });
-        } catch(e){}
-      });
+        });
+      } catch(e){}
+    });
 
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
-        const banner = document.getElementById("updateBanner");
-        if(banner) banner.style.display = "block";
-        setTimeout(()=>window.location.reload(), 1200);
-      });
-    }
-<!-- ===== FUNDO DINÂMICO (cole dentro do SEU <script> principal) ===== -->
-  // ===== Paleta de fundos (cores comuns) =====
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      const banner = document.getElementById("updateBanner");
+      if(banner) banner.style.display = "block";
+      setTimeout(()=>window.location.reload(), 1200);
+    });
+  }
+</script>
+
+<script>
+  // ===== FUNDO DINÂMICO =====
   const fundos = {
     azul:    ["#061726", "#0b1f33"],
     verde:   ["#0b2e1a", "#134d2c"],
@@ -1143,7 +1145,6 @@ video.fit-contain{ object-fit:contain; }
     preto:   ["#000000", "#111111"]
   };
 
-  // Troca manual (ex.: setFundo("verde"))
   function setFundo(cor){
     if(!fundos[cor]) return;
     document.documentElement.style.setProperty("--bg1", fundos[cor][0]);
@@ -1151,7 +1152,6 @@ video.fit-contain{ object-fit:contain; }
     try { localStorage.setItem("fundoEscolhido", cor); } catch(e){}
   }
 
-  // Troca aleatória
   function fundoAleatorio(){
     const cores = Object.keys(fundos);
     const cor = cores[Math.floor(Math.random() * cores.length)];
@@ -1159,7 +1159,6 @@ video.fit-contain{ object-fit:contain; }
     return cor;
   }
 
-  // Carrega o último fundo escolhido (se existir)
   (function carregarFundoSalvo(){
     try{
       const salvo = localStorage.getItem("fundoEscolhido");
@@ -1167,8 +1166,6 @@ video.fit-contain{ object-fit:contain; }
     }catch(e){}
   })();
 
-  // ===== Atalhos de teclado (opcional) =====
-  // 1=azul 2=verde 3=amarelo 4=laranja 5=branco 6=preto | R = aleatório
   window.addEventListener("keydown", (e)=>{
     const k = String(e.key || "").toLowerCase();
     if (k === "1") setFundo("azul");
@@ -1180,11 +1177,9 @@ video.fit-contain{ object-fit:contain; }
     else if (k === "r") fundoAleatorio();
   });
 
-  // ===== Auto-aleatório (opcional) =====
-  // Descomente se quiser trocar sozinho:
-  // fundoAleatorio();
-     setInterval(fundoAleatorio, 300000); // a cada 5 minutos
+  setInterval(fundoAleatorio, 300000); // 5 min
 </script>
+
 
 </body>
 </html>
