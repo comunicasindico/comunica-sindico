@@ -245,6 +245,9 @@
   0%,100%{ box-shadow: 0 0 14px rgba(255,80,80,.35), inset 0 1px 0 rgba(255,255,255,.15); }
   50%    { box-shadow: 0 0 20px rgba(255,80,80,.55), inset 0 1px 0 rgba(255,255,255,.18); }
 }
+/* Fade da lista inteira (troca de página da rotação) */
+#avisos.fade-out{ opacity:0; transition: opacity .22s ease; }
+#avisos.fade-in { opacity:1; transition: opacity .22s ease; }
 
 /* Container: melhora espaçamento e rolagem */
 .avisos{
@@ -732,38 +735,53 @@
       const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
       ROT_STATE = { page: 0, totalPages, paused: false };
 
-      function renderPage(pageIdx){
-        root.innerHTML = "";
+     function renderPage(pageIdx){
+  // fade out
+  root.classList.remove("fade-in");
+  root.classList.add("fade-out");
 
-        const start = pageIdx * qtd;
-        const slice = avisosAll.slice(start, start + qtd);
+  const doRender = () => {
+    root.innerHTML = "";
 
-        slice.forEach(a=>{
-          const el = document.createElement("div");
-          el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+    const start = pageIdx * qtd;
+    const slice = avisosAll.slice(start, start + qtd);
 
-          const titulo = safeText(a.titulo || "Aviso");
-          const desc = safeText(a.descricao || "");
-          const tipo = safeText(a.tipo || "");
-          const local = safeText(a.local || "");
-          const ini = formatDT_BR(a.inicio || "");
-          const fim = formatDT_BR(a.fim || "");
+    slice.forEach(a=>{
+      const el = document.createElement("div");
+      el.className = `aviso ${prioridadeClass(a.prioridade)}`;
 
-          const tags = [];
-          if(tipo) tags.push(`<span class="tag">🏷️ ${tipo}</span>`);
-          if(local) tags.push(`<span class="tag">📍 ${local}</span>`);
-          if(ini || fim) tags.push(`<span class="tag">🗓️ ${ini}${fim ? " → " + fim : ""}</span>`);
-          tags.push(`<span class="tag">⚡ ${safeText(a.prioridade || "Baixa")}</span>`);
+      const titulo = safeText(a.titulo || "Aviso");
+      const desc = safeText(a.descricao || "");
+      const tipo = safeText(a.tipo || "");
+      const local = safeText(a.local || "");
+      const ini = formatDT_BR(a.inicio || "");
+      const fim = formatDT_BR(a.fim || "");
 
-          el.innerHTML = `
-            <p class="t">${titulo}</p>
-            ${desc ? `<p class="d">${desc}</p>` : ""}
-            <div class="meta">${tags.join("")}</div>
-          `;
-          root.appendChild(el);
-        });
-      }
+      const tags = [];
+      if(tipo) tags.push(`<span class="tag">🏷️ ${tipo}</span>`);
+      if(local) tags.push(`<span class="tag">📍 ${local}</span>`);
+      if(ini || fim) tags.push(`<span class="tag">🗓️ ${ini}${fim ? " → " + fim : ""}</span>`);
+      tags.push(`<span class="tag">⚡ ${safeText(a.prioridade || "Baixa")}</span>`);
 
+      el.innerHTML = `
+        <p class="t">${titulo}</p>
+        ${desc ? `<p class="d">${desc}</p>` : ""}
+        <div class="meta">${tags.join("")}</div>
+      `;
+      root.appendChild(el);
+    });
+
+    // força reflow p/ aplicar fade-in certinho
+    void root.offsetWidth;
+
+    // fade in
+    root.classList.remove("fade-out");
+    root.classList.add("fade-in");
+  };
+
+  // espera o tempo do fade-out e renderiza
+  setTimeout(doRender, 220);
+}
       renderPage(0);
 
       if (ativar && totalPages > 1){
