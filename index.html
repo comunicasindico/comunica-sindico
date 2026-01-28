@@ -241,38 +241,117 @@
       min-height:0;
     }
 
-    .aviso{
-      padding:14px 14px;
-      border:1px solid var(--line);
-      border-radius:14px;
-      background:rgba(7,20,34,.28);
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-    .aviso.alta{
-      border-color:rgba(255,70,70,.75);
-      background:linear-gradient(180deg, rgba(255,70,70,.16), rgba(7,20,34,.28));
-    }
-    .aviso.media{
-      border-color:rgba(255,160,40,.70);
-      background:linear-gradient(180deg, rgba(255,160,40,.14), rgba(7,20,34,.28));
-    }
-    .aviso.baixa{
-      border-color:rgba(110,190,255,.70);
-      background:linear-gradient(180deg, rgba(110,190,255,.12), rgba(7,20,34,.28));
-    }
-    .aviso .t{margin:0;font-weight:950;font-size:18px}
-    .aviso .d{margin:0;color:var(--muted);line-height:1.35;font-size:14px}
-    .aviso .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
-    .tag{
-      font-size:12px;font-weight:950;
-      padding:7px 10px;border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(12,35,56,.35);
-      color:rgba(234,242,255,.95);
-    }
+   /* ===== AVISOS – ESTILO PROFISSIONAL 3D ===== */
 
+.aviso{
+  padding:16px;
+  border-radius:16px;
+
+  background:linear-gradient(180deg, rgba(20,60,95,.85), rgba(10,30,50,.85));
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+
+  border:1px solid rgba(255,255,255,.08);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    0 6px 18px rgba(0,0,0,.45);
+
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.aviso:hover{
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.15),
+    0 10px 26px rgba(0,0,0,.6);
+}
+
+/* PRIORIDADES COM BRILHO */
+.aviso.alta{
+  border:1px solid #ff4d4d;
+  background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.9));
+  box-shadow:
+    0 0 14px rgba(255,80,80,.40),
+    inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+.aviso.media{
+  border:1px solid #ffb347;
+  background:linear-gradient(180deg, rgba(255,180,70,.25), rgba(12,30,50,.9));
+  box-shadow:
+    0 0 14px rgba(255,180,70,.35),
+    inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+.aviso.baixa{
+  border:1px solid #4da6ff;
+  background:linear-gradient(180deg, rgba(100,170,255,.25), rgba(12,30,50,.9));
+  box-shadow:
+    0 0 14px rgba(100,170,255,.30),
+    inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+/* TÍTULO */
+.aviso .t{
+  margin:0;
+  font-weight:900;
+  font-size:18px;
+  letter-spacing:.3px;
+  color:#ffffff;
+  text-shadow:0 1px 2px rgba(0,0,0,.6);
+}
+
+/* DESCRIÇÃO */
+.aviso .d{
+  margin:0;
+  color:#e0ecff;
+  line-height:1.45;
+  font-size:14px;
+}
+
+/* META */
+.aviso .meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:4px;
+}
+
+/* TAGS / BOTÕES 3D */
+.tag{
+  font-size:12px;
+  font-weight:900;
+  padding:7px 12px;
+  border-radius:999px;
+
+  background:linear-gradient(180deg, rgba(30,90,140,.9), rgba(10,40,70,.9));
+  color:#fff;
+
+  border:1px solid rgba(255,255,255,.18);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.25),
+    0 3px 6px rgba(0,0,0,.45);
+
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+/* TAGS POR PRIORIDADE */
+.aviso.alta .tag{
+  background:linear-gradient(180deg,#ff5a5a,#c0392b);
+}
+
+.aviso.media .tag{
+  background:linear-gradient(180deg,#ffb347,#e67e22);
+}
+
+.aviso.baixa .tag{
+  background:linear-gradient(180deg,#6fb6ff,#2980b9);
+}
     /* ===== AD ===== */
     .adBody{
       padding:14px;
