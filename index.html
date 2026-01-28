@@ -570,8 +570,12 @@ function formatDT_BR(v){
       const status = document.getElementById("statusJson");
 
       try{
-        const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
-        const data = await res.json();
+      const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
+if (!res.ok) throw new Error("HTTP " + res.status);
+const ct = (res.headers.get("content-type") || "").toLowerCase();
+if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
+const data = await res.json();
+
 
         // Se quiser manter "Comunica Síndico - Condôminos" fixo, pode remover estas 2 linhas:
         // setText("titulo", safeText(data.titulo || "Comunica Síndico"));
