@@ -160,6 +160,17 @@
       "inicio": "27/01/26 - 22:49",
       "fim": "28/01/26 - 22:49",
       "emergencia": false
+    },
+    {
+      "id": "009",
+      "titulo": "Alarme no Hall",
+      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família.",
+      "prioridade": "Baixa",
+      "tipo": "Segurança",
+      "local": "Hall de Entrada",
+      "inicio": "27/01/26 - 22:58",
+      "fim": "28/01/26 - 22:58",
+      "emergencia": false
     }
   ]
 }
