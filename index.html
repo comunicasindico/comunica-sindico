@@ -40,6 +40,7 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%;width:100%}
+
     body{
       margin:0;
       font-family:"Segoe UI",Arial,sans-serif;
@@ -48,14 +49,19 @@
         radial-gradient(1200px 700px at 15% 10%, rgba(16,56,91,0.55), transparent 60%),
         radial-gradient(900px 600px at 85% 15%, rgba(11,52,84,0.55), transparent 60%),
         linear-gradient(180deg,var(--bg1),var(--bg2));
+
+      /* TV/PC: layout travado com scroll interno */
       overflow:hidden;
       overscroll-behavior:none;
       touch-action:manipulation;
-      min-height:100vh;
+
+      /* IMPORTANTES: evita rodapé “cortado” por barra do Windows/TV */
+      min-height:100svh;
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
     }
 
     .wrap{
-      min-height:100vh;
+      min-height:100svh;
       width:100%;
       padding:
         calc(14px + var(--sat))
@@ -69,13 +75,13 @@
     .container{
       width:100%;
       max-width:1600px;
-      min-height:100vh;
+      min-height:100svh;
       display:flex;
-      flex-direction:column; /* topo acima, conteúdo no meio, rodapé abaixo */
+      flex-direction:column;
       gap:12px;
     }
 
-    /* ===== HEADER (sempre em cima) ===== */
+    /* ===== HEADER ===== */
     .topbar{
       display:flex;
       align-items:center;
@@ -87,7 +93,7 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       backdrop-filter: blur(8px);
-      flex:0 0 auto; /* não “vira coluna lateral” */
+      flex:0 0 auto;
       width:100%;
     }
     .brand{
@@ -170,10 +176,10 @@
       width:100%;
     }
 
-    /* ===== MAIN (meio) ===== */
+    /* ===== MAIN (TV/PC: 2 COLUNAS) ===== */
     .main{
-      flex:1 1 auto;      /* ocupa o “miolo” */
-      min-height:0;       /* permite scroll interno */
+      flex:1 1 auto;
+      min-height:0;
       display:grid;
       grid-template-columns: 1.20fr .80fr;
       gap:12px;
@@ -228,7 +234,7 @@
 
     .avisos{
       padding:14px;
-      overflow:auto;
+      overflow:auto; /* TV/PC: scroll interno */
       display:flex;
       flex-direction:column;
       gap:12px;
@@ -309,85 +315,118 @@
     }
     video.fit-contain{ object-fit:contain; }
 
-   /* ===== FOOTER (2 LINHAS) ===== */
-.ticker{
-  flex:0 0 auto;
-  width:100%;
-  padding:10px 12px;
-  border-radius:var(--radius);
-  border:1px solid var(--line);
-  background:rgba(8,28,46,.60);
-  box-shadow:var(--shadow);
-  backdrop-filter: blur(8px);
+    /* ===== FOOTER (2 LINHAS) ===== */
+    .ticker{
+      flex:0 0 auto;
+      width:100%;
+      padding:10px 12px;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:rgba(8,28,46,.60);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(8px);
+      display:flex;
+      flex-direction:column;
+      align-items:stretch;
+      gap:6px;
 
-  /* agora é COLUNA (linha 1 versículo / linha 2 clima) */
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  gap:6px;
-}
+      /* evita ser “engolido” por barras inferiores */
+      margin-bottom: max(14px, env(safe-area-inset-bottom));
+    }
 
-.tickerLine1{
-  width:100%;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-  overflow:hidden;
-}
+    .tickerLine1{
+      width:100%;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      overflow:hidden;
+    }
 
-.tickerIcon{
-  font-size:clamp(16px, 2.2vw, 20px);
-  opacity:.95;
-  flex:0 0 auto;
-}
+    .tickerIcon{
+      font-size:clamp(16px, 2.2vw, 20px);
+      opacity:.95;
+      flex:0 0 auto;
+    }
 
-#dataBiblica{
-  font-weight:950;
-  white-space:nowrap;
-  color:rgba(234,242,255,.95);
-  font-size:clamp(13px, 1.8vw, 16px);
-  flex:0 0 auto;
-}
+    #dataBiblica{
+      font-weight:950;
+      white-space:nowrap;
+      color:rgba(234,242,255,.95);
+      font-size:clamp(13px, 1.8vw, 16px);
+      flex:0 0 auto;
+    }
 
-#ref{
-  color:rgba(234,242,255,.88);
-  font-weight:850;
-  font-size:clamp(13px, 1.8vw, 16px);
+    #ref{
+      color:rgba(234,242,255,.88);
+      font-weight:850;
+      font-size:clamp(13px, 1.8vw, 16px);
+      flex:1 1 auto;
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
 
-  /* ocupa o resto da linha */
-  flex:1 1 auto;
-  min-width:0;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+    .tickerLine2{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+    }
 
-.tickerLine2{
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end; /* clima alinhado à direita */
-  gap:10px;
-}
+    .wxMini{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+      color:rgba(234,242,255,.92);
+      white-space:nowrap;
+      font-size:clamp(12px, 1.7vw, 15px);
+    }
 
-.wxMini{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:900;
-  color:rgba(234,242,255,.92);
-  white-space:nowrap;
+    @media (max-width: 520px){
+      .tickerLine2{ justify-content:flex-start; }
+      .wxMini{ white-space:normal; }
+    }
 
-  /* fonte adaptável à tela */
-  font-size:clamp(12px, 1.7vw, 15px);
-}
+    /* ===== MOBILE: scroll + vídeo embaixo ===== */
+    @media (max-width: 980px){
+      body{
+        overflow:auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0;
+      }
 
-@media (max-width: 520px){
-  .tickerLine2{ justify-content:flex-start; } /* no celular fica mais natural à esquerda */
-  .wxMini{ white-space:normal; }             /* permite quebrar se ficar longo */
-}
+      .container{
+        min-height:auto;
+      }
 
+      .topbar{ flex-wrap:wrap; }
+      .condoCenter{ order:3; width:100%; text-align:left; padding:0; }
+
+      /* Em MOBILE vira coluna: avisos acima, publicidade abaixo */
+      .main{
+        display:flex;
+        flex-direction:column;
+      }
+      section.panel{ order:1; }
+      #adBox{ order:2; }
+
+      /* remove scroll interno no mobile: rolagem única da página */
+      .panel{ min-height:auto; }
+      .avisos{ overflow:visible; }
+
+      /* rodapé fica sempre visível ao rolar */
+      .ticker{
+        position:sticky;
+        bottom:0;
+        z-index:9;
+        margin-bottom: 0;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+      }
+    }
   </style>
 </head>
 
@@ -447,20 +486,21 @@
       </div>
 
       <div class="ticker">
-  <div class="tickerLine1">
-    <span class="tickerIcon">📖</span>
-    <span id="dataBiblica">—</span>
-    <span id="ref">—</span>
-  </div>
+        <div class="tickerLine1">
+          <span class="tickerIcon">📖</span>
+          <span id="dataBiblica">—</span>
+          <span id="ref">—</span>
+        </div>
 
-  <div class="tickerLine2">
-    <div class="wxMini">
-      <span id="wxIcon">🌦️</span>
-      <span id="wxText">Clima: carregando…</span>
+        <div class="tickerLine2">
+          <div class="wxMini">
+            <span id="wxIcon">🌦️</span>
+            <span id="wxText">Clima: carregando…</span>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </div>
-</div>
-
   </div>
 
   <script>
