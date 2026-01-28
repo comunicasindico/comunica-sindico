@@ -232,78 +232,113 @@
       text-overflow:ellipsis;
     }
 
-    .avisos{
-      padding:14px;
-      overflow:auto; /* TV/PC: scroll interno */
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      min-height:0;
-    }
+    /* ===== AVISOS – PREMIUM 3D + ANIMAÇÕES ===== */
 
-   /* ===== AVISOS – ESTILO PROFISSIONAL 3D ===== */
+/* Entrada suave (usada ao criar o card) */
+@keyframes avisoIn{
+  from{ opacity:0; transform: translateY(10px) scale(.99); }
+  to  { opacity:1; transform: translateY(0) scale(1); }
+}
 
+/* “pulso” sutil para chamar atenção (apenas Alta) */
+@keyframes glowPulseRed{
+  0%,100%{ box-shadow: 0 0 14px rgba(255,80,80,.35), inset 0 1px 0 rgba(255,255,255,.15); }
+  50%    { box-shadow: 0 0 20px rgba(255,80,80,.55), inset 0 1px 0 rgba(255,255,255,.18); }
+}
+
+/* Container: melhora espaçamento e rolagem */
+.avisos{
+  padding:14px;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-height:0;
+  scroll-behavior:smooth;
+}
+
+/* Card base premium */
 .aviso{
   padding:16px;
   border-radius:16px;
-
-  background:linear-gradient(180deg, rgba(20,60,95,.85), rgba(10,30,50,.85));
+  background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
   display:flex;
   flex-direction:column;
   gap:10px;
 
-  border:1px solid rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
 
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.10),
-    0 6px 18px rgba(0,0,0,.45);
+    0 6px 18px rgba(0,0,0,.48);
 
-  transition: transform .25s ease, box-shadow .25s ease;
+  transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+  animation: avisoIn .28s ease both;
+  will-change: transform, opacity;
 }
 
+/* Interação “premium” */
 .aviso:hover{
   transform: translateY(-2px);
+  filter: saturate(1.05);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.15),
-    0 10px 26px rgba(0,0,0,.6);
+    inset 0 1px 0 rgba(255,255,255,.16),
+    0 10px 28px rgba(0,0,0,.62);
+}
+.aviso:active{
+  transform: translateY(0);
 }
 
-/* PRIORIDADES COM BRILHO */
-.aviso.alta{
-  border:1px solid #ff4d4d;
-  background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.9));
-  box-shadow:
-    0 0 14px rgba(255,80,80,.40),
-    inset 0 1px 0 rgba(255,255,255,.15);
+/* Barra lateral de prioridade (alto padrão) */
+.aviso::before{
+  content:"";
+  position:absolute;
+  inset:10px auto 10px 10px;
+  width:6px;
+  border-radius:999px;
+  background:rgba(255,255,255,.15);
+  filter: blur(.0px);
 }
+.aviso{ position:relative; padding-left:18px; } /* abre espaço para a barra */
+
+/* Prioridades com brilho + barra */
+.aviso.alta{
+  border:1px solid rgba(255,90,90,.9);
+  background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.92));
+  animation: avisoIn .28s ease both, glowPulseRed 2.2s ease-in-out infinite;
+}
+.aviso.alta::before{ background:linear-gradient(180deg,#ff5a5a,#c0392b); }
 
 .aviso.media{
-  border:1px solid #ffb347;
-  background:linear-gradient(180deg, rgba(255,180,70,.25), rgba(12,30,50,.9));
-  box-shadow:
-    0 0 14px rgba(255,180,70,.35),
-    inset 0 1px 0 rgba(255,255,255,.15);
+  border:1px solid rgba(255,179,71,.85);
+  background:linear-gradient(180deg, rgba(255,180,70,.25), rgba(12,30,50,.92));
 }
+.aviso.media::before{ background:linear-gradient(180deg,#ffb347,#e67e22); }
 
 .aviso.baixa{
-  border:1px solid #4da6ff;
-  background:linear-gradient(180deg, rgba(100,170,255,.25), rgba(12,30,50,.9));
-  box-shadow:
-    0 0 14px rgba(100,170,255,.30),
-    inset 0 1px 0 rgba(255,255,255,.15);
+  border:1px solid rgba(77,166,255,.85);
+  background:linear-gradient(180deg, rgba(100,170,255,.25), rgba(12,30,50,.92));
 }
+.aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
 
-/* TÍTULO */
+/* Título com ícone automático por prioridade */
 .aviso .t{
   margin:0;
   font-weight:900;
   font-size:18px;
   letter-spacing:.3px;
-  color:#ffffff;
+  color:#fff;
   text-shadow:0 1px 2px rgba(0,0,0,.6);
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
-/* DESCRIÇÃO */
+.aviso.alta .t::before{ content:"⚠️"; }
+.aviso.media .t::before{ content:"🔶"; }
+.aviso.baixa .t::before{ content:"ℹ️"; }
+
+/* Descrição */
 .aviso .d{
   margin:0;
   color:#e0ecff;
@@ -311,7 +346,7 @@
   font-size:14px;
 }
 
-/* META */
+/* Meta */
 .aviso .meta{
   display:flex;
   flex-wrap:wrap;
@@ -319,16 +354,15 @@
   margin-top:4px;
 }
 
-/* TAGS / BOTÕES 3D */
+/* Tags premium (alto relevo) */
 .tag{
   font-size:12px;
   font-weight:900;
   padding:7px 12px;
   border-radius:999px;
-
-  background:linear-gradient(180deg, rgba(30,90,140,.9), rgba(10,40,70,.9));
   color:#fff;
 
+  background:linear-gradient(180deg, rgba(30,90,140,.92), rgba(10,40,70,.92));
   border:1px solid rgba(255,255,255,.18);
 
   box-shadow:
@@ -338,20 +372,29 @@
   display:inline-flex;
   align-items:center;
   gap:6px;
+
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+.tag:hover{
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.30),
+    0 6px 12px rgba(0,0,0,.55);
+  filter:saturate(1.05);
 }
 
-/* TAGS POR PRIORIDADE */
-.aviso.alta .tag{
-  background:linear-gradient(180deg,#ff5a5a,#c0392b);
+/* Tags por prioridade */
+.aviso.alta .tag{ background:linear-gradient(180deg,#ff5a5a,#c0392b); }
+.aviso.media .tag{ background:linear-gradient(180deg,#ffb347,#e67e22); }
+.aviso.baixa .tag{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
+
+/* Acessibilidade: remove animações se o usuário preferir */
+@media (prefers-reduced-motion: reduce){
+  .avisos{ scroll-behavior:auto; }
+  .aviso{ animation:none; transition:none; }
+  .tag{ transition:none; }
 }
 
-.aviso.media .tag{
-  background:linear-gradient(180deg,#ffb347,#e67e22);
-}
-
-.aviso.baixa .tag{
-  background:linear-gradient(180deg,#6fb6ff,#2980b9);
-}
     /* ===== AD ===== */
     .adBody{
       padding:14px;
