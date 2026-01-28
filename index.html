@@ -392,41 +392,79 @@
     }
 
     /* ===== MOBILE: scroll + vídeo embaixo ===== */
-    @media (max-width: 980px){
-      body{
-        overflow:auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 0;
-      }
+/* ===== MOBILE: scroll + vídeo embaixo ===== */
+@media (max-width: 980px){
 
-      .container{
-        min-height:auto;
-      }
+  body{
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0;
+  }
 
-      .topbar{ flex-wrap:wrap; }
-      .condoCenter{ order:3; width:100%; text-align:left; padding:0; }
+  .container{
+    min-height:auto;
+  }
 
-      /* Em MOBILE vira coluna: avisos acima, publicidade abaixo */
-      .main{
-        display:flex;
-        flex-direction:column;
-      }
-      section.panel{ order:1; }
-      #adBox{ order:2; }
+  .topbar{
+    flex-wrap:wrap;
+  }
 
-      /* remove scroll interno no mobile: rolagem única da página */
-      .panel{ min-height:auto; }
-      .avisos{ overflow:visible; }
+  .condoCenter{
+    order:3;
+    width:100%;
+    text-align:left;
+    padding:0;
+  }
 
-      /* rodapé fica sempre visível ao rolar */
-      .ticker{
-        position:sticky;
-        bottom:0;
-        z-index:9;
-        margin-bottom: 0;
-        padding-bottom: max(12px, env(safe-area-inset-bottom));
-      }
-    }
+  /* Em MOBILE vira coluna: avisos acima, publicidade abaixo */
+  .main{
+    display:flex;
+    flex-direction:column;
+  }
+
+  section.panel{
+    order:1;
+  }
+
+  #adBox{
+    order:2;
+  }
+
+  /* remove scroll interno no mobile: rolagem única da página */
+  .panel{
+    min-height:auto;
+  }
+
+  .avisos{
+    overflow:visible;
+  }
+
+  /* rodapé fica sempre visível ao rolar */
+  .ticker{
+    position:sticky;
+    bottom:0;
+    z-index:9;
+    margin-bottom: 0;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  /* Versículo quebra linha no celular */
+  #ref{
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.3;
+  }
+
+  #dataBiblica{
+    white-space: normal;
+  }
+
+  .tickerLine1{
+    flex-wrap: wrap;
+  }
+}
+
   </style>
 </head>
 
