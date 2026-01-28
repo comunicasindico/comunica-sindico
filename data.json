@@ -79,6 +79,17 @@
   "avisos": [
     {
       "id": "001",
+      "titulo": "Alarme no Hall",
+      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família. Seja sábio e cuide de seu lar.",
+      "prioridade": "Alta",
+      "tipo": "Segurança",
+      "local": "Hall de Entrada",
+      "inicio": "28/01/26 - 12:56",
+      "fim": "15/02/26 - 12:56",
+      "emergencia": true
+    },
+    {
+      "id": "002",
       "titulo": "Limpeza",
       "descricao": "Utilizem, por favor, sacolas reforçadas, próprias para lixo, e evitem sacolas finas de mercado, pois elas rasgam com facilidade.",
       "prioridade": "Baixa",
@@ -89,7 +100,7 @@
       "emergencia": false
     },
     {
-      "id": "002",
+      "id": "003",
       "titulo": "Carrinho interno",
       "descricao": "Caso optem por colocar várias sacolas menores dentro de um saco grande de lixo, pedimos que levem esse saco diretamente até a lixeira externa, e não ao carrinho que fica dentro do prédio (ele é exclusivo para sacolas menores). O excesso de peso acaba rasgando as sacolas dentro do carrinho, dificultando bastante o manuseio pela prestadora de serviços e os sacos maiores \"trancam\" ali dentro ocupando muito mais espaço do que um descarte do dia a dia.",
       "prioridade": "Baixa",
@@ -100,7 +111,7 @@
       "emergencia": false
     },
     {
-      "id": "003",
+      "id": "004",
       "titulo": "Piscina",
       "descricao": "Evite nadar sozinho, qualquer anormalidade sempre uma pessoa próxima poderá auxiliar.",
       "prioridade": "Baixa",
@@ -108,17 +119,6 @@
       "local": "Piscina",
       "inicio": "27/01/26 - 23:48",
       "fim": "31/01/26 - 23:48",
-      "emergencia": false
-    },
-    {
-      "id": "004",
-      "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família.",
-      "prioridade": "Baixa",
-      "tipo": "Segurança",
-      "local": "Hall de Entrada",
-      "inicio": "27/01/26 - 23:49",
-      "fim": "04/02/26 - 23:49",
       "emergencia": false
     }
   ]
