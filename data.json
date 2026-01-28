@@ -171,17 +171,6 @@
       "inicio": "27/01/26 - 22:58",
       "fim": "28/01/26 - 22:58",
       "emergencia": false
-    },
-    {
-      "id": "010",
-      "titulo": "Alarme",
-      "descricao": "Cuidado com o código",
-      "prioridade": "Baixa",
-      "tipo": "Alarme 2",
-      "local": "Hall",
-      "inicio": "27/01/26 - 22:50",
-      "fim": "28/01/26 - 22:50",
-      "emergencia": false
     }
   ]
 }
