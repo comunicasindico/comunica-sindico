@@ -592,9 +592,12 @@ function formatDT_BR(v){
         await carregarClima(data);
         iniciarPublicidade(data);
 
-      } catch(e){
-        status.textContent = "Offline";
-      }
+} catch(e){
+  console.warn("Falha ao carregar data.json:", e);
+  status.textContent = "Offline";
+  return null;
+}
+
     }
 
     loadAll();
