@@ -309,58 +309,85 @@
     }
     video.fit-contain{ object-fit:contain; }
 
-    /* ===== FOOTER (sempre embaixo) ===== */
-    .ticker{
-      flex:0 0 auto; /* não fica ao lado */
-      width:100%;
-      padding:10px 12px;
-      border-radius:var(--radius);
-      border:1px solid var(--line);
-      background:rgba(8,28,46,.60);
-      box-shadow:var(--shadow);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      overflow:hidden;
-      backdrop-filter: blur(8px);
-    }
-    .tickerLeft{
-      min-width:0;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex:1;
-      overflow:hidden;
-    }
-    .tickerIcon{font-size:18px;opacity:.95}
-    #dataBiblica{font-weight:950;white-space:nowrap;color:rgba(234,242,255,.95)}
-    #ref{
-      color:rgba(234,242,255,.88);
-      font-weight:800;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .wxMini{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:900;
-      color:rgba(234,242,255,.92);
-      white-space:nowrap;
-      flex:0 0 auto;
-    }
+   /* ===== FOOTER (2 LINHAS) ===== */
+.ticker{
+  flex:0 0 auto;
+  width:100%;
+  padding:10px 12px;
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  background:rgba(8,28,46,.60);
+  box-shadow:var(--shadow);
+  backdrop-filter: blur(8px);
 
-    @media (max-width: 980px){
-      body{overflow:auto}
-      .container{min-height:auto}
-      .main{grid-template-columns:1fr}
-      .panel{min-height:520px}
-      .ticker{position:sticky;bottom:0;z-index:9}
-      .topbar{flex-wrap:wrap}
-      .condoCenter{order:3;width:100%;text-align:left;padding:0}
-    }
+  /* agora é COLUNA (linha 1 versículo / linha 2 clima) */
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:6px;
+}
+
+.tickerLine1{
+  width:100%;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  overflow:hidden;
+}
+
+.tickerIcon{
+  font-size:clamp(16px, 2.2vw, 20px);
+  opacity:.95;
+  flex:0 0 auto;
+}
+
+#dataBiblica{
+  font-weight:950;
+  white-space:nowrap;
+  color:rgba(234,242,255,.95);
+  font-size:clamp(13px, 1.8vw, 16px);
+  flex:0 0 auto;
+}
+
+#ref{
+  color:rgba(234,242,255,.88);
+  font-weight:850;
+  font-size:clamp(13px, 1.8vw, 16px);
+
+  /* ocupa o resto da linha */
+  flex:1 1 auto;
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.tickerLine2{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end; /* clima alinhado à direita */
+  gap:10px;
+}
+
+.wxMini{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  color:rgba(234,242,255,.92);
+  white-space:nowrap;
+
+  /* fonte adaptável à tela */
+  font-size:clamp(12px, 1.7vw, 15px);
+}
+
+@media (max-width: 520px){
+  .tickerLine2{ justify-content:flex-start; } /* no celular fica mais natural à esquerda */
+  .wxMini{ white-space:normal; }             /* permite quebrar se ficar longo */
+}
+
   </style>
 </head>
 
@@ -420,18 +447,20 @@
       </div>
 
       <div class="ticker">
-        <div class="tickerLeft">
-          <span class="tickerIcon">📖</span>
-          <span id="dataBiblica">—</span>
-          <span id="ref">—</span>
-        </div>
-        <div class="wxMini">
-          <span id="wxIcon">🌦️</span>
-          <span id="wxText">Clima: carregando…</span>
-        </div>
-      </div>
+  <div class="tickerLine1">
+    <span class="tickerIcon">📖</span>
+    <span id="dataBiblica">—</span>
+    <span id="ref">—</span>
+  </div>
 
+  <div class="tickerLine2">
+    <div class="wxMini">
+      <span id="wxIcon">🌦️</span>
+      <span id="wxText">Clima: carregando…</span>
     </div>
+  </div>
+</div>
+
   </div>
 
   <script>
