@@ -114,11 +114,11 @@
       "id": "004",
       "titulo": "Limpeza",
       "descricao": "Utilizem, por favor, sacolas reforçadas, próprias para lixo, e evitem sacolas finas de mercado, pois elas rasgam com facilidade.",
-      "prioridade": "Baixa",
+      "prioridade": "Média",
       "tipo": "Serviços",
       "local": "Lixeira",
-      "inicio": "27/01/26 - 23:48",
-      "fim": "31/01/26 - 23:48",
+      "inicio": "28/01/26 - 12:59",
+      "fim": "09/02/26 - 12:59",
       "emergencia": false
     }
   ]
