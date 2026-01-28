@@ -350,6 +350,46 @@
   opacity:.35;
   font-weight:900;
 }
+/* ===== BADGE 3D (BISEL) PARA PRIORIDADE ===== */
+.prioBadge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:950;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  font-size:12px;
+  line-height:1;
+
+  /* efeito “bisel/3D” */
+  border:1px solid rgba(255,255,255,.22);
+  background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.35),   /* brilho em cima */
+    inset 0 -2px 6px rgba(0,0,0,.35),      /* sombra interna em baixo */
+    0 6px 14px rgba(0,0,0,.35);            /* sombra externa */
+}
+
+/* cores por nível (mantém o 3D) */
+.prioBadge.alta{
+  border-color: rgba(255,90,90,.80);
+  background: linear-gradient(180deg, rgba(255,120,120,.50), rgba(160,0,0,.35));
+  text-shadow: 0 1px 0 rgba(0,0,0,.55);
+}
+
+.prioBadge.media{
+  border-color: rgba(255,179,71,.75);
+  background: linear-gradient(180deg, rgba(255,210,120,.55), rgba(160,90,0,.35));
+  text-shadow: 0 1px 0 rgba(0,0,0,.50);
+}
+
+.prioBadge.baixa{
+  border-color: rgba(120,190,255,.70);
+  background: linear-gradient(180deg, rgba(160,210,255,.55), rgba(0,80,160,.32));
+  text-shadow: 0 1px 0 rgba(0,0,0,.45);
+}
 
 /* ===== AD ===== */
 .adBody{
@@ -760,7 +800,9 @@ video.fit-contain{ object-fit:contain; }
             const itens = [];
             if(local) itens.push(`<span class="metaItem">📍 <b>${local}</b></span>`);
             if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${tipo}</b></span>`);
-            itens.push(`<span class="metaItem">⚡ <b>${safeText(a.prioridade || "Baixa")}</b></span>`);
+            const pr = safeText(a.prioridade || "Baixa");
+            itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${pr}</span></span>`);
+           
             if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${ini}${fim ? " → " + fim : ""}</b></span>`);
 
             el.innerHTML = `
