@@ -60,6 +60,13 @@ function isAnyJson(url){
   return url.pathname.toLowerCase().endsWith(".json");
 }
 
+// normaliza: remove query/hash e transforma em "./arquivo"
+function toRelativePath(url){
+  const p = url.pathname;
+  const last = p.split("/").pop() || "";
+  return `./${last}`;
+}
+
 async function addAllSafe(cache, assets){
   await Promise.all(
     assets.map(async (path) => {
@@ -85,7 +92,9 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.map(k => (k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME) ? caches.delete(k) : null));
+    await Promise.all(
+      keys.map(k => (k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME) ? caches.delete(k) : null)
+    );
     await self.clients.claim();
   })());
 });
@@ -98,29 +107,38 @@ self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
 
+  if (req.method !== "GET") return;
   if (!sameOrigin(url)) return;
 
+  // mantém como você já queria: SW não interfere no /sindico/
   if (isInSindicoScope(url)) return;
 
+  // vídeos e Range: não cachear
   if (isVideoRequest(req, url) || hasRangeHeader(req)) {
     event.respondWith(fetch(req));
     return;
   }
 
+  // NAVEGAÇÃO (HTML)
   if (isNavigation(req)) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
       try{
         const fresh = await fetch(req, { cache:"no-store" });
         if (fresh && fresh.ok) cache.put(req, fresh.clone());
+
+        // tenta atualizar o shell também
         try{
           const freshShell = await fetch("./index.html", { cache:"no-store" });
           if (freshShell && freshShell.ok) cache.put("./index.html", freshShell.clone());
         }catch(e){}
+
         return fresh;
       }catch(e){
+        // fallback: tenta URL exata, depois "./index.html", depois offline.html
         const cachedNav = await cache.match(req);
         if (cachedNav) return cachedNav;
+
         const cachedShell = await cache.match("./index.html");
         return cachedShell || (await cache.match("./offline.html"));
       }
@@ -128,38 +146,31 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (isCriticalJson(url)) {
+  // JSON CRÍTICO (data/versiculos) — network-first + fallback que resolve query (?ts=)
+  if (isCriticalJson(url) || isAnyJson(url)) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
+      const rel = toRelativePath(url); // "./data.json" etc
+
       try{
         const fresh = await fetch(req, { cache:"no-store" });
-        if (fresh && fresh.ok) cache.put(req, fresh.clone());
+        if (fresh && fresh.ok) {
+          // grava tanto pela request (com query) quanto pelo path limpo
+          cache.put(req, fresh.clone());
+          cache.put(rel, fresh.clone());
+        }
         return fresh;
       }catch(e){
-        return (await cache.match(req)) || new Response("{}", {
-          headers: { "Content-Type":"application/json; charset=utf-8" }
-        });
+        // tenta casar com query, depois com path limpo
+        return (await cache.match(req)) ||
+               (await cache.match(rel)) ||
+               new Response("{}", { headers: { "Content-Type":"application/json; charset=utf-8" }});
       }
     })());
     return;
   }
 
-  if (isAnyJson(url)) {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      try{
-        const fresh = await fetch(req, { cache:"no-store" });
-        if (fresh && fresh.ok) cache.put(req, fresh.clone());
-        return fresh;
-      }catch(e){
-        return (await cache.match(req)) || new Response("{}", {
-          headers: { "Content-Type":"application/json; charset=utf-8" }
-        });
-      }
-    })());
-    return;
-  }
-
+  // OUTROS (stale-while-revalidate)
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
     const cached = await cache.match(req);
