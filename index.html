@@ -597,6 +597,72 @@ video.fit-contain{ object-fit:contain; }
   .panelTitle{ font-size:18px; }
 }
 </style>
+
+/* ===== NEWS (Mensagens da Cidade) ===== */
+.newsBox{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(7,20,34,.18);
+  border-radius:14px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+
+.newsHead{
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+  background:rgba(12,35,56,.35);
+}
+
+.newsTitle{
+  font-weight:950;
+  color:rgba(234,242,255,.92);
+}
+
+.newsBody{
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  overflow:auto;
+  max-height: 32vh;
+}
+
+.newsItem{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(7,20,34,.22);
+  border-radius:12px;
+  padding:10px 10px;
+}
+
+.newsItem .h{
+  margin:0 0 6px 0;
+  font-weight:950;
+  color:#fff;
+  font-size:14px;
+  line-height:1.25;
+}
+
+.newsItem .p{
+  margin:0;
+  color:rgba(234,242,255,.88);
+  font-weight:700;
+  font-size:13px;
+  line-height:1.35;
+}
+
+.newsItem a{
+  color:rgba(180,220,255,.95);
+  text-decoration:none;
+  font-weight:900;
+}
+.newsItem a:hover{ text-decoration:underline; }
+
 </head>
 
 <body>
