@@ -22,20 +22,20 @@
   <script>
   (function(){
     const isStandalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.navigator.standalone === true;
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      (window.navigator.standalone === true);
 
-    const url = new URL(location.href);
-
-    if(!isStandalone && !url.searchParams.has("pwa")){
-      url.searchParams.set("pwa","1");
-      history.replaceState(null,"",url.toString());
-    }
+    try{
+      const url = new URL(location.href);
+      if(!isStandalone && !url.searchParams.has("pwa")){
+        url.searchParams.set("pwa","1");
+        history.replaceState(null,"",url.toString());
+      }
+    }catch(e){}
   })();
   </script>
 
   <style>
-
     :root{
       --bg:#061726;
       --card:rgba(12,35,56,.55);
@@ -110,7 +110,10 @@
     <p>Painel administrativo para gerenciar avisos e e-mails dos condôminos.</p>
 
     <div class="actions">
-      <a class="btn" id="go" rel="noopener" href="https://script.google.com/macros/s/AKfycbyBHEhubiPa50If5T68PzrahDbYHpw5LDfZo0HD_E7ozCYE6k2cXVGk648TIzH-eehQ/exec">🚀 Abrir Painel do Síndico</a>
+      <a class="btn" id="go" rel="noopener"
+         href="https://script.google.com/macros/s/AKfycbyBHEhubiPa50If5T68PzrahDbYHpw5LDfZo0HD_E7ozCYE6k2cXVGk648TIzH-eehQ/exec">
+        🚀 Abrir Painel do Síndico
+      </a>
       <button class="btn" id="cancel" type="button" style="opacity:.9;display:none">⏸️ Não redirecionar</button>
     </div>
 
@@ -128,33 +131,24 @@
     (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
     (window.navigator.standalone === true);
 
-  // Sempre fixe pwa=1 no navegador (sem recarregar)
-  try{
-    const url = new URL(location.href);
-    if(!isStandalone && !url.searchParams.has("pwa")){
-      url.searchParams.set("pwa","1");
-      history.replaceState(null,"",url.toString());
-    }
-  }catch(e){}
-
   mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
 
-  // NUNCA redireciona automático (mantém elegível para instalar)
   if (hint) {
     hint.textContent = isStandalone
       ? "Toque em “Abrir painel” (o painel é online no Apps Script)."
       : "Instale o app (menu do navegador) ou toque em “Abrir painel”.";
   }
 
-  // Botão cancelar não faz mais sentido sem auto-redirect
   if (cancelBtn) cancelBtn.style.display = "none";
 
-  // Se for standalone e você quiser abrir na hora, faça isso só no clique
-  // (mantém controle do usuário e evita bloqueios)
+  // Melhor compatibilidade (principalmente iPhone/Safari):
+  // no navegador, abre em nova aba; no app instalado, abre normal.
   if(goEl){
-    goEl.addEventListener("click", (e)=>{
-      // deixa abrir normal
-    });
+    if(!isStandalone){
+      goEl.setAttribute("target","_blank");
+    }else{
+      goEl.removeAttribute("target");
+    }
   }
 
   // Service Worker (GitHub Pages + repo)
@@ -185,7 +179,7 @@
     });
   }
 })();
-</script>
+  </script>
 
 </body>
 </html>
