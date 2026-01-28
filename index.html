@@ -232,7 +232,7 @@
       text-overflow:ellipsis;
     }
 
-    /* ===== AVISOS – PREMIUM 3D + ANIMAÇÕES ===== */
+/* ===== AVISOS – PREMIUM 3D + ANIMAÇÕES ===== */
 
 /* Entrada suave (usada ao criar o card) */
 @keyframes avisoIn{
@@ -245,6 +245,7 @@
   0%,100%{ box-shadow: 0 0 14px rgba(255,80,80,.35), inset 0 1px 0 rgba(255,255,255,.15); }
   50%    { box-shadow: 0 0 20px rgba(255,80,80,.55), inset 0 1px 0 rgba(255,255,255,.18); }
 }
+
 /* Fade da lista inteira (troca de página da rotação) */
 #avisos.fade-out{ opacity:0; transition: opacity .22s ease; }
 #avisos.fade-in { opacity:1; transition: opacity .22s ease; }
@@ -263,21 +264,25 @@
 /* Card base premium */
 .aviso{
   padding:16px;
-  border-radius:16px;
+  border-radius:18px;
   background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
   display:flex;
   flex-direction:column;
   gap:10px;
 
-  border:1px solid rgba(255,255,255,.10);
+  border:1px solid rgba(140,200,255,.22);
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    0 6px 18px rgba(0,0,0,.48);
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -14px 22px rgba(0,0,0,.28),
+    0 14px 34px rgba(0,0,0,.55);
 
   transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
   animation: avisoIn .28s ease both;
   will-change: transform, opacity;
+
+  position:relative;
+  padding-left:18px; /* abre espaço para a barra */
 }
 
 /* Interação “premium” */
@@ -288,9 +293,7 @@
     inset 0 1px 0 rgba(255,255,255,.16),
     0 10px 28px rgba(0,0,0,.62);
 }
-.aviso:active{
-  transform: translateY(0);
-}
+.aviso:active{ transform: translateY(0); }
 
 /* Barra lateral de prioridade (alto padrão) */
 .aviso::before{
@@ -300,9 +303,7 @@
   width:6px;
   border-radius:999px;
   background:rgba(255,255,255,.15);
-  filter: blur(.0px);
 }
-.aviso{ position:relative; padding-left:18px; } /* abre espaço para a barra */
 
 /* Prioridades com brilho + barra */
 .aviso.alta{
@@ -336,8 +337,7 @@
   align-items:center;
   gap:10px;
 }
-
-.aviso.alta .t::before{ content:"⚠️"; }
+.aviso.alta  .t::before{ content:"⚠️"; }
 .aviso.media .t::before{ content:"🔶"; }
 .aviso.baixa .t::before{ content:"ℹ️"; }
 
@@ -349,182 +349,153 @@
   font-size:14px;
 }
 
-/* ===== CAMPOS coloridos em alto relevo (no lugar dos “botões”) ===== */
-
-.aviso .meta{
-  display:grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+/* ===== META INTERNA (SEM BOTÕES / DENTRO DO CARD) ===== */
+.metaLine{
+  margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
   gap:10px;
-  margin-top:6px;
+  align-items:center;
+
+  color:rgba(234,242,255,.92);
+  font-size:13px;
+  font-weight:900;
 }
 
-/* Campo base (alto relevo) */
-.campo{
+.metaItem{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  opacity:.95;
+}
+
+.metaItem b{
+  font-weight:950;
+  color:#fff;
+}
+
+.metaSep{
+  opacity:.35;
+  font-weight:900;
+}
+
+/* ===== AD ===== */
+.adBody{
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-height:0;
+}
+.adCard{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(7,20,34,.18);
+  border-radius:14px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.adLabel{
+  padding:10px 12px;
+  font-weight:950;
+  border-bottom:1px solid rgba(255,255,255,.10);
+  color:rgba(234,242,255,.92);
+  background:rgba(12,35,56,.35);
+}
+.videoWrap{
+  width:100%;
+  aspect-ratio:16/9;
+  background:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+video{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+  object-position:center;
+  background:#000;
+}
+video.fit-contain{ object-fit:contain; }
+
+/* ===== FOOTER (2 LINHAS) ===== */
+.ticker{
+  flex:0 0 auto;
+  width:100%;
+  padding:10px 12px;
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  background:rgba(8,28,46,.60);
+  box-shadow:var(--shadow);
+  backdrop-filter: blur(8px);
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:6px;
+
+  /* evita ser “engolido” por barras inferiores */
+  margin-bottom: max(14px, env(safe-area-inset-bottom));
+}
+
+.tickerLine1{
+  width:100%;
   display:flex;
   align-items:center;
   gap:10px;
+  min-width:0;
+  overflow:hidden;
+}
 
-  padding:10px 12px;
-  border-radius:12px;
+.tickerIcon{
+  font-size:clamp(16px, 2.2vw, 20px);
+  opacity:.95;
+  flex:0 0 auto;
+}
 
-  font-weight:900;
-  font-size:13px;
-  color:rgba(255,255,255,.95);
+#dataBiblica{
+  font-weight:950;
+  white-space:nowrap;
+  color:rgba(234,242,255,.95);
+  font-size:clamp(13px, 1.8vw, 16px);
+  flex:0 0 auto;
+}
 
-  border:1px solid rgba(255,255,255,.14);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.28),
-    inset 0 -10px 18px rgba(0,0,0,.22),
-    0 6px 14px rgba(0,0,0,.35);
-
+#ref{
+  color:rgba(234,242,255,.88);
+  font-weight:850;
+  font-size:clamp(13px, 1.8vw, 16px);
+  flex:1 1 auto;
+  min-width:0;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
 
-/* Cores por campo */
-.campo-local{ background: linear-gradient(180deg, rgba(220,95,40,.95), rgba(120,45,15,.95)); }
-.campo-tipo { background: linear-gradient(180deg, rgba(80,170,255,.95), rgba(25,85,140,.95)); }
-.campo-data { background: linear-gradient(180deg, rgba(150,160,175,.95), rgba(70,80,95,.95)); }
-.campo-prio { background: linear-gradient(180deg, rgba(120,120,140,.95), rgba(55,55,75,.95)); }
-
-/* Ajuste “tema” por prioridade (deixa mais vivo como na imagem) */
-.aviso.alta  .campo-prio{ background: linear-gradient(180deg, rgba(255,70,70,.98), rgba(140,25,25,.98)); }
-.aviso.media .campo-prio{ background: linear-gradient(180deg, rgba(255,185,70,.98), rgba(150,90,20,.98)); }
-.aviso.baixa .campo-prio{ background: linear-gradient(180deg, rgba(110,190,255,.98), rgba(35,95,155,.98)); }
-
-/* No celular: quebra em 2 linhas de campos */
-@media (max-width: 980px){
-  .aviso .meta{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.tickerLine2{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
 }
 
-/* Em telas bem estreitas: 1 por linha */
-@media (max-width: 420px){
-  .aviso .meta{
-    grid-template-columns: 1fr;
-  }
-  .campo{ white-space:normal; }
+.wxMini{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  color:rgba(234,242,255,.92);
+  white-space:nowrap;
+  font-size:clamp(12px, 1.7vw, 15px);
 }
-    /* ===== AD ===== */
-    .adBody{
-      padding:14px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      min-height:0;
-    }
-    .adCard{
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(7,20,34,.18);
-      border-radius:14px;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      min-height:0;
-    }
-    .adLabel{
-      padding:10px 12px;
-      font-weight:950;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      color:rgba(234,242,255,.92);
-      background:rgba(12,35,56,.35);
-    }
-    .videoWrap{
-      width:100%;
-      aspect-ratio:16/9;
-      background:#000;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    video{
-      width:100%;
-      height:100%;
-      display:block;
-      object-fit:cover;
-      object-position:center;
-      background:#000;
-    }
-    video.fit-contain{ object-fit:contain; }
 
-    /* ===== FOOTER (2 LINHAS) ===== */
-    .ticker{
-      flex:0 0 auto;
-      width:100%;
-      padding:10px 12px;
-      border-radius:var(--radius);
-      border:1px solid var(--line);
-      background:rgba(8,28,46,.60);
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(8px);
-      display:flex;
-      flex-direction:column;
-      align-items:stretch;
-      gap:6px;
-
-      /* evita ser “engolido” por barras inferiores */
-      margin-bottom: max(14px, env(safe-area-inset-bottom));
-    }
-
-    .tickerLine1{
-      width:100%;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-      overflow:hidden;
-    }
-
-    .tickerIcon{
-      font-size:clamp(16px, 2.2vw, 20px);
-      opacity:.95;
-      flex:0 0 auto;
-    }
-
-    #dataBiblica{
-      font-weight:950;
-      white-space:nowrap;
-      color:rgba(234,242,255,.95);
-      font-size:clamp(13px, 1.8vw, 16px);
-      flex:0 0 auto;
-    }
-
-    #ref{
-      color:rgba(234,242,255,.88);
-      font-weight:850;
-      font-size:clamp(13px, 1.8vw, 16px);
-      flex:1 1 auto;
-      min-width:0;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .tickerLine2{
-      width:100%;
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:10px;
-    }
-
-    .wxMini{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:900;
-      color:rgba(234,242,255,.92);
-      white-space:nowrap;
-      font-size:clamp(12px, 1.7vw, 15px);
-    }
-
-    @media (max-width: 520px){
-      .tickerLine2{ justify-content:flex-start; }
-      .wxMini{ white-space:normal; }
-    }
+@media (max-width: 520px){
+  .tickerLine2{ justify-content:flex-start; }
+  .wxMini{ white-space:normal; }
+}
 
 /* ===== MOBILE: scroll + vídeo embaixo ===== */
 @media (max-width: 980px){
@@ -534,13 +505,9 @@
     padding-bottom: 0;
   }
 
-  .container{
-    min-height:auto;
-  }
+  .container{ min-height:auto; }
 
-  .topbar{
-    flex-wrap:wrap;
-  }
+  .topbar{ flex-wrap:wrap; }
 
   .condoCenter{
     order:3;
@@ -574,9 +541,7 @@
   /* Versículo quebra linha no celular */
   .tickerLine1{ flex-wrap: wrap; }
 
-  #dataBiblica{
-    white-space: normal;
-  }
+  #dataBiblica{ white-space: normal; }
 
   #ref{
     white-space: normal;
@@ -585,6 +550,7 @@
     line-height: 1.3;
   }
 }
+
   </style>
 </head>
 
@@ -767,17 +733,18 @@
       const ini = formatDT_BR(a.inicio || "");
       const fim = formatDT_BR(a.fim || "");
 
-      const tags = [];
-      if(local) tags.push(`<span class="campo campo-local">📍 ${local}</span>`);
-      if(tipo)  tags.push(`<span class="campo campo-tipo">🏷️ ${tipo}</span>`);
-      if(ini || fim) tags.push(`<span class="campo campo-data">🗓️ ${ini}${fim ? " → " + fim : ""}</span>`);
-      tags.push(`<span class="campo campo-prio">⚡ ${safeText(a.prioridade || "Baixa")}</span>`);
+   const itens = [];
+if(local) itens.push(`<span class="metaItem">📍 <b>${local}</b></span>`);
+if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${tipo}</b></span>`);
+itens.push(`<span class="metaItem">⚡ <b>${safeText(a.prioridade || "Baixa")}</b></span>`);
+if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${ini}${fim ? " → " + fim : ""}</b></span>`);
 
-      el.innerHTML = `
-        <p class="t">${titulo}</p>
-        ${desc ? `<p class="d">${desc}</p>` : ""}
-        <div class="meta">${tags.join("")}</div>
-      `;
+el.innerHTML = `
+  <p class="t">${titulo}</p>
+  ${desc ? `<p class="d">${desc}</p>` : ""}
+  <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
+`;
+
       root.appendChild(el);
     });
 
