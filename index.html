@@ -48,94 +48,117 @@
         radial-gradient(1200px 700px at 15% 10%, rgba(16,56,91,0.55), transparent 60%),
         radial-gradient(900px 600px at 85% 15%, rgba(11,52,84,0.55), transparent 60%),
         linear-gradient(180deg,var(--bg1),var(--bg2));
-      overflow-x:hidden;
+      overflow:hidden;
       overscroll-behavior:none;
       touch-action:manipulation;
       min-height:100vh;
     }
+
     .wrap{
       min-height:100vh;
       width:100%;
       padding:
-        calc(18px + var(--sat))
-        calc(18px + var(--sar))
-        calc(18px + var(--sab) + 58px)
-        calc(18px + var(--sal));
+        calc(14px + var(--sat))
+        calc(14px + var(--sar))
+        calc(14px + var(--sab))
+        calc(14px + var(--sal));
       display:flex;
       justify-content:center;
     }
+
     .container{
       width:100%;
-      max-width:1400px;
-      min-height:calc(100dvh - var(--sat) - var(--sab) - 36px - 58px);
-      display:flex;
-      flex-direction:column;
-      gap:18px;
+      max-width:1600px;
+      min-height:calc(100dvh - var(--sat) - var(--sab) - 28px);
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:12px;
     }
+
+    /* ===== HEADER ===== */
     .topbar{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:14px;
-      padding:18px 20px;
-      background:rgba(8,28,46,.55);
+      padding:16px 18px;
+      background:rgba(8,28,46,.60);
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       backdrop-filter: blur(8px);
     }
-    .title{margin:0;font-size:22px;font-weight:800}
-    .subtitle{margin:4px 0 0;font-size:13px;color:var(--muted);font-weight:600}
-
-    .titleSmall{
-      font-size:16px;
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      min-width:0;
+    }
+    .brand .title{
+      margin:0;
+      font-size:22px;
       font-weight:900;
-      line-height:1.2;
+      letter-spacing:.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .updated{
-      margin-top:2px;
-      font-size:11px;
-      font-weight:700;
+    .brand .sub{
+      margin:0;
+      font-size:12.5px;
       color:var(--muted);
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-
+    .rightInfo{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
     .badge{
       display:flex;align-items:center;gap:10px;
       padding:10px 12px;border-radius:999px;
       border:1px solid var(--line);
       background:rgba(12,35,56,.55);
-      color:var(--muted);font-weight:700;font-size:12px;
+      color:var(--muted);font-weight:800;font-size:12px;
       white-space:nowrap;
     }
     .dot{width:10px;height:10px;border-radius:50%;background:#44d07a}
+    #statusJson{font-weight:900;color:rgba(234,242,255,.92)}
+    #clock{font-size:22px;font-weight:950;letter-spacing:.6px;color:#fff}
     .btnInstall{
       border:1px solid rgba(255,255,255,.18);
       background:rgba(12,35,56,.55);
       color:rgba(234,242,255,.92);
       padding:10px 12px;
       border-radius:999px;
-      font-weight:800;
+      font-weight:900;
       cursor:pointer;
       font-size:14px;
       white-space:nowrap;
     }
     .updateBanner{
-      padding:12px 14px;
+      padding:10px 12px;
       border-radius:14px;
       border:1px solid rgba(120,190,255,.35);
       background:rgba(7,20,34,.28);
       box-shadow:var(--shadow);
       font-weight:900;
     }
-    .grid{
-      flex:1;
-      display:grid;
-      grid-template-columns:1.25fr .75fr;
-      gap:18px;
+
+    /* ===== MAIN ===== */
+    .main{
       min-height:0;
+      display:grid;
+      grid-template-columns: 1.20fr .80fr;
+      gap:12px;
     }
 
-    .card{
+    .panel{
       background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
       border:1px solid var(--line);
       border-radius:var(--radius);
@@ -143,44 +166,52 @@
       display:flex;
       flex-direction:column;
       min-height:0;
+      overflow:hidden;
     }
-    .card .head{
-      padding:8px 12px;
+
+    .panelHead{
+      padding:10px 12px;
       border-bottom:1px solid var(--line);
       display:flex;
+      align-items:center;
       justify-content:space-between;
-      align-items:flex-start;
-      gap:8px;
+      gap:10px;
+      background:rgba(7,20,34,.20);
+    }
+    .panelTitle{
+      display:flex;align-items:center;gap:10px;
+      font-size:13px;
+      font-weight:950;
+      letter-spacing:.6px;
+      color:rgba(234,242,255,.95);
+      text-transform:uppercase;
     }
     .pill{
       font-size:12px;
-      font-weight:700;
-      padding:4px 8px;
-      border-radius:12px;
-      line-height:1.25;
-      max-width:100%;
-      white-space:normal;
-
+      font-weight:800;
+      padding:6px 10px;
+      border-radius:999px;
       border:1px solid var(--line);
-      color:var(--muted);
       background:rgba(12,35,56,.35);
+      color:var(--muted);
       display:inline-flex;
       align-items:center;
       gap:8px;
-    }
-    #ref{
-      font-size:12.5px;
-      line-height:1.25;
+      white-space:nowrap;
+      max-width:100%;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .avisos{
-      padding:16px;
+      padding:14px;
       overflow:auto;
       display:flex;
       flex-direction:column;
       gap:12px;
       min-height:0;
     }
+
     .aviso{
       padding:14px 14px;
       border:1px solid var(--line);
@@ -188,51 +219,55 @@
       background:rgba(7,20,34,.28);
       display:flex;
       flex-direction:column;
-      gap:6px;
+      gap:8px;
     }
     .aviso.alta{border-color:rgba(255,80,80,.55)}
     .aviso.media{border-color:rgba(255,200,70,.40)}
     .aviso.baixa{border-color:rgba(120,190,255,.35)}
-    .aviso .t{margin:0;font-weight:900;font-size:16px}
-    .aviso .d{margin:0;color:var(--muted);line-height:1.35}
+    .aviso .t{margin:0;font-weight:950;font-size:18px}
+    .aviso .d{margin:0;color:var(--muted);line-height:1.35;font-size:14px}
     .aviso .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
     .tag{
-      font-size:11px;font-weight:800;
-      padding:6px 8px;border-radius:999px;
+      font-size:12px;font-weight:900;
+      padding:7px 10px;border-radius:999px;
       border:1px solid var(--line);
       background:rgba(12,35,56,.35);
-      color:rgba(234,242,255,.9);
-    }
-    .side{
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-      min-height:0;
-    }
-    .miniAnuncio{
-      padding:16px;
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:rgba(7,20,34,.28);
-      box-shadow:var(--shadow);
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      min-height:0;
+      color:rgba(234,242,255,.95);
     }
 
-    .miniAnuncio .videoWrap{
+    /* ===== AD / PUBLICIDADE ===== */
+    .adBody{
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-height:0;
+    }
+    .adCard{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(7,20,34,.18);
+      border-radius:14px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+    .adLabel{
+      padding:10px 12px;
+      font-weight:950;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      color:rgba(234,242,255,.92);
+      background:rgba(12,35,56,.35);
+    }
+    .videoWrap{
       width:100%;
       aspect-ratio:16/9;
-      border-radius:14px;
-      border:1px solid var(--line);
-      overflow:hidden;
       background:#000;
       display:flex;
       align-items:center;
       justify-content:center;
     }
-    .miniAnuncio video{
+    video{
       width:100%;
       height:100%;
       display:block;
@@ -240,25 +275,61 @@
       object-position:center;
       background:#000;
     }
-    .miniAnuncio video.fit-contain{
-      object-fit:contain;
+    video.fit-contain{ object-fit:contain; }
+
+    /* ===== FOOTER TICKER ===== */
+    .ticker{
+      padding:10px 12px;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:rgba(8,28,46,.60);
+      box-shadow:var(--shadow);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      overflow:hidden;
+      backdrop-filter: blur(8px);
+    }
+    .tickerLeft{
+      min-width:0;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex:1;
+      overflow:hidden;
+    }
+    .tickerIcon{
+      font-size:18px;
+      opacity:.95;
+    }
+    #dataBiblica{
+      font-weight:950;
+      white-space:nowrap;
+      color:rgba(234,242,255,.95);
+    }
+    #ref{
+      color:rgba(234,242,255,.88);
+      font-weight:800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .wxMini{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+      color:rgba(234,242,255,.92);
+      white-space:nowrap;
     }
 
-    .wxbar{
-      position:fixed;left:0;right:0;bottom:0;
-      padding:
-        10px
-        calc(14px + var(--sar))
-        calc(10px + var(--sab))
-        calc(14px + var(--sal));
-      font:800 13px "Segoe UI",Arial,sans-serif;
-      display:flex;gap:10px;align-items:center;justify-content:center;
-      background:#0b223a;color:#fff;
-      border-top:1px solid rgba(255,255,255,.12);
-      z-index:9;
-    }
-    @media (max-width:980px){
-      .grid{grid-template-columns:1fr}
+    @media (max-width: 980px){
+      body{overflow:auto}
+      .container{min-height:auto}
+      .main{grid-template-columns:1fr}
+      .panel{min-height:520px}
+      .ticker{position:sticky;bottom:0;z-index:9}
     }
   </style>
 </head>
@@ -268,43 +339,70 @@
     <div class="container">
 
       <div class="topbar">
-        <div>
-          <div class="titleSmall" id="titulo">Comunica Síndico - Condôminos</div>
-          <div class="subtitle" id="subtitulo">Painel informativo</div>
-          <div class="updated" id="statusJson">Carregando...</div>
+        <div class="brand">
+          <div class="title" id="titulo">Comunica Síndico — Condôminos</div>
+          <div class="sub" id="subtitulo">Painel informativo</div>
         </div>
-        <div style="display:flex;gap:10px;align-items:center;">
+
+        <div class="rightInfo">
+          <div class="badge" title="Status do painel">
+            <span class="dot" id="dotOnline"></span>
+            <span id="statusJson">Carregando...</span>
+          </div>
+
+          <div class="badge" title="Hora">
+            <span>🕒</span>
+            <span id="clock">--:--</span>
+          </div>
+
           <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">⬇️ Instalar App</button>
         </div>
       </div>
 
       <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
-      <div class="grid">
-        <section class="card">
-          <div class="head">
-            <div class="pill" id="dataBiblica">—</div>
-            <div class="pill" id="ref">—</div>
+      <div class="main">
+        <!-- AVISOS -->
+        <section class="panel">
+          <div class="panelHead">
+            <div class="panelTitle">🔔 Avisos Importantes</div>
+            <div class="pill" id="refPill">Atualizado</div>
           </div>
           <div class="avisos" id="avisos"></div>
         </section>
 
-        <aside class="side">
-          <div class="miniAnuncio" id="adBox" style="display:none">
-            <div class="pill" id="adLabel">Anúncio</div>
-            <div class="videoWrap">
-              <video id="adVideo" autoplay muted playsinline></video>
+        <!-- PUBLICIDADE -->
+        <aside class="panel" id="adBox" style="display:none">
+          <div class="panelHead">
+            <div class="panelTitle">📣 Publicidade</div>
+            <div class="pill" id="adPill">—</div>
+          </div>
+
+          <div class="adBody">
+            <div class="adCard">
+              <div class="adLabel" id="adLabel">Anúncio</div>
+              <div class="videoWrap">
+                <video id="adVideo" autoplay muted playsinline></video>
+              </div>
             </div>
           </div>
         </aside>
       </div>
 
-    </div>
-  </div>
+      <!-- TICKER / CLIMA / VERSÍCULO -->
+      <div class="ticker">
+        <div class="tickerLeft">
+          <span class="tickerIcon">📖</span>
+          <span id="dataBiblica">—</span>
+          <span id="ref">—</span>
+        </div>
+        <div class="wxMini">
+          <span id="wxIcon">🌦️</span>
+          <span id="wxText">Clima: carregando…</span>
+        </div>
+      </div>
 
-  <div class="wxbar">
-    <span id="wxIcon">🌦️</span>
-    <span id="wxText">Clima: carregando…</span>
+    </div>
   </div>
 
   <script>
@@ -345,23 +443,28 @@
 
     function pad2(n){ return String(n).padStart(2,"0"); }
 
-function formatDT_BR(v){
-  if(!v) return "";
-  const d = new Date(v);
-  if(isNaN(d.getTime())) return String(v);
+    function formatDT_BR(v){
+      if(!v) return "";
+      const d = new Date(v);
+      if(isNaN(d.getTime())) return String(v);
+      const dd = pad2(d.getDate());
+      const mm = pad2(d.getMonth()+1);
+      const aa = String(d.getFullYear()).slice(-2);
+      const HH = pad2(d.getHours());
+      const MM = pad2(d.getMinutes());
+      return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
+    }
 
-  const dd = pad2(d.getDate());
-  const mm = pad2(d.getMonth()+1);
-  const aa = String(d.getFullYear()).slice(-2);
-  const HH = pad2(d.getHours());
-  const MM = pad2(d.getMinutes());
-  return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
-}
+    // ===== CLOCK =====
+    function tickClock(){
+      const d = new Date();
+      setText("clock", `${pad2(d.getHours())}:${pad2(d.getMinutes())}`);
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
 
-    
     // =========================================================
-    // ✅ AVISOS: 4 por tela + rotação quando houver mais
-    // Controlado por data.json -> rotacao.{ativar,intervaloSeg,quantidadePorTela,pausarNoMouse}
+    // AVISOS: rotação
     // =========================================================
     let ROT_TIMER = null;
     let ROT_STATE = { page: 0, totalPages: 1, paused: false };
@@ -424,9 +527,7 @@ function formatDT_BR(v){
 
       renderPage(0);
 
-      // rotaciona só se ativado e houver mais de 1 "página"
       if (ativar && totalPages > 1){
-        // pausa no mouse (desktop) e no toque (celular)
         if (rot.pausarNoMouse){
           root.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
           root.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
@@ -460,7 +561,7 @@ function formatDT_BR(v){
         const key = hojeKeyMMDD();
         const texto = v?.versos?.[key];
 
-        setText("dataBiblica", "📖");
+        setText("dataBiblica", "O choro pode durar uma noite, mas a alegria vem ao amanhecer.");
         setText("ref", texto ? texto : (v?.titulo ? v.titulo : "Versículo não encontrado"));
       } catch (e) {}
     }
@@ -505,19 +606,20 @@ function formatDT_BR(v){
         const p = cur.precipitation;
 
         document.getElementById("wxIcon").textContent = emoji;
-        setText("wxText", `Clima: ${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
+        setText("wxText", `${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
       } catch (e) {
         document.getElementById("wxIcon").textContent = "🌦️";
-        setText("wxText", `Clima: ${data?.clima?.cidade || "—"} (offline)`);
+        setText("wxText", `${data?.clima?.cidade || "—"} (offline)`);
       }
     }
 
-    // ✅ PUBLICIDADE: SEQUENCIAL (sem random) + vertical/horizontal
+    // PUBLICIDADE
     function iniciarPublicidade(data){
       const pub = data?.publicidade;
       const adBox = document.getElementById("adBox");
       const adVideo = document.getElementById("adVideo");
       const adLabel = document.getElementById("adLabel");
+      const adPill = document.getElementById("adPill");
 
       if (!(pub?.ativar && Array.isArray(pub.videos) && pub.videos.length)) {
         adBox.style.display = "none";
@@ -532,6 +634,7 @@ function formatDT_BR(v){
         if(!item) return;
 
         adLabel.textContent = String(item.anunciante || "Anúncio");
+        if (adPill) adPill.textContent = "Atualizando…";
 
         const src = String(item.arquivo || "");
         const sep = src.includes("?") ? "&" : "?";
@@ -557,6 +660,7 @@ function formatDT_BR(v){
         const isVertical = adVideo.videoHeight > adVideo.videoWidth;
         if (isVertical) adVideo.classList.add("fit-contain");
         else adVideo.classList.remove("fit-contain");
+        if (adPill) adPill.textContent = "No ar";
       };
 
       adVideo.onended = () => setTimeout(playNext, intervalMs);
@@ -568,40 +672,46 @@ function formatDT_BR(v){
 
     async function loadAll(){
       const status = document.getElementById("statusJson");
+      const dot = document.getElementById("dotOnline");
+      const refPill = document.getElementById("refPill");
 
       try{
-      const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
-if (!res.ok) throw new Error("HTTP " + res.status);
-const ct = (res.headers.get("content-type") || "").toLowerCase();
-if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
-const data = await res.json();
+        const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const ct = (res.headers.get("content-type") || "").toLowerCase();
+        if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
+        const data = await res.json();
 
-
-        // Se quiser manter "Comunica Síndico - Condôminos" fixo, pode remover estas 2 linhas:
-        // setText("titulo", safeText(data.titulo || "Comunica Síndico"));
+        // opcional: se quiser usar título/subtítulo do JSON, descomente
+        // setText("titulo", safeText(data.titulo || "Comunica Síndico — Condôminos"));
         // setText("subtitulo", safeText(data.subtitulo || "Painel informativo"));
 
         status.textContent = "Atualizado";
+        if (dot) dot.style.background = "#44d07a";
+        if (refPill) refPill.textContent = "Atualizado";
 
+        renderAvisos(data);
+
+        // mensagem inferior: versículo/mensagem
         if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
           setText("dataBiblica", "📖 Versículo do dia");
+          setText("ref", "Carregando…");
         } else {
           setText("dataBiblica", "📌 Avisos");
           setText("ref", safeText(data.referencia || "Atualizado"));
         }
 
-        renderAvisos(data);
-
         await carregarVersiculo(data);
         await carregarClima(data);
         iniciarPublicidade(data);
 
-} catch(e){
-  console.warn("Falha ao carregar data.json:", e);
-  status.textContent = "Offline";
-  return null;
-}
-
+      } catch(e){
+        console.warn("Falha ao carregar data.json:", e);
+        status.textContent = "Offline";
+        if (dot) dot.style.background = "#ff5a5a";
+        if (refPill) refPill.textContent = "Offline";
+        return null;
+      }
     }
 
     loadAll();
