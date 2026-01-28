@@ -618,13 +618,25 @@ video.fit-contain{ object-fit:contain; }
             <div class="pill" id="adPill">—</div>
           </div>
 
-         <div class="adBody">
+<div class="adBody">
+
   <div class="adCard">
     <div class="adLabel" id="adLabel">Anúncio</div>
     <div class="videoWrap">
       <video id="adVideo" autoplay muted playsinline></video>
     </div>
   </div>
+
+  <!-- NOVO BLOCO: Mensagens / Notícias -->
+  <div class="newsBox" id="newsBox" style="display:none">
+    <div class="newsHead">
+      <div class="newsTitle">📰 Mensagens da Cidade</div>
+      <div class="pill" id="newsPill">—</div>
+    </div>
+    <div class="newsBody" id="newsBody"></div>
+  </div>
+
+</div>
 
   <!-- NOVO: Mensagens/Notícias -->
   <div class="newsBox" id="newsBox" style="display:none">
@@ -941,6 +953,29 @@ el.innerHTML = `
 
       adBox.style.display = "flex";
       playNext();
+      // ===== Mensagens/Notícias embaixo do vídeo =====
+const newsBox = document.getElementById("newsBox");
+const newsBody = document.getElementById("newsBody");
+const newsPill = document.getElementById("newsPill");
+
+// data.publicidade.mensagens: [{titulo:"", texto:""}, ...]
+const msgs = Array.isArray(pub?.mensagens) ? pub.mensagens : [];
+
+if (newsBox && newsBody) {
+  if (!msgs.length) {
+    newsBox.style.display = "none";
+  } else {
+    newsBody.innerHTML = msgs.slice(0, 8).map(m => `
+      <div class="newsItem">
+        <p class="h">${safeText(m.titulo || "Mensagem")}</p>
+        <p class="p">${safeText(m.texto || "")}</p>
+      </div>
+    `).join("");
+    newsBox.style.display = "flex";
+    if (newsPill) newsPill.textContent = "Atualizado";
+  }
+}
+
     }
 
     async function loadAll(){
