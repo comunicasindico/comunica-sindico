@@ -802,7 +802,7 @@ video.fit-contain{ object-fit:contain; }
         const key = hojeKeyMMDD();
         const texto = v?.versos?.[key];
 
-        setText("dataBiblica", v?.cabecalho || "📖");
+        setText("dataBiblica", v?.cabecalho || "");
         setText("ref", texto ? texto : (v?.titulo ? v.titulo : "Verso não encontrado"));
       } catch (e) {}
     }
