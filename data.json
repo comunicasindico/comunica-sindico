@@ -130,17 +130,6 @@
     },
     {
       "id": "006",
-      "titulo": "Resíduos",
-      "descricao": "Teste lixeira",
-      "prioridade": "Baixa",
-      "tipo": "Sólidos",
-      "local": "Lixo",
-      "inicio": "27/01/26 - 17:06",
-      "fim": "31/01/26 - 17:06",
-      "emergencia": false
-    },
-    {
-      "id": "007",
       "titulo": "Alarme no Hall",
       "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família.",
       "prioridade": "Baixa",
