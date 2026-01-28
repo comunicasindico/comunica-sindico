@@ -49,13 +49,9 @@
         radial-gradient(1200px 700px at 15% 10%, rgba(16,56,91,0.55), transparent 60%),
         radial-gradient(900px 600px at 85% 15%, rgba(11,52,84,0.55), transparent 60%),
         linear-gradient(180deg,var(--bg1),var(--bg2));
-
-      /* TV/PC: layout travado com scroll interno */
       overflow:hidden;
       overscroll-behavior:none;
       touch-action:manipulation;
-
-      /* IMPORTANTES: evita rodapé “cortado” por barra do Windows/TV */
       min-height:100svh;
       padding-bottom: max(14px, env(safe-area-inset-bottom));
     }
@@ -68,7 +64,7 @@
     calc(14px + var(--sar))
     calc(14px + var(--sab))
     calc(14px + var(--sal));
-  display:block;          /* era flex */
+  display:block;
 }
 
 .container{
@@ -77,7 +73,7 @@
   display:flex;
   flex-direction:column;
   gap:12px;
-  max-width:none;         /* remove limite 1600px */
+  max-width:none;
 }
     /* ===== HEADER ===== */
     .topbar{
@@ -231,24 +227,17 @@
     }
 
 /* ===== AVISOS – PREMIUM 3D + ANIMAÇÕES ===== */
-
-/* Entrada suave (usada ao criar o card) */
 @keyframes avisoIn{
   from{ opacity:0; transform: translateY(10px) scale(.99); }
   to  { opacity:1; transform: translateY(0) scale(1); }
 }
-
-/* “pulso” sutil para chamar atenção (apenas Alta) */
 @keyframes glowPulseRed{
   0%,100%{ box-shadow: 0 0 14px rgba(255,80,80,.35), inset 0 1px 0 rgba(255,255,255,.15); }
   50%    { box-shadow: 0 0 20px rgba(255,80,80,.55), inset 0 1px 0 rgba(255,255,255,.18); }
 }
-
-/* Fade da lista inteira (troca de página da rotação) */
 #avisos.fade-out{ opacity:0; transition: opacity .22s ease; }
 #avisos.fade-in { opacity:1; transition: opacity .22s ease; }
 
-/* Container: melhora espaçamento e rolagem */
 .avisos{
   padding:14px;
   overflow:auto;
@@ -259,7 +248,6 @@
   scroll-behavior:smooth;
 }
 
-/* Card base premium */
 .aviso{
   padding:16px;
   border-radius:18px;
@@ -267,23 +255,18 @@
   display:flex;
   flex-direction:column;
   gap:10px;
-
   border:1px solid rgba(140,200,255,.22);
-
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.14),
     inset 0 -14px 22px rgba(0,0,0,.28),
     0 14px 34px rgba(0,0,0,.55);
-
   transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
   animation: avisoIn .28s ease both;
   will-change: transform, opacity;
-
   position:relative;
-  padding-left:18px; /* abre espaço para a barra */
+  padding-left:18px;
 }
 
-/* Interação “premium” */
 .aviso:hover{
   transform: translateY(-2px);
   filter: saturate(1.05);
@@ -293,7 +276,6 @@
 }
 .aviso:active{ transform: translateY(0); }
 
-/* Barra lateral de prioridade (alto padrão) */
 .aviso::before{
   content:"";
   position:absolute;
@@ -303,7 +285,6 @@
   background:rgba(255,255,255,.15);
 }
 
-/* Prioridades com brilho + barra */
 .aviso.alta{
   border:1px solid rgba(255,90,90,.9);
   background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.92));
@@ -323,7 +304,6 @@
 }
 .aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
 
-/* Título com ícone automático por prioridade */
 .aviso .t{
   margin:0;
   font-weight:900;
@@ -339,7 +319,6 @@
 .aviso.media .t::before{ content:"🔶"; }
 .aviso.baixa .t::before{ content:"ℹ️"; }
 
-/* Descrição */
 .aviso .d{
   margin:0;
   color:#e0ecff;
@@ -347,31 +326,26 @@
   font-size:14px;
 }
 
-/* ===== META INTERNA (SEM BOTÕES / DENTRO DO CARD) ===== */
 .metaLine{
   margin-top:8px;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   align-items:center;
-
   color:rgba(234,242,255,.92);
   font-size:13px;
   font-weight:900;
 }
-
 .metaItem{
   display:inline-flex;
   align-items:center;
   gap:8px;
   opacity:.95;
 }
-
 .metaItem b{
   font-weight:950;
   color:#fff;
 }
-
 .metaSep{
   opacity:.35;
   font-weight:900;
@@ -419,7 +393,7 @@ video{
 }
 video.fit-contain{ object-fit:contain; }
 
-/* ===== FOOTER (2 LINHAS) ===== */
+/* ===== FOOTER (VERSÍCULO + DATA/HORA + TEMPO/VENTO) ===== */
 .ticker{
   flex:0 0 auto;
   width:100%;
@@ -433,8 +407,6 @@ video.fit-contain{ object-fit:contain; }
   flex-direction:column;
   align-items:stretch;
   gap:6px;
-
-  /* evita ser “engolido” por barras inferiores */
   margin-bottom: max(14px, env(safe-area-inset-bottom));
 }
 
@@ -476,11 +448,12 @@ video.fit-contain{ object-fit:contain; }
   width:100%;
   display:flex;
   align-items:center;
-  justify-content:flex-end;
+  justify-content:space-between;
   gap:10px;
+  flex-wrap:wrap;
 }
 
-.wxMini{
+.wxMini, .dtMini{
   display:flex;
   align-items:center;
   gap:10px;
@@ -490,9 +463,15 @@ video.fit-contain{ object-fit:contain; }
   font-size:clamp(12px, 1.7vw, 15px);
 }
 
+.dtMini{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(12,35,56,.25);
+  padding:6px 10px;
+  border-radius:999px;
+}
+
 @media (max-width: 520px){
-  .tickerLine2{ justify-content:flex-start; }
-  .wxMini{ white-space:normal; }
+  .wxMini, .dtMini{ white-space:normal; }
 }
 
 /* ===== MOBILE: scroll + vídeo embaixo ===== */
@@ -514,7 +493,6 @@ video.fit-contain{ object-fit:contain; }
     padding:0;
   }
 
-  /* Em MOBILE vira coluna: avisos acima, publicidade abaixo */
   .main{
     display:flex;
     flex-direction:column;
@@ -523,11 +501,9 @@ video.fit-contain{ object-fit:contain; }
   section.panel{ order:1; }
   #adBox{ order:2; }
 
-  /* remove scroll interno no mobile: rolagem única da página */
   .panel{ min-height:auto; }
   .avisos{ overflow:visible; }
 
-  /* rodapé fica sempre visível ao rolar */
   .ticker{
     position:sticky;
     bottom:0;
@@ -536,11 +512,8 @@ video.fit-contain{ object-fit:contain; }
     padding-bottom: max(12px, env(safe-area-inset-bottom));
   }
 
-  /* Versículo quebra linha no celular */
   .tickerLine1{ flex-wrap: wrap; }
-
   #dataBiblica{ white-space: normal; }
-
   #ref{
     white-space: normal;
     overflow: visible;
@@ -548,29 +521,25 @@ video.fit-contain{ object-fit:contain; }
     line-height: 1.3;
   }
 }
-/* ===== TV / TELAS GRANDES: mais legibilidade ===== */
+
+/* ===== TV / TELAS GRANDES ===== */
 @media (min-width: 1400px){
   .aviso{ padding:22px; gap:12px; border-radius:20px; }
   .aviso .t{ font-size:24px; }
   .aviso .d{ font-size:18px; line-height:1.55; }
-
   .metaLine{ font-size:16px; gap:14px; }
   .panelTitle{ font-size:16px; }
   .pill{ font-size:14px; }
-
   .brand .title{ font-size:26px; }
   .brand .sub{ font-size:14px; }
   #clock{ font-size:26px; }
 }
-
-/* TV bem grande (4K / longe do sofá) */
 @media (min-width: 1900px){
   .aviso .t{ font-size:28px; }
   .aviso .d{ font-size:20px; }
   .metaLine{ font-size:17px; }
   .panelTitle{ font-size:18px; }
 }
-
 </style>
 </head>
 
@@ -618,36 +587,21 @@ video.fit-contain{ object-fit:contain; }
             <div class="pill" id="adPill">—</div>
           </div>
 
-<div class="adBody">
+          <div class="adBody">
+            <div class="adCard">
+              <div class="adLabel" id="adLabel">Anúncio</div>
+              <div class="videoWrap">
+                <video id="adVideo" autoplay muted playsinline></video>
+              </div>
+            </div>
 
-  <div class="adCard">
-    <div class="adLabel" id="adLabel">Anúncio</div>
-    <div class="videoWrap">
-      <video id="adVideo" autoplay muted playsinline></video>
-    </div>
-  </div>
-
-  <!-- NOVO BLOCO: Mensagens / Notícias -->
-  <div class="newsBox" id="newsBox" style="display:none">
-    <div class="newsHead">
-      <div class="newsTitle">📰 Mensagens da Cidade</div>
-      <div class="pill" id="newsPill">—</div>
-    </div>
-    <div class="newsBody" id="newsBody"></div>
-  </div>
-
-</div>
-
-  <!-- NOVO: Mensagens/Notícias -->
-  <div class="newsBox" id="newsBox" style="display:none">
-    <div class="newsHead">
-      <div class="newsTitle">📰 Mensagens da Cidade</div>
-      <div class="pill" id="newsPill">—</div>
-    </div>
-    <div class="newsBody" id="newsBody"></div>
-  </div>
-</div>
-
+            <div class="newsBox" id="newsBox" style="display:none">
+              <div class="newsHead">
+                <div class="newsTitle">📰 Mensagens da Cidade</div>
+                <div class="pill" id="newsPill">—</div>
+              </div>
+              <div class="newsBody" id="newsBody"></div>
+            </div>
           </div>
         </aside>
       </div>
@@ -663,6 +617,11 @@ video.fit-contain{ object-fit:contain; }
           <div class="wxMini">
             <span id="wxIcon">🌦️</span>
             <span id="wxText">Clima: carregando…</span>
+          </div>
+
+          <div class="dtMini" title="Data e hora">
+            <span>🗓️</span>
+            <span id="footerDT">—</span>
           </div>
         </div>
       </div>
@@ -719,9 +678,19 @@ video.fit-contain{ object-fit:contain; }
       return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
     }
 
+    function footerDateTimeString(d){
+      const dd = pad2(d.getDate());
+      const mm = pad2(d.getMonth()+1);
+      const yyyy = d.getFullYear();
+      const HH = pad2(d.getHours());
+      const MM = pad2(d.getMinutes());
+      return `${dd}/${mm}/${yyyy} • ${HH}:${MM}`;
+    }
+
     function tickClock(){
       const d = new Date();
       setText("clock", `${pad2(d.getHours())}:${pad2(d.getMinutes())}`);
+      setText("footerDT", footerDateTimeString(d));
     }
     tickClock();
     setInterval(tickClock, 1000);
@@ -754,56 +723,51 @@ video.fit-contain{ object-fit:contain; }
       const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
       ROT_STATE = { page: 0, totalPages, paused: false };
 
-     function renderPage(pageIdx){
-  // fade out
-  root.classList.remove("fade-in");
-  root.classList.add("fade-out");
+      function renderPage(pageIdx){
+        root.classList.remove("fade-in");
+        root.classList.add("fade-out");
 
-  const doRender = () => {
-    root.innerHTML = "";
+        const doRender = () => {
+          root.innerHTML = "";
 
-    const start = pageIdx * qtd;
-    const slice = avisosAll.slice(start, start + qtd);
+          const start = pageIdx * qtd;
+          const slice = avisosAll.slice(start, start + qtd);
 
-    slice.forEach(a=>{
-      const el = document.createElement("div");
-      el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+          slice.forEach(a=>{
+            const el = document.createElement("div");
+            el.className = `aviso ${prioridadeClass(a.prioridade)}`;
 
-      const titulo = safeText(a.titulo || "Aviso");
-      const desc = safeText(a.descricao || "");
-      const tipo = safeText(a.tipo || "");
-      const local = safeText(a.local || "");
-      const ini = formatDT_BR(a.inicio || "");
-      const fim = formatDT_BR(a.fim || "");
+            const titulo = safeText(a.titulo || "Aviso");
+            const desc = safeText(a.descricao || "");
+            const tipo = safeText(a.tipo || "");
+            const local = safeText(a.local || "");
+            const ini = formatDT_BR(a.inicio || "");
+            const fim = formatDT_BR(a.fim || "");
 
-   const itens = [];
-if(local) itens.push(`<span class="metaItem">📍 <b>${local}</b></span>`);
-if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${tipo}</b></span>`);
-itens.push(`<span class="metaItem">⚡ <b>${safeText(a.prioridade || "Baixa")}</b></span>`);
-if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${ini}${fim ? " → " + fim : ""}</b></span>`);
+            const itens = [];
+            if(local) itens.push(`<span class="metaItem">📍 <b>${local}</b></span>`);
+            if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${tipo}</b></span>`);
+            itens.push(`<span class="metaItem">⚡ <b>${safeText(a.prioridade || "Baixa")}</b></span>`);
+            if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${ini}${fim ? " → " + fim : ""}</b></span>`);
 
-el.innerHTML = `
-  <p class="t">${titulo}</p>
-  ${desc ? `<p class="d">${desc}</p>` : ""}
-  <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
-`;
+            el.innerHTML = `
+              <p class="t">${titulo}</p>
+              ${desc ? `<p class="d">${desc}</p>` : ""}
+              <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
+            `;
+            root.appendChild(el);
+          });
 
-      root.appendChild(el);
-    });
+          void root.offsetWidth;
 
-    // força reflow p/ aplicar fade-in certinho
-    void root.offsetWidth;
+          root.classList.remove("fade-out");
+          root.classList.add("fade-in");
+        };
 
-    // fade in
-    root.classList.remove("fade-out");
-    root.classList.add("fade-in");
-  };
+        setTimeout(doRender, 220);
+      }
 
-  // espera o tempo do fade-out e renderiza
-  setTimeout(doRender, 220);
-}
       renderPage(0);
-// inicia já com fade-in
       root.classList.add("fade-in");
 
       if (ativar && totalPages > 1){
@@ -953,29 +917,27 @@ el.innerHTML = `
 
       adBox.style.display = "flex";
       playNext();
-      // ===== Mensagens/Notícias embaixo do vídeo =====
-const newsBox = document.getElementById("newsBox");
-const newsBody = document.getElementById("newsBody");
-const newsPill = document.getElementById("newsPill");
 
-// data.publicidade.mensagens: [{titulo:"", texto:""}, ...]
-const msgs = Array.isArray(pub?.mensagens) ? pub.mensagens : [];
+      const newsBox = document.getElementById("newsBox");
+      const newsBody = document.getElementById("newsBody");
+      const newsPill = document.getElementById("newsPill");
 
-if (newsBox && newsBody) {
-  if (!msgs.length) {
-    newsBox.style.display = "none";
-  } else {
-    newsBody.innerHTML = msgs.slice(0, 8).map(m => `
-      <div class="newsItem">
-        <p class="h">${safeText(m.titulo || "Mensagem")}</p>
-        <p class="p">${safeText(m.texto || "")}</p>
-      </div>
-    `).join("");
-    newsBox.style.display = "flex";
-    if (newsPill) newsPill.textContent = "Atualizado";
-  }
-}
+      const msgs = Array.isArray(pub?.mensagens) ? pub.mensagens : [];
 
+      if (newsBox && newsBody) {
+        if (!msgs.length) {
+          newsBox.style.display = "none";
+        } else {
+          newsBody.innerHTML = msgs.slice(0, 8).map(m => `
+            <div class="newsItem">
+              <p class="h">${safeText(m.titulo || "Mensagem")}</p>
+              <p class="p">${safeText(m.texto || "")}</p>
+            </div>
+          `).join("");
+          newsBox.style.display = "flex";
+          if (newsPill) newsPill.textContent = "Atualizado";
+        }
+      }
     }
 
     async function loadAll(){
@@ -1050,5 +1012,6 @@ if (newsBox && newsBody) {
       });
     }
   </script>
+
 </body>
 </html>
