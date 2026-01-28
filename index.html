@@ -679,14 +679,11 @@ video.fit-contain{ object-fit:contain; }
     }
 
     function footerDateTimeString(d){
-      const dd = pad2(d.getDate());
-      const mm = pad2(d.getMonth()+1);
-      const yyyy = d.getFullYear();
-      const HH = pad2(d.getHours());
-      const MM = pad2(d.getMinutes());
-      return `${dd}/${mm}/${yyyy} • ${HH}:${MM}`;
-    }
-
+  const dd = pad2(d.getDate());
+  const mm = pad2(d.getMonth()+1);
+  const yyyy = d.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
     function tickClock(){
       const d = new Date();
       setText("clock", `${pad2(d.getHours())}:${pad2(d.getMinutes())}`);
