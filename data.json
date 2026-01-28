@@ -141,17 +141,6 @@
     },
     {
       "id": "007",
-      "titulo": "Resíduos Sólidos",
-      "descricao": "teste lixo resíduos sólidos",
-      "prioridade": "Baixa",
-      "tipo": "Lixo",
-      "local": "Garagem",
-      "inicio": "27/01/26 - 18:02",
-      "fim": "28/01/26 - 18:02",
-      "emergencia": false
-    },
-    {
-      "id": "008",
       "titulo": "Alarme no Hall",
       "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família.",
       "prioridade": "Baixa",
