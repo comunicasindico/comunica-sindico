@@ -617,10 +617,14 @@
         const w = Math.round(cur.wind_speed_10m);
         const p = cur.precipitation;
 
-        document.getElementById("wxIcon").textContent = emoji;
+      document.getElementById("wxIcon").textContent = emoji;
+        const top = document.getElementById("wxIconTop");
+        if (top) top.textContent = emoji;
         setText("wxText", `${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
       } catch (e) {
         document.getElementById("wxIcon").textContent = "🌦️";
+        const top = document.getElementById("wxIconTop");
+        if (top) top.textContent = "🌦️";
         setText("wxText", `${data?.clima?.cidade || "—"} (offline)`);
       }
     }
@@ -693,6 +697,7 @@
         const ct = (res.headers.get("content-type") || "").toLowerCase();
         if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
         const data = await res.json();
+        setText("condoCenter", safeText(data.condominio || "—"));
 
         // opcional: se quiser usar título/subtítulo do JSON, descomente
         // setText("titulo", safeText(data.titulo || "Comunica Síndico — Condôminos"));
