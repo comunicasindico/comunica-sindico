@@ -67,6 +67,20 @@
         "arquivo": "./ads/06heb.mp4",
         "anunciante": "Em breve, Israel receberá a Palavra"
       }
+    ],
+    "mensagens": [
+      {
+        "titulo": "Trânsito",
+        "texto": "Atenção: obras na Av. Marcolino Martins Cabral hoje à tarde."
+      },
+      {
+        "titulo": "Clima",
+        "texto": "Previsão de chuva fraca à noite. Leve guarda-chuva."
+      },
+      {
+        "titulo": "Cidade",
+        "texto": "Evento na praça central neste sábado às 18h."
+      }
     ]
   },
   "clima": {
