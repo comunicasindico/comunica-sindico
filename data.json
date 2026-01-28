@@ -26,16 +26,46 @@
     "shuffle": true,
     "fit": "contain",
     "videos": [
-      {        "arquivo": "./ads/01luisa.avi",        "anunciante": "Luisa — Momentos Especiais"      },
-      {        "arquivo": "./ads/rafinha_keyon.mp4",        "anunciante": "O melhor Corretor de Santa Catarina"      },
-      {        "arquivo": "./ads/02parque.mp4",        "anunciante": "Parque — Lazer e Diversão"      },
-      {        "arquivo": "./ads/03larissa.mp4",        "anunciante": "Larissa — Momentos Especiais"      },
-      {        "arquivo": "./ads/04paty.mp4",        "anunciante": "Paty — Experiência Internacional"      },
-      {        "arquivo": "./ads/05port.mp4",        "anunciante": "SWOT Cristão — Português"      },
-      {        "arquivo": "./ads/calibra01.mp4",        "anunciante": "Loja de Caminhões"      },
-      {        "arquivo": "./ads/calibra02.mp4",        "anunciante": "Visite-nos e veja o que temos de especial"      },
-      {        "arquivo": "./ads/rododis01.mp4",        "anunciante": "Nosso diferencial é te atender cada vez melhor"      },
-      {        "arquivo": "./ads/06heb.mp4",        "anunciante": "Em breve, Israel receberá a Palavra"      }
+      {
+        "arquivo": "./ads/01luisa.avi",
+        "anunciante": "Luisa — Momentos Especiais"
+      },
+      {
+        "arquivo": "./ads/rafinha_keyon.mp4",
+        "anunciante": "O melhor Corretor de Santa Catarina"
+      },
+      {
+        "arquivo": "./ads/02parque.mp4",
+        "anunciante": "Parque — Lazer e Diversão"
+      },
+      {
+        "arquivo": "./ads/03larissa.mp4",
+        "anunciante": "Larissa — Momentos Especiais"
+      },
+      {
+        "arquivo": "./ads/04paty.mp4",
+        "anunciante": "Paty — Experiência Internacional"
+      },
+      {
+        "arquivo": "./ads/05port.mp4",
+        "anunciante": "SWOT Cristão — Português"
+      },
+      {
+        "arquivo": "./ads/calibra01.mp4",
+        "anunciante": "Loja de Caminhões"
+      },
+      {
+        "arquivo": "./ads/calibra02.mp4",
+        "anunciante": "Visite-nos e veja o que temos de especial"
+      },
+      {
+        "arquivo": "./ads/rododis01.mp4",
+        "anunciante": "Nosso diferencial é te atender cada vez melhor"
+      },
+      {
+        "arquivo": "./ads/06heb.mp4",
+        "anunciante": "Em breve, Israel receberá a Palavra"
+      }
     ]
   },
   "clima": {
@@ -93,17 +123,6 @@
     },
     {
       "id": "005",
-      "titulo": "Resíduos Sólidos",
-      "descricao": "Teste Pelo PC",
-      "prioridade": "Baixa",
-      "tipo": "Lixo",
-      "local": "Lixeira",
-      "inicio": "27/01/26 - 23:49",
-      "fim": "31/01/26 - 23:49",
-      "emergencia": false
-    },
-    {
-      "id": "006",
       "titulo": "Alarme no Hall",
       "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família.",
       "prioridade": "Baixa",
