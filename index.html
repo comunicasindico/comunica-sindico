@@ -221,9 +221,19 @@
       flex-direction:column;
       gap:8px;
     }
-    .aviso.alta{border-color:rgba(255,80,80,.55)}
-    .aviso.media{border-color:rgba(255,200,70,.40)}
-    .aviso.baixa{border-color:rgba(120,190,255,.35)}
+    /* PRIORIDADES (bordas + leve fundo) */
+.aviso.alta{
+  border-color:rgba(255,70,70,.75);
+  background:linear-gradient(180deg, rgba(255,70,70,.16), rgba(7,20,34,.28));
+}
+.aviso.media{
+  border-color:rgba(255,160,40,.70);
+  background:linear-gradient(180deg, rgba(255,160,40,.14), rgba(7,20,34,.28));
+}
+.aviso.baixa{
+  border-color:rgba(110,190,255,.70);
+  background:linear-gradient(180deg, rgba(110,190,255,.12), rgba(7,20,34,.28));
+}
     .aviso .t{margin:0;font-weight:950;font-size:18px}
     .aviso .d{margin:0;color:var(--muted);line-height:1.35;font-size:14px}
     .aviso .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
@@ -339,25 +349,27 @@
     <div class="container">
 
       <div class="topbar">
-        <div class="brand">
-          <div class="title" id="titulo">Comunica Síndico — Condôminos</div>
-          <div class="sub" id="subtitulo">Painel informativo</div>
-        </div>
+  <div class="brand">
+    <div class="title" id="titulo">Comunica Síndico — Condôminos</div>
+    <div class="sub" id="subtitulo">Painel informativo</div>
+  </div>
 
-        <div class="rightInfo">
-          <div class="badge" title="Status do painel">
-            <span class="dot" id="dotOnline"></span>
-            <span id="statusJson">Carregando...</span>
-          </div>
+  <div class="condoCenter" id="condoCenter">Condomínio de Alto Padrão/div>
 
-          <div class="badge" title="Hora">
-            <span>🕒</span>
-            <span id="clock">--:--</span>
-          </div>
+  <div class="rightInfo">
+    <div class="badge" title="Status do painel">
+      <span class="dot" id="dotOnline"></span>
+      <span id="statusJson">Carregando...</span>
+    </div>
 
-          <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">⬇️ Instalar App</button>
-        </div>
-      </div>
+    <div class="badge" title="Hora e Clima">
+      <span id="wxIconTop">🌦️</span>
+      <span id="clock">--:--</span>
+    </div>
+
+    <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">⬇️ Instalar App</button>
+  </div>
+</div>
 
       <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
