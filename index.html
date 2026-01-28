@@ -349,55 +349,65 @@
   font-size:14px;
 }
 
-/* Meta */
+/* ===== CAMPOS coloridos em alto relevo (no lugar dos “botões”) ===== */
+
 .aviso .meta{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap:10px;
+  margin-top:6px;
+}
+
+/* Campo base (alto relevo) */
+.campo{
   display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:4px;
-}
-
-/* Tags premium (alto relevo) */
-.tag{
-  font-size:12px;
-  font-weight:900;
-  padding:7px 12px;
-  border-radius:999px;
-  color:#fff;
-
-  background:linear-gradient(180deg, rgba(30,90,140,.92), rgba(10,40,70,.92));
-  border:1px solid rgba(255,255,255,.18);
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.25),
-    0 3px 6px rgba(0,0,0,.45);
-
-  display:inline-flex;
   align-items:center;
-  gap:6px;
+  gap:10px;
 
-  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-}
-.tag:hover{
-  transform: translateY(-1px);
+  padding:10px 12px;
+  border-radius:12px;
+
+  font-weight:900;
+  font-size:13px;
+  color:rgba(255,255,255,.95);
+
+  border:1px solid rgba(255,255,255,.14);
+
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.30),
-    0 6px 12px rgba(0,0,0,.55);
-  filter:saturate(1.05);
+    inset 0 1px 0 rgba(255,255,255,.28),
+    inset 0 -10px 18px rgba(0,0,0,.22),
+    0 6px 14px rgba(0,0,0,.35);
+
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-/* Tags por prioridade */
-.aviso.alta .tag{ background:linear-gradient(180deg,#ff5a5a,#c0392b); }
-.aviso.media .tag{ background:linear-gradient(180deg,#ffb347,#e67e22); }
-.aviso.baixa .tag{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
+/* Cores por campo */
+.campo-local{ background: linear-gradient(180deg, rgba(220,95,40,.95), rgba(120,45,15,.95)); }
+.campo-tipo { background: linear-gradient(180deg, rgba(80,170,255,.95), rgba(25,85,140,.95)); }
+.campo-data { background: linear-gradient(180deg, rgba(150,160,175,.95), rgba(70,80,95,.95)); }
+.campo-prio { background: linear-gradient(180deg, rgba(120,120,140,.95), rgba(55,55,75,.95)); }
 
-/* Acessibilidade: remove animações se o usuário preferir */
-@media (prefers-reduced-motion: reduce){
-  .avisos{ scroll-behavior:auto; }
-  .aviso{ animation:none; transition:none; }
-  .tag{ transition:none; }
+/* Ajuste “tema” por prioridade (deixa mais vivo como na imagem) */
+.aviso.alta  .campo-prio{ background: linear-gradient(180deg, rgba(255,70,70,.98), rgba(140,25,25,.98)); }
+.aviso.media .campo-prio{ background: linear-gradient(180deg, rgba(255,185,70,.98), rgba(150,90,20,.98)); }
+.aviso.baixa .campo-prio{ background: linear-gradient(180deg, rgba(110,190,255,.98), rgba(35,95,155,.98)); }
+
+/* No celular: quebra em 2 linhas de campos */
+@media (max-width: 980px){
+  .aviso .meta{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
+/* Em telas bem estreitas: 1 por linha */
+@media (max-width: 420px){
+  .aviso .meta{
+    grid-template-columns: 1fr;
+  }
+  .campo{ white-space:normal; }
+}
     /* ===== AD ===== */
     .adBody{
       padding:14px;
@@ -758,10 +768,10 @@
       const fim = formatDT_BR(a.fim || "");
 
       const tags = [];
-      if(tipo) tags.push(`<span class="tag">🏷️ ${tipo}</span>`);
-      if(local) tags.push(`<span class="tag">📍 ${local}</span>`);
-      if(ini || fim) tags.push(`<span class="tag">🗓️ ${ini}${fim ? " → " + fim : ""}</span>`);
-      tags.push(`<span class="tag">⚡ ${safeText(a.prioridade || "Baixa")}</span>`);
+      if(local) tags.push(`<span class="campo campo-local">📍 ${local}</span>`);
+      if(tipo)  tags.push(`<span class="campo campo-tipo">🏷️ ${tipo}</span>`);
+      if(ini || fim) tags.push(`<span class="campo campo-data">🗓️ ${ini}${fim ? " → " + fim : ""}</span>`);
+      tags.push(`<span class="campo campo-prio">⚡ ${safeText(a.prioridade || "Baixa")}</span>`);
 
       el.innerHTML = `
         <p class="t">${titulo}</p>
