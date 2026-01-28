@@ -66,14 +66,14 @@
       justify-content:center;
     }
 
-  .container{
-  width:100%;
-  max-width:1600px;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
+    .container{
+      width:100%;
+      max-width:1600px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
 
     /* ===== HEADER ===== */
     .topbar{
@@ -112,6 +112,20 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
+
+    .condoCenter{
+      flex:1;
+      min-width:0;
+      text-align:center;
+      font-weight:950;
+      letter-spacing:.2px;
+      color:rgba(234,242,255,.92);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      padding:0 8px;
+    }
+
     .rightInfo{
       display:flex;
       gap:10px;
@@ -221,19 +235,19 @@
       flex-direction:column;
       gap:8px;
     }
-    /* PRIORIDADES (bordas + leve fundo) */
-.aviso.alta{
-  border-color:rgba(255,70,70,.75);
-  background:linear-gradient(180deg, rgba(255,70,70,.16), rgba(7,20,34,.28));
-}
-.aviso.media{
-  border-color:rgba(255,160,40,.70);
-  background:linear-gradient(180deg, rgba(255,160,40,.14), rgba(7,20,34,.28));
-}
-.aviso.baixa{
-  border-color:rgba(110,190,255,.70);
-  background:linear-gradient(180deg, rgba(110,190,255,.12), rgba(7,20,34,.28));
-}
+    /* PRIORIDADES */
+    .aviso.alta{
+      border-color:rgba(255,70,70,.75);
+      background:linear-gradient(180deg, rgba(255,70,70,.16), rgba(7,20,34,.28));
+    }
+    .aviso.media{
+      border-color:rgba(255,160,40,.70);
+      background:linear-gradient(180deg, rgba(255,160,40,.14), rgba(7,20,34,.28));
+    }
+    .aviso.baixa{
+      border-color:rgba(110,190,255,.70);
+      background:linear-gradient(180deg, rgba(110,190,255,.12), rgba(7,20,34,.28));
+    }
     .aviso .t{margin:0;font-weight:950;font-size:18px}
     .aviso .d{margin:0;color:var(--muted);line-height:1.35;font-size:14px}
     .aviso .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
@@ -245,7 +259,7 @@
       color:rgba(234,242,255,.95);
     }
 
-    /* ===== AD / PUBLICIDADE ===== */
+    /* ===== AD ===== */
     .adBody{
       padding:14px;
       display:flex;
@@ -340,6 +354,8 @@
       .main{grid-template-columns:1fr}
       .panel{min-height:520px}
       .ticker{position:sticky;bottom:0;z-index:9}
+      .topbar{flex-wrap:wrap}
+      .condoCenter{order:3;width:100%;text-align:left;padding:0}
     }
   </style>
 </head>
@@ -349,27 +365,27 @@
     <div class="container">
 
       <div class="topbar">
-  <div class="brand">
-    <div class="title" id="titulo">Comunica Síndico — Condôminos</div>
-    <div class="sub" id="subtitulo">Painel informativo</div>
-  </div>
+        <div class="brand">
+          <div class="title" id="titulo">Comunica Síndico — Condôminos</div>
+          <div class="sub" id="subtitulo">Painel informativo</div>
+        </div>
 
-  <div class="condoCenter" id="condoCenter">Condomínio de Alto Padrão/div>
+        <div class="condoCenter" id="condoCenter">Condomínio</div>
 
-  <div class="rightInfo">
-    <div class="badge" title="Status do painel">
-      <span class="dot" id="dotOnline"></span>
-      <span id="statusJson">Carregando...</span>
-    </div>
+        <div class="rightInfo">
+          <div class="badge" title="Status do painel">
+            <span class="dot" id="dotOnline"></span>
+            <span id="statusJson">Carregando...</span>
+          </div>
 
-    <div class="badge" title="Hora e Clima">
-      <span id="wxIconTop">🌦️</span>
-      <span id="clock">--:--</span>
-    </div>
+          <div class="badge" title="Hora e Clima">
+            <span id="wxIconTop">🌦️</span>
+            <span id="clock">--:--</span>
+          </div>
 
-    <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">⬇️ Instalar App</button>
-  </div>
-</div>
+          <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">⬇️ Instalar App</button>
+        </div>
+      </div>
 
       <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
@@ -422,7 +438,7 @@
 
     function mostrarBotaoInstalar(show){
       const b = document.getElementById("btnInstalarApp");
-      b.style.display = show ? "inline-flex" : "none";
+      if (b) b.style.display = show ? "inline-flex" : "none";
     }
 
     window.addEventListener("beforeinstallprompt", (e)=>{
@@ -452,7 +468,6 @@
 
     function safeText(v){ return (v == null ? "" : String(v)); }
     function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
-
     function pad2(n){ return String(n).padStart(2,"0"); }
 
     function formatDT_BR(v){
@@ -483,6 +498,7 @@
 
     function renderAvisos(data){
       const root = document.getElementById("avisos");
+      if (!root) return;
       root.innerHTML = "";
 
       if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
@@ -573,7 +589,7 @@
         const key = hojeKeyMMDD();
         const texto = v?.versos?.[key];
 
-        setText("dataBiblica", "O choro pode durar uma noite, mas a alegria vem ao amanhecer.");
+        setText("dataBiblica", v?.cabecalho || "📖 Versículo do dia");
         setText("ref", texto ? texto : (v?.titulo ? v.titulo : "Versículo não encontrado"));
       } catch (e) {}
     }
@@ -617,12 +633,15 @@
         const w = Math.round(cur.wind_speed_10m);
         const p = cur.precipitation;
 
-      document.getElementById("wxIcon").textContent = emoji;
+        const wx = document.getElementById("wxIcon");
+        if (wx) wx.textContent = emoji;
         const top = document.getElementById("wxIconTop");
         if (top) top.textContent = emoji;
+
         setText("wxText", `${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
       } catch (e) {
-        document.getElementById("wxIcon").textContent = "🌦️";
+        const wx = document.getElementById("wxIcon");
+        if (wx) wx.textContent = "🌦️";
         const top = document.getElementById("wxIconTop");
         if (top) top.textContent = "🌦️";
         setText("wxText", `${data?.clima?.cidade || "—"} (offline)`);
@@ -636,6 +655,8 @@
       const adVideo = document.getElementById("adVideo");
       const adLabel = document.getElementById("adLabel");
       const adPill = document.getElementById("adPill");
+
+      if (!adBox || !adVideo || !adLabel) return;
 
       if (!(pub?.ativar && Array.isArray(pub.videos) && pub.videos.length)) {
         adBox.style.display = "none";
@@ -697,13 +718,11 @@
         const ct = (res.headers.get("content-type") || "").toLowerCase();
         if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
         const data = await res.json();
+
         setText("condoCenter", safeText(data.condominio || "—"));
 
-        // opcional: se quiser usar título/subtítulo do JSON, descomente
-        // setText("titulo", safeText(data.titulo || "Comunica Síndico — Condôminos"));
-        // setText("subtitulo", safeText(data.subtitulo || "Painel informativo"));
-
-        status.textContent = "Atualizado";
+        // status
+        if (status) status.textContent = "Atualizado";
         if (dot) dot.style.background = "#44d07a";
         if (refPill) refPill.textContent = "Atualizado";
 
@@ -722,9 +741,11 @@
         await carregarClima(data);
         iniciarPublicidade(data);
 
+        return data;
+
       } catch(e){
         console.warn("Falha ao carregar data.json:", e);
-        status.textContent = "Offline";
+        if (status) status.textContent = "Offline";
         if (dot) dot.style.background = "#ff5a5a";
         if (refPill) refPill.textContent = "Offline";
         return null;
