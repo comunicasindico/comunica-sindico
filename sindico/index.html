@@ -5,29 +5,37 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
   <meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
 
-  <link rel="canonical" href="./">
+  <title>Síndico(a) — Comunica Síndico</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0b223a">
+
+  <link rel="icon" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Síndico(a)">
+
+  <!-- Evita múltiplas versões sem matar o ?pwa=1 -->
   <script>
   (function(){
-    try{
-      const u = new URL(location.href);
-      if(u.search){ u.search=""; location.replace(u.toString()); return; }
-      if(u.pathname.endsWith("/index.html")){ location.replace("./"); return; }
-    }catch(e){}
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true;
+
+    const url = new URL(location.href);
+
+    if(!isStandalone && !url.searchParams.has("pwa")){
+      url.searchParams.set("pwa","1");
+      history.replaceState(null,"",url.toString());
+    }
   })();
   </script>
 
-  <title>Síndico(a) — Comunica Síndico</title>
-
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icons/icon-192.png">
-  <meta name="theme-color" content="#0b223a">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Síndico(a)">
-
   <style>
+
     :root{
       --bg:#061726;
       --card:rgba(12,35,56,.55);
