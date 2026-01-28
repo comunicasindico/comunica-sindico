@@ -71,11 +71,11 @@
       max-width:1600px;
       min-height:100vh;
       display:flex;
-      flex-direction:column;
+      flex-direction:column; /* topo acima, conteúdo no meio, rodapé abaixo */
       gap:12px;
     }
 
-    /* ===== HEADER ===== */
+    /* ===== HEADER (sempre em cima) ===== */
     .topbar{
       display:flex;
       align-items:center;
@@ -87,12 +87,15 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       backdrop-filter: blur(8px);
+      flex:0 0 auto; /* não “vira coluna lateral” */
+      width:100%;
     }
     .brand{
       display:flex;
       flex-direction:column;
       gap:3px;
       min-width:0;
+      flex:1 1 auto;
     }
     .brand .title{
       margin:0;
@@ -114,7 +117,7 @@
     }
 
     .condoCenter{
-      flex:1;
+      flex:1 1 auto;
       min-width:0;
       text-align:center;
       font-weight:950;
@@ -132,6 +135,7 @@
       align-items:center;
       flex-wrap:wrap;
       justify-content:flex-end;
+      flex:0 0 auto;
     }
     .badge{
       display:flex;align-items:center;gap:10px;
@@ -162,14 +166,18 @@
       background:rgba(7,20,34,.28);
       box-shadow:var(--shadow);
       font-weight:900;
+      flex:0 0 auto;
+      width:100%;
     }
 
-    /* ===== MAIN ===== */
+    /* ===== MAIN (meio) ===== */
     .main{
-      min-height:0;
+      flex:1 1 auto;      /* ocupa o “miolo” */
+      min-height:0;       /* permite scroll interno */
       display:grid;
       grid-template-columns: 1.20fr .80fr;
       gap:12px;
+      width:100%;
     }
 
     .panel{
@@ -191,6 +199,7 @@
       justify-content:space-between;
       gap:10px;
       background:rgba(7,20,34,.20);
+      flex:0 0 auto;
     }
     .panelTitle{
       display:flex;align-items:center;gap:10px;
@@ -235,7 +244,6 @@
       flex-direction:column;
       gap:8px;
     }
-    /* PRIORIDADES */
     .aviso.alta{
       border-color:rgba(255,70,70,.75);
       background:linear-gradient(180deg, rgba(255,70,70,.16), rgba(7,20,34,.28));
@@ -301,8 +309,10 @@
     }
     video.fit-contain{ object-fit:contain; }
 
-    /* ===== FOOTER TICKER ===== */
+    /* ===== FOOTER (sempre embaixo) ===== */
     .ticker{
+      flex:0 0 auto; /* não fica ao lado */
+      width:100%;
       padding:10px 12px;
       border-radius:var(--radius);
       border:1px solid var(--line);
@@ -323,15 +333,8 @@
       flex:1;
       overflow:hidden;
     }
-    .tickerIcon{
-      font-size:18px;
-      opacity:.95;
-    }
-    #dataBiblica{
-      font-weight:950;
-      white-space:nowrap;
-      color:rgba(234,242,255,.95);
-    }
+    .tickerIcon{font-size:18px;opacity:.95}
+    #dataBiblica{font-weight:950;white-space:nowrap;color:rgba(234,242,255,.95)}
     #ref{
       color:rgba(234,242,255,.88);
       font-weight:800;
@@ -346,6 +349,7 @@
       font-weight:900;
       color:rgba(234,242,255,.92);
       white-space:nowrap;
+      flex:0 0 auto;
     }
 
     @media (max-width: 980px){
@@ -390,7 +394,6 @@
       <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
       <div class="main">
-        <!-- AVISOS -->
         <section class="panel">
           <div class="panelHead">
             <div class="panelTitle">🔔 Avisos Importantes</div>
@@ -399,7 +402,6 @@
           <div class="avisos" id="avisos"></div>
         </section>
 
-        <!-- PUBLICIDADE -->
         <aside class="panel" id="adBox" style="display:none">
           <div class="panelHead">
             <div class="panelTitle">📣 Publicidade</div>
@@ -417,7 +419,6 @@
         </aside>
       </div>
 
-      <!-- TICKER / CLIMA / VERSÍCULO -->
       <div class="ticker">
         <div class="tickerLeft">
           <span class="tickerIcon">📖</span>
@@ -482,7 +483,6 @@
       return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
     }
 
-    // ===== CLOCK =====
     function tickClock(){
       const d = new Date();
       setText("clock", `${pad2(d.getHours())}:${pad2(d.getMinutes())}`);
@@ -490,9 +490,6 @@
     tickClock();
     setInterval(tickClock, 1000);
 
-    // =========================================================
-    // AVISOS: rotação
-    // =========================================================
     let ROT_TIMER = null;
     let ROT_STATE = { page: 0, totalPages: 1, paused: false };
 
@@ -559,9 +556,7 @@
         if (rot.pausarNoMouse){
           root.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
           root.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
-          root.addEventListener("touchstart", ()=>{
-            ROT_STATE.paused = !ROT_STATE.paused;
-          }, {passive:true});
+          root.addEventListener("touchstart", ()=>{ ROT_STATE.paused = !ROT_STATE.paused; }, {passive:true});
         }
 
         ROT_TIMER = setInterval(()=>{
@@ -648,7 +643,6 @@
       }
     }
 
-    // PUBLICIDADE
     function iniciarPublicidade(data){
       const pub = data?.publicidade;
       const adBox = document.getElementById("adBox");
@@ -721,14 +715,12 @@
 
         setText("condoCenter", safeText(data.condominio || "—"));
 
-        // status
         if (status) status.textContent = "Atualizado";
         if (dot) dot.style.background = "#44d07a";
         if (refPill) refPill.textContent = "Atualizado";
 
         renderAvisos(data);
 
-        // mensagem inferior: versículo/mensagem
         if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
           setText("dataBiblica", "📖 Versículo do dia");
           setText("ref", "Carregando…");
