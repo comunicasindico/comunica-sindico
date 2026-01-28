@@ -118,58 +118,74 @@
   </div>
 
   <script>
-    const targetUrl = document.getElementById("go").href;
-    const mode = document.getElementById("mode");
-    const cancelBtn = document.getElementById("cancel");
-    const hint = document.getElementById("hint");
+(function(){
+  const goEl = document.getElementById("go");
+  const mode = document.getElementById("mode");
+  const cancelBtn = document.getElementById("cancel");
+  const hint = document.getElementById("hint");
 
-    const isStandalone =
-      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
-      (window.navigator.standalone === true);
+  const isStandalone =
+    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+    (window.navigator.standalone === true);
 
-    mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
-
-    if (isStandalone) {
-      hint.textContent = "Abra o painel pelo botão acima (o painel é online no Apps Script).";
-    } else {
-      cancelBtn.style.display = "inline-flex";
-      let canceled = false;
-
-      cancelBtn.addEventListener("click", () => {
-        canceled = true;
-        mode.textContent = "Redirecionamento pausado";
-        cancelBtn.style.display = "none";
-      });
-
-      setTimeout(() => {
-        if (canceled) return;
-        mode.textContent = "Abrindo painel...";
-        window.location.assign(targetUrl);
-      }, 900);
+  // Sempre fixe pwa=1 no navegador (sem recarregar)
+  try{
+    const url = new URL(location.href);
+    if(!isStandalone && !url.searchParams.has("pwa")){
+      url.searchParams.set("pwa","1");
+      history.replaceState(null,"",url.toString());
     }
+  }catch(e){}
 
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", async () => {
-        try{
-          const reg = await navigator.serviceWorker.register("./sw.js", { scope:"./" });
-          try { await reg.update(); } catch(e){}
+  mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
 
-          reg.addEventListener("updatefound", () => {
-            const nw = reg.installing;
-            if(!nw) return;
-            nw.addEventListener("statechange", () => {
-              if (nw.state === "installed" && navigator.serviceWorker.controller) {
-                nw.postMessage("SKIP_WAITING");
-              }
-            });
+  // NUNCA redireciona automático (mantém elegível para instalar)
+  if (hint) {
+    hint.textContent = isStandalone
+      ? "Toque em “Abrir painel” (o painel é online no Apps Script)."
+      : "Instale o app (menu do navegador) ou toque em “Abrir painel”.";
+  }
+
+  // Botão cancelar não faz mais sentido sem auto-redirect
+  if (cancelBtn) cancelBtn.style.display = "none";
+
+  // Se for standalone e você quiser abrir na hora, faça isso só no clique
+  // (mantém controle do usuário e evita bloqueios)
+  if(goEl){
+    goEl.addEventListener("click", (e)=>{
+      // deixa abrir normal
+    });
+  }
+
+  // Service Worker (GitHub Pages + repo)
+  if ("serviceWorker" in navigator) {
+    const base = "/comunica-sindico/sindico/";
+    const swUrl = base + "sw.js";
+    const scope = base;
+
+    window.addEventListener("load", async () => {
+      try{
+        const reg = await navigator.serviceWorker.register(swUrl, { scope });
+        try { await reg.update(); } catch(e){}
+
+        reg.addEventListener("updatefound", () => {
+          const nw = reg.installing;
+          if(!nw) return;
+          nw.addEventListener("statechange", () => {
+            if (nw.state === "installed" && navigator.serviceWorker.controller) {
+              nw.postMessage("SKIP_WAITING");
+            }
           });
-        }catch(e){}
-      });
+        });
+      }catch(e){}
+    });
 
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
-        setTimeout(() => window.location.reload(), 800);
-      });
-    }
-  </script>
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      setTimeout(() => window.location.reload(), 600);
+    });
+  }
+})();
+</script>
+
 </body>
 </html>
