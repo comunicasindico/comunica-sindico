@@ -22,7 +22,7 @@
   },
   "publicidade": {
     "ativar": true,
-    "intervaloSeg": 08,
+    "intervaloSeg": 8,
     "shuffle": true,
     "fit": "contain",
     "videos": [
