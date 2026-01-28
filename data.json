@@ -26,7 +26,7 @@
     "shuffle": true,
     "fit": "contain",
     "videos": [
-      {        "arquivo": "./ads/01luisa.mp4",        "anunciante": "Luisa — Momentos Especiais"      },
+      {        "arquivo": "./ads/01luisa.avi",        "anunciante": "Luisa — Momentos Especiais"      },
       {        "arquivo": "./ads/rafinha_keyon.mp4",        "anunciante": "O melhor Corretor de Santa Catarina"      },
       {        "arquivo": "./ads/02parque.mp4",        "anunciante": "Parque — Lazer e Diversão"      },
       {        "arquivo": "./ads/03larissa.mp4",        "anunciante": "Larissa — Momentos Especiais"      },
