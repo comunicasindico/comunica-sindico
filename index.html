@@ -1024,7 +1024,59 @@ video.fit-contain{ object-fit:contain; }
         setTimeout(()=>window.location.reload(), 1200);
       });
     }
-  </script>
+<!-- ===== FUNDO DINÂMICO (cole dentro do SEU <script> principal) ===== -->
+  // ===== Paleta de fundos (cores comuns) =====
+  const fundos = {
+    azul:    ["#061726", "#0b1f33"],
+    verde:   ["#0b2e1a", "#134d2c"],
+    amarelo: ["#3a3300", "#665c00"],
+    laranja: ["#3a1f00", "#663300"],
+    branco:  ["#f2f2f2", "#dcdcdc"],
+    preto:   ["#000000", "#111111"]
+  };
+
+  // Troca manual (ex.: setFundo("verde"))
+  function setFundo(cor){
+    if(!fundos[cor]) return;
+    document.documentElement.style.setProperty("--bg1", fundos[cor][0]);
+    document.documentElement.style.setProperty("--bg2", fundos[cor][1]);
+    try { localStorage.setItem("fundoEscolhido", cor); } catch(e){}
+  }
+
+  // Troca aleatória
+  function fundoAleatorio(){
+    const cores = Object.keys(fundos);
+    const cor = cores[Math.floor(Math.random() * cores.length)];
+    setFundo(cor);
+    return cor;
+  }
+
+  // Carrega o último fundo escolhido (se existir)
+  (function carregarFundoSalvo(){
+    try{
+      const salvo = localStorage.getItem("fundoEscolhido");
+      if(salvo && fundos[salvo]) setFundo(salvo);
+    }catch(e){}
+  })();
+
+  // ===== Atalhos de teclado (opcional) =====
+  // 1=azul 2=verde 3=amarelo 4=laranja 5=branco 6=preto | R = aleatório
+  window.addEventListener("keydown", (e)=>{
+    const k = String(e.key || "").toLowerCase();
+    if (k === "1") setFundo("azul");
+    else if (k === "2") setFundo("verde");
+    else if (k === "3") setFundo("amarelo");
+    else if (k === "4") setFundo("laranja");
+    else if (k === "5") setFundo("branco");
+    else if (k === "6") setFundo("preto");
+    else if (k === "r") fundoAleatorio();
+  });
+
+  // ===== Auto-aleatório (opcional) =====
+  // Descomente se quiser trocar sozinho:
+  // fundoAleatorio();
+     setInterval(fundoAleatorio, 300000); // a cada 5 minutos
+</script>
 
 </body>
 </html>
