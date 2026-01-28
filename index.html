@@ -391,10 +391,8 @@
       .wxMini{ white-space:normal; }
     }
 
-    /* ===== MOBILE: scroll + vídeo embaixo ===== */
 /* ===== MOBILE: scroll + vídeo embaixo ===== */
 @media (max-width: 980px){
-
   body{
     overflow:auto;
     -webkit-overflow-scrolling: touch;
@@ -422,22 +420,12 @@
     flex-direction:column;
   }
 
-  section.panel{
-    order:1;
-  }
-
-  #adBox{
-    order:2;
-  }
+  section.panel{ order:1; }
+  #adBox{ order:2; }
 
   /* remove scroll interno no mobile: rolagem única da página */
-  .panel{
-    min-height:auto;
-  }
-
-  .avisos{
-    overflow:visible;
-  }
+  .panel{ min-height:auto; }
+  .avisos{ overflow:visible; }
 
   /* rodapé fica sempre visível ao rolar */
   .ticker{
@@ -449,22 +437,19 @@
   }
 
   /* Versículo quebra linha no celular */
+  .tickerLine1{ flex-wrap: wrap; }
+
+  #dataBiblica{
+    white-space: normal;
+  }
+
   #ref{
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
     line-height: 1.3;
   }
-
-  #dataBiblica{
-    white-space: normal;
-  }
-
-  .tickerLine1{
-    flex-wrap: wrap;
-  }
 }
-
   </style>
 </head>
 
