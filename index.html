@@ -358,6 +358,7 @@
   flex-direction:column;
   gap:12px;
   min-height:0;
+  overflow:auto;             /* <- CHAVE: se faltar espaço, rola dentro do painel */
 }
 .adCard{
   border:1px solid rgba(255,255,255,.14);
@@ -375,6 +376,7 @@
   color:rgba(234,242,255,.92);
   background:rgba(12,35,56,.35);
 }
+/* vídeo não pode “empurrar” o rodapé */
 .videoWrap{
   width:100%;
   aspect-ratio:16/9;
@@ -382,6 +384,11 @@
   display:flex;
   align-items:center;
   justify-content:center;
+
+  flex:0 0 auto;
+  max-height: 38vh;          /* <- limite de altura do vídeo */
+  overflow:hidden;
+  border-radius: 12px;
 }
 video{
   width:100%;
@@ -499,7 +506,10 @@ video.fit-contain{ object-fit:contain; }
   }
 
   section.panel{ order:1; }
-  #adBox{ order:2; }
+  #adBox{ 
+    order:2;   
+    min-height:0;
+  }
 
   .panel{ min-height:auto; }
   .avisos{ overflow:visible; }
@@ -511,6 +521,12 @@ video.fit-contain{ object-fit:contain; }
     margin-bottom: 0;
     padding-bottom: max(12px, env(safe-area-inset-bottom));
   }
+/* BLINDAGEM: rodapé sempre visível (TV/PC também) */
+.ticker{
+  position: sticky;
+  bottom: 0;
+  z-index: 50;
+}
 
   .tickerLine1{ flex-wrap: wrap; }
   #dataBiblica{ white-space: normal; }
