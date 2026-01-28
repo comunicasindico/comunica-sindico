@@ -795,8 +795,8 @@ el.innerHTML = `
         const key = hojeKeyMMDD();
         const texto = v?.versos?.[key];
 
-        setText("dataBiblica", v?.cabecalho || "📖 Versículo do dia");
-        setText("ref", texto ? texto : (v?.titulo ? v.titulo : "Versículo não encontrado"));
+        setText("dataBiblica", v?.cabecalho || "📖");
+        setText("ref", texto ? texto : (v?.titulo ? v.titulo : "Verso não encontrado"));
       } catch (e) {}
     }
 
@@ -933,7 +933,7 @@ el.innerHTML = `
         renderAvisos(data);
 
         if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
-          setText("dataBiblica", "📖 Versículo do dia");
+          setText("dataBiblica", "📖");
           setText("ref", "Carregando…");
         } else {
           setText("dataBiblica", "📌 Avisos");
