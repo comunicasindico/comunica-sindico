@@ -661,6 +661,161 @@ video.fit-contain{ object-fit:contain; }
   font-weight:900;
 }
 .newsItem a:hover{ text-decoration:underline; }
+
+/* ===========================
+   PREMIUM — Mensagens da Cidade
+   (newsBox / newsBody / newsItem)
+   =========================== */
+
+/* Tipografia premium (sem depender de Google Fonts) */
+:root{
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+  --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
+
+  --news-bg: rgba(8, 24, 40, .62);
+  --news-border: rgba(255,255,255,.12);
+  --news-shadow: 0 18px 40px rgba(0,0,0,.38);
+
+  --news-title: rgba(234,242,255,.96);
+  --news-text: rgba(234,242,255,.78);
+  --news-muted: rgba(234,242,255,.62);
+
+  --news-chip-bg: rgba(255,255,255,.10);
+  --news-chip-border: rgba(255,255,255,.14);
+}
+
+/* Caixa */
+#newsBox{
+  background: var(--news-bg);
+  border: 1px solid var(--news-border);
+  box-shadow: var(--news-shadow);
+  border-radius: 18px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Cabeçalho “Mensagens da Cidade” (se existir) */
+#newsBox .titleRow,
+#newsBox .newsHead,
+#newsBox .headRow{
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+#newsBox .titleRow .t,
+#newsBox .newsHead .t,
+#newsBox .headRow .t{
+  font-family: var(--font-soft);
+  font-weight: 900;
+  letter-spacing: .2px;
+  font-size: 14px;
+  color: var(--news-title);
+}
+
+/* Pílula de status */
+#newsPill{
+  font-family: var(--font-ui);
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--news-title);
+  background: var(--news-chip-bg);
+  border: 1px solid var(--news-chip-border);
+  padding: 6px 10px;
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+/* Lista */
+#newsBody{
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 34vh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+/* Scrollbar (Chrome/Edge/Safari) */
+#newsBody::-webkit-scrollbar{ width: 10px; }
+#newsBody::-webkit-scrollbar-track{ background: transparent; }
+#newsBody::-webkit-scrollbar-thumb{
+  background: rgba(255,255,255,.18);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Item */
+.newsItem{
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  padding: 12px 12px 10px;
+  transition: transform .12s ease, border-color .12s ease, background .12s ease;
+}
+
+.newsItem:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,.16);
+  background: rgba(0,0,0,.22);
+}
+
+/* Título */
+.newsItem .h{
+  font-family: var(--font-soft);
+  font-weight: 900;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: .2px;
+  color: var(--news-title);
+  margin: 0 0 6px 0;
+
+  /* 2 linhas no máximo */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Texto */
+.newsItem .p{
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--news-text);
+  margin: 0;
+
+  /* 3 linhas no máximo */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Caso você esteja mostrando Fonte/Data dentro do texto, deixa com cara de “nota” */
+.newsItem .p .muted,
+.newsItem .p small{
+  color: var(--news-muted);
+  font-weight: 700;
+}
+
+/* Mobile: mais compacto */
+@media (max-width: 520px){
+  #newsBody{ max-height: 30vh; padding: 10px 12px 12px; }
+  .newsItem{ padding: 10px 10px 9px; border-radius: 12px; }
+  .newsItem .h{ font-size: 13.5px; }
+  .newsItem .p{ font-size: 12.5px; }
+}
+  
 </style>
 </head>
 
