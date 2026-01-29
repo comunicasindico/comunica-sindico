@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <!-- =========================================================
+       INÍCIO — HEAD / CANONICAL (remove ?pwa= etc)
+       ========================================================= -->
   <link rel="canonical" href="./">
   <script>
   (function () {
@@ -11,7 +14,13 @@
     } catch(e){}
   })();
   </script>
+  <!-- =========================================================
+       FIM — HEAD / CANONICAL
+       ========================================================= -->
 
+  <!-- =========================================================
+       INÍCIO — META / PWA
+       ========================================================= -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Condôminos - Comunica Síndico(a)</title>
@@ -23,8 +32,15 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#0b223a">
+  <!-- =========================================================
+       FIM — META / PWA
+       ========================================================= -->
 
+  <!-- =========================================================
+       INÍCIO — CSS (ESTILOS)
+       ========================================================= -->
   <style>
+    /* ===== BASE ===== */
     :root{
       --bg1:#061726;
       --bg2:#0b1f33;
@@ -37,7 +53,20 @@
       --sar: env(safe-area-inset-right);
       --sab: env(safe-area-inset-bottom);
       --sal: env(safe-area-inset-left);
+
+      /* NEWS premium tokens */
+      --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
+      --news-bg: rgba(8, 24, 40, .62);
+      --news-border: rgba(255,255,255,.12);
+      --news-shadow: 0 18px 40px rgba(0,0,0,.38);
+      --news-title: rgba(234,242,255,.96);
+      --news-text: rgba(234,242,255,.78);
+      --news-muted: rgba(234,242,255,.62);
+      --news-chip-bg: rgba(255,255,255,.10);
+      --news-chip-border: rgba(255,255,255,.14);
     }
+
     *{box-sizing:border-box}
     html,body{height:100%;width:100%}
 
@@ -56,26 +85,27 @@
       padding-bottom: max(14px, env(safe-area-inset-bottom));
     }
 
-.wrap{
-  min-height:100svh;
-  width:100%;
-  padding:
-    calc(14px + var(--sat))
-    calc(14px + var(--sar))
-    calc(14px + var(--sab))
-    calc(14px + var(--sal));
-  display:block;
-}
+    .wrap{
+      min-height:100svh;
+      width:100%;
+      padding:
+        calc(14px + var(--sat))
+        calc(14px + var(--sar))
+        calc(14px + var(--sab))
+        calc(14px + var(--sal));
+      display:block;
+    }
 
-.container{
-  width:100%;
-  min-height:100svh;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  max-width:none;
-}
-    /* ===== HEADER ===== */
+    .container{
+      width:100%;
+      min-height:100svh;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      max-width:none;
+    }
+
+    /* ===== HEADER (TOPBAR) ===== */
     .topbar{
       display:flex;
       align-items:center;
@@ -90,6 +120,7 @@
       flex:0 0 auto;
       width:100%;
     }
+
     .brand{
       display:flex;
       flex-direction:column;
@@ -148,6 +179,7 @@
     .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
     #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
     #clock{font-size:22px;font-weight:950;letter-spacing:.6px;color:#fff}
+
     .btnInstall{
       border:1px solid rgba(255,255,255,.18);
       background:rgba(12,35,56,.55);
@@ -159,6 +191,7 @@
       font-size:14px;
       white-space:nowrap;
     }
+
     .updateBanner{
       padding:10px 12px;
       border-radius:14px;
@@ -170,7 +203,7 @@
       width:100%;
     }
 
-    /* ===== MAIN (TV/PC: 2 COLUNAS) ===== */
+    /* ===== MAIN ===== */
     .main{
       flex:1 1 auto;
       min-height:0;
@@ -191,16 +224,18 @@
       overflow:hidden;
     }
 
+    /* ✅ TOPO DO PAINEL (sem o traço) */
     .panelHead{
       padding:10px 12px;
-    /* border-bottom:1px solid var(--line);
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
       background:rgba(7,20,34,.20);
       flex:0 0 auto;
+      /* border-bottom:1px solid var(--line);  <-- removido */
     }
+
     .panelTitle{
       display:flex;align-items:center;gap:10px;
       font-size:13px;
@@ -209,6 +244,8 @@
       color:rgba(234,242,255,.95);
       text-transform:uppercase;
     }
+
+    /* ===== PILL (BOTÕES/STATUS) ===== */
     .pill{
       font-size:12px;
       font-weight:900;
@@ -224,583 +261,462 @@
       max-width:100%;
       overflow:hidden;
       text-overflow:ellipsis;
-      .pill{ user-select:none; }
-      .pill:hover{ filter:brightness(1.08); }
-      .pill:active{ transform:scale(.98); }
+      user-select:none;
+    }
+    .pill:hover{ filter:brightness(1.08); }
+    .pill:active{ transform:scale(.98); }
 
+    /* ===== AVISOS – PREMIUM ===== */
+    @keyframes avisoIn{
+      from{ opacity:0; transform: translateY(10px) scale(.99); }
+      to  { opacity:1; transform: translateY(0) scale(1); }
+    }
+    @keyframes glowPulseRed{
+      0%,100%{ box-shadow: 0 0 14px rgba(255,80,80,.35), inset 0 1px 0 rgba(255,255,255,.15); }
+      50%    { box-shadow: 0 0 20px rgba(255,80,80,.55), inset 0 1px 0 rgba(255,255,255,.18); }
+    }
+    #avisos.fade-out{ opacity:0; transition: opacity .22s ease; }
+    #avisos.fade-in { opacity:1; transition: opacity .22s ease; }
+
+    .avisos{
+      padding:14px;
+      min-height:0;
+      overflow:hidden;
+      display:grid;
+      grid-template-rows: repeat(4, minmax(0, 1fr));
+      gap:12px;
+      scroll-behavior:smooth;
     }
 
-/* ===== AVISOS – PREMIUM 3D + ANIMAÇÕES ===== */
-@keyframes avisoIn{
-  from{ opacity:0; transform: translateY(10px) scale(.99); }
-  to  { opacity:1; transform: translateY(0) scale(1); }
-}
-@keyframes glowPulseRed{
-  0%,100%{ box-shadow: 0 0 14px rgba(255,80,80,.35), inset 0 1px 0 rgba(255,255,255,.15); }
-  50%    { box-shadow: 0 0 20px rgba(255,80,80,.55), inset 0 1px 0 rgba(255,255,255,.18); }
-}
-#avisos.fade-out{ opacity:0; transition: opacity .22s ease; }
-#avisos.fade-in { opacity:1; transition: opacity .22s ease; }
+    .aviso{
+      min-height:0;
+      padding:16px;
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      border:1px solid rgba(140,200,255,.22);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 -14px 22px rgba(0,0,0,.28),
+        0 14px 34px rgba(0,0,0,.55);
+      transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+      animation: avisoIn .28s ease both;
+      will-change: transform, opacity;
+      position:relative;
+      padding-left:18px;
+      overflow:hidden;
+    }
 
-/* >>> Ajuste principal: 4 avisos por vez, sem rolagem (cabendo) <<< */
-.avisos{
-  padding:14px;
-  min-height:0;
-  overflow:hidden;
-  display:grid;
-  grid-template-rows: repeat(4, minmax(0, 1fr));
-  gap:12px;
-  scroll-behavior:smooth;
-}
+    .aviso:hover{
+      transform: translateY(-2px);
+      filter: saturate(1.05);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.16),
+        0 10px 28px rgba(0,0,0,.62);
+    }
+    .aviso:active{ transform: translateY(0); }
 
-.aviso{
-  min-height:0;
-  padding:16px;
-  border-radius:18px;
-  background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  border:1px solid rgba(140,200,255,.22);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.14),
-    inset 0 -14px 22px rgba(0,0,0,.28),
-    0 14px 34px rgba(0,0,0,.55);
-  transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
-  animation: avisoIn .28s ease both;
-  will-change: transform, opacity;
-  position:relative;
-  padding-left:18px;
-  overflow:hidden;
-}
+    .aviso::before{
+      content:"";
+      position:absolute;
+      inset:10px auto 10px 10px;
+      width:6px;
+      border-radius:999px;
+      background:rgba(255,255,255,.15);
+    }
 
-.aviso:hover{
-  transform: translateY(-2px);
-  filter: saturate(1.05);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.16),
-    0 10px 28px rgba(0,0,0,.62);
-}
-.aviso:active{ transform: translateY(0); }
+    .aviso.alta{
+      border:1px solid rgba(255,90,90,.9);
+      background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.92));
+      animation: avisoIn .28s ease both, glowPulseRed 2.2s ease-in-out infinite;
+    }
+    .aviso.alta::before{ background:linear-gradient(180deg,#ff5a5a,#c0392b); }
 
-.aviso::before{
-  content:"";
-  position:absolute;
-  inset:10px auto 10px 10px;
-  width:6px;
-  border-radius:999px;
-  background:rgba(255,255,255,.15);
-}
+    .aviso.media{
+      border:1px solid rgba(255,179,71,.85);
+      background:linear-gradient(180deg, rgba(255,180,70,.25), rgba(12,30,50,.92));
+    }
+    .aviso.media::before{ background:linear-gradient(180deg,#ffb347,#e67e22); }
 
-.aviso.alta{
-  border:1px solid rgba(255,90,90,.9);
-  background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.92));
-  animation: avisoIn .28s ease both, glowPulseRed 2.2s ease-in-out infinite;
-}
-.aviso.alta::before{ background:linear-gradient(180deg,#ff5a5a,#c0392b); }
+    .aviso.baixa{
+      border:1px solid rgba(77,166,255,.85);
+      background:linear-gradient(180deg, rgba(100,170,255,.25), rgba(12,30,50,.92));
+    }
+    .aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
 
-.aviso.media{
-  border:1px solid rgba(255,179,71,.85);
-  background:linear-gradient(180deg, rgba(255,180,70,.25), rgba(12,30,50,.92));
-}
-.aviso.media::before{ background:linear-gradient(180deg,#ffb347,#e67e22); }
+    .aviso .t{
+      margin:0;
+      font-weight:900;
+      font-size:clamp(16px, 2.0vw, 20px);
+      letter-spacing:.3px;
+      color:#fff;
+      text-shadow:0 1px 2px rgba(0,0,0,.6);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      line-height:1.15;
+      display:-webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
+    .aviso.alta  .t::before{ content:"⚠️"; }
+    .aviso.media .t::before{ content:"🔶"; }
+    .aviso.baixa .t::before{ content:"ℹ️"; }
 
-.aviso.baixa{
-  border:1px solid rgba(77,166,255,.85);
-  background:linear-gradient(180deg, rgba(100,170,255,.25), rgba(12,30,50,.92));
-}
-.aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
+    .aviso .d{
+      margin:0;
+      color:#e0ecff;
+      line-height:1.35;
+      font-size:clamp(14px, 1.7vw, 17px);
+      display:-webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
 
-.aviso .t{
-  margin:0;
-  font-weight:900;
-  font-size:clamp(16px, 2.0vw, 20px);
-  letter-spacing:.3px;
-  color:#fff;
-  text-shadow:0 1px 2px rgba(0,0,0,.6);
-  display:flex;
-  align-items:center;
-  gap:10px;
-  line-height:1.15;
-  display:-webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow:hidden;
-}
-.aviso.alta  .t::before{ content:"⚠️"; }
-.aviso.media .t::before{ content:"🔶"; }
-.aviso.baixa .t::before{ content:"ℹ️"; }
+    .metaLine{
+      margin-top:auto;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      color:rgba(234,242,255,.92);
+      font-size:clamp(12px, 1.5vw, 14px);
+      font-weight:900;
+    }
+    .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
+    .metaItem b{ font-weight:950; color:#fff; }
+    .metaSep{ opacity:.35; font-weight:900; }
 
-.aviso .d{
-  margin:0;
-  color:#e0ecff;
-  line-height:1.35;
-  font-size:clamp(14px, 1.7vw, 17px);
-  display:-webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow:hidden;
-}
+    .prioBadge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:950;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      font-size:12px;
+      line-height:1;
+      border:1px solid rgba(255,255,255,.22);
+      background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.35),
+        inset 0 -2px 6px rgba(0,0,0,.35),
+        0 6px 14px rgba(0,0,0,.35);
+    }
+    .prioBadge.alta{
+      border-color: rgba(255,90,90,.80);
+      background: linear-gradient(180deg, rgba(255,120,120,.50), rgba(160,0,0,.35));
+      text-shadow: 0 1px 0 rgba(0,0,0,.55);
+    }
+    .prioBadge.media{
+      border-color: rgba(255,179,71,.75);
+      background: linear-gradient(180deg, rgba(255,210,120,.55), rgba(160,90,0,.35));
+      text-shadow: 0 1px 0 rgba(0,0,0,.50);
+    }
+    .prioBadge.baixa{
+      border-color: rgba(120,190,255,.70);
+      background: linear-gradient(180deg, rgba(160,210,255,.55), rgba(0,80,160,.32));
+      text-shadow: 0 1px 0 rgba(0,0,0,.45);
+    }
 
-.metaLine{
-  margin-top:auto;
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-  color:rgba(234,242,255,.92);
-  font-size:clamp(12px, 1.5vw, 14px);
-  font-weight:900;
-}
-.metaItem{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  opacity:.95;
-}
-.metaItem b{
-  font-weight:950;
-  color:#fff;
-}
-.metaSep{
-  opacity:.35;
-  font-weight:900;
-}
+    /* ===== AD ===== */
+    .adBody{
+      padding:14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-height:0;
+      overflow:auto;
+    }
+    .adCard{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(7,20,34,.18);
+      border-radius:14px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+    .adLabel{
+      padding:10px 12px;
+      font-weight:950;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      color:rgba(234,242,255,.92);
+      background:rgba(12,35,56,.35);
+    }
+    .videoWrap{
+      width:100%;
+      aspect-ratio:16/9;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 auto;
+      max-height: 38vh;
+      overflow:hidden;
+      border-radius: 12px;
+    }
+    video{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+      object-position:center;
+      background:#000;
+    }
+    video.fit-contain{ object-fit:contain; }
 
-/* ===== BADGE 3D (BISEL) PARA PRIORIDADE ===== */
-.prioBadge{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:6px 10px;
-  border-radius:999px;
-  font-weight:950;
-  letter-spacing:.4px;
-  text-transform:uppercase;
-  font-size:12px;
-  line-height:1;
+    /* ===== FOOTER (TICKER) ===== */
+    .ticker{
+      flex:0 0 auto;
+      width:100%;
+      padding:10px 12px;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:rgba(8,28,46,.60);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(8px);
+      display:flex;
+      flex-direction:column;
+      align-items:stretch;
+      gap:6px;
+      margin-bottom: max(14px, env(safe-area-inset-bottom));
+    }
+    .tickerLine1{
+      width:100%;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      overflow:hidden;
+      flex-wrap: wrap;
+    }
+    .wxInline{
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 900;
+      color: rgba(234,242,255,.92);
+      font-size: clamp(12px, 1.6vw, 15px);
+      white-space: nowrap;
+    }
+    .tickerLine2{ display:none !important; }
 
-  border:1px solid rgba(255,255,255,.22);
-  background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.35),
-    inset 0 -2px 6px rgba(0,0,0,.35),
-    0 6px 14px rgba(0,0,0,.35);
-}
-.prioBadge.alta{
-  border-color: rgba(255,90,90,.80);
-  background: linear-gradient(180deg, rgba(255,120,120,.50), rgba(160,0,0,.35));
-  text-shadow: 0 1px 0 rgba(0,0,0,.55);
-}
-.prioBadge.media{
-  border-color: rgba(255,179,71,.75);
-  background: linear-gradient(180deg, rgba(255,210,120,.55), rgba(160,90,0,.35));
-  text-shadow: 0 1px 0 rgba(0,0,0,.50);
-}
-.prioBadge.baixa{
-  border-color: rgba(120,190,255,.70);
-  background: linear-gradient(180deg, rgba(160,210,255,.55), rgba(0,80,160,.32));
-  text-shadow: 0 1px 0 rgba(0,0,0,.45);
-}
+    .tickerIcon{
+      font-size:clamp(22px, 3.1vw, 28px);
+      opacity:.95;
+      flex:0 0 auto;
+    }
+    #dataBiblica{
+      font-weight:950;
+      white-space:nowrap;
+      color:rgba(234,242,255,.95);
+      font-size:clamp(13px, 1.8vw, 16px);
+      flex:0 0 auto;
+    }
+    #ref{
+      color:rgba(234,242,255,.88);
+      font-weight:850;
+      font-size:clamp(13px, 1.8vw, 16px);
+      flex:1 1 auto;
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
 
-/* ===== AD ===== */
-.adBody{
-  padding:14px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  min-height:0;
-  overflow:auto;
-}
-.adCard{
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(7,20,34,.18);
-  border-radius:14px;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-}
-.adLabel{
-  padding:10px 12px;
-  font-weight:950;
-  border-bottom:1px solid rgba(255,255,255,.10);
-  color:rgba(234,242,255,.92);
-  background:rgba(12,35,56,.35);
-}
-.videoWrap{
-  width:100%;
-  aspect-ratio:16/9;
-  background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+    @media (max-width: 980px){
+      #dataBiblica{ white-space: normal; }
+      #ref{
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        line-height: 1.3;
+      }
+      .wxInline{
+        white-space: normal;
+        flex: 1 1 100%;
+        justify-content:flex-start;
+        margin-left: 0;
+      }
+    }
 
-  flex:0 0 auto;
-  max-height: 38vh;
-  overflow:hidden;
-  border-radius: 12px;
-}
-video{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:cover;
-  object-position:center;
-  background:#000;
-}
-video.fit-contain{ object-fit:contain; }
+    /* ===== MOBILE LAYOUT ===== */
+    @media (max-width: 980px){
+      body{
+        overflow:auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0;
+      }
+      .container{ min-height:auto; }
+      .topbar{ flex-wrap:wrap; }
+      .condoCenter{
+        order:3;
+        width:100%;
+        text-align:left;
+        padding:0;
+      }
+      .main{ display:flex; flex-direction:column; }
+      section.panel{ order:1; }
+      #adBox{ order:2; min-height:0; }
+      .panel{ min-height:auto; }
+      .avisos{ grid-template-rows: repeat(4, minmax(0, 1fr)); overflow:hidden; }
+      .ticker{
+        position:sticky;
+        bottom:0;
+        z-index:50;
+        margin-bottom: 0;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+      }
+    }
 
-/* ===== FOOTER (VERSÍCULO + DATA + TEMPO/VENTO) ===== */
-.ticker{
-  flex:0 0 auto;
-  width:100%;
-  padding:10px 12px;
-  border-radius:var(--radius);
-  border:1px solid var(--line);
-  background:rgba(8,28,46,.60);
-  box-shadow:var(--shadow);
-  backdrop-filter: blur(8px);
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  gap:6px;
-  margin-bottom: max(14px, env(safe-area-inset-bottom));
-}
+    /* ===== TV / TELAS GRANDES ===== */
+    @media (min-width: 1400px){
+      .aviso{ padding:22px; gap:12px; border-radius:20px; }
+      .aviso .t{ font-size:24px; }
+      .aviso .d{ font-size:18px; line-height:1.45; }
+      .metaLine{ font-size:16px; gap:14px; }
+      .panelTitle{ font-size:16px; }
+      .pill{ font-size:14px; }
+      .brand .title{ font-size:26px; }
+      .brand .sub{ font-size:14px; }
+      #clock{ font-size:26px; }
+    }
+    @media (min-width: 1900px){
+      .aviso .t{ font-size:28px; }
+      .aviso .d{ font-size:20px; }
+      .metaLine{ font-size:17px; }
+      .panelTitle{ font-size:18px; }
+    }
 
-.tickerLine1{
-  width:100%;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
-  overflow:hidden;
-  flex-wrap: wrap; /* sempre adaptando */
-}
+    /* ===== NEWS (Mensagens da Cidade) ===== */
+    #newsBox{
+      background: var(--news-bg);
+      border: 1px solid var(--news-border);
+      box-shadow: var(--news-shadow);
+      border-radius: 18px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
 
-.wxInline{
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 900;
-  color: rgba(234,242,255,.92);
-  font-size: clamp(12px, 1.6vw, 15px);
-  white-space: nowrap;
-}
+    .newsHead{
+      padding:10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background:rgba(12,35,56,.35);
+    }
 
-/* ✅ Mantém apenas a PRIMEIRA linha do rodapé (remove duplicação) */
-.tickerLine2{ display:none !important; }
+    .newsTitle{
+      font-weight:950;
+      color:rgba(234,242,255,.92);
+    }
 
-.tickerIcon{
-  font-size:clamp(22px, 3.1vw, 28px);
-  opacity:.95;
-  flex:0 0 auto;
-}
+    #newsPill{
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--news-title);
+      background: var(--news-chip-bg);
+      border: 1px solid var(--news-chip-border);
+      padding: 6px 10px;
+      border-radius: 999px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
 
-#dataBiblica{
-  font-weight:950;
-  white-space:nowrap;
-  color:rgba(234,242,255,.95);
-  font-size:clamp(13px, 1.8vw, 16px);
-  flex:0 0 auto;
-}
+    /* ✅ você pediu: não mostrar "Atualizado" dentro do bloco */
+    #newsPill{ display:none !important; }
 
-#ref{
-  color:rgba(234,242,255,.88);
-  font-weight:850;
-  font-size:clamp(13px, 1.8vw, 16px);
-  flex:1 1 auto;
-  min-width:0;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
+    #newsBody{
+      padding: 12px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 34vh;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    #newsBody::-webkit-scrollbar{ width: 10px; }
+    #newsBody::-webkit-scrollbar-track{ background: transparent; }
+    #newsBody::-webkit-scrollbar-thumb{
+      background: rgba(255,255,255,.18);
+      border-radius: 999px;
+      border: 3px solid transparent;
+      background-clip: padding-box;
+    }
 
-@media (max-width: 980px){
-  #dataBiblica{ white-space: normal; }
-  #ref{
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
-    line-height: 1.3;
-  }
-  .wxInline{
-    white-space: normal;
-    flex: 1 1 100%;
-    justify-content:flex-start;
-    margin-left: 0;
-  }
-}
+    .newsItem{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      padding: 12px 12px 10px;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .newsItem:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+    }
+    .newsItem .h{
+      font-family: var(--font-soft);
+      font-weight: 900;
+      font-size: 14px;
+      line-height: 1.2;
+      letter-spacing: .2px;
+      color: var(--news-title);
+      margin: 0 0 6px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .newsItem .p{
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 13px;
+      line-height: 1.35;
+      color: var(--news-text);
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
 
-/* ===== MOBILE: scroll + vídeo embaixo ===== */
-@media (max-width: 980px){
-  body{
-    overflow:auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 0;
-  }
-
-  .container{ min-height:auto; }
-
-  .topbar{ flex-wrap:wrap; }
-
-  .condoCenter{
-    order:3;
-    width:100%;
-    text-align:left;
-    padding:0;
-  }
-
-  .main{
-    display:flex;
-    flex-direction:column;
-  }
-
-  section.panel{ order:1; }
-  #adBox{ order:2; min-height:0; }
-
-  .panel{ min-height:auto; }
-
-  .avisos{
-    grid-template-rows: repeat(4, minmax(0, 1fr));
-    overflow:hidden;
-  }
-
-  .ticker{
-    position:sticky;
-    bottom:0;
-    z-index:50;
-    margin-bottom: 0;
-    padding-bottom: max(12px, env(safe-area-inset-bottom));
-  }
-}
-
-/* ===== TV / TELAS GRANDES ===== */
-@media (min-width: 1400px){
-  .aviso{ padding:22px; gap:12px; border-radius:20px; }
-  .aviso .t{ font-size:24px; }
-  .aviso .d{ font-size:18px; line-height:1.45; }
-  .metaLine{ font-size:16px; gap:14px; }
-  .panelTitle{ font-size:16px; }
-  .pill{ font-size:14px; }
-  .brand .title{ font-size:26px; }
-  .brand .sub{ font-size:14px; }
-  #clock{ font-size:26px; }
-}
-@media (min-width: 1900px){
-  .aviso .t{ font-size:28px; }
-  .aviso .d{ font-size:20px; }
-  .metaLine{ font-size:17px; }
-  .panelTitle{ font-size:18px; }
-}
-
-/* ===== NEWS (Mensagens da Cidade) ===== */
-.newsBox{
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(7,20,34,.18);
-  border-radius:14px;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-}
-
-.newsHead{
-  padding:10px 12px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  border-bottom:1px solid rgba(255,255,255,.10);
-  background:rgba(12,35,56,.35);
-}
-
-.newsTitle{
-  font-weight:950;
-  color:rgba(234,242,255,.92);
-}
-
-.newsBody{
-  padding:12px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  overflow:auto;
-  max-height: 32vh;
-}
-
-.newsItem{
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(7,20,34,.22);
-  border-radius:12px;
-  padding:10px 10px;
-}
-
-.newsItem .h{
-  margin:0 0 6px 0;
-  font-weight:950;
-  color:#fff;
-  font-size:14px;
-  line-height:1.25;
-}
-
-.newsItem .p{
-  margin:0;
-  color:rgba(234,242,255,.88);
-  font-weight:700;
-  font-size:13px;
-  line-height:1.35;
-}
-
-.newsItem a{
-  color:rgba(180,220,255,.95);
-  text-decoration:none;
-  font-weight:900;
-}
-.newsItem a:hover{ text-decoration:underline; }
-
-/* ===========================
-   PREMIUM — Mensagens da Cidade
-   =========================== */
-:root{
-  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-  --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
-
-  --news-bg: rgba(8, 24, 40, .62);
-  --news-border: rgba(255,255,255,.12);
-  --news-shadow: 0 18px 40px rgba(0,0,0,.38);
-
-  --news-title: rgba(234,242,255,.96);
-  --news-text: rgba(234,242,255,.78);
-  --news-muted: rgba(234,242,255,.62);
-
-  --news-chip-bg: rgba(255,255,255,.10);
-  --news-chip-border: rgba(255,255,255,.14);
-}
-
-#newsBox{
-  background: var(--news-bg);
-  border: 1px solid var(--news-border);
-  box-shadow: var(--news-shadow);
-  border-radius: 18px;
-  overflow: hidden;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-#newsPill{
-  font-family: var(--font-ui);
-  font-weight: 800;
-  font-size: 12px;
-  color: var(--news-title);
-  background: var(--news-chip-bg);
-  border: 1px solid var(--news-chip-border);
-  padding: 6px 10px;
-  border-radius: 999px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
-}
-
-#newsBody{
-  padding: 12px 14px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 34vh;
-  overflow: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-}
-
-#newsBody::-webkit-scrollbar{ width: 10px; }
-#newsBody::-webkit-scrollbar-track{ background: transparent; }
-#newsBody::-webkit-scrollbar-thumb{
-  background: rgba(255,255,255,.18);
-  border-radius: 999px;
-  border: 3px solid transparent;
-  background-clip: padding-box;
-}
-
-.newsItem{
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.10);
-  background: rgba(0,0,0,.18);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-  padding: 12px 12px 10px;
-  transition: transform .12s ease, border-color .12s ease, background .12s ease;
-}
-
-.newsItem:hover{
-  transform: translateY(-1px);
-  border-color: rgba(255,255,255,.16);
-  background: rgba(0,0,0,.22);
-}
-
-.newsItem .h{
-  font-family: var(--font-soft);
-  font-weight: 900;
-  font-size: 14px;
-  line-height: 1.2;
-  letter-spacing: .2px;
-  color: var(--news-title);
-  margin: 0 0 6px 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.newsItem .p{
-  font-family: var(--font-ui);
-  font-weight: 600;
-  font-size: 13px;
-  line-height: 1.35;
-  color: var(--news-text);
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.newsItem .p .muted,
-.newsItem .p small{
-  color: var(--news-muted);
-  font-weight: 700;
-}
-
-@media (max-width: 520px){
-  #newsBody{ max-height: 30vh; padding: 10px 12px 12px; }
-  .newsItem{ padding: 10px 10px 9px; border-radius: 12px; }
-  .newsItem .h{ font-size: 13.5px; }
-  .newsItem .p{ font-size: 12.5px; }
-}
-
-/* ✅ Remove "Atualizado" extras (mantém apenas o do topo à direita: #refPill) */
-#adPill, #newsPill { display:none !important; }
-
-.newsMeta{
-  font-size: 11px;
-  opacity: 0.7;
-  text-align: left;
-  margin-bottom: 4px;
-  font-weight: 700;
-}
-
-  .newsHeader{
-    font-size:0.65em;
-    color:rgba(255,255,255,.55);
-    margin-bottom:8px;
-    padding-left:4px;
-  }
+    .newsHeader{
+      font-size:0.65em;
+      color:rgba(255,255,255,.55);
+      margin-bottom:8px;
+      padding-left:4px;
+    }
   </style>
-
+  <!-- =========================================================
+       FIM — CSS (ESTILOS)
+       ========================================================= -->
 </head>
 
 <body>
   <div class="wrap">
     <div class="container">
 
+      <!-- =========================================================
+           INÍCIO — HEADER (TOPBAR)
+           ========================================================= -->
       <div class="topbar">
         <div class="brand">
           <div class="title" id="titulo">Comunica Síndico — Condôminos</div>
@@ -820,20 +736,23 @@ video.fit-contain{ object-fit:contain; }
             <span id="clock">--:--</span>
           </div>
 
-          <button id="btnInstalarApp" class="btnInstall" onclick="instalarApp()" style="display:none">⬇️ Instalar App</button>
+          <button id="btnInstalarApp" class="btnInstall" style="display:none">⬇️ Instalar App</button>
         </div>
       </div>
+      <!-- =========================================================
+           FIM — HEADER (TOPBAR)
+           ========================================================= -->
 
       <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
+      <!-- =========================================================
+           INÍCIO — MAIN
+           ========================================================= -->
       <div class="main">
         <section class="panel">
           <div class="panelHead">
             <div class="panelTitle">🔔 Avisos Importantes</div>
-           <div class="pill" id="refPill" onclick="refreshPage()" style="cursor:pointer">
-            Atualizar
-            </div>
-
+            <div class="pill" id="refPill" title="Clique para atualizar">Atualizar</div>
           </div>
           <div class="avisos" id="avisos"></div>
         </section>
@@ -852,19 +771,25 @@ video.fit-contain{ object-fit:contain; }
               </div>
             </div>
 
-            <!-- Mensagens da Cidade (embaixo do vídeo) — vem do mensagens_cidade.json -->
+            <!-- Mensagens da Cidade -->
             <div class="newsBox" id="newsBox" style="display:none">
               <div class="newsHead">
                 <div class="newsTitle" id="cityTitle">📰 Mensagens da Cidade</div>
                 <div class="pill" id="newsPill">—</div>
               </div>
-              <div class="" id="newsBody"></div>
+              <div id="newsBody"></div>
             </div>
 
           </div>
         </aside>
       </div>
+      <!-- =========================================================
+           FIM — MAIN
+           ========================================================= -->
 
+      <!-- =========================================================
+           INÍCIO — FOOTER / TICKER
+           ========================================================= -->
       <div class="ticker">
         <div class="tickerLine1">
           <span class="tickerIcon">📖</span>
@@ -889,11 +814,18 @@ video.fit-contain{ object-fit:contain; }
           </div>
         </div>
       </div>
+      <!-- =========================================================
+           FIM — FOOTER / TICKER
+           ========================================================= -->
 
     </div>
   </div>
 
+  <!-- =========================================================
+       INÍCIO — JS (APP / UI / DADOS)
+       ========================================================= -->
   <script>
+    /* ===== INSTALL APP ===== */
     let deferredPrompt = null;
 
     function mostrarBotaoInstalar(show){
@@ -919,29 +851,26 @@ video.fit-contain{ object-fit:contain; }
       mostrarBotaoInstalar(false);
     }
 
+    /* ===== HELPERS ===== */
     function prioridadeClass(p){
       const x = String(p || "").toLowerCase();
       if (x === "alta") return "alta";
       if (x === "média" || x === "media") return "media";
       return "baixa";
     }
-
     function safeText(v){ return (v == null ? "" : String(v)); }
     function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
     function pad2(n){ return String(n).padStart(2,"0"); }
 
-    function formatDT_BR(v){
-      if(!v) return "";
-      const d = new Date(v);
-      if(isNaN(d.getTime())) return String(v);
-      const dd = pad2(d.getDate());
-      const mm = pad2(d.getMonth()+1);
-      const aa = String(d.getFullYear()).slice(-2);
-      const HH = pad2(d.getHours());
-      const MM = pad2(d.getMinutes());
-      return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
+    function escapeHtml(s){
+      return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
     }
 
+    function refreshPage(){ location.reload(); }
+
+    /* ===== CLOCK ===== */
     function footerDateTimeString(d){
       const dd = pad2(d.getDate());
       const mm = pad2(d.getMonth()+1);
@@ -956,17 +885,34 @@ video.fit-contain{ object-fit:contain; }
     tickClock();
     setInterval(tickClock, 1000);
 
+    /* ===== BIND UI ===== */
+    (function bindUI(){
+      const btn = document.getElementById("btnInstalarApp");
+      if(btn) btn.onclick = instalarApp;
+
+      const refPill = document.getElementById("refPill");
+      if(refPill){
+        refPill.style.cursor = "pointer";
+        refPill.onclick = refreshPage;
+      }
+    })();
+
+    /* ===== ROTATION ===== */
     let ROT_TIMER = null;
     let ROT_STATE = { page: 0, totalPages: 1, paused: false };
 
-    function escapeHtml(s){
-      return String(s ?? "").replace(/[&<>"']/g, c => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-      }[c]));
+    function formatDT_BR(v){
+      if(!v) return "";
+      const d = new Date(v);
+      if(isNaN(d.getTime())) return String(v);
+      const dd = pad2(d.getDate());
+      const mm = pad2(d.getMonth()+1);
+      const aa = String(d.getFullYear()).slice(-2);
+      const HH = pad2(d.getHours());
+      const MM = pad2(d.getMinutes());
+      return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
     }
-    function refreshPage(){
-  location.reload();
-}
+
     function renderAvisos(data){
       const root = document.getElementById("avisos");
       if (!root) return;
@@ -1058,6 +1004,7 @@ video.fit-contain{ object-fit:contain; }
       }
     }
 
+    /* ===== VERSÍCULO ===== */
     function hojeKeyMMDD() {
       const d = new Date();
       const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -1080,6 +1027,7 @@ video.fit-contain{ object-fit:contain; }
       } catch (e) {}
     }
 
+    /* ===== CLIMA ===== */
     function wxEmojiFromCode(code){
       if (code === 0) return "☀️";
       if ([1,2,3].includes(code)) return "⛅";
@@ -1135,6 +1083,19 @@ video.fit-contain{ object-fit:contain; }
       }
     }
 
+    /* ===== PUBLICIDADE ===== */
+    function setCityTitleFromConfig(cfg){
+      const el = document.getElementById("cityTitle");
+      if(!el) return;
+
+      const t =
+        cfg?.publicidade?.cidadeTitulo ||
+        cfg?.cidadeTitulo ||
+        "📰 Mensagens da Cidade";
+
+      el.textContent = String(t);
+    }
+
     function iniciarPublicidade(data){
       const pub = data?.publicidade;
       const adBox = document.getElementById("adBox");
@@ -1171,9 +1132,7 @@ video.fit-contain{ object-fit:contain; }
         adVideo.src = finalSrc;
         adVideo.load();
 
-        adVideo.play().catch(() => {
-          setTimeout(playNext, 800);
-        });
+        adVideo.play().catch(() => setTimeout(playNext, 800));
 
         idx++;
         if(idx >= pub.videos.length) idx = 0;
@@ -1191,13 +1150,12 @@ video.fit-contain{ object-fit:contain; }
 
       adBox.style.display = "flex";
       playNext();
+
+      // ✅ notícias só quando bloco está visível
       carregarMensagensCidade();
     }
 
-    // ==========================================================
-    // MENSAGENS DA CIDADE (mensagens_cidade.json)
-    // ==========================================================
-
+    /* ===== MENSAGENS DA CIDADE ===== */
     function decodeHtmlEntities_(s){
       const t = document.createElement("textarea");
       t.innerHTML = String(s ?? "");
@@ -1223,103 +1181,79 @@ video.fit-contain{ object-fit:contain; }
       return s;
     }
 
-    function setCityTitleFromConfig(cfg){
-      const el = document.getElementById("cityTitle");
-      if(!el) return;
-
-      const t =
-        cfg?.publicidade?.cidadeTitulo ||
-        cfg?.cidadeTitulo ||
-        "📰 Mensagens da Cidade";
-
-      el.textContent = String(t);
-    }
-
     async function carregarMensagensCidade(){
       const newsBox  = document.getElementById("newsBox");
       const newsBody = document.getElementById("newsBody");
-      const newsPill = document.getElementById("newsPill");
-
       if(!newsBox || !newsBody) return;
 
       try{
         const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
         if(!res.ok) throw new Error("HTTP " + res.status);
 
-// ================= INÍCIO DA RENDERIZAÇÃO DAS MENSAGENS DA CIDADE =================
-const j = await res.json();
-const items = Array.isArray(j.items) ? j.items : [];
+        // ================= INÍCIO DA RENDERIZAÇÃO DAS MENSAGENS DA CIDADE =================
+        const j = await res.json();
+        const items = Array.isArray(j.items) ? j.items : [];
 
-if(!items.length){
-  newsBody.innerHTML = `
-    <div class="newsItem">
-      <p class="h">Sem mensagens no momento</p>
-      <p class="p">Aguardando atualização do feed.</p>
-    </div>`;
-  newsBox.style.display = "flex";
-  if(newsPill) newsPill.textContent = "—";
-  return;
-}
+        if(!items.length){
+          newsBody.innerHTML = `
+            <div class="newsItem">
+              <p class="h">Sem mensagens no momento</p>
+              <p class="p">Aguardando atualização do feed.</p>
+            </div>`;
+          newsBox.style.display = "flex";
+          return;
+        }
 
-// Fonte e data únicas (do primeiro item)
-const fonte = normalizeText_(items[0].fonte || "news.google.com");
-const data  = toBRDate_(items[0].data || "");
+        const fonte = normalizeText_(items[0].fonte || "news.google.com");
+        const data  = toBRDate_(items[0].data || "");
 
-let html = `
-  <div class="newsHeader">
-    Fonte: ${escapeHtml(fonte)} — ${escapeHtml(data)}
-  </div>
-`;
+        let html = `
+          <div class="newsHeader">
+            Fonte: ${escapeHtml(fonte)} — ${escapeHtml(data)}
+          </div>
+        `;
 
-items.slice(0,8).forEach(x=>{
-  const titulo = normalizeText_(x.titulo || x.title || "Mensagem");
-  let texto   = normalizeText_(x.texto || x.text || x.description || "");
+        items.slice(0,8).forEach(x=>{
+          const titulo = normalizeText_(x.titulo || x.title || "Mensagem");
+          let texto   = normalizeText_(x.texto || x.text || x.description || "");
 
-  texto = texto.replace(/<[^>]*>/g,"").trim();
+          texto = texto.replace(/<[^>]*>/g,"").trim();
+          if(texto.toLowerCase().startsWith(titulo.toLowerCase())){
+            texto = texto.slice(titulo.length).trim();
+          }
 
-  if(texto.toLowerCase().startsWith(titulo.toLowerCase())){
-    texto = texto.slice(titulo.length).trim();
-  }
+          let resumo = texto.split(".").filter(t=>t.trim().length>10)[0];
+          if(!resumo) resumo = "Mais informações disponíveis na matéria original.";
 
-  // resumo completo (sem reticências)
-  let resumo = texto.split(".").filter(t=>t.trim().length>10)[0];
-  if(!resumo) resumo = "Mais informações disponíveis na matéria original.";
+          html += `
+            <div class="newsItem">
+              <p class="h">${escapeHtml(titulo)}</p>
+              <p class="p">${escapeHtml(resumo)}.</p>
+            </div>
+          `;
+        });
 
-  html += `
-    <div class="newsItem">
-      <p class="h">${escapeHtml(titulo)}</p>
-      <p class="p">${escapeHtml(resumo)}.</p>
-    </div>
-  `;
-});
+        newsBody.innerHTML = html;
+        newsBox.style.display = "flex";
+        // ================= FIM DA RENDERIZAÇÃO DAS MENSAGENS DA CIDADE =================
 
-newsBody.innerHTML = html;
-newsBox.style.display = "flex";
-if(newsPill) newsPill.textContent = String(items.length);
-// ================= FIM DA RENDERIZAÇÃO DAS MENSAGENS DA CIDADE =================
-     }catch(e){
-  console.warn("Falha ao carregar mensagens_cidade.json:", e);
-
-  newsBody.innerHTML = `
-    <div class="newsHeader">
-      Fonte: news.google.com — Offline
-    </div>
-    <div class="newsItem">
-      <p class="h">Mensagens indisponíveis</p>
-      <p class="p">Não foi possível atualizar as notícias no momento.</p>
-    </div>
-  `;
-
-  newsBox.style.display = "flex";
-  if(newsPill) newsPill.textContent = "Offline";
-}
-
+      }catch(e){
+        console.warn("Falha ao carregar mensagens_cidade.json:", e);
+        newsBody.innerHTML = `
+          <div class="newsHeader">Fonte: news.google.com — Offline</div>
+          <div class="newsItem">
+            <p class="h">Mensagens indisponíveis</p>
+            <p class="p">Não foi possível atualizar as notícias no momento.</p>
+          </div>
+        `;
+        newsBox.style.display = "flex";
+      }
     }
 
+    /* ===== LOAD ALL ===== */
     async function loadAll(){
       const status = document.getElementById("statusJson");
       const dot = document.getElementById("dotOnline");
-      const refPill = document.getElementById("refPill");
 
       try{
         const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
@@ -1332,11 +1266,8 @@ if(newsPill) newsPill.textContent = String(items.length);
 
         if (status) status.textContent = "Atualizado";
         if (dot) dot.style.background = "#44d07a";
-        if (refPill) refPill.textContent = "Atualizado";
 
-        // ✅ título do bloco "Mensagens..." agora altera via data.json
         setCityTitleFromConfig(data);
-
         renderAvisos(data);
 
         if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
@@ -1351,24 +1282,26 @@ if(newsPill) newsPill.textContent = String(items.length);
         await carregarClima(data);
         iniciarPublicidade(data);
 
-        await carregarMensagensCidade();
-
         return data;
 
       } catch(e){
         console.warn("Falha ao carregar data.json:", e);
         if (status) status.textContent = "Offline";
         if (dot) dot.style.background = "#ff5a5a";
-        if (refPill) refPill.textContent = "Offline";
         return null;
       }
     }
 
     loadAll();
     setInterval(loadAll, 60000);
-  
   </script>
+  <!-- =========================================================
+       FIM — JS (APP / UI / DADOS)
+       ========================================================= -->
 
+  <!-- =========================================================
+       INÍCIO — JS (SERVICE WORKER)
+       ========================================================= -->
   <script>
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", async () => {
@@ -1394,9 +1327,14 @@ if(newsPill) newsPill.textContent = String(items.length);
     });
   }
   </script>
+  <!-- =========================================================
+       FIM — JS (SERVICE WORKER)
+       ========================================================= -->
 
+  <!-- =========================================================
+       INÍCIO — JS (FUNDO DINÂMICO)
+       ========================================================= -->
   <script>
-  // ===== FUNDO DINÂMICO =====
   const fundos = {
     azul:    ["#061726", "#0b1f33"],
     verde:   ["#0b2e1a", "#134d2c"],
@@ -1438,8 +1376,11 @@ if(newsPill) newsPill.textContent = String(items.length);
     else if (k === "r") fundoAleatorio();
   });
 
-  setInterval(fundoAleatorio, 300000); // 5 min
+  setInterval(fundoAleatorio, 300000);
   </script>
+  <!-- =========================================================
+       FIM — JS (FUNDO DINÂMICO)
+       ========================================================= -->
 
 </body>
 </html>
