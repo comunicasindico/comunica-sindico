@@ -782,7 +782,15 @@ video.fit-contain{ object-fit:contain; }
   margin-bottom: 4px;
   font-weight: 700;
 }
+
+  .newsHeader{
+    font-size:0.65em;
+    color:rgba(255,255,255,.55);
+    margin-bottom:8px;
+    padding-left:4px;
+  }
   </style>
+
 </head>
 
 <body>
@@ -843,7 +851,7 @@ video.fit-contain{ object-fit:contain; }
                 <div class="newsTitle" id="cityTitle">📰 Mensagens da Cidade</div>
                 <div class="pill" id="newsPill">—</div>
               </div>
-              <div class="newsBody" id="newsBody"></div>
+              <div class="" id="newsBody"></div>
             </div>
 
           </div>
@@ -1229,65 +1237,74 @@ video.fit-contain{ object-fit:contain; }
         const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
         if(!res.ok) throw new Error("HTTP " + res.status);
 
-       const j = await res.json();
-      const items = Array.isArray(j?.items) ? j.items : [];
+// ================= INÍCIO DA RENDERIZAÇÃO DAS MENSAGENS DA CIDADE =================
+const j = await res.json();
+const items = Array.isArray(j.items) ? j.items : [];
 
-      const list = items.slice(0, 8).map(x=>{
-        const tituloRaw = normalizeText_(x.titulo || x.title || "Mensagem");
-        const textoRaw  = normalizeText_(x.texto  || x.text  || x.description || "");
-
-        const fonte = normalizeText_(x.fonte || x.source || "news.google.com");
-        const data  = toBRDate_(x.data || x.date || "");
-
-  // limpa URL/domínio grudado no final do título
-        const titulo = (tituloRaw.replace(/(\s+-\s+[\w.-]+\.[a-z]{2,})\s*$/i, "") || tituloRaw).trim();
-
-  // resumo curto: tira html, tira repetição do título, pega 1ª frase e fecha
-        let limpo = (textoRaw || "").replace(/<[^>]*>/g, "").replace(/\s+/g," ").trim();
-        if(limpo && titulo && limpo.toLowerCase().startsWith(titulo.toLowerCase())) limpo = limpo.slice(titulo.length).trim();
-
-        let resumo = (limpo.split(".")[0] || "").trim();
-        if(!resumo) resumo = "Veja o resumo completo no link da fonte";
-        if(resumo.length > 150) resumo = resumo.slice(0, 150).trim() + "...";
-        if(!/[.!?]$/.test(resumo)) resumo += ".";
-
-        return { titulo, resumo, fonte, data };
-      });
-
-        if(!list.length){
+if(!items.length){
   newsBody.innerHTML = `
     <div class="newsItem">
       <p class="h">Sem mensagens no momento</p>
-      <p class="p">Aguardando atualização do feed…</p>
+      <p class="p">Aguardando atualização do feed.</p>
     </div>`;
   newsBox.style.display = "flex";
   if(newsPill) newsPill.textContent = "—";
   return;
 }
 
-// render novo padrão (título + resumo + fonte/data pequena embaixo)
-newsBody.innerHTML = list.map(n => `
-  <div class="newsItem">
-    <p class="h">${escapeHtml_(n.titulo)}</p>
-    <p class="p">${escapeHtml_(n.resumo)}</p>
-    <div class="newsMeta">Fonte: ${escapeHtml_(n.fonte)} — ${escapeHtml_(n.data || "—")}</div>
+// Fonte e data únicas (do primeiro item)
+const fonte = normalizeText_(items[0].fonte || "news.google.com");
+const data  = toBRDate_(items[0].data || "");
+
+let html = `
+  <div class="newsHeader">
+    Fonte: ${escapeHtml(fonte)} — ${escapeHtml(data)}
   </div>
-`).join("");
+`;
 
+items.slice(0,8).forEach(x=>{
+  const titulo = normalizeText_(x.titulo || x.title || "Mensagem");
+  let texto   = normalizeText_(x.texto || x.text || x.description || "");
+
+  texto = texto.replace(/<[^>]*>/g,"").trim();
+
+  if(texto.toLowerCase().startsWith(titulo.toLowerCase())){
+    texto = texto.slice(titulo.length).trim();
+  }
+
+  // resumo completo (sem reticências)
+  let resumo = texto.split(".").filter(t=>t.trim().length>10)[0];
+  if(!resumo) resumo = "Mais informações disponíveis na matéria original.";
+
+  html += `
+    <div class="newsItem">
+      <p class="h">${escapeHtml(titulo)}</p>
+      <p class="p">${escapeHtml(resumo)}.</p>
+    </div>
+  `;
+});
+
+newsBody.innerHTML = html;
 newsBox.style.display = "flex";
-if(newsPill) newsPill.textContent = String(list.length);
+if(newsPill) newsPill.textContent = String(items.length);
+// ================= FIM DA RENDERIZAÇÃO DAS MENSAGENS DA CIDADE =================
+     }catch(e){
+  console.warn("Falha ao carregar mensagens_cidade.json:", e);
 
-      }catch(e){
-        console.warn("Falha ao carregar mensagens_cidade.json:", e);
-        newsBody.innerHTML = `
-          <div class="newsItem">
-            <div class="newsMeta">Fonte: news.google.com</div>
-            <p class="h">Mensagens indisponíveis</p>
-            <p class="p">Sem conexão ou arquivo não encontrado.</p>
-          </div>`;
-        newsBox.style.display = "flex";
-        if(newsPill) newsPill.textContent = "Offline";
-      }
+  newsBody.innerHTML = `
+    <div class="newsHeader">
+      Fonte: news.google.com — Offline
+    </div>
+    <div class="newsItem">
+      <p class="h">Mensagens indisponíveis</p>
+      <p class="p">Não foi possível atualizar as notícias no momento.</p>
+    </div>
+  `;
+
+  newsBox.style.display = "flex";
+  if(newsPill) newsPill.textContent = "Offline";
+}
+
     }
 
     async function loadAll(){
