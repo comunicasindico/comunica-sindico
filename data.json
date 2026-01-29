@@ -67,12 +67,7 @@
         "anunciante": "Em breve, Israel receberá a Palavra"
       }
     ],
-    "mensagens": [
-      {
-        "titulo": "📰 Notícias",
-        "texto": "Sem notícias no momento. (verifique RSS)"
-      }
-    ]
+    "mensagens": []
   },
   "clima": {
     "cidade": "Tubarão/SC",
