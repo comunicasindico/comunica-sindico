@@ -1,5 +1,4 @@
 {
-  "condominio": "Condomínio Alto Padrão Moema",
   "titulo": "Comunica Síndico — Condôminos",
   "subtitulo": "Painel informativo",
   "referencia": "",
@@ -70,16 +69,8 @@
     ],
     "mensagens": [
       {
-        "titulo": "Trânsito",
-        "texto": "Atenção: obras na Av. Marcolino Martins Cabral hoje à tarde."
-      },
-      {
-        "titulo": "Clima",
-        "texto": "Previsão de chuva fraca à noite. Leve guarda-chuva."
-      },
-      {
-        "titulo": "Cidade",
-        "texto": "Evento na praça central neste sábado às 18h."
+        "titulo": "📰 Notícias",
+        "texto": "Sem notícias no momento. (verifique RSS)"
       }
     ]
   },
@@ -95,12 +86,12 @@
     {
       "id": "001",
       "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família. Seja sábio e cuide de seu lar.",
+      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família. Seja sábio e cuide de seu lar. O Mateus está de olho.",
       "prioridade": "Alta",
       "tipo": "Segurança",
       "local": "Hall de Entrada",
-      "inicio": "28/01/26 - 12:56",
-      "fim": "15/02/26 - 12:56",
+      "inicio": "28/01/26 - 22:37",
+      "fim": "28/02/26 - 22:37",
       "emergencia": true
     },
     {
