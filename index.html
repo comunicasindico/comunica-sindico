@@ -347,46 +347,46 @@
     .aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
 
     .aviso .t{
-      margin:0;
-      font-weight:900;
-      font-size:clamp(16px, 2.0vw, 20px);
-      letter-spacing:.3px;
-      color:#fff;
-      text-shadow:0 1px 2px rgba(0,0,0,.6);
-      display:flex;
-      align-items:center;
-      gap:10px;
-      line-height:1.15;
-      display:-webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow:hidden;
-    }
+  margin:0;
+  font-weight:900;
+  font-size:clamp(18px, 2.4vw, 28px);   /* << aumentei */
+  letter-spacing:.3px;
+  color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,.6);
+  line-height:1.15;
+
+  display:-webkit-box;
+  -webkit-line-clamp: 3;               /* << era 2 */
+  -webkit-box-orient: vertical;
+  overflow:hidden;
+}
+
     .aviso.alta  .t::before{ content:"⚠️"; }
     .aviso.media .t::before{ content:"🔶"; }
     .aviso.baixa .t::before{ content:"ℹ️"; }
 
     .aviso .d{
-      margin:0;
-      color:#e0ecff;
-      line-height:1.35;
-      font-size:clamp(14px, 1.7vw, 17px);
-      display:-webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow:hidden;
-    }
+  margin:0;
+  color:#e0ecff;
+  line-height:1.35;
+  font-size:clamp(15px, 2.0vw, 22px);  /* << aumentei */
+  display:-webkit-box;
+  -webkit-line-clamp: 6;               /* << era 4 */
+  -webkit-box-orient: vertical;
+  overflow:hidden;
+}
 
-    .metaLine{
-      margin-top:auto;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      color:rgba(234,242,255,.92);
-      font-size:clamp(12px, 1.5vw, 14px);
-      font-weight:900;
-    }
+   .metaLine{
+  margin-top:auto;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  color:rgba(234,242,255,.92);
+  font-size:clamp(13px, 1.8vw, 18px);  /* << aumentei */
+  font-weight:900;
+}
+
     .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
     .metaItem b{ font-weight:950; color:#fff; }
     .metaSep{ opacity:.35; font-weight:900; }
@@ -400,7 +400,7 @@
       font-weight:950;
       letter-spacing:.4px;
       text-transform:uppercase;
-      font-size:12px;
+      font-size:14px;
       line-height:1;
       border:1px solid rgba(255,255,255,.22);
       background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
@@ -504,7 +504,7 @@
       gap: 8px;
       font-weight: 900;
       color: rgba(234,242,255,.92);
-      font-size: clamp(12px, 1.6vw, 15px);
+      font-size: clamp(13px, 1.9vw, 18px);
       white-space: nowrap;
     }
     .tickerLine2{ display:none !important; }
@@ -524,7 +524,7 @@
     #ref{
       color:rgba(234,242,255,.88);
       font-weight:850;
-      font-size:clamp(13px, 1.8vw, 16px);
+      font-size:clamp(14px, 2.0vw, 18px);
       flex:1 1 auto;
       min-width:0;
       white-space:nowrap;
@@ -673,30 +673,31 @@
       background: rgba(0,0,0,.22);
     }
     .newsItem .h{
-      font-family: var(--font-soft);
-      font-weight: 900;
-      font-size: 14px;
-      line-height: 1.2;
-      letter-spacing: .2px;
-      color: var(--news-title);
-      margin: 0 0 6px 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .newsItem .p{
-      font-family: var(--font-ui);
-      font-weight: 600;
-      font-size: 13px;
-      line-height: 1.35;
-      color: var(--news-text);
-      margin: 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
+  font-family: var(--font-soft);
+  font-weight: 900;
+  font-size: 16px;              /* << aumentei */
+  line-height: 1.25;
+  letter-spacing: .2px;
+  color: var(--news-title);
+  margin: 0 0 6px 0;
+
+  display:block;                /* << sem clamp */
+  overflow:visible;             /* << sem cortar */
+  white-space:normal;           /* << quebra linha */
+}
+
+   .newsItem .p{
+  font-family: var(--font-ui);
+  font-weight: 650;
+  font-size: 14px;              /* << aumentei */
+  line-height: 1.35;
+  color: var(--news-text);
+  margin: 0;
+
+  display:block;                /* << sem clamp */
+  overflow:visible;             /* << sem cortar */
+  white-space:normal;           /* << quebra linha */
+}
 
     .newsHeader{
       font-size:0.65em;
