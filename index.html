@@ -242,8 +242,8 @@
 .avisos{
   padding:14px;
   min-height:0;
-  overflow:hidden;                 /* evita “estourar” */
-  display:grid;                    /* garante 4 slots */
+  overflow:hidden;
+  display:grid;
   grid-template-rows: repeat(4, minmax(0, 1fr));
   gap:12px;
   scroll-behavior:smooth;
@@ -267,7 +267,7 @@
   will-change: transform, opacity;
   position:relative;
   padding-left:18px;
-  overflow:hidden;                 /* importante para clamps */
+  overflow:hidden;
 }
 
 .aviso:hover{
@@ -318,7 +318,6 @@
   align-items:center;
   gap:10px;
   line-height:1.15;
-  /* no máximo 2 linhas */
   display:-webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -332,8 +331,7 @@
   margin:0;
   color:#e0ecff;
   line-height:1.35;
-  font-size:clamp(14px, 1.7vw, 17px);  /* leitura melhor */
-  /* no máximo 4 linhas */
+  font-size:clamp(14px, 1.7vw, 17px);
   display:-webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
@@ -341,7 +339,7 @@
 }
 
 .metaLine{
-  margin-top:auto;                 /* empurra meta para baixo */
+  margin-top:auto;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
@@ -364,6 +362,7 @@
   opacity:.35;
   font-weight:900;
 }
+
 /* ===== BADGE 3D (BISEL) PARA PRIORIDADE ===== */
 .prioBadge{
   display:inline-flex;
@@ -472,11 +471,7 @@ video.fit-contain{ object-fit:contain; }
   gap:10px;
   min-width:0;
   overflow:hidden;
-}
-
-    /* clima na mesma linha do versículo */
-.tickerLine1{
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* sempre adaptando */
 }
 
 .wxInline{
@@ -490,17 +485,8 @@ video.fit-contain{ object-fit:contain; }
   white-space: nowrap;
 }
 
-/* TV / desktop: esconde a linha de baixo */
-@media (min-width: 981px){
-  .tickerLine2{ display:none; }
-  .wxInline{ display:flex; }
-}
-
-/* Mobile: mantém como estava */
-@media (max-width: 980px){
-  .wxInline{ display:none; }
-  .tickerLine2{ display:flex; }
-}
+/* ✅ Mantém apenas a PRIMEIRA linha do rodapé (remove duplicação) */
+.tickerLine2{ display:none !important; }
 
 .tickerIcon{
   font-size:clamp(22px, 3.1vw, 28px);
@@ -527,34 +513,20 @@ video.fit-contain{ object-fit:contain; }
   text-overflow:ellipsis;
 }
 
-.tickerLine2{
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.wxMini, .dtMini{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:900;
-  color:rgba(234,242,255,.92);
-  white-space:nowrap;
-  font-size:clamp(12px, 1.7vw, 15px);
-}
-
-.dtMini{
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(12,35,56,.25);
-  padding:6px 10px;
-  border-radius:999px;
-}
-
-@media (max-width: 520px){
-  .wxMini, .dtMini{ white-space:normal; }
+@media (max-width: 980px){
+  #dataBiblica{ white-space: normal; }
+  #ref{
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    line-height: 1.3;
+  }
+  .wxInline{
+    white-space: normal;
+    flex: 1 1 100%;
+    justify-content:flex-start;
+    margin-left: 0;
+  }
 }
 
 /* ===== MOBILE: scroll + vídeo embaixo ===== */
@@ -586,7 +558,6 @@ video.fit-contain{ object-fit:contain; }
 
   .panel{ min-height:auto; }
 
-  /* no mobile, deixa o painel de avisos respirar */
   .avisos{
     grid-template-rows: repeat(4, minmax(0, 1fr));
     overflow:hidden;
@@ -598,15 +569,6 @@ video.fit-contain{ object-fit:contain; }
     z-index:50;
     margin-bottom: 0;
     padding-bottom: max(12px, env(safe-area-inset-bottom));
-  }
-
-  .tickerLine1{ flex-wrap: wrap; }
-  #dataBiblica{ white-space: normal; }
-  #ref{
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
-    line-height: 1.3;
   }
 }
 
@@ -809,17 +771,17 @@ video.fit-contain{ object-fit:contain; }
   .newsItem .h{ font-size: 13.5px; }
   .newsItem .p{ font-size: 12.5px; }
 }
-/* Remove os 2 "Atualizado" extras, deixando só o do topo */
-   #refPill, #adPill, #newsPill { display:none !important; }
- 
-  .newsMeta{
+
+/* ✅ Remove "Atualizado" extras (mantém apenas o do topo à direita: #refPill) */
+#adPill, #newsPill { display:none !important; }
+
+.newsMeta{
   font-size: 11px;
   opacity: 0.7;
   text-align: left;
   margin-bottom: 4px;
   font-weight: 700;
 }
-
   </style>
 </head>
 
@@ -878,7 +840,7 @@ video.fit-contain{ object-fit:contain; }
             <!-- Mensagens da Cidade (embaixo do vídeo) — vem do mensagens_cidade.json -->
             <div class="newsBox" id="newsBox" style="display:none">
               <div class="newsHead">
-                <div class="newsTitle">📰 Mensagens da Cidade</div>
+                <div class="newsTitle" id="cityTitle">📰 Mensagens da Cidade</div>
                 <div class="pill" id="newsPill">—</div>
               </div>
               <div class="newsBody" id="newsBody"></div>
@@ -889,18 +851,17 @@ video.fit-contain{ object-fit:contain; }
       </div>
 
       <div class="ticker">
-     
-      <div class="tickerLine1">
-        <span class="tickerIcon">📖</span>
-        <span id="dataBiblica">—</span>
-        <span id="ref">—</span>
-  <!-- clima na mesma linha (TV) -->
-        <span class="wxInline" id="wxInline">
-          <span id="wxIconInline">🌦️</span>
-          <span id="wxTextInline">—</span>
-        </span>
+        <div class="tickerLine1">
+          <span class="tickerIcon">📖</span>
+          <span id="dataBiblica">—</span>
+          <span id="ref">—</span>
 
-      </div>
+          <span class="wxInline" id="wxInline">
+            <span id="wxIconInline">🌦️</span>
+            <span id="wxTextInline">—</span>
+          </span>
+        </div>
+
         <div class="tickerLine2">
           <div class="wxMini">
             <span id="wxIcon">🌦️</span>
@@ -983,6 +944,12 @@ video.fit-contain{ object-fit:contain; }
     let ROT_TIMER = null;
     let ROT_STATE = { page: 0, totalPages: 1, paused: false };
 
+    function escapeHtml(s){
+      return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
     function renderAvisos(data){
       const root = document.getElementById("avisos");
       if (!root) return;
@@ -994,7 +961,6 @@ video.fit-contain{ object-fit:contain; }
       const rot = data?.rotacao || {};
       const ativar = !!rot.ativar;
 
-      // >>> sempre no máximo 4 por tela <<<
       const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
       const qtd = Math.min(4, qtdCfg);
 
@@ -1113,7 +1079,7 @@ video.fit-contain{ object-fit:contain; }
       const c = data?.clima;
 
       if (!c?.latitude || !c?.longitude) {
-        setText("wxText", "Clima: configure latitude/longitude no data.json");
+        setText("wxTextInline", "Clima: configure latitude/longitude no data.json");
         return;
       }
 
@@ -1136,22 +1102,19 @@ video.fit-contain{ object-fit:contain; }
         const w = Math.round(cur.wind_speed_10m);
         const p = cur.precipitation;
 
-        const wx = document.getElementById("wxIcon");
-        if (wx) wx.textContent = emoji;
         const top = document.getElementById("wxIconTop");
         if (top) top.textContent = emoji;
 
-        setText("wxText", `${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
         const wxI = document.getElementById("wxIconInline");
         if (wxI) wxI.textContent = emoji;
 
         setText("wxTextInline", `${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
       } catch (e) {
-        const wx = document.getElementById("wxIcon");
-        if (wx) wx.textContent = "🌦️";
         const top = document.getElementById("wxIconTop");
         if (top) top.textContent = "🌦️";
-        setText("wxText", `${data?.clima?.cidade || "—"} (offline)`);
+        const wxI = document.getElementById("wxIconInline");
+        if (wxI) wxI.textContent = "🌦️";
+        setText("wxTextInline", `${data?.clima?.cidade || "—"} (offline)`);
       }
     }
 
@@ -1215,174 +1178,115 @@ video.fit-contain{ object-fit:contain; }
     }
 
     // ==========================================================
-    // MENSAGENS DA CIDADE (mensagens_cidade.json) -> abaixo do vídeo
-    // Aceita 2 formatos:
-    //  A) { mensagens: ["...", "..."] }
-    //  B) { items: [{titulo,texto,fonte,data,link}, ...] }
+    // MENSAGENS DA CIDADE (mensagens_cidade.json)
     // ==========================================================
-    const CITY_JSON_URL = "./mensagens_cidade.json";
 
-    function escapeHtml(s){
-      return String(s ?? "").replace(/[&<>"']/g, c => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-      }[c]));
+    function decodeHtmlEntities_(s){
+      const t = document.createElement("textarea");
+      t.innerHTML = String(s ?? "");
+      return t.value;
     }
-
-function decodeHtmlEntities_(s){
-  const t = document.createElement("textarea");
-  t.innerHTML = String(s ?? "");
-  return t.value;
-}
-function normalizeText_(s){
-  return decodeHtmlEntities_(s).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
-}
-    
-    function parseCityJsonToNewsItems_(j){
-      // Formato A: mensagens[]
-      if (Array.isArray(j?.mensagens) && j.mensagens.length){
-        return j.mensagens.slice(0, 8).map((txt, i)=>({
-          titulo: "🗞️ Cidade",
-          texto: String(txt || "").trim(),
-          data: j.atualizado_em || j.updatedAt || ""
-        }));
+    function normalizeText_(s){
+      return decodeHtmlEntities_(s).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+    }
+    function toBRDate_(v){
+      const s = String(v ?? "").trim();
+      if(!s) return "";
+      const m1 = s.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+      if(m1) return `${m1[1]}/${m1[2]}/${m1[3].slice(-2)}`;
+      const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if(m2) return `${m2[3]}/${m2[2]}/${m2[1].slice(-2)}`;
+      const d = new Date(s);
+      if(!isNaN(d.getTime())){
+        const dd = String(d.getDate()).padStart(2,"0");
+        const mm = String(d.getMonth()+1).padStart(2,"0");
+        const aa = String(d.getFullYear()).slice(-2);
+        return `${dd}/${mm}/${aa}`;
       }
+      return s;
+    }
 
-      // Formato B: items[]
-      const items = Array.isArray(j?.items) ? j.items : [];
-      if(items.length){
-        return items.slice(0, 8).map(x=>({
-          titulo: normalizeText_(x.titulo || "Mensagem"),
-          texto: normalizeText_(x.texto || ""),
-          data: x.data || j.updatedAt || "",
-          fonte: x.fonte || "",
-          link: x.link || ""
-        }));
+    function setCityTitleFromConfig(cfg){
+      const el = document.getElementById("cityTitle");
+      if(!el) return;
+
+      const t =
+        cfg?.publicidade?.cidadeTitulo ||
+        cfg?.cidadeTitulo ||
+        "📰 Mensagens da Cidade";
+
+      el.textContent = String(t);
+    }
+
+    async function carregarMensagensCidade(){
+      const newsBox  = document.getElementById("newsBox");
+      const newsBody = document.getElementById("newsBody");
+      const newsPill = document.getElementById("newsPill");
+
+      if(!newsBox || !newsBody) return;
+
+      try{
+        const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+
+        const j = await res.json();
+        const items = Array.isArray(j?.items) ? j.items : [];
+
+        const list = items.slice(0, 8).map(x=>{
+          const titulo = normalizeText_(x.titulo || "Mensagem");
+          const texto  = normalizeText_(x.texto || "");
+          const fonte  = normalizeText_(x.fonte || "news.google.com");
+          const data   = toBRDate_(x.data || "");
+
+          let textoLimpo = texto;
+          if(textoLimpo && titulo && textoLimpo.toLowerCase() === titulo.toLowerCase()){
+            textoLimpo = "";
+          }
+
+          const tituloLimpo = titulo.replace(/\s+-\s+[\w.-]+\.[a-z]{2,}.*$/i, "").trim() || titulo;
+
+          return { titulo: tituloLimpo, texto: textoLimpo, fonte, data };
+        });
+
+        if(!list.length){
+          newsBody.innerHTML = `
+            <div class="newsItem">
+              <div class="newsMeta">Fonte: news.google.com</div>
+              <p class="h">Sem mensagens no momento</p>
+              <p class="p">Aguardando atualização do feed…</p>
+            </div>`;
+          newsBox.style.display = "flex";
+          if(newsPill) newsPill.textContent = "—";
+          return;
+        }
+
+        newsBody.innerHTML = list.map(m=>{
+          const meta = `Fonte: ${m.fonte || "news.google.com"}${m.data ? " - " + m.data : ""}`;
+          return `
+            <div class="newsItem">
+              <div class="newsMeta">${escapeHtml(meta)}</div>
+              <p class="h">${escapeHtml(m.titulo || "Mensagem")}</p>
+              ${m.texto ? `<p class="p">${escapeHtml(m.texto)}</p>` : ``}
+            </div>
+          `;
+        }).join("");
+
+        newsBox.style.display = "flex";
+        if(newsPill) newsPill.textContent = "Atualizado";
+
+      }catch(e){
+        console.warn("Falha ao carregar mensagens_cidade.json:", e);
+        newsBody.innerHTML = `
+          <div class="newsItem">
+            <div class="newsMeta">Fonte: news.google.com</div>
+            <p class="h">Mensagens indisponíveis</p>
+            <p class="p">Sem conexão ou arquivo não encontrado.</p>
+          </div>`;
+        newsBox.style.display = "flex";
+        if(newsPill) newsPill.textContent = "Offline";
       }
-
-      return [];
     }
 
-   // ==========================================================
-// MENSAGENS DA CIDADE (mensagens_cidade.json) — FUNÇÃO COMPLETA (CORRIGIDA)
-// - Remove &nbsp; e outras entidades HTML
-// - Evita repetição (quando texto == título)
-// - Layout: Fonte/Data bem pequeno à esquerda, depois título, depois resumo
-// - Preenche #newsBox / #newsBody (e opcionalmente #newsPill)
-// ==========================================================
-
-async function carregarMensagensCidade(){
-  const newsBox  = document.getElementById("newsBox");
-  const newsBody = document.getElementById("newsBody");
-  const newsPill = document.getElementById("newsPill"); // se você ocultou via CSS, ok
-
-  if(!newsBox || !newsBody) return;
-
-  // Helpers
-  function escapeHtml(s){
-    return String(s ?? "")
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;")
-      .replace(/"/g,"&quot;")
-      .replace(/'/g,"&#39;");
-  }
-  function decodeHtmlEntities_(s){
-    const t = document.createElement("textarea");
-    t.innerHTML = String(s ?? "");
-    return t.value;
-  }
-  function normalizeText_(s){
-    return decodeHtmlEntities_(s)
-      .replace(/\u00a0/g," ")
-      .replace(/\s+/g," ")
-      .trim();
-  }
-  function toBRDate_(v){
-    // aceita "29-01-2026" ou "2026-01-29" ou ISO
-    const s = String(v ?? "").trim();
-    if(!s) return "";
-    const m1 = s.match(/^(\d{2})-(\d{2})-(\d{4})$/);
-    if(m1) return `${m1[1]}/${m1[2]}/${m1[3].slice(-2)}`; // 29/01/26
-    const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if(m2) return `${m2[3]}/${m2[2]}/${m2[1].slice(-2)}`;
-    const d = new Date(s);
-    if(!isNaN(d.getTime())){
-      const dd = String(d.getDate()).padStart(2,"0");
-      const mm = String(d.getMonth()+1).padStart(2,"0");
-      const aa = String(d.getFullYear()).slice(-2);
-      return `${dd}/${mm}/${aa}`;
-    }
-    return s;
-  }
-
-  try{
-    const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
-    if(!res.ok) throw new Error("HTTP " + res.status);
-
-    const j = await res.json();
-    const items = Array.isArray(j?.items) ? j.items : [];
-
-    const list = items.slice(0, 8).map(x=>{
-      const titulo = normalizeText_(x.titulo || "Mensagem");
-      const texto  = normalizeText_(x.texto || "");
-      const fonte  = normalizeText_(x.fonte || "news.google.com");
-      const data   = toBRDate_(x.data || "");
-
-      // remove repetição: se texto for igual ao título (ou muito parecido), some
-      let textoLimpo = texto;
-      if(textoLimpo && titulo && textoLimpo.toLowerCase() === titulo.toLowerCase()){
-        textoLimpo = "";
-      }
-
-      // também remove a parte final " - domínio" do título, se vier colada
-      // (opcional, melhora visual)
-      const tituloLimpo = titulo.replace(/\s+-\s+[\w.-]+\.[a-z]{2,}.*$/i, "").trim() || titulo;
-
-      return { titulo: tituloLimpo, texto: textoLimpo, fonte, data };
-    });
-
-    if(!list.length){
-      newsBody.innerHTML = `
-        <div class="newsItem">
-          <div class="newsMeta">Fonte: news.google.com</div>
-          <p class="h">Sem mensagens no momento</p>
-          <p class="p">Aguardando atualização do feed…</p>
-        </div>`;
-      newsBox.style.display = "flex";
-      if(newsPill) newsPill.textContent = "—";
-      return;
-    }
-
-    // Render no formato que você pediu
-    newsBody.innerHTML = list.map(m=>{
-      const meta = `Fonte: ${m.fonte || "news.google.com"}${m.data ? " - " + m.data : ""}`;
-
-      return `
-        <div class="newsItem">
-          <div class="newsMeta">${escapeHtml(meta)}</div>
-          <p class="h">${escapeHtml(m.titulo || "Mensagem")}</p>
-          ${m.texto ? `<p class="p">${escapeHtml(m.texto)}</p>` : ``}
-        </div>
-      `;
-    }).join("");
-
-    newsBox.style.display = "flex";
-    if(newsPill) newsPill.textContent = "Atualizado";
-
-  }catch(e){
-    console.warn("Falha ao carregar mensagens_cidade.json:", e);
-    newsBody.innerHTML = `
-      <div class="newsItem">
-        <div class="newsMeta">Fonte: news.google.com</div>
-        <p class="h">Mensagens indisponíveis</p>
-        <p class="p">Sem conexão ou arquivo não encontrado.</p>
-      </div>`;
-    newsBox.style.display = "flex";
-    if(newsPill) newsPill.textContent = "Offline";
-  }
-}
-
-    
     async function loadAll(){
       const status = document.getElementById("statusJson");
       const dot = document.getElementById("dotOnline");
@@ -1401,6 +1305,9 @@ async function carregarMensagensCidade(){
         if (dot) dot.style.background = "#44d07a";
         if (refPill) refPill.textContent = "Atualizado";
 
+        // ✅ título do bloco "Mensagens..." agora altera via data.json
+        setCityTitleFromConfig(data);
+
         renderAvisos(data);
 
         if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
@@ -1415,7 +1322,6 @@ async function carregarMensagensCidade(){
         await carregarClima(data);
         iniciarPublicidade(data);
 
-        // >>> Mensagens da Cidade vêm SOMENTE do mensagens_cidade.json <<<
         await carregarMensagensCidade();
 
         return data;
