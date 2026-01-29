@@ -1095,7 +1095,8 @@ async function applyCityMessagesToData_(data, mode="replace"){
         const ct = (res.headers.get("content-type") || "").toLowerCase();
         if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
         let data = await res.json();
-// ✅ AQUI:
+
+        // ✅ AQUI:
         data = await applyCityMessagesToData_(data, "replace");
         
         setText("condoCenter", safeText(data.condominio || "—"));
