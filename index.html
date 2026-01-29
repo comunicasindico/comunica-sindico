@@ -1084,7 +1084,6 @@ async function applyCityMessagesToData_(data, mode="replace"){
 
   return data;
 }
-
     
     async function loadAll(){
       const status = document.getElementById("statusJson");
@@ -1096,7 +1095,7 @@ async function applyCityMessagesToData_(data, mode="replace"){
         if (!res.ok) throw new Error("HTTP " + res.status);
         const ct = (res.headers.get("content-type") || "").toLowerCase();
         if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
-        const data = await res.json();
+        let data = await res.json();
 // ✅ AQUI:
         data = await applyCityMessagesToData_(data, "replace");
         
@@ -1143,31 +1142,28 @@ const CITY_JSON_URL = "./mensagens_cidade.json"; // mesmo nível do index.html
 
 async function loadCityMessages_(){
   try{
-    // cache-buster pra evitar pegar versão velha do GitHub Pages
-    const url = CITY_JSON_URL + (CITY_JSON_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
-
-    const res = await fetch(url, { cache: "no-store" });
+    const res = await fetch(CITY_JSON_URL + "?ts=" + Date.now(), { cache: "no-store" });
     if(!res.ok) throw new Error("HTTP " + res.status);
 
     const j = await res.json();
     const items = Array.isArray(j?.items) ? j.items : [];
 
-    // converte para o formato que o seu app já entende (titulo/texto)
-    const msgs = items.map(x => ({
-      titulo: (x.titulo || "Cidade").trim(),
+    // converte para o formato que seu iniciarPublicidade() já entende (titulo/texto)
+    return items.slice(0, 8).map(x => ({
+      titulo: x.titulo || "Mensagem",
       texto: [
         (x.texto || "").trim(),
-        x.fonte ? `Fonte: ${x.fonte}` : "",
-        x.data ? `Data: ${x.data}` : "",
-        x.link ? `${x.link}` : ""
-      ].filter(Boolean).join(" — ")
+        x.fonte ? ("Fonte: " + x.fonte) : "",
+        x.data ? ("Data: " + x.data) : "",
+        x.link ? ("Link: " + x.link) : ""
+      ].filter(Boolean).join(" • ")
     }));
-
-    return msgs.filter(m => (m.titulo || m.texto));
-  } catch(e){
-    return []; // silêncio e fallback será aplicado no merge
+  }catch(e){
+    console.warn("Falha ao carregar mensagens_cidade.json:", e);
+    return [];
   }
 }
+
 
 /**
  * Aplica mensagens da cidade dentro do objeto data já carregado do data.json
