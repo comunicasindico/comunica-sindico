@@ -238,17 +238,19 @@
 #avisos.fade-out{ opacity:0; transition: opacity .22s ease; }
 #avisos.fade-in { opacity:1; transition: opacity .22s ease; }
 
+/* >>> Ajuste principal: 4 avisos por vez, sem rolagem (cabendo) <<< */
 .avisos{
   padding:14px;
-  overflow:auto;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
   min-height:0;
+  overflow:hidden;                 /* evita “estourar” */
+  display:grid;                    /* garante 4 slots */
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  gap:12px;
   scroll-behavior:smooth;
 }
 
 .aviso{
+  min-height:0;
   padding:16px;
   border-radius:18px;
   background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
@@ -265,6 +267,7 @@
   will-change: transform, opacity;
   position:relative;
   padding-left:18px;
+  overflow:hidden;                 /* importante para clamps */
 }
 
 .aviso:hover{
@@ -307,13 +310,19 @@
 .aviso .t{
   margin:0;
   font-weight:900;
-  font-size:18px;
+  font-size:clamp(16px, 2.0vw, 20px);
   letter-spacing:.3px;
   color:#fff;
   text-shadow:0 1px 2px rgba(0,0,0,.6);
   display:flex;
   align-items:center;
   gap:10px;
+  line-height:1.15;
+  /* no máximo 2 linhas */
+  display:-webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow:hidden;
 }
 .aviso.alta  .t::before{ content:"⚠️"; }
 .aviso.media .t::before{ content:"🔶"; }
@@ -322,18 +331,23 @@
 .aviso .d{
   margin:0;
   color:#e0ecff;
-  line-height:1.45;
-  font-size:14px;
+  line-height:1.35;
+  font-size:clamp(14px, 1.7vw, 17px);  /* leitura melhor */
+  /* no máximo 4 linhas */
+  display:-webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow:hidden;
 }
 
 .metaLine{
-  margin-top:8px;
+  margin-top:auto;                 /* empurra meta para baixo */
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   align-items:center;
   color:rgba(234,242,255,.92);
-  font-size:13px;
+  font-size:clamp(12px, 1.5vw, 14px);
   font-weight:900;
 }
 .metaItem{
@@ -363,28 +377,23 @@
   font-size:12px;
   line-height:1;
 
-  /* efeito “bisel/3D” */
   border:1px solid rgba(255,255,255,.22);
   background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.35),   /* brilho em cima */
-    inset 0 -2px 6px rgba(0,0,0,.35),      /* sombra interna em baixo */
-    0 6px 14px rgba(0,0,0,.35);            /* sombra externa */
+    inset 0 1px 0 rgba(255,255,255,.35),
+    inset 0 -2px 6px rgba(0,0,0,.35),
+    0 6px 14px rgba(0,0,0,.35);
 }
-
-/* cores por nível (mantém o 3D) */
 .prioBadge.alta{
   border-color: rgba(255,90,90,.80);
   background: linear-gradient(180deg, rgba(255,120,120,.50), rgba(160,0,0,.35));
   text-shadow: 0 1px 0 rgba(0,0,0,.55);
 }
-
 .prioBadge.media{
   border-color: rgba(255,179,71,.75);
   background: linear-gradient(180deg, rgba(255,210,120,.55), rgba(160,90,0,.35));
   text-shadow: 0 1px 0 rgba(0,0,0,.50);
 }
-
 .prioBadge.baixa{
   border-color: rgba(120,190,255,.70);
   background: linear-gradient(180deg, rgba(160,210,255,.55), rgba(0,80,160,.32));
@@ -398,7 +407,7 @@
   flex-direction:column;
   gap:12px;
   min-height:0;
-  overflow:auto;             /* <- CHAVE: se faltar espaço, rola dentro do painel */
+  overflow:auto;
 }
 .adCard{
   border:1px solid rgba(255,255,255,.14);
@@ -416,7 +425,6 @@
   color:rgba(234,242,255,.92);
   background:rgba(12,35,56,.35);
 }
-/* vídeo não pode “empurrar” o rodapé */
 .videoWrap{
   width:100%;
   aspect-ratio:16/9;
@@ -426,7 +434,7 @@
   justify-content:center;
 
   flex:0 0 auto;
-  max-height: 38vh;          /* <- limite de altura do vídeo */
+  max-height: 38vh;
   overflow:hidden;
   border-radius: 12px;
 }
@@ -440,7 +448,7 @@ video{
 }
 video.fit-contain{ object-fit:contain; }
 
-/* ===== FOOTER (VERSÍCULO + DATA/HORA + TEMPO/VENTO) ===== */
+/* ===== FOOTER (VERSÍCULO + DATA + TEMPO/VENTO) ===== */
 .ticker{
   flex:0 0 auto;
   width:100%;
@@ -546,27 +554,23 @@ video.fit-contain{ object-fit:contain; }
   }
 
   section.panel{ order:1; }
-  #adBox{ 
-    order:2;   
-    min-height:0;
-  }
+  #adBox{ order:2; min-height:0; }
 
   .panel{ min-height:auto; }
-  .avisos{ overflow:visible; }
+
+  /* no mobile, deixa o painel de avisos respirar */
+  .avisos{
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    overflow:hidden;
+  }
 
   .ticker{
     position:sticky;
     bottom:0;
-    z-index:9;
+    z-index:50;
     margin-bottom: 0;
     padding-bottom: max(12px, env(safe-area-inset-bottom));
   }
-/* BLINDAGEM: rodapé sempre visível (TV/PC também) */
-.ticker{
-  position: sticky;
-  bottom: 0;
-  z-index: 50;
-}
 
   .tickerLine1{ flex-wrap: wrap; }
   #dataBiblica{ white-space: normal; }
@@ -582,7 +586,7 @@ video.fit-contain{ object-fit:contain; }
 @media (min-width: 1400px){
   .aviso{ padding:22px; gap:12px; border-radius:20px; }
   .aviso .t{ font-size:24px; }
-  .aviso .d{ font-size:18px; line-height:1.55; }
+  .aviso .d{ font-size:18px; line-height:1.45; }
   .metaLine{ font-size:16px; gap:14px; }
   .panelTitle{ font-size:16px; }
   .pill{ font-size:14px; }
@@ -664,10 +668,7 @@ video.fit-contain{ object-fit:contain; }
 
 /* ===========================
    PREMIUM — Mensagens da Cidade
-   (newsBox / newsBody / newsItem)
    =========================== */
-
-/* Tipografia premium (sem depender de Google Fonts) */
 :root{
   --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
   --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
@@ -684,7 +685,6 @@ video.fit-contain{ object-fit:contain; }
   --news-chip-border: rgba(255,255,255,.14);
 }
 
-/* Caixa */
 #newsBox{
   background: var(--news-bg);
   border: 1px solid var(--news-border);
@@ -695,29 +695,6 @@ video.fit-contain{ object-fit:contain; }
   -webkit-backdrop-filter: blur(10px);
 }
 
-/* Cabeçalho “Mensagens da Cidade” (se existir) */
-#newsBox .titleRow,
-#newsBox .newsHead,
-#newsBox .headRow{
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  border-bottom: 1px solid rgba(255,255,255,.10);
-}
-
-#newsBox .titleRow .t,
-#newsBox .newsHead .t,
-#newsBox .headRow .t{
-  font-family: var(--font-soft);
-  font-weight: 900;
-  letter-spacing: .2px;
-  font-size: 14px;
-  color: var(--news-title);
-}
-
-/* Pílula de status */
 #newsPill{
   font-family: var(--font-ui);
   font-weight: 800;
@@ -730,7 +707,6 @@ video.fit-contain{ object-fit:contain; }
   box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
 }
 
-/* Lista */
 #newsBody{
   padding: 12px 14px 14px;
   display: flex;
@@ -742,7 +718,6 @@ video.fit-contain{ object-fit:contain; }
   scrollbar-width: thin;
 }
 
-/* Scrollbar (Chrome/Edge/Safari) */
 #newsBody::-webkit-scrollbar{ width: 10px; }
 #newsBody::-webkit-scrollbar-track{ background: transparent; }
 #newsBody::-webkit-scrollbar-thumb{
@@ -752,7 +727,6 @@ video.fit-contain{ object-fit:contain; }
   background-clip: padding-box;
 }
 
-/* Item */
 .newsItem{
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,.10);
@@ -768,7 +742,6 @@ video.fit-contain{ object-fit:contain; }
   background: rgba(0,0,0,.22);
 }
 
-/* Título */
 .newsItem .h{
   font-family: var(--font-soft);
   font-weight: 900;
@@ -777,15 +750,12 @@ video.fit-contain{ object-fit:contain; }
   letter-spacing: .2px;
   color: var(--news-title);
   margin: 0 0 6px 0;
-
-  /* 2 linhas no máximo */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* Texto */
 .newsItem .p{
   font-family: var(--font-ui);
   font-weight: 600;
@@ -793,30 +763,26 @@ video.fit-contain{ object-fit:contain; }
   line-height: 1.35;
   color: var(--news-text);
   margin: 0;
-
-  /* 3 linhas no máximo */
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* Caso você esteja mostrando Fonte/Data dentro do texto, deixa com cara de “nota” */
 .newsItem .p .muted,
 .newsItem .p small{
   color: var(--news-muted);
   font-weight: 700;
 }
 
-/* Mobile: mais compacto */
 @media (max-width: 520px){
   #newsBody{ max-height: 30vh; padding: 10px 12px 12px; }
   .newsItem{ padding: 10px 10px 9px; border-radius: 12px; }
   .newsItem .h{ font-size: 13.5px; }
   .newsItem .p{ font-size: 12.5px; }
 }
-  
-</style>
+
+  </style>
 </head>
 
 <body>
@@ -871,6 +837,7 @@ video.fit-contain{ object-fit:contain; }
               </div>
             </div>
 
+            <!-- Mensagens da Cidade (embaixo do vídeo) — vem do mensagens_cidade.json -->
             <div class="newsBox" id="newsBox" style="display:none">
               <div class="newsHead">
                 <div class="newsTitle">📰 Mensagens da Cidade</div>
@@ -878,6 +845,7 @@ video.fit-contain{ object-fit:contain; }
               </div>
               <div class="newsBody" id="newsBody"></div>
             </div>
+
           </div>
         </aside>
       </div>
@@ -955,11 +923,11 @@ video.fit-contain{ object-fit:contain; }
     }
 
     function footerDateTimeString(d){
-  const dd = pad2(d.getDate());
-  const mm = pad2(d.getMonth()+1);
-  const yyyy = d.getFullYear();
-  return `${dd}/${mm}/${yyyy}`;
-}
+      const dd = pad2(d.getDate());
+      const mm = pad2(d.getMonth()+1);
+      const yyyy = d.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    }
     function tickClock(){
       const d = new Date();
       setText("clock", `${pad2(d.getHours())}:${pad2(d.getMinutes())}`);
@@ -981,7 +949,11 @@ video.fit-contain{ object-fit:contain; }
       const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
       const rot = data?.rotacao || {};
       const ativar = !!rot.ativar;
-      const qtd = Math.max(1, Number(rot.quantidadePorTela || 4));
+
+      // >>> sempre no máximo 4 por tela <<<
+      const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
+      const qtd = Math.min(4, qtdCfg);
+
       const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
 
       if(!avisosAll.length){
@@ -1018,16 +990,15 @@ video.fit-contain{ object-fit:contain; }
             const fim = formatDT_BR(a.fim || "");
 
             const itens = [];
-            if(local) itens.push(`<span class="metaItem">📍 <b>${local}</b></span>`);
-            if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${tipo}</b></span>`);
+            if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
+            if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
             const pr = safeText(a.prioridade || "Baixa");
-            itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${pr}</span></span>`);
-           
-            if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${ini}${fim ? " → " + fim : ""}</b></span>`);
+            itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
+            if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
 
             el.innerHTML = `
-              <p class="t">${titulo}</p>
-              ${desc ? `<p class="d">${desc}</p>` : ""}
+              <p class="t">${escapeHtml(titulo)}</p>
+              ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : ""}
               <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
             `;
             root.appendChild(el);
@@ -1192,53 +1163,89 @@ video.fit-contain{ object-fit:contain; }
 
       adBox.style.display = "flex";
       playNext();
+    }
 
+    // ==========================================================
+    // MENSAGENS DA CIDADE (mensagens_cidade.json) -> abaixo do vídeo
+    // Aceita 2 formatos:
+    //  A) { mensagens: ["...", "..."] }
+    //  B) { items: [{titulo,texto,fonte,data,link}, ...] }
+    // ==========================================================
+    const CITY_JSON_URL = "./mensagens_cidade.json";
+
+    function escapeHtml(s){
+      return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    function parseCityJsonToNewsItems_(j){
+      // Formato A: mensagens[]
+      if (Array.isArray(j?.mensagens) && j.mensagens.length){
+        return j.mensagens.slice(0, 8).map((txt, i)=>({
+          titulo: "🗞️ Cidade",
+          texto: String(txt || "").trim(),
+          data: j.atualizado_em || j.updatedAt || ""
+        }));
+      }
+
+      // Formato B: items[]
+      const items = Array.isArray(j?.items) ? j.items : [];
+      if(items.length){
+        return items.slice(0, 8).map(x=>({
+          titulo: x.titulo || "Mensagem",
+          texto: (x.texto || "").replace(/\s+/g," ").trim(),
+          data: x.data || j.updatedAt || "",
+          fonte: x.fonte || "",
+          link: x.link || ""
+        }));
+      }
+
+      return [];
+    }
+
+    async function carregarMensagensCidade(){
       const newsBox = document.getElementById("newsBox");
       const newsBody = document.getElementById("newsBody");
       const newsPill = document.getElementById("newsPill");
+      if(!newsBox || !newsBody) return;
 
-      const msgs = Array.isArray(pub?.mensagens) ? pub.mensagens : [];
+      try{
+        const res = await fetch(CITY_JSON_URL + "?ts=" + Date.now(), { cache: "no-store" });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+        const j = await res.json();
 
-      if (newsBox && newsBody) {
-        if (!msgs.length) {
+        const list = parseCityJsonToNewsItems_(j);
+        if(!list.length){
           newsBox.style.display = "none";
-        } else {
-          newsBody.innerHTML = msgs.slice(0, 8).map(m => `
-            <div class="newsItem">
-              <p class="h">${safeText(m.titulo || "Mensagem")}</p>
-              <p class="p">${safeText(m.texto || "")}</p>
-            </div>
-          `).join("");
-          newsBox.style.display = "flex";
-          if (newsPill) newsPill.textContent = "Atualizado";
+          return;
         }
+
+        newsBody.innerHTML = list.map(m=>{
+          const metaParts = [];
+          if(m.fonte) metaParts.push("Fonte: " + m.fonte);
+          if(m.data) metaParts.push("Data: " + m.data);
+          const meta = metaParts.length ? `<small class="muted">${escapeHtml(metaParts.join(" • "))}</small>` : "";
+
+          const linkPart = m.link ? `<div style="margin-top:8px"><a href="${escapeHtml(m.link)}" target="_blank" rel="noopener">Abrir</a></div>` : "";
+
+          return `
+            <div class="newsItem">
+              <p class="h">${escapeHtml(m.titulo || "Mensagem")}</p>
+              <p class="p">${escapeHtml(m.texto || "")}${meta ? "<br>"+meta : ""}</p>
+              ${linkPart}
+            </div>
+          `;
+        }).join("");
+
+        newsBox.style.display = "flex";
+        if (newsPill) newsPill.textContent = (j.atualizado_em || j.updatedAt) ? "Atualizado" : "Ok";
+      }catch(e){
+        // Se falhar, só esconde (não interfere no restante)
+        if (newsBox) newsBox.style.display = "none";
       }
     }
 
-async function applyCityMessagesToData_(data, mode="replace"){
-  data.publicidade = data.publicidade || {};
-  if(!Array.isArray(data.publicidade.mensagens)) data.publicidade.mensagens = [];
-
-  const cityMsgs = await loadCityMessages_();
-
-  if(cityMsgs.length){
-    if(mode === "merge"){
-      // coloca as mensagens da cidade na frente e mantém as antigas depois
-      data.publicidade.mensagens = [...cityMsgs, ...data.publicidade.mensagens];
-    }else{
-      // substitui totalmente pelo feed da cidade
-      data.publicidade.mensagens = cityMsgs;
-    }
-  }else{
-    // fallback mínimo se vier vazio
-    if(!data.publicidade.mensagens.length){
-      data.publicidade.mensagens = [{ titulo:"Cidade", texto:"Sem notícias no momento." }];
-    }
-  }
-
-  return data;
-}
-    
     async function loadAll(){
       const status = document.getElementById("statusJson");
       const dot = document.getElementById("dotOnline");
@@ -1249,11 +1256,8 @@ async function applyCityMessagesToData_(data, mode="replace"){
         if (!res.ok) throw new Error("HTTP " + res.status);
         const ct = (res.headers.get("content-type") || "").toLowerCase();
         if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
-        let data = await res.json();
+        const data = await res.json();
 
-        // ✅ AQUI:
-        data = await applyCityMessagesToData_(data, "replace");
-        
         setText("condoCenter", safeText(data.condominio || "—"));
 
         if (status) status.textContent = "Atualizado";
@@ -1274,6 +1278,9 @@ async function applyCityMessagesToData_(data, mode="replace"){
         await carregarClima(data);
         iniciarPublicidade(data);
 
+        // >>> Mensagens da Cidade vêm SOMENTE do mensagens_cidade.json <<<
+        await carregarMensagensCidade();
+
         return data;
 
       } catch(e){
@@ -1285,48 +1292,6 @@ async function applyCityMessagesToData_(data, mode="replace"){
       }
     }
 
-
-// ==========================================================
-// MENSAGENS DA CIDADE (mensagens_cidade.json) -> publicidade.mensagens
-// - Busca o arquivo separado no GitHub
-// - Faz fallback se não existir / der erro
-// - Pode "substituir" ou "mesclar" com mensagens já existentes
-// ==========================================================
-
-const CITY_JSON_URL = "./mensagens_cidade.json"; // mesmo nível do index.html
-
-async function loadCityMessages_(){
-  try{
-    const res = await fetch(CITY_JSON_URL + "?ts=" + Date.now(), { cache: "no-store" });
-    if(!res.ok) throw new Error("HTTP " + res.status);
-
-    const j = await res.json();
-    const items = Array.isArray(j?.items) ? j.items : [];
-
-    // converte para o formato que seu iniciarPublicidade() já entende (titulo/texto)
-    return items.slice(0, 8).map(x => ({
-      titulo: x.titulo || "Mensagem",
-      texto: [
-        (x.texto || "").trim(),
-        x.fonte ? ("Fonte: " + x.fonte) : "",
-        x.data ? ("Data: " + x.data) : "",
-        x.link ? ("Link: " + x.link) : ""
-      ].filter(Boolean).join(" • ")
-    }));
-  }catch(e){
-    console.warn("Falha ao carregar mensagens_cidade.json:", e);
-    return [];
-  }
-}
-
-
-/**
- * Aplica mensagens da cidade dentro do objeto data já carregado do data.json
- * @param {object} data
- * @param {"replace"|"merge"} mode
- */
-
-    
     loadAll();
     setInterval(loadAll, 60000);
   </script>
@@ -1355,9 +1320,9 @@ async function loadCityMessages_(){
       setTimeout(()=>window.location.reload(), 1200);
     });
   }
-</script>
+  </script>
 
-<script>
+  <script>
   // ===== FUNDO DINÂMICO =====
   const fundos = {
     azul:    ["#061726", "#0b1f33"],
@@ -1401,9 +1366,7 @@ async function loadCityMessages_(){
   });
 
   setInterval(fundoAleatorio, 300000); // 5 min
-
-</script>
-
+  </script>
 
 </body>
 </html>
