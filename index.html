@@ -1229,24 +1229,30 @@ video.fit-contain{ object-fit:contain; }
         const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
         if(!res.ok) throw new Error("HTTP " + res.status);
 
-        const j = await res.json();
-        const items = Array.isArray(j?.items) ? j.items : [];
+       const j = await res.json();
+      const items = Array.isArray(j?.items) ? j.items : [];
 
-        const list = items.slice(0, 8).map(x=>{
-          const titulo = normalizeText_(x.titulo || "Mensagem");
-          const texto  = normalizeText_(x.texto || "");
-          const fonte  = normalizeText_(x.fonte || "news.google.com");
-          const data   = toBRDate_(x.data || "");
+      const list = items.slice(0, 8).map(x=>{
+        const tituloRaw = normalizeText_(x.titulo || x.title || "Mensagem");
+        const textoRaw  = normalizeText_(x.texto  || x.text  || x.description || "");
 
-          let textoLimpo = texto;
-          if(textoLimpo && titulo && textoLimpo.toLowerCase() === titulo.toLowerCase()){
-            textoLimpo = "";
-          }
+        const fonte = normalizeText_(x.fonte || x.source || "news.google.com");
+        const data  = toBRDate_(x.data || x.date || "");
 
-          const tituloLimpo = titulo.replace(/\s+-\s+[\w.-]+\.[a-z]{2,}.*$/i, "").trim() || titulo;
+  // limpa URL/domínio grudado no final do título
+        const titulo = (tituloRaw.replace(/(\s+-\s+[\w.-]+\.[a-z]{2,})\s*$/i, "") || tituloRaw).trim();
 
-          return { titulo: tituloLimpo, texto: textoLimpo, fonte, data };
-        });
+  // resumo curto: tira html, tira repetição do título, pega 1ª frase e fecha
+        let limpo = (textoRaw || "").replace(/<[^>]*>/g, "").replace(/\s+/g," ").trim();
+        if(limpo && titulo && limpo.toLowerCase().startsWith(titulo.toLowerCase())) limpo = limpo.slice(titulo.length).trim();
+
+        let resumo = (limpo.split(".")[0] || "").trim();
+        if(!resumo) resumo = "Veja o resumo completo no link da fonte";
+        if(resumo.length > 150) resumo = resumo.slice(0, 150).trim() + "...";
+        if(!/[.!?]$/.test(resumo)) resumo += ".";
+
+        return { titulo, resumo, fonte, data };
+      });
 
         if(!list.length){
           newsBody.innerHTML = `
