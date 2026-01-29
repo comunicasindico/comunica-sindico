@@ -474,8 +474,36 @@ video.fit-contain{ object-fit:contain; }
   overflow:hidden;
 }
 
+    /* clima na mesma linha do versículo */
+.tickerLine1{
+  flex-wrap: wrap;
+}
+
+.wxInline{
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 900;
+  color: rgba(234,242,255,.92);
+  font-size: clamp(12px, 1.6vw, 15px);
+  white-space: nowrap;
+}
+
+/* TV / desktop: esconde a linha de baixo */
+@media (min-width: 981px){
+  .tickerLine2{ display:none; }
+  .wxInline{ display:flex; }
+}
+
+/* Mobile: mantém como estava */
+@media (max-width: 980px){
+  .wxInline{ display:none; }
+  .tickerLine2{ display:flex; }
+}
+
 .tickerIcon{
-  font-size:clamp(32px, 4.4vw, 40px);
+  font-size:clamp(22px, 3.1vw, 28px);
   opacity:.95;
   flex:0 0 auto;
 }
@@ -781,7 +809,8 @@ video.fit-contain{ object-fit:contain; }
   .newsItem .h{ font-size: 13.5px; }
   .newsItem .p{ font-size: 12.5px; }
 }
-
+/* Remove os 2 "Atualizado" extras, deixando só o do topo */
+   #refPill, #adPill, #newsPill { display:none !important; }
   </style>
 </head>
 
@@ -851,12 +880,18 @@ video.fit-contain{ object-fit:contain; }
       </div>
 
       <div class="ticker">
-        <div class="tickerLine1">
-          <span class="tickerIcon">📖</span>
-          <span id="dataBiblica">—</span>
-          <span id="ref">—</span>
-        </div>
+     
+      <div class="tickerLine1">
+        <span class="tickerIcon">📖</span>
+        <span id="dataBiblica">—</span>
+        <span id="ref">—</span>
+  <!-- clima na mesma linha (TV) -->
+        <span class="wxInline" id="wxInline">
+          <span id="wxIconInline">🌦️</span>
+          <span id="wxTextInline">—</span>
+        </span>
 
+      </div>
         <div class="tickerLine2">
           <div class="wxMini">
             <span id="wxIcon">🌦️</span>
@@ -1098,6 +1133,10 @@ video.fit-contain{ object-fit:contain; }
         if (top) top.textContent = emoji;
 
         setText("wxText", `${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
+        const wxI = document.getElementById("wxIconInline");
+        if (wxI) wxI.textContent = emoji;
+
+        setText("wxTextInline", `${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
       } catch (e) {
         const wx = document.getElementById("wxIcon");
         if (wx) wx.textContent = "🌦️";
@@ -1254,7 +1293,6 @@ function normalizeText_(s){
         if (newsBox) newsBox.style.display = "none";
       }
     }
-
     async function loadAll(){
       const status = document.getElementById("statusJson");
       const dot = document.getElementById("dotOnline");
