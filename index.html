@@ -811,6 +811,15 @@ video.fit-contain{ object-fit:contain; }
 }
 /* Remove os 2 "Atualizado" extras, deixando só o do topo */
    #refPill, #adPill, #newsPill { display:none !important; }
+ 
+  .newsMeta{
+  font-size: 11px;
+  opacity: 0.7;
+  text-align: left;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
   </style>
 </head>
 
@@ -1252,47 +1261,127 @@ function normalizeText_(s){
       return [];
     }
 
-    async function carregarMensagensCidade(){
-      const newsBox = document.getElementById("newsBox");
-      const newsBody = document.getElementById("newsBody");
-      const newsPill = document.getElementById("newsPill");
-      if(!newsBox || !newsBody) return;
+   // ==========================================================
+// MENSAGENS DA CIDADE (mensagens_cidade.json) — FUNÇÃO COMPLETA (CORRIGIDA)
+// - Remove &nbsp; e outras entidades HTML
+// - Evita repetição (quando texto == título)
+// - Layout: Fonte/Data bem pequeno à esquerda, depois título, depois resumo
+// - Preenche #newsBox / #newsBody (e opcionalmente #newsPill)
+// ==========================================================
 
-      try{
-        const res = await fetch(CITY_JSON_URL + "?ts=" + Date.now(), { cache: "no-store" });
-        if(!res.ok) throw new Error("HTTP " + res.status);
-        const j = await res.json();
+async function carregarMensagensCidade(){
+  const newsBox  = document.getElementById("newsBox");
+  const newsBody = document.getElementById("newsBody");
+  const newsPill = document.getElementById("newsPill"); // se você ocultou via CSS, ok
 
-        const list = parseCityJsonToNewsItems_(j);
-        if(!list.length){
-          newsBox.style.display = "none";
-          return;
-        }
+  if(!newsBox || !newsBody) return;
 
-        newsBody.innerHTML = list.map(m=>{
-          const metaParts = [];
-          if(m.fonte) metaParts.push("Fonte: " + m.fonte);
-          if(m.data) metaParts.push("Data: " + m.data);
-          const meta = metaParts.length ? `<small class="muted">${escapeHtml(metaParts.join(" • "))}</small>` : "";
-
-          const linkPart = m.link ? `<div style="margin-top:8px"><a href="${escapeHtml(m.link)}" target="_blank" rel="noopener">Abrir</a></div>` : "";
-
-          return `
-            <div class="newsItem">
-              <p class="h">${escapeHtml(m.titulo || "Mensagem")}</p>
-              <p class="p">${escapeHtml(m.texto || "")}${meta ? "<br>"+meta : ""}</p>
-              ${linkPart}
-            </div>
-          `;
-        }).join("");
-
-        newsBox.style.display = "flex";
-        if (newsPill) newsPill.textContent = (j.atualizado_em || j.updatedAt) ? "Atualizado" : "Ok";
-      }catch(e){
-        // Se falhar, só esconde (não interfere no restante)
-        if (newsBox) newsBox.style.display = "none";
-      }
+  // Helpers
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#39;");
+  }
+  function decodeHtmlEntities_(s){
+    const t = document.createElement("textarea");
+    t.innerHTML = String(s ?? "");
+    return t.value;
+  }
+  function normalizeText_(s){
+    return decodeHtmlEntities_(s)
+      .replace(/\u00a0/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+  }
+  function toBRDate_(v){
+    // aceita "29-01-2026" ou "2026-01-29" ou ISO
+    const s = String(v ?? "").trim();
+    if(!s) return "";
+    const m1 = s.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+    if(m1) return `${m1[1]}/${m1[2]}/${m1[3].slice(-2)}`; // 29/01/26
+    const m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if(m2) return `${m2[3]}/${m2[2]}/${m2[1].slice(-2)}`;
+    const d = new Date(s);
+    if(!isNaN(d.getTime())){
+      const dd = String(d.getDate()).padStart(2,"0");
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const aa = String(d.getFullYear()).slice(-2);
+      return `${dd}/${mm}/${aa}`;
     }
+    return s;
+  }
+
+  try{
+    const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+
+    const j = await res.json();
+    const items = Array.isArray(j?.items) ? j.items : [];
+
+    const list = items.slice(0, 8).map(x=>{
+      const titulo = normalizeText_(x.titulo || "Mensagem");
+      const texto  = normalizeText_(x.texto || "");
+      const fonte  = normalizeText_(x.fonte || "news.google.com");
+      const data   = toBRDate_(x.data || "");
+
+      // remove repetição: se texto for igual ao título (ou muito parecido), some
+      let textoLimpo = texto;
+      if(textoLimpo && titulo && textoLimpo.toLowerCase() === titulo.toLowerCase()){
+        textoLimpo = "";
+      }
+
+      // também remove a parte final " - domínio" do título, se vier colada
+      // (opcional, melhora visual)
+      const tituloLimpo = titulo.replace(/\s+-\s+[\w.-]+\.[a-z]{2,}.*$/i, "").trim() || titulo;
+
+      return { titulo: tituloLimpo, texto: textoLimpo, fonte, data };
+    });
+
+    if(!list.length){
+      newsBody.innerHTML = `
+        <div class="newsItem">
+          <div class="newsMeta">Fonte: news.google.com</div>
+          <p class="h">Sem mensagens no momento</p>
+          <p class="p">Aguardando atualização do feed…</p>
+        </div>`;
+      newsBox.style.display = "flex";
+      if(newsPill) newsPill.textContent = "—";
+      return;
+    }
+
+    // Render no formato que você pediu
+    newsBody.innerHTML = list.map(m=>{
+      const meta = `Fonte: ${m.fonte || "news.google.com"}${m.data ? " - " + m.data : ""}`;
+
+      return `
+        <div class="newsItem">
+          <div class="newsMeta">${escapeHtml(meta)}</div>
+          <p class="h">${escapeHtml(m.titulo || "Mensagem")}</p>
+          ${m.texto ? `<p class="p">${escapeHtml(m.texto)}</p>` : ``}
+        </div>
+      `;
+    }).join("");
+
+    newsBox.style.display = "flex";
+    if(newsPill) newsPill.textContent = "Atualizado";
+
+  }catch(e){
+    console.warn("Falha ao carregar mensagens_cidade.json:", e);
+    newsBody.innerHTML = `
+      <div class="newsItem">
+        <div class="newsMeta">Fonte: news.google.com</div>
+        <p class="h">Mensagens indisponíveis</p>
+        <p class="p">Sem conexão ou arquivo não encontrado.</p>
+      </div>`;
+    newsBox.style.display = "flex";
+    if(newsPill) newsPill.textContent = "Offline";
+  }
+}
+
+    
     async function loadAll(){
       const status = document.getElementById("statusJson");
       const dot = document.getElementById("dotOnline");
