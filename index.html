@@ -1255,30 +1255,27 @@ video.fit-contain{ object-fit:contain; }
       });
 
         if(!list.length){
-          newsBody.innerHTML = `
-            <div class="newsItem">
-              <div class="newsMeta">Fonte: news.google.com</div>
-              <p class="h">Sem mensagens no momento</p>
-              <p class="p">Aguardando atualização do feed…</p>
-            </div>`;
-          newsBox.style.display = "flex";
-          if(newsPill) newsPill.textContent = "—";
-          return;
-        }
+  newsBody.innerHTML = `
+    <div class="newsItem">
+      <p class="h">Sem mensagens no momento</p>
+      <p class="p">Aguardando atualização do feed…</p>
+    </div>`;
+  newsBox.style.display = "flex";
+  if(newsPill) newsPill.textContent = "—";
+  return;
+}
 
-        newsBody.innerHTML = list.map(m=>{
-          const meta = `Fonte: ${m.fonte || "news.google.com"}${m.data ? " - " + m.data : ""}`;
-          return `
-            <div class="newsItem">
-              <div class="newsMeta">${escapeHtml(meta)}</div>
-              <p class="h">${escapeHtml(m.titulo || "Mensagem")}</p>
-              ${m.texto ? `<p class="p">${escapeHtml(m.texto)}</p>` : ``}
-            </div>
-          `;
-        }).join("");
+// render novo padrão (título + resumo + fonte/data pequena embaixo)
+newsBody.innerHTML = list.map(n => `
+  <div class="newsItem">
+    <p class="h">${escapeHtml_(n.titulo)}</p>
+    <p class="p">${escapeHtml_(n.resumo)}</p>
+    <div class="newsMeta">Fonte: ${escapeHtml_(n.fonte)} — ${escapeHtml_(n.data || "—")}</div>
+  </div>
+`).join("");
 
-        newsBox.style.display = "flex";
-        if(newsPill) newsPill.textContent = "Atualizado";
+newsBox.style.display = "flex";
+if(newsPill) newsPill.textContent = String(list.length);
 
       }catch(e){
         console.warn("Falha ao carregar mensagens_cidade.json:", e);
