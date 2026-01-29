@@ -86,12 +86,12 @@
     {
       "id": "001",
       "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família. Seja sábio e cuide de seu lar. O Mateus está de olho.",
+      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família. Seja sábio e cuide de seu lar. O Rafael Fagundes está de olho.",
       "prioridade": "Alta",
       "tipo": "Segurança",
       "local": "Hall de Entrada",
-      "inicio": "28/01/26 - 22:37",
-      "fim": "28/02/26 - 22:37",
+      "inicio": "",
+      "fim": "",
       "emergencia": true
     },
     {
