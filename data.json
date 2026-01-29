@@ -67,7 +67,12 @@
         "anunciante": "Em breve, Israel receberá a Palavra"
       }
     ],
-    "mensagens": []
+    "mensagens": [
+      {
+        "titulo": "📰 Notícias",
+        "texto": "Sem notícias no momento. (verifique RSS)"
+      }
+    ]
   },
   "clima": {
     "cidade": "Tubarão/SC",
@@ -81,7 +86,7 @@
     {
       "id": "001",
       "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família. Seja sábio e cuide de seu lar. O Rafael Fagundes está de olho.",
+      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família. Seja sábio e cuide de seu lar.",
       "prioridade": "Alta",
       "tipo": "Segurança",
       "local": "Hall de Entrada",
