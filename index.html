@@ -193,7 +193,7 @@
 
     .panelHead{
       padding:10px 12px;
-      border-bottom:1px solid var(--line);
+    /* border-bottom:1px solid var(--line);
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -224,6 +224,10 @@
       max-width:100%;
       overflow:hidden;
       text-overflow:ellipsis;
+      .pill{ user-select:none; }
+      .pill:hover{ filter:brightness(1.08); }
+      .pill:active{ transform:scale(.98); }
+
     }
 
 /* ===== AVISOS – PREMIUM 3D + ANIMAÇÕES ===== */
@@ -826,7 +830,10 @@ video.fit-contain{ object-fit:contain; }
         <section class="panel">
           <div class="panelHead">
             <div class="panelTitle">🔔 Avisos Importantes</div>
-            <div class="pill" id="refPill">Atualizado</div>
+           <div class="pill" id="refPill" onclick="refreshPage()" style="cursor:pointer">
+            Atualizar
+            </div>
+
           </div>
           <div class="avisos" id="avisos"></div>
         </section>
@@ -957,7 +964,9 @@ video.fit-contain{ object-fit:contain; }
         "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
       }[c]));
     }
-
+    function refreshPage(){
+  location.reload();
+}
     function renderAvisos(data){
       const root = document.getElementById("avisos");
       if (!root) return;
@@ -1357,6 +1366,7 @@ if(newsPill) newsPill.textContent = String(items.length);
 
     loadAll();
     setInterval(loadAll, 60000);
+  
   </script>
 
   <script>
