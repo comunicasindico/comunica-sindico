@@ -1179,6 +1179,15 @@ video.fit-contain{ object-fit:contain; }
       }[c]));
     }
 
+function decodeHtmlEntities_(s){
+  const t = document.createElement("textarea");
+  t.innerHTML = String(s ?? "");
+  return t.value;
+}
+function normalizeText_(s){
+  return decodeHtmlEntities_(s).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+}
+    
     function parseCityJsonToNewsItems_(j){
       // Formato A: mensagens[]
       if (Array.isArray(j?.mensagens) && j.mensagens.length){
@@ -1193,8 +1202,8 @@ video.fit-contain{ object-fit:contain; }
       const items = Array.isArray(j?.items) ? j.items : [];
       if(items.length){
         return items.slice(0, 8).map(x=>({
-          titulo: x.titulo || "Mensagem",
-          texto: (x.texto || "").replace(/\s+/g," ").trim(),
+          titulo: normalizeText_(x.titulo || "Mensagem"),
+          texto: normalizeText_(x.texto || ""),
           data: x.data || j.updatedAt || "",
           fonte: x.fonte || "",
           link: x.link || ""
