@@ -917,6 +917,45 @@
   }
 }
 
+
+    /* =========================
+   PATCH: Avisos IMPORTANTES no celular (texto sumindo)
+   Cole no FINAL do <style> do index.html
+   ========================= */
+
+@media (max-width: 520px){
+
+  /* 1) Qualquer “linha de aviso” dentro de painéis: não pode colapsar */
+  :where(.panel, .card, .box, section, .bloco) :where(.item, .row, .linha, .avisoItem, .noticeItem){
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* 2) Se a linha do aviso for GRID, força 2 colunas: indicador + texto */
+  :where(.panel, .card, .box, section, .bloco) :where(.item, .row, .linha, .avisoItem, .noticeItem){
+    display: grid !important;
+    grid-template-columns: 14px 1fr !important; /* <- impede “texto = 0” */
+    column-gap: 10px !important;
+    align-items: center !important;
+  }
+
+  /* 3) O bloco do texto tem que poder encolher e quebrar */
+  :where(.panel, .card, .box, section, .bloco)
+  :where(.item, .row, .linha, .avisoItem, .noticeItem)
+  :where(.txt, .text, .conteudo, .label, .titulo, .desc, span, div){
+    min-width: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* 4) Se o seu item for um “pill” (retângulo arredondado), garante altura/padding */
+  :where(.pill, .chip, .tag, .badge, .avisoPill, .noticePill){
+    min-height: 42px !important;
+    padding: 10px 12px !important;
+  }
+}
+
     
   </style>
   <!-- =========================================================
