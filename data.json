@@ -27,10 +27,6 @@
     "fit": "contain",
     "videos": [
       {
-        "arquivo": "./ads/01luisa.avi",
-        "anunciante": "Luisa — Momentos Especiais"
-      },
-      {
         "arquivo": "./ads/rafinha_keyon.mp4",
         "anunciante": "O melhor Corretor de Santa Catarina"
       },
@@ -67,13 +63,7 @@
         "anunciante": "Em breve, Israel receberá a Palavra"
       }
     ],
-    "mensagens": [
-      {
-        "titulo": "📰 Notícias",
-        "texto": "Sem notícias no momento. (verifique RSS)"
-      }
-    ]
-  },
+    },
   "clima": {
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
