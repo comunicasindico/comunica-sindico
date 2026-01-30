@@ -1628,8 +1628,11 @@
         s.textContent = `
         /* BLINDADO: no celular NUNCA esconder */
 @media (max-width: 980px){
-  .tvVideoControls{ display:flex !important; }
-}
+ /* mostra só os dois desejados */
+  .tvVideoControls .tvBtn.prev,
+  .tvVideoControls .tvBtn.next{
+    display:flex !important;
+  }
 
   .tvVideoControls{
     position:absolute;
