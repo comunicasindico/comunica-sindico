@@ -934,6 +934,88 @@
   #avisos .metaLine{ font-size: 0.70em !important; } /* TV: ainda menor, mas legível */
 }
 
+/* =========================
+   PATCH (PC/TV) — Rodapé sempre visível
+   - NÃO mexe no celular (que já está ok)
+   - avisos ocupam o espaço disponível e rolam dentro
+   ========================= */
+
+@media (min-width: 981px){
+
+  :root{ --tickerH: 150px; }  /* PC padrão */
+
+  /* TV: um pouco maior se o rodapé for mais alto */
+  @media (min-width: 1200px){
+    :root{ --tickerH: 160px; }
+  }
+
+  .wrap, .container{ min-height: 100vh; }
+
+  .main{
+    height: calc(100vh - var(--tickerH)) !important;
+    overflow: hidden !important;
+  }
+
+  #avisos{
+    max-height: 100% !important;
+    overflow: auto !important;
+    overscroll-behavior: contain;
+    padding-right: 6px;
+  }
+
+  .ticker{
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+  }
+
+  /* no máximo 4 “visuais”: se for longo, rola dentro do aviso */
+  #avisos .aviso{
+    max-height: 22vh;
+    overflow: auto;
+  }
+}
+
+/* =========================
+   PATCH FINAL — PC/TV
+   Rodapé sempre visível
+   (não altera celular)
+   ========================= */
+
+@media (min-width: 981px){
+
+  :root{ --tickerH: 150px; }
+
+  .wrap, .container{
+    min-height: 100vh;
+  }
+
+  .main{
+    height: calc(100vh - var(--tickerH)) !important;
+    overflow: hidden !important;
+  }
+
+  #avisos{
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    padding-right: 6px;
+  }
+
+  .ticker{
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+  }
+
+  /* garante no máximo 4 visíveis */
+  #avisos .aviso{
+    max-height: 22vh;
+    overflow: auto;
+  }
+}
+
+    
   
   
   </style>
