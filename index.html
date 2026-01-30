@@ -1122,6 +1122,29 @@
   }
 }
 
+/* =========================
+   PATCH FINAL — TAMANHO DOS TEXTOS (TV 32")
+   Título grande
+   Descrição = 90%
+   ========================= */
+
+#avisos .aviso .t{
+  font-size: clamp(26px, 2.4vw, 36px) !important;
+  line-height: 1.15 !important;
+  font-weight: 900 !important;
+}
+
+#avisos .aviso .d{
+  font-size: clamp(18px, 1.8vw, 22px) !important; /* ~90% do título */
+  line-height: 1.35 !important;
+}
+
+/* garante que nenhum scale antigo atue */
+#avisos .aviso{
+  --tScale: 1 !important;
+  --dScale: 1 !important;
+  transform: none !important;
+}
 
     
     
