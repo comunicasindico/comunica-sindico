@@ -955,6 +955,72 @@
     padding: 10px 12px !important;
   }
 }
+/* =========================
+   PATCH MOBILE — Texto dos avisos não pode sumir
+   Alvo real do seu HTML: #avisos .aviso.alta / .aviso.media
+   ========================= */
+
+@media (max-width: 520px){
+
+  /* O grid pai não pode esmagar conteúdo */
+  #avisos{
+    display: block !important;
+  }
+
+  /* Cada aviso: vira coluna (não deixa “texto = 0”) */
+  #avisos .aviso{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+
+    min-width: 0 !important;
+    width: 100% !important;
+
+    height: auto !important;
+    min-height: 64px !important;
+
+    overflow: visible !important;
+  }
+
+  /* “Reset” para qualquer filho que esteja sendo colapsado/absoluto/transparente */
+  #avisos .aviso *{
+    min-width: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    filter: none !important;
+    font-size: inherit !important;
+  }
+
+  /* Se algum bloco interno estiver com position absolute (muito comum em pills) */
+  #avisos .aviso > *{
+    position: static !important;
+  }
+
+  /* Linhas internas: quebra e aparece */
+  #avisos .aviso .linha,
+  #avisos .aviso .row,
+  #avisos .aviso .meta,
+  #avisos .aviso .tags,
+  #avisos .aviso .chips{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    overflow: visible !important;
+  }
+
+  /* Texto: nunca pode ficar invisível ou “fora” */
+  #avisos .aviso span,
+  #avisos .aviso p,
+  #avisos .aviso div{
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+}
 
     
   </style>
