@@ -180,7 +180,6 @@
     }
     .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
     #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
-    font-size: calc(22px * var(--ui2));
 
     .btnInstall{
       border:1px solid rgba(255,255,255,.18);
@@ -235,21 +234,18 @@
       gap:10px;
       background:rgba(7,20,34,.20);
       flex:0 0 auto;
-      /* border-bottom:1px solid var(--line);  <-- removido */
     }
 
     .panelTitle{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:950;
-  letter-spacing:.6px;
-  color:rgba(234,242,255,.95);
-  text-transform:uppercase;
-
-  /* 🔥 escala para TV e fullscreen */
-  font-size: calc(18px * var(--ui2));
-}
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:950;
+      letter-spacing:.6px;
+      color:rgba(234,242,255,.95);
+      text-transform:uppercase;
+      font-size: calc(18px * var(--ui2));
+    }
 
     /* ===== PILL (BOTÕES/STATUS) ===== */
     .pill{
@@ -284,46 +280,40 @@
     #avisos.fade-out{ opacity:0; transition: opacity .22s ease; }
     #avisos.fade-in { opacity:1; transition: opacity .22s ease; }
 
-   /* PATCH: avisos com altura automática (cada card do seu tamanho) */
-.avisos{
-  padding:14px;
-  min-height:0;
+    .avisos{
+      padding:14px;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      overflow:visible;
+    }
 
-  /* deixa os avisos crescerem conforme o conteúdo */
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+    .aviso{
+      padding:16px;
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
+      display:flex;
+      flex-direction:column;
+      gap:10px;
 
-  overflow:visible;
-}
+      border:1px solid rgba(140,200,255,.22);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 -14px 22px rgba(0,0,0,.28),
+        0 14px 34px rgba(0,0,0,.55);
 
- /* PATCH: aviso com altura automática (cresce conforme conteúdo) */
-.aviso{
-  padding:16px;
-  border-radius:18px;
-  background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+      transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+      animation: avisoIn .28s ease both;
+      will-change: transform, opacity;
 
-  border:1px solid rgba(140,200,255,.22);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.14),
-    inset 0 -14px 22px rgba(0,0,0,.28),
-    0 14px 34px rgba(0,0,0,.55);
+      position:relative;
+      padding-left:18px;
 
-  transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
-  animation: avisoIn .28s ease both;
-  will-change: transform, opacity;
-
-  position:relative;
-  padding-left:18px;
-
-  /* 🔑 chave da correção */
-  height:auto;
-  min-height:auto;
-  overflow:visible;
-}
+      height:auto;
+      min-height:auto;
+      overflow:visible;
+    }
 
     .aviso:hover{
       transform: translateY(-2px);
@@ -362,53 +352,47 @@
     }
     .aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
 
-  .aviso .t{
-  margin:0;
-  font-weight:900;
-  font-size: calc(22px * var(--ui2));
-  letter-spacing:.3px;
-  color:#fff;
-  text-shadow:0 1px 2px rgba(0,0,0,.6);
-  line-height:1.15;
-
-  /* PATCH: não cortar */
-  display:block;
-  overflow:visible;
-  white-space:normal;
-  overflow-wrap:anywhere;
-  word-break:break-word;
-}
+    .aviso .t{
+      margin:0;
+      font-weight:900;
+      font-size: calc(22px * var(--ui2));
+      letter-spacing:.3px;
+      color:#fff;
+      text-shadow:0 1px 2px rgba(0,0,0,.6);
+      line-height:1.15;
+      display:block;
+      overflow:visible;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
 
     .aviso.alta  .t::before{ content:"⚠️"; }
     .aviso.media .t::before{ content:"🔶"; }
     .aviso.baixa .t::before{ content:"ℹ️"; }
 
-  .aviso .d{
-  margin:0;
-  color:#e0ecff;
-  line-height:1.35;
-  font-size:clamp(14px, 1.7vw, 17px);
+    .aviso .d{
+      margin:0;
+      color:#e0ecff;
+      line-height:1.35;
+      font-size:clamp(14px, 1.7vw, 17px);
+      display:block;
+      overflow:visible;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
 
-  /* PATCH: não cortar */
-  display:block;
-  overflow:visible;
-  white-space:normal;
-  overflow-wrap:anywhere;
-  word-break:break-word;
-}
-
- .metaLine{
-  margin-top:auto;
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-  color:rgba(234,242,255,.92);
-
-  /* PATCH: ~60% menor */
-  font-size: calc(13px * var(--ui) * 0.60);
-  font-weight:900;
-}
+    .metaLine{
+      margin-top:auto;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      color:rgba(234,242,255,.92);
+      font-size: calc(13px * var(--ui) * 0.60);
+      font-weight:900;
+    }
 
     .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
     .metaItem b{ font-weight:950; color:#fff; }
@@ -484,6 +468,9 @@
       max-height: 38vh;
       overflow:hidden;
       border-radius: 12px;
+
+      /* ✅ para o overlay dos botões */
+      position:relative;
     }
     video{
       width:100%;
@@ -494,6 +481,32 @@
       background:#000;
     }
     video.fit-contain{ object-fit:contain; }
+
+    /* ===== Controles do vídeo (TV) ===== */
+    .tvVideoControls{
+      position:absolute;
+      right:12px;
+      bottom:12px;
+      display:flex;
+      gap:8px;
+      z-index:50;
+      user-select:none;
+      pointer-events:auto;
+    }
+    .tvBtn{
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(0,0,0,.35);
+      color:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:16px;
+      line-height:1;
+      cursor:pointer;
+    }
+    .tvBtn:active{ transform:scale(.98); }
+    @media (max-width: 980px){
+      .tvVideoControls{ display:none !important; }
+    }
 
     /* ===== FOOTER (TICKER) ===== */
     .ticker{
@@ -601,178 +614,164 @@
       }
     }
 
-  /* ===========================
-   MODO TV / FULLSCREEN (COMPLETO)
-   - cresce com a tela
-   - avisos grandes (estilo painel)
-   - cabeçalho/rodapé/msgs cidade/publicidade escalados
-   =========================== */
-@media (min-width: 1200px){
+    /* ===========================
+       MODO TV / FULLSCREEN (COMPLETO)
+       =========================== */
+    @media (min-width: 1200px){
 
-  /* ===== HEADER (TOPO) ===== */
-  .topbar{
-    padding: 2.2vh 2.2vw;
-    gap: 1.4vw;
-    border-radius: 24px;
-  }
+      .topbar{
+        padding: 2.2vh 2.2vw;
+        gap: 1.4vw;
+        border-radius: 24px;
+      }
 
-  .brand .title{
-    font-size: clamp(34px, 3.2vw, 56px);
-    line-height: 1.05;
-  }
+      .brand .title{
+        font-size: clamp(34px, 3.2vw, 56px);
+        line-height: 1.05;
+      }
 
-  .brand .sub{
-    font-size: clamp(18px, 1.6vw, 28px);
-  }
+      .brand .sub{
+        font-size: clamp(18px, 1.6vw, 28px);
+      }
 
-  .condoCenter{
-    font-size: clamp(20px, 1.8vw, 32px);
-  }
+      .condoCenter{
+        font-size: clamp(20px, 1.8vw, 32px);
+      }
 
-  .badge{
-    font-size: clamp(16px, 1.3vw, 22px);
-    padding: 12px 16px;
-  }
+      .badge{
+        font-size: clamp(16px, 1.3vw, 22px);
+        padding: 12px 16px;
+      }
 
-  #clock{
-    font-size: clamp(30px, 2.8vw, 50px);
-    letter-spacing: 1px;
-  }
+      #clock{
+        font-size: clamp(30px, 2.8vw, 50px);
+        letter-spacing: 1px;
+      }
 
-  .btnInstall{
-    font-size: clamp(16px, 1.2vw, 22px);
-    padding: 12px 16px;
-  }
+      .btnInstall{
+        font-size: clamp(16px, 1.2vw, 22px);
+        padding: 12px 16px;
+      }
 
-  /* ===== LAYOUT / PAINÉIS ===== */
-  .main{
-    gap: 1.2vw;
-  }
+      .main{
+        gap: 1.2vw;
+      }
 
-  .panel{
-    border-radius: 26px;
-  }
+      .panel{
+        border-radius: 26px;
+      }
 
-  .panelHead{
-    padding: 1.4vh 1.2vw;
-  }
+      .panelHead{
+        padding: 1.4vh 1.2vw;
+      }
 
-  .panelTitle{
-    font-size: clamp(26px, 2.4vw, 44px);
-    letter-spacing: 1px;
-  }
+      .panelTitle{
+        font-size: clamp(26px, 2.4vw, 44px);
+        letter-spacing: 1px;
+      }
 
-  .pill{
-    font-size: clamp(18px, 1.6vw, 28px);
-    padding: 10px 18px;
-  }
+      .pill{
+        font-size: clamp(18px, 1.6vw, 28px);
+        padding: 10px 18px;
+      }
 
-  /* ===== AVISOS (PRINCIPAL) ===== */
-  .avisos{
-    padding: 1.4vw;
-    gap: 1.0vw;
-  }
+      .avisos{
+        padding: 1.4vw;
+        gap: 1.0vw;
+      }
 
-  .aviso{
-    padding: 2.6vh 2.0vw;
-    gap: 1.4vh;
-    border-radius: 24px;
-  }
+      .aviso{
+        padding: 2.6vh 2.0vw;
+        gap: 1.4vh;
+        border-radius: 24px;
+      }
 
-  .aviso .t{
-    font-size: clamp(32px, 3.2vw, 58px);
-    line-height: 1.15;
-    -webkit-line-clamp: 2;
-  }
+      .aviso .t{
+        font-size: clamp(32px, 3.2vw, 58px);
+        line-height: 1.15;
+      }
 
-  .aviso .d{
-    font-size: clamp(24px, 2.4vw, 44px);
-    line-height: 1.35;
-    -webkit-line-clamp: 4;
-  }
+      .aviso .d{
+        font-size: clamp(24px, 2.4vw, 44px);
+        line-height: 1.35;
+      }
 
-  .metaLine{
-    font-size: clamp(20px, 2.0vw, 34px);
-    gap: 18px;
-  }
+      .metaLine{
+        font-size: clamp(20px, 2.0vw, 34px);
+        gap: 18px;
+      }
 
-  .prioBadge{
-    font-size: clamp(16px, 1.6vw, 26px);
-    padding: 10px 18px;
-  }
+      .prioBadge{
+        font-size: clamp(16px, 1.6vw, 26px);
+        padding: 10px 18px;
+      }
 
-  /* ===== PUBLICIDADE ===== */
-  .adBody{
-    padding: 1.2vw;
-    gap: 1.0vw;
-  }
+      .adBody{
+        padding: 1.2vw;
+        gap: 1.0vw;
+      }
 
-  .adLabel{
-    font-size: clamp(18px, 1.5vw, 26px);
-    padding: 14px 16px;
-  }
+      .adLabel{
+        font-size: clamp(18px, 1.5vw, 26px);
+        padding: 14px 16px;
+      }
 
-  .videoWrap{
-    max-height: 44vh; /* mais alto em TV */
-    border-radius: 16px;
-  }
+      .videoWrap{
+        max-height: 44vh;
+        border-radius: 16px;
+      }
 
-  /* ===== MENSAGENS DA CIDADE ===== */
-  #newsBody{
-    max-height: 34vh;          /* ocupa bem o espaço */
-    padding: 1.0vw 1.0vw 1.2vw;
-    gap: 0.9vw;
-  }
+      #newsBody{
+        max-height: 34vh;
+        padding: 1.0vw 1.0vw 1.2vw;
+        gap: 0.9vw;
+      }
 
-  .newsHeader{
-    font-size: clamp(14px, 1.1vw, 18px);
-    margin-bottom: 10px;
-    padding-left: 6px;
-  }
+      .newsHeader{
+        font-size: clamp(14px, 1.1vw, 18px);
+        margin-bottom: 10px;
+        padding-left: 6px;
+      }
 
-  .newsItem{
-    padding: 1.0vw;
-    border-radius: 16px;
-  }
+      .newsItem{
+        padding: 1.0vw;
+        border-radius: 16px;
+      }
 
-  .newsItem .h{
-    font-size: clamp(22px, 1.8vw, 30px);
-    line-height: 1.2;
-    -webkit-line-clamp: 2;
-  }
+      .newsItem .h{
+        font-size: clamp(22px, 1.8vw, 30px);
+        line-height: 1.2;
+      }
 
-  .newsItem .p{
-    font-size: clamp(18px, 1.5vw, 26px);
-    line-height: 1.35;
-    -webkit-line-clamp: 3;
-  }
+      .newsItem .p{
+        font-size: clamp(18px, 1.5vw, 26px);
+        line-height: 1.35;
+      }
 
-  /* ===== RODAPÉ (VERSÍCULO + CLIMA) ===== */
-  .ticker{
-    padding: 1.4vh 1.2vw;
-    border-radius: 24px;
-    gap: 10px;
-  }
+      .ticker{
+        padding: 1.4vh 1.2vw;
+        border-radius: 24px;
+        gap: 10px;
+      }
 
-  .tickerIcon{
-    font-size: clamp(26px, 2.2vw, 38px);
-  }
+      .tickerIcon{
+        font-size: clamp(26px, 2.2vw, 38px);
+      }
 
-  #dataBiblica{
-    font-size: clamp(18px, 1.6vw, 28px);
-  }
+      #dataBiblica{
+        font-size: clamp(18px, 1.6vw, 28px);
+      }
 
-  #ref{
-    font-size: clamp(18px, 1.6vw, 28px);
-    line-height: 1.25;
-  }
+      #ref{
+        font-size: clamp(18px, 1.6vw, 28px);
+        line-height: 1.25;
+      }
 
-  .wxInline{
-    font-size: clamp(16px, 1.4vw, 26px);
-    gap: 10px;
-  }
-
-}
+      .wxInline{
+        font-size: clamp(16px, 1.4vw, 26px);
+        gap: 10px;
+      }
+    }
 
     /* ===== NEWS (Mensagens da Cidade) ===== */
     #newsBox{
@@ -815,7 +814,6 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
     }
 
-    /* ✅ você pediu: não mostrar "Atualizado" dentro do bloco */
     #newsPill{ display:none !important; }
 
     #newsBody{
@@ -851,305 +849,118 @@
       background: rgba(0,0,0,.22);
     }
     .newsItem .h{
-  font-family: var(--font-soft);
-  font-weight: 900;
-  font-size: calc(16px * var(--ui));
-  line-height: 1.25;
-  letter-spacing: .2px;
-  color: var(--news-title);
-  margin: 0 0 6px 0;
+      font-family: var(--font-soft);
+      font-weight: 900;
+      font-size: calc(16px * var(--ui));
+      line-height: 1.25;
+      letter-spacing: .2px;
+      color: var(--news-title);
+      margin: 0 0 6px 0;
+      display:block;
+      overflow:visible;
+      white-space:normal;
+    }
 
-  display:block;                /* << sem clamp */
-  overflow:visible;             /* << sem cortar */
-  white-space:normal;           /* << quebra linha */
-}
-
-   .newsItem .p{
-  font-family: var(--font-ui);
-  font-weight: 650;
-  font-size: calc(14px * var(--ui));
-  line-height: 1.35;
-  color: var(--news-text);
-  margin: 0;
-
-  display:block;                /* << sem clamp */
-  overflow:visible;             /* << sem cortar */
-  white-space:normal;           /* << quebra linha */
-}
+    .newsItem .p{
+      font-family: var(--font-ui);
+      font-weight: 650;
+      font-size: calc(14px * var(--ui));
+      line-height: 1.35;
+      color: var(--news-text);
+      margin: 0;
+      display:block;
+      overflow:visible;
+      white-space:normal;
+    }
 
     .newsHeader{
       font-size: calc(11px * var(--ui));
-  
       color:rgba(255,255,255,.55);
       margin-bottom:8px;
       padding-left:4px;
     }
- 
-  /* =========================
-   PATCH 1 (SEGURO)
-   1) Título não corta
-   2) Descrição do aviso quebra e aparece inteira
-   3) Campos (metaLine / metaItem / prioBadge) ~60% menores (responsivo)
-   ========================= */
 
-/* 1) Título (topo) não cortar */
-#titulo{
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.08;
-}
+    /* PATCH 1 (SEGURO) */
+    #titulo{
+      white-space: normal !important;
+      overflow: visible !important;
+      text-overflow: unset !important;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      line-height: 1.08;
+    }
 
-/* 2) Aviso: título/descrição não cortar */
-#avisos .aviso .t,
-#avisos .aviso .d{
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-  overflow-wrap: anywhere !important;
-  word-break: break-word !important;
-  -webkit-line-clamp: unset !important;
-  line-clamp: unset !important;
-  max-height: none !important;
-}
+    #avisos .aviso .t,
+    #avisos .aviso .d{
+      white-space: normal !important;
+      overflow: visible !important;
+      text-overflow: unset !important;
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
+      -webkit-line-clamp: unset !important;
+      line-clamp: unset !important;
+      max-height: none !important;
+    }
 
-/* 3) Campos do aviso (linha de meta) 60% menores, sem afetar botões */
-#avisos .metaLine{
-  font-size: 0.60em !important;
-  line-height: 1.15 !important;
-  gap: 10px !important;
-}
-#avisos .metaLine .metaItem,
-#avisos .metaLine .prioBadge{
-  font-size: 1em !important; /* mantém proporcional dentro da metaLine */
-}
+    #avisos .metaLine{
+      font-size: 0.60em !important;
+      line-height: 1.15 !important;
+      gap: 10px !important;
+    }
+    #avisos .metaLine .metaItem,
+    #avisos .metaLine .prioBadge{
+      font-size: 1em !important;
+    }
 
-/* Ajuste fino por tela (PC/TV/celular) */
-@media (max-width: 520px){
-  #avisos .metaLine{ font-size: 0.70em !important; } /* celular: não some */
-}
-@media (min-width: 1200px){
-  #avisos .metaLine{ font-size: 0.70em !important; } /* TV: ainda menor, mas legível */
-}
+    @media (max-width: 520px){
+      #avisos .metaLine{ font-size: 0.70em !important; }
+    }
+    @media (min-width: 1200px){
+      #avisos .metaLine{ font-size: 0.70em !important; }
+    }
 
-/* =========================
-   PATCH (PC/TV) — Rodapé sempre visível
-   - NÃO mexe no celular (que já está ok)
-   - avisos ocupam o espaço disponível e rolam dentro
-   ========================= */
+    /* Rodapé sempre visível (PC/TV) */
+    @media (min-width: 981px){
+      :root{ --tickerH: 150px; }
+      @media (min-width: 1200px){
+        :root{ --tickerH: 160px; }
+      }
 
-@media (min-width: 981px){
+      .wrap, .container{ min-height: 100vh; }
 
-  :root{ --tickerH: 150px; }  /* PC padrão */
+      .main{
+        height: calc(100vh - var(--tickerH)) !important;
+        overflow: hidden !important;
+      }
 
-  /* TV: um pouco maior se o rodapé for mais alto */
-  @media (min-width: 1200px){
-    :root{ --tickerH: 160px; }
-  }
+      #avisos{
+        max-height: 100% !important;
+        overflow: hidden !important;
+        padding-right: 0 !important;
+      }
 
-  .wrap, .container{ min-height: 100vh; }
+      .ticker{
+        position: sticky;
+        bottom: 0;
+        z-index: 20;
+      }
+    }
 
-  .main{
-    height: calc(100vh - var(--tickerH)) !important;
-    overflow: hidden !important;
-  }
-
-  #avisos{
-    max-height: 100% !important;
-    overflow: auto !important;
-    overscroll-behavior: contain;
-    padding-right: 6px;
-  }
-
-  .ticker{
-    position: sticky;
-    bottom: 0;
-    z-index: 20;
-  }
-
-  /* no máximo 4 “visuais”: se for longo, rola dentro do aviso */
-  #avisos .aviso{
-    max-height: 22vh;
-    overflow: auto;
-  }
-}
-
-/* =========================
-   PATCH FINAL — PC/TV
-   Rodapé sempre visível
-   (não altera celular)
-   ========================= */
-
-@media (min-width: 981px){
-
-  :root{ --tickerH: 150px; }
-
-  .wrap, .container{
-    min-height: 100vh;
-  }
-
-  .main{
-    height: calc(100vh - var(--tickerH)) !important;
-    overflow: hidden !important;
-  }
-
-  #avisos{
-    max-height: 100% !important;
-    overflow-y: auto !important;
-    overscroll-behavior: contain;
-    padding-right: 6px;
-  }
-
-  .ticker{
-    position: sticky;
-    bottom: 0;
-    z-index: 20;
-  }
-
-  /* garante no máximo 4 visíveis */
-  #avisos .aviso{
-    max-height: 22vh;
-    overflow: auto;
-  }
-}
-/* =========================
-   PATCH TV 32" — SEM ROLAGEM
-   - rodapé sempre visível
-   - avisos estáticos
-   - mostra só o que cabe (1–3, às vezes 4 curtos)
-   ========================= */
-
-@media (min-width: 981px){
-
-  :root{ --tickerH: 160px; } /* TV 32" costuma ter rodapé mais “alto” proporcionalmente */
-
-  .main{
-    height: calc(100vh - var(--tickerH)) !important;
-    overflow: hidden !important;
-  }
-
-  /* SEM rolagem nos avisos */
-  #avisos{
-    overflow: hidden !important;
-    max-height: 100% !important;
-    padding-right: 0 !important;
-  }
-
-  /* Cada aviso: altura limitada (TV 32") */
-  #avisos .aviso{
-    overflow: hidden !important;
-    max-height: 19vh;     /* cabe 3 confortáveis; 4 se forem curtos */
-    padding: 14px !important;
-  }
-
-  /* Título: curto e legível */
-  #avisos .aviso .t{
-    display: -webkit-box !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    -webkit-line-clamp: 2 !important;
-  }
-
-  /* Descrição: no máximo 2 linhas na 32" */
-  #avisos .aviso .d{
-    display: -webkit-box !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-    -webkit-line-clamp: 2 !important;
-  }
-
-  /* Meta sempre no rodapé do card */
-  #avisos .metaLine{
-    margin-top: auto !important;
-  }
-
-  .ticker{
-    position: sticky;
-    bottom: 0;
-    z-index: 20;
-  }
-}
-
-@media (min-width: 981px){
-  #avisos .aviso .t,
-  #avisos .aviso .d{
-    display:block !important;
-    overflow:visible !important;
-    -webkit-line-clamp: unset !important;
-    line-clamp: unset !important;
-    max-height:none !important;
-    text-overflow: unset !important;
-    white-space: normal !important;
-  }
-  #avisos{ overflow:hidden !important; } /* sem rolagem */
-}
-
-    /* =========================
-   AUTO-FIT (TV/PC) — reduz fonte para caber (até 4 avisos)
-   usa variáveis --tScale e --dScale definidas pelo JS
-   ========================= */
-@media (min-width: 981px){
-
-  #avisos .aviso{
-    --tScale: 1;
-    --dScale: 1;
-    overflow: hidden; /* sem rolagem no aviso */
-  }
-
-  /* remove clamp/reticências no TV/PC e deixa o JS encaixar */
-  #avisos .aviso .t,
-  #avisos .aviso .d{
-    display:block !important;
-    -webkit-line-clamp: unset !important;
-    line-clamp: unset !important;
-    text-overflow: unset !important;
-    white-space: normal !important;
-  }
-
-  /* título escala leve */
-  #avisos .aviso .t{
-    font-size: calc(22px * var(--ui2) * var(--tScale)) !important;
-    line-height: 1.12 !important;
-  }
-
-  /* descrição escala mais (é aqui que “cabe” melhor) */
-  #avisos .aviso .d{
-    font-size: calc(16px * var(--ui) * var(--dScale)) !important;
-    line-height: 1.25 !important;
-    overflow: hidden !important;
-  }
-}
-
-/* =========================
-   PATCH FINAL — TAMANHO DOS TEXTOS (TV 32")
-   Título grande
-   Descrição = 90%
-   ========================= */
-
-#avisos .aviso .t{
-  font-size: clamp(26px, 2.4vw, 36px) !important;
-  line-height: 1.15 !important;
-  font-weight: 900 !important;
-}
-
-#avisos .aviso .d{
-  font-size: clamp(18px, 1.8vw, 22px) !important; /* ~90% do título */
-  line-height: 1.35 !important;
-}
-
-/* garante que nenhum scale antigo atue */
-#avisos .aviso{
-  --tScale: 1 !important;
-  --dScale: 1 !important;
-  transform: none !important;
-}
-
-    
-    
-  
-  
+    /* TV 32" — textos fixos */
+    #avisos .aviso .t{
+      font-size: clamp(26px, 2.4vw, 36px) !important;
+      line-height: 1.15 !important;
+      font-weight: 900 !important;
+    }
+    #avisos .aviso .d{
+      font-size: clamp(18px, 1.8vw, 22px) !important;
+      line-height: 1.35 !important;
+    }
+    #avisos .aviso{
+      --tScale: 1 !important;
+      --dScale: 1 !important;
+      transform: none !important;
+    }
   </style>
   <!-- =========================================================
        FIM — CSS (ESTILOS)
@@ -1214,6 +1025,14 @@
               <div class="adLabel" id="adLabel">Anúncio</div>
               <div class="videoWrap">
                 <video id="adVideo" autoplay muted playsinline></video>
+
+                <!-- CONTROLES TV (não aparece no celular) -->
+                <div class="tvVideoControls" id="tvVideoControls" aria-hidden="true">
+                  <button class="tvBtn" id="btnPrevAd" title="Vídeo anterior">◀</button>
+                  <button class="tvBtn" id="btnBack10" title="Voltar 10s">⟲10s</button>
+                  <button class="tvBtn" id="btnFwd10" title="Avançar 10s">10s⟳</button>
+                  <button class="tvBtn" id="btnNextAd" title="Próximo vídeo">▶</button>
+                </div>
               </div>
             </div>
 
@@ -1359,130 +1178,118 @@
       return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
     }
 
-function renderAvisos(data){
-  const root = document.getElementById("avisos");
-  if (!root) return;
-  root.innerHTML = "";
-
-  if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
-
-  const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
-  const rot = data?.rotacao || {};
-  const ativar = !!rot.ativar;
-
-  const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
-  let qtd = Math.min(4, qtdCfg);
-
-  const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
-
-  if(!avisosAll.length){
-    const div = document.createElement("div");
-    div.className = "aviso baixa";
-    div.innerHTML = `<p class="t">Sem avisos no momento</p><p class="d">${safeText(data.fallback || "—")}</p>`;
-    root.appendChild(div);
-    ROT_STATE = { page: 0, totalPages: 1, paused: false };
-    return;
-  }
-
-  // ===== cria 1 card de aviso (sem auto-reduzir fonte) =====
-  function buildAvisoEl(a){
-    const el = document.createElement("div");
-    el.className = `aviso ${prioridadeClass(a.prioridade)}`;
-
-    const titulo = safeText(a.titulo || "Aviso");
-    const desc = safeText(a.descricao || "");
-    const tipo = safeText(a.tipo || "");
-    const local = safeText(a.local || "");
-    const ini = formatDT_BR(a.inicio || "");
-    const fim = formatDT_BR(a.fim || "");
-
-    const itens = [];
-    if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
-    if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
-    const pr = safeText(a.prioridade || "Baixa");
-    itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
-    if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
-
-    el.innerHTML = `
-      <p class="t">${escapeHtml(titulo)}</p>
-      ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : ""}
-      <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
-    `;
-    return el;
-  }
-
-  // ===== TV/PC (>=981px): escolhe 1..4 que COUBER SEM rolagem e SEM cortar =====
-  function escolherQtdQueCabe(){
-    const maxPerScreen = Math.min(4, qtd);
-    for(let n = maxPerScreen; n >= 1; n--){
+    function renderAvisos(data){
+      const root = document.getElementById("avisos");
+      if (!root) return;
       root.innerHTML = "";
-      avisosAll.slice(0, n).forEach(a => root.appendChild(buildAvisoEl(a)));
 
-      // espera layout “assentar”
-      const ok = (root.scrollHeight <= root.clientHeight + 2);
-      if (ok) return n;
-    }
-    return 1;
-  }
+      if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
 
-  if (window.matchMedia("(min-width: 981px)").matches){
-    // mede com o DOM real antes de fixar qtd
-    requestAnimationFrame(() => {
-      qtd = escolherQtdQueCabe();
-      root.style.setProperty("--rows", String(qtd));
-      // re-render “limpo” já com qtd final
+      const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
+      const rot = data?.rotacao || {};
+      const ativar = !!rot.ativar;
+
+      const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
+      let qtd = Math.min(4, qtdCfg);
+
+      const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
+
+      if(!avisosAll.length){
+        const div = document.createElement("div");
+        div.className = "aviso baixa";
+        div.innerHTML = `<p class="t">Sem avisos no momento</p><p class="d">${safeText(data.fallback || "—")}</p>`;
+        root.appendChild(div);
+        ROT_STATE = { page: 0, totalPages: 1, paused: false };
+        return;
+      }
+
+      function buildAvisoEl(a){
+        const el = document.createElement("div");
+        el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+
+        const titulo = safeText(a.titulo || "Aviso");
+        const desc = safeText(a.descricao || "");
+        const tipo = safeText(a.tipo || "");
+        const local = safeText(a.local || "");
+        const ini = formatDT_BR(a.inicio || "");
+        const fim = formatDT_BR(a.fim || "");
+
+        const itens = [];
+        if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
+        if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
+        const pr = safeText(a.prioridade || "Baixa");
+        itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
+        if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
+
+        el.innerHTML = `
+          <p class="t">${escapeHtml(titulo)}</p>
+          ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : ""}
+          <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
+        `;
+        return el;
+      }
+
+      function escolherQtdQueCabe(){
+        const maxPerScreen = Math.min(4, qtd);
+        for(let n = maxPerScreen; n >= 1; n--){
+          root.innerHTML = "";
+          avisosAll.slice(0, n).forEach(a => root.appendChild(buildAvisoEl(a)));
+          const ok = (root.scrollHeight <= root.clientHeight + 2);
+          if (ok) return n;
+        }
+        return 1;
+      }
+
+      if (window.matchMedia("(min-width: 981px)").matches){
+        requestAnimationFrame(() => {
+          qtd = escolherQtdQueCabe();
+          root.style.setProperty("--rows", String(qtd));
+          renderPage(0);
+        });
+      } else {
+        root.style.setProperty("--rows", String(qtd));
+      }
+
+      const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
+      ROT_STATE = { page: 0, totalPages, paused: false };
+
+      function renderPage(pageIdx){
+        root.classList.remove("fade-in");
+        root.classList.add("fade-out");
+
+        const doRender = () => {
+          root.innerHTML = "";
+          const start = pageIdx * qtd;
+          const slice = avisosAll.slice(start, start + qtd);
+          slice.forEach(a => root.appendChild(buildAvisoEl(a)));
+          void root.offsetWidth;
+          root.classList.remove("fade-out");
+          root.classList.add("fade-in");
+        };
+
+        setTimeout(doRender, 220);
+      }
+
       renderPage(0);
-    });
-  } else {
-    // celular: usa o config (até 4) e deixa rotação normal
-    root.style.setProperty("--rows", String(qtd));
-  }
-
-  const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
-  ROT_STATE = { page: 0, totalPages, paused: false };
-
-  function renderPage(pageIdx){
-    root.classList.remove("fade-in");
-    root.classList.add("fade-out");
-
-    const doRender = () => {
-      root.innerHTML = "";
-
-      const start = pageIdx * qtd;
-      const slice = avisosAll.slice(start, start + qtd);
-
-      slice.forEach(a => root.appendChild(buildAvisoEl(a)));
-
-      void root.offsetWidth;
-
-      root.classList.remove("fade-out");
       root.classList.add("fade-in");
-    };
 
-    setTimeout(doRender, 220);
-  }
+      if (ativar && totalPages > 1){
+        if (rot.pausarNoMouse){
+          root.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
+          root.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
+          root.addEventListener("touchstart", ()=>{ ROT_STATE.paused = !ROT_STATE.paused; }, {passive:true});
+        }
 
-  renderPage(0);
-  root.classList.add("fade-in");
-
-  if (ativar && totalPages > 1){
-    if (rot.pausarNoMouse){
-      root.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
-      root.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
-      root.addEventListener("touchstart", ()=>{ ROT_STATE.paused = !ROT_STATE.paused; }, {passive:true});
+        ROT_TIMER = setInterval(()=>{
+          if (ROT_STATE.paused) return;
+          ROT_STATE.page = (ROT_STATE.page + 1) % totalPages;
+          renderPage(ROT_STATE.page);
+        }, intervaloMs);
+      }
     }
 
-    ROT_TIMER = setInterval(()=>{
-      if (ROT_STATE.paused) return;
-      ROT_STATE.page = (ROT_STATE.page + 1) % totalPages;
-      renderPage(ROT_STATE.page);
-    }, intervaloMs);
-  }
-}
-
-
-    /* ===== VERSÍCULO ===== */
-   function hojeKeyMMDD() {
+       /* ===== VERSÍCULO ===== */
+    function hojeKeyMMDD() {
       const d = new Date();
       const mm = String(d.getMonth() + 1).padStart(2, "0");
       const dd = String(d.getDate()).padStart(2, "0");
@@ -1561,6 +1368,35 @@ function renderAvisos(data){
     }
 
     /* ===== PUBLICIDADE ===== */
+
+    // Estado do player (não reseta ao trocar página/rotacionar)
+    const AD_STATE_KEY = "CS_AD_STATE_V1";
+    let AD_TIMER = null;
+
+    function isMobile(){
+      return window.matchMedia("(max-width: 980px)").matches;
+    }
+
+    function adLoadState(){
+      try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); }
+      catch(e){ return {}; }
+    }
+    function adSaveState(st){
+      try { sessionStorage.setItem(AD_STATE_KEY, JSON.stringify(st || {})); } catch(e){}
+    }
+
+    function adSeek(delta){
+      const v = document.getElementById("adVideo");
+      if(!v) return;
+      try{
+        v.currentTime = Math.max(0, (v.currentTime || 0) + delta);
+        const st = adLoadState();
+        st.t = v.currentTime || 0;
+        st.paused = v.paused;
+        adSaveState(st);
+      }catch(e){}
+    }
+
     function setCityTitleFromConfig(cfg){
       const el = document.getElementById("cityTitle");
       if(!el) return;
@@ -1571,6 +1407,145 @@ function renderAvisos(data){
         "📰 Mensagens da Cidade";
 
       el.textContent = String(t);
+    }
+
+    function bindTvVideoControls(pub){
+      const v = document.getElementById("adVideo");
+      const controls = document.getElementById("tvVideoControls");
+      if(!v || !controls) return;
+
+      // só TV/PC
+      if (isMobile()){
+        controls.style.display = "none";
+        return;
+      } else {
+        controls.style.display = "flex";
+      }
+
+      const bPrev = document.getElementById("btnPrevAd");
+      const bNext = document.getElementById("btnNextAd");
+      const bBack = document.getElementById("btnBack10");
+      const bFwd  = document.getElementById("btnFwd10");
+
+      function setIdx(nextIdx){
+        const list = Array.isArray(pub?.videos) ? pub.videos : [];
+        if(!list.length) return;
+
+        let i = nextIdx;
+        if(i < 0) i = list.length - 1;
+        if(i >= list.length) i = 0;
+
+        const st = adLoadState();
+        st.idx = i;
+        st.t = 0;
+        st.paused = false;
+        adSaveState(st);
+
+        // troca e toca
+        adPlayByState(pub, true);
+      }
+
+      if(bPrev) bPrev.onclick = () => {
+        const st = adLoadState();
+        setIdx((Number.isFinite(st.idx) ? st.idx : 0) - 1);
+      };
+      if(bNext) bNext.onclick = () => {
+        const st = adLoadState();
+        setIdx((Number.isFinite(st.idx) ? st.idx : 0) + 1);
+      };
+      if(bBack) bBack.onclick = () => adSeek(-10);
+      if(bFwd)  bFwd.onclick  = () => adSeek(+10);
+
+      // atalhos teclado (TV)
+      window.addEventListener("keydown", (e)=>{
+        if(isMobile()) return;
+        const k = String(e.key || "").toLowerCase();
+        if(k === "arrowleft") setIdx((adLoadState().idx ?? 0) - 1);
+        if(k === "arrowright") setIdx((adLoadState().idx ?? 0) + 1);
+      });
+    }
+
+    function adApplyFitContain(v){
+      try{
+        const isVertical = v.videoHeight > v.videoWidth;
+        if (isVertical) v.classList.add("fit-contain");
+        else v.classList.remove("fit-contain");
+      }catch(e){}
+    }
+
+    function adSavePlayback(){
+      const v = document.getElementById("adVideo");
+      if(!v) return;
+      const st = adLoadState();
+      st.t = Number.isFinite(v.currentTime) ? v.currentTime : (st.t || 0);
+      st.paused = v.paused;
+      adSaveState(st);
+    }
+
+    // toca vídeo baseado no estado salvo (idx + currentTime)
+    function adPlayByState(pub, forceFromStart){
+      const adVideo = document.getElementById("adVideo");
+      const adLabel = document.getElementById("adLabel");
+      const adPill  = document.getElementById("adPill");
+      if(!adVideo || !adLabel) return;
+
+      const list = Array.isArray(pub?.videos) ? pub.videos : [];
+      if(!list.length) return;
+
+      const st = adLoadState();
+      let idx = Number.isFinite(st.idx) ? st.idx : 0;
+      if(idx < 0) idx = 0;
+      if(idx >= list.length) idx = 0;
+
+      const item = list[idx];
+      const src = String(item?.arquivo || "");
+      const sep = src.includes("?") ? "&" : "?";
+      const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+
+      adLabel.textContent = String(item?.anunciante || "Anúncio");
+      if (adPill) adPill.textContent = "No ar";
+
+      // NÃO resetar desnecessariamente: só troca src se mudou
+      const cur = adVideo.currentSrc || adVideo.src || "";
+      const baseCur = cur.split("?")[0];
+      const baseNext = finalSrc.split("?")[0];
+
+      if (baseCur !== baseNext){
+        adVideo.pause();
+        adVideo.classList.remove("fit-contain");
+        adVideo.removeAttribute("src");
+        adVideo.load();
+        adVideo.src = finalSrc;
+        adVideo.load();
+      }
+
+      const desiredTime = (forceFromStart ? 0 : Number(st.t || 0));
+
+      const playNow = () => {
+        try{
+          if(!forceFromStart && desiredTime > 0 && Number.isFinite(desiredTime)){
+            try { adVideo.currentTime = desiredTime; } catch(e){}
+          }
+          const p = adVideo.play();
+          if(p && p.catch) p.catch(()=>{});
+        }catch(e){}
+      };
+
+      // se metadados já carregados, toca já
+      if (adVideo.readyState >= 1) {
+        adApplyFitContain(adVideo);
+        playNow();
+      } else {
+        adVideo.onloadedmetadata = () => {
+          adApplyFitContain(adVideo);
+          playNow();
+        };
+      }
+
+      // salva idx atual
+      st.idx = idx;
+      st.paused = false;
+      adSaveState(st);
     }
 
     function iniciarPublicidade(data){
@@ -1587,46 +1562,99 @@ function renderAvisos(data){
         return;
       }
 
+      // garante overlay existir (TV)
+      (function ensureControls(){
+        const wrap = adVideo?.closest(".videoWrap");
+        if(!wrap) return;
+        wrap.style.position = "relative";
+        if(!document.getElementById("tvVideoControls")){
+          const div = document.createElement("div");
+          div.className = "tvVideoControls";
+          div.id = "tvVideoControls";
+          div.innerHTML = `
+            <button class="tvBtn" id="btnPrevAd" title="Vídeo anterior">◀</button>
+            <button class="tvBtn" id="btnBack10" title="Voltar 10s">⟲10s</button>
+            <button class="tvBtn" id="btnFwd10" title="Avançar 10s">10s⟳</button>
+            <button class="tvBtn" id="btnNextAd" title="Próximo vídeo">▶</button>
+          `;
+          wrap.appendChild(div);
+        }
+      })();
+
+      // estilo básico dos controles (seu CSS pode já ter; aqui é “seguro”)
+      (function ensureControlsCss(){
+        if(document.getElementById("tvControlsCss")) return;
+        const s = document.createElement("style");
+        s.id = "tvControlsCss";
+        s.textContent = `
+          .tvVideoControls{
+            position:absolute; right:12px; bottom:12px;
+            display:flex; gap:8px; z-index:50; user-select:none;
+          }
+          .tvBtn{
+            border:1px solid rgba(255,255,255,.22);
+            background:rgba(0,0,0,.35);
+            color:#fff;
+            padding:10px 12px;
+            border-radius:12px;
+            font-size:16px;
+            line-height:1;
+            cursor:pointer;
+          }
+          .tvBtn:active{ transform:scale(.98); }
+          @media (max-width: 980px){
+            .tvVideoControls{ display:none !important; }
+          }
+        `;
+        document.head.appendChild(s);
+      })();
+
+      // bind botões TV
+      bindTvVideoControls(pub);
+
+      // evento para salvar tempo
+      adVideo.addEventListener("timeupdate", ()=>{ if(!isMobile()) adSavePlayback(); }, {passive:true});
+      adVideo.addEventListener("pause", adSavePlayback, {passive:true});
+      adVideo.addEventListener("play", adSavePlayback, {passive:true});
+      document.addEventListener("visibilitychange", ()=>{
+        if(document.hidden) adSavePlayback();
+      });
+
+      // rotação automática (mas preservando estado)
       const intervalMs = Math.max(3, Number(pub.intervaloSeg || 10)) * 1000;
-      let idx = 0;
 
-      function playNext(){
-        const item = pub.videos[idx];
-        if(!item) return;
-
-        adLabel.textContent = String(item.anunciante || "Anúncio");
-        if (adPill) adPill.textContent = "Atualizando…";
-
-        const src = String(item.arquivo || "");
-        const sep = src.includes("?") ? "&" : "?";
-        const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
-
-        adVideo.pause();
-        adVideo.classList.remove("fit-contain");
-        adVideo.removeAttribute("src");
-        adVideo.load();
-
-        adVideo.src = finalSrc;
-        adVideo.load();
-
-        adVideo.play().catch(() => setTimeout(playNext, 800));
-
+      function nextIdx(){
+        const st = adLoadState();
+        const list = Array.isArray(pub.videos) ? pub.videos : [];
+        let idx = Number.isFinite(st.idx) ? st.idx : 0;
         idx++;
-        if(idx >= pub.videos.length) idx = 0;
+        if(idx >= list.length) idx = 0;
+        st.idx = idx;
+        st.t = 0;
+        st.paused = false;
+        adSaveState(st);
+        adPlayByState(pub, true);
       }
 
-      adVideo.onloadedmetadata = () => {
-        const isVertical = adVideo.videoHeight > adVideo.videoWidth;
-        if (isVertical) adVideo.classList.add("fit-contain");
-        else adVideo.classList.remove("fit-contain");
-        if (adPill) adPill.textContent = "No ar";
-      };
+      // se já tem timer, limpa
+      if (AD_TIMER){ clearInterval(AD_TIMER); AD_TIMER = null; }
 
-      adVideo.onended = () => setTimeout(playNext, intervalMs);
-      adVideo.onerror = () => setTimeout(playNext, 1000);
-
+      // mostra box
       adBox.style.display = "flex";
-      playNext();
+
+      // toca a partir do estado salvo (NÃO volta pro 1º)
+      adPlayByState(pub, false);
+
+      // timer de troca (mantém automático)
+      AD_TIMER = setInterval(()=>{
+        // se usuário pausou manualmente, respeita
+        const st = adLoadState();
+        if(st.paused) return;
+        nextIdx();
+      }, intervalMs);
+
+      // fallback erro
+      adVideo.onerror = () => setTimeout(()=>nextIdx(), 1200);
 
       // ✅ notícias só quando bloco está visível
       carregarMensagensCidade();
@@ -1667,7 +1695,6 @@ function renderAvisos(data){
         const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
         if(!res.ok) throw new Error("HTTP " + res.status);
 
-        // ================= INÍCIO DA RENDERIZAÇÃO DAS MENSAGENS DA CIDADE =================
         const j = await res.json();
         const items = Array.isArray(j.items) ? j.items : [];
 
@@ -1699,20 +1726,16 @@ function renderAvisos(data){
             texto = texto.slice(titulo.length).trim();
           }
 
-          let resumo = texto.split(".").filter(t=>t.trim().length>10)[0];
-          if(!resumo) resumo = "Mais informações disponíveis na matéria original.";
-
+          // mostra só o título (como você queria no exemplo anterior)
           html += `
             <div class="newsItem">
               <p class="h">${escapeHtml(titulo)}</p>
-        
             </div>
           `;
         });
 
         newsBody.innerHTML = html;
         newsBox.style.display = "flex";
-        // ================= FIM DA RENDERIZAÇÃO DAS MENSAGENS DA CIDADE =================
 
       }catch(e){
         console.warn("Falha ao carregar mensagens_cidade.json:", e);
@@ -1757,6 +1780,8 @@ function renderAvisos(data){
 
         await carregarVersiculo(data);
         await carregarClima(data);
+
+        // ✅ NÃO reinicia publicidade se já está ativa com o mesmo set de vídeos
         iniciarPublicidade(data);
 
         return data;
@@ -1771,6 +1796,7 @@ function renderAvisos(data){
 
     loadAll();
     setInterval(loadAll, 60000);
+
   </script>
   <!-- =========================================================
        FIM — JS (APP / UI / DADOS)
