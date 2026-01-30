@@ -1618,6 +1618,15 @@
 
       // bind botões TV
       bindTvVideoControls(pub);
+      // iPhone: 1 toque libera o play (quando autoplay é bloqueado)
+adVideo.addEventListener("click", () => {
+  try{
+    const st = adLoadState();
+    st.paused = false;
+    adSaveState(st);
+  }catch(e){}
+  adVideo.play().catch(()=>{});
+}, { passive:true });
 
       // evento para salvar tempo
       adVideo.addEventListener("timeupdate", ()=>{ if(!isMobile()) adSavePlayback(); }, {passive:true});
@@ -1725,7 +1734,10 @@
         `;
 
         items.slice(0,8).forEach(x=>{
-          const titulo = normalizeText_(x.titulo || x.title || "Mensagem");
+          let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
+          titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
+          titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim(); // remove " | Site" no final
+          if(!titulo) titulo = "Mensagem";
           let texto   = normalizeText_(x.texto || x.text || x.description || "");
 
           texto = texto.replace(/<[^>]*>/g,"").trim();
