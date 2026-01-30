@@ -49,7 +49,7 @@
       --ui2: clamp(1, calc(100vmin / 850), 2.70);
 
       --topbar-bg: none;
-      --topbar-img-opacity: .22;
+      --topbar-img-opacity: .92;
 
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
@@ -131,15 +131,15 @@
       pointer-events:none;
     }
 
-    .topbar::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(90deg, rgba(5,20,35,.92), rgba(5,20,35,.70)),
-        radial-gradient(900px 420px at 20% 20%, rgba(0,0,0,.45), transparent 60%);
-      pointer-events:none;
-    }
+   .topbar::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg, rgba(5,20,35,.55), rgba(5,20,35,.25)),
+    radial-gradient(900px 420px at 20% 20%, rgba(0,0,0,.12), transparent 65%);
+  pointer-events:none;
+}
 
     .topbar > *{ position:relative; z-index:1; }
 
@@ -218,6 +218,12 @@
       color:var(--muted);font-weight:900;font-size:12px;
       white-space:nowrap;
     }
+    #wxIconTop{
+  font-size: 3em;      /* 3x */
+  line-height: 1;
+  display:inline-block;
+  transform: translateY(2px);
+}
     .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
     #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
 
