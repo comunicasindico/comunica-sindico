@@ -993,94 +993,11 @@ body { overflow: hidden; }
 
 }
 
-    /* =========================================================
-   AJUSTE FINAL DE LAYOUT — PC/TV (não mexe no celular)
-   ========================================================= */
-@media (min-width: 981px){
 
-  /* 1) GARANTE ALTURA CORRETA + RODAPÉ SEM CORTAR */
-  html, body{ height: 100%; }
-  body{ overflow: hidden; }
 
-  .container{
-    min-height: 100vh;
-    display: grid;
-    grid-template-rows: auto 1fr auto; /* topbar / main / ticker */
-  }
 
-  /* 2) CABEÇALHO MAIS BAIXO (título grande) */
-  .topbar{
-    min-height: 54px;
-    padding: 6px 12px;
-  }
 
-  /* Se seu título do cabeçalho usa #titulo (como eu sugeri) */
-  #titulo{
-    font-size: 3.4rem;  /* grande e legível */
-    line-height: 1.05;
-    margin: 0;
-  }
 
-  /* Se usa .topbar .title (caso seu HTML seja outro) */
-  .topbar .title{
-    font-size: 2.2rem;
-    line-height: 1.05;
-    margin: 0;
-  }
-
-  /* 3) MAIN PREENCHE A TELA SEM EMPURRAR O RODAPÉ */
-  .main{
-    min-height: 0;       /* ESSENCIAL para não cortar */
-    overflow: hidden;
-    gap: 10px;
-  }
-
-  /* Painéis com scroll interno (se precisar) */
-  .panel{
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  /* 4) AVISOS: MAIS COMPACTO E COM TÍTULO NO TOPO */
-  #avisos{
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .aviso{
-    padding: 6px 10px 8px;
-  }
-
-  .aviso .t{
-    font-size: 1.65rem;
-    line-height: 1.15;
-    margin: 0 0 4px 0; /* colado no topo */
-  }
-
-  .aviso .d{
-    font-size: 0.95rem;  /* ~10% menor */
-    line-height: 1.35;
-    margin: 0 0 4px 0;
-  }
-
-  .aviso .metaLine,
-  .aviso .metaItem{
-    font-size: 0.65rem;  /* bem pequeno */
-    line-height: 1.2;
-  }
-
-  .prioBadge{
-    font-size: 0.6rem;
-    padding: 2px 6px;
-  }
-
-  /* 5) RODAPÉ FIXO E SEM SUMIR */
-  .ticker{
-    position: sticky;
-    bottom: 0;
-    z-index: 20;
-  }
-}
     
   </style>
   <!-- =========================================================
@@ -1335,8 +1252,8 @@ body { overflow: hidden; }
       const rot = data?.rotacao || {};
       const ativar = !!rot.ativar;
 
-      const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
-      let qtd = Math.min(4, qtdCfg);
+      const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 3));
+      let qtd = Math.min(3, qtdCfg);
 
       const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
 
