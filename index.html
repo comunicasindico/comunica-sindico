@@ -1014,6 +1014,64 @@
     overflow: auto;
   }
 }
+/* =========================
+   PATCH TV 32" — SEM ROLAGEM
+   - rodapé sempre visível
+   - avisos estáticos
+   - mostra só o que cabe (1–3, às vezes 4 curtos)
+   ========================= */
+
+@media (min-width: 981px){
+
+  :root{ --tickerH: 160px; } /* TV 32" costuma ter rodapé mais “alto” proporcionalmente */
+
+  .main{
+    height: calc(100vh - var(--tickerH)) !important;
+    overflow: hidden !important;
+  }
+
+  /* SEM rolagem nos avisos */
+  #avisos{
+    overflow: hidden !important;
+    max-height: 100% !important;
+    padding-right: 0 !important;
+  }
+
+  /* Cada aviso: altura limitada (TV 32") */
+  #avisos .aviso{
+    overflow: hidden !important;
+    max-height: 19vh;     /* cabe 3 confortáveis; 4 se forem curtos */
+    padding: 14px !important;
+  }
+
+  /* Título: curto e legível */
+  #avisos .aviso .t{
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  /* Descrição: no máximo 2 linhas na 32" */
+  #avisos .aviso .d{
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    -webkit-line-clamp: 2 !important;
+  }
+
+  /* Meta sempre no rodapé do card */
+  #avisos .metaLine{
+    margin-top: auto !important;
+  }
+
+  .ticker{
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+  }
+}
+
 
     
   
