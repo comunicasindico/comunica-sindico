@@ -508,6 +508,7 @@
 
       /* ✅ para o overlay dos botões */
       position:relative;
+      #adVideo{ position:relative; z-index:1; }
     }
     video{
       width:100%;
@@ -542,8 +543,13 @@
     }
     .tvBtn:active{ transform:scale(.98); }
     @media (max-width: 980px){
-      .tvVideoControls{ display:none !important; }
-    }
+  .tvVideoControls{
+    display:flex !important;
+    right:10px;
+    bottom:10px;
+    gap:6px;
+  }
+}
 
     /* ===== FOOTER (TICKER) ===== */
     .ticker{
@@ -1620,6 +1626,11 @@
         const s = document.createElement("style");
         s.id = "tvControlsCss";
         s.textContent = `
+        /* BLINDADO: no celular NUNCA esconder */
+@media (max-width: 980px){
+  .tvVideoControls{ display:flex !important; }
+}
+
   .tvVideoControls{
     position:absolute;
     right:12px;
