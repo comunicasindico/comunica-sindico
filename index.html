@@ -70,7 +70,7 @@
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%;width:100%}
+   html,body{height:100%;width:100%; overflow:hidden;}
 
     body{
       margin:0;
@@ -83,12 +83,12 @@
       overflow:hidden;
       overscroll-behavior:none;
       touch-action:manipulation;
-      min-height:100svh;
-      padding-bottom: max(14px, env(safe-area-inset-bottom));
+      height:100svh;
+      padding-bottom: 0; /*max(14px, env(safe-area-inset-bottom));*/
     }
 
     .wrap{
-      min-height:100svh;
+      height:100svh;
       width:100%;
       padding:
         calc(14px + var(--sat))
@@ -100,7 +100,8 @@
 
     .container{
       width:100%;
-      min-height:100svh;
+      height:100%;
+      min-height:0;
       display:flex;
       flex-direction:column;
       gap:12px;
@@ -175,13 +176,23 @@
       padding:10px 12px;border-radius:999px;
       border:1px solid var(--line);
       background:rgba(12,35,56,.55);
-      color:var(--muted);font-weight:900;font-size:12px;
+      color:var(--muted);
+      font-weight:900;
+      font-size: calc(16px * var(--ui));
       white-space:nowrap;
     }
-    .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
-    #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
-    font-size: calc(22px * var(--ui2));
+    .dot{
+      width: calc(12px * var(--ui));
+      height: calc(12px * var(--ui));
+      border-radius:50%;
+      background:#ff5a5a;
+    }
 
+    #statusJson{
+      font-weight:950;
+      color:rgba(234,242,255,.92);
+      font-size: inherit; /* usa o mesmo tamanho do .badge */
+    }
     .btnInstall{
       border:1px solid rgba(255,255,255,.18);
       background:rgba(12,35,56,.55);
@@ -289,7 +300,7 @@
       min-height:0;
       overflow:hidden;
       display:grid;
-      grid-template-rows: repeat(4, minmax(0, 1fr));
+      grid-template-rows: repeat(var(--rows, 4), minmax(0, 1fr));
       gap:12px;
       scroll-behavior:smooth;
     }
@@ -389,7 +400,6 @@
   align-items:center;
   color:rgba(234,242,255,.92);
   font-weight:900;
-
   /* ✅ pequeno, tipo “Mensagens da Cidade” */
   font-size: calc(11px * var(--ui));
   opacity: .88;
@@ -501,7 +511,7 @@
       flex-direction:column;
       align-items:stretch;
       gap:6px;
-      margin-bottom: max(14px, env(safe-area-inset-bottom));
+      margin-bottom: 0;
     }
     .tickerLine1{
       width:100%;
@@ -1069,7 +1079,15 @@
       const ativar = !!rot.ativar;
 
       const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
-      const qtd = Math.min(4, qtdCfg);
+
+// padrão: tenta 4, mas cai pra 3 se ficar apertado
+let qtd = Math.min(4, qtdCfg);
+
+// “caber na tela”: se o container estiver baixo, usa 3
+if (root.clientHeight < 520) qtd = Math.min(qtd, 3);
+
+// avisa o CSS quantas linhas usar
+root.style.setProperty("--rows", String(qtd));
 
       const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
 
