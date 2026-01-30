@@ -37,1069 +37,1019 @@
        ========================================================= -->
 
   <!-- =========================================================
-       INÍCIO — CSS (ESTILOS)
-       ========================================================= -->
-  <style>
-    /* =========================================================
-       BASE
-       ========================================================= */
-    :root{
-      --bg1:#061726;
-      --bg2:#0b1f33;
-      --line:rgba(255,255,255,.10);
-      --txt:#eaf2ff;
-      --muted:rgba(234,242,255,.75);
-      --shadow: 0 14px 50px rgba(0,0,0,.35);
-      --radius: 18px;
-      --sat: env(safe-area-inset-top);
-      --sar: env(safe-area-inset-right);
-      --sab: env(safe-area-inset-bottom);
-      --sal: env(safe-area-inset-left);
-      --ui: clamp(1, calc(100vmin / 900), 2.10);
-      --ui2: clamp(1, calc(100vmin / 850), 2.70);
+     INÍCIO — CSS (ESTILOS)
+     ========================================================= -->
+<style>
+  /* =========================================================
+     BASE
+     ========================================================= */
+  :root{
+    --bg1:#061726;
+    --bg2:#0b1f33;
+    --line:rgba(255,255,255,.10);
+    --txt:#eaf2ff;
+    --muted:rgba(234,242,255,.75);
+    --shadow: 0 14px 50px rgba(0,0,0,.35);
+    --radius: 18px;
+    --sat: env(safe-area-inset-top);
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+    --ui: clamp(1, calc(100vmin / 900), 2.10);
+    --ui2: clamp(1, calc(100vmin / 850), 2.70);
 
-      /* Topbar BG */
-      --topbar-bg: none;
-      --topbar-img-opacity: .22; /* mais forte */
+    /* Topbar BG */
+    --topbar-bg: none;
+    --topbar-img-opacity: .22; /* mais forte */
 
-      /* NEWS premium tokens */
-      --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
-      --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
-      --news-bg: rgba(8, 24, 40, .62);
-      --news-border: rgba(255,255,255,.12);
-      --news-shadow: 0 18px 40px rgba(0,0,0,.38);
-      --news-title: rgba(234,242,255,.96);
-      --news-text: rgba(234,242,255,.78);
-      --news-muted: rgba(234,242,255,.62);
-      --news-chip-bg: rgba(255,255,255,.10);
-      --news-chip-border: rgba(255,255,255,.14);
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%;width:100%}
-
-    body{
-      margin:0;
-      font-family:"Segoe UI",Arial,sans-serif;
-      color:var(--txt);
-      background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(16,56,91,0.55), transparent 60%),
-        radial-gradient(900px 600px at 85% 15%, rgba(11,52,84,0.55), transparent 60%),
-        linear-gradient(180deg,var(--bg1),var(--bg2));
-      overflow:hidden;
-      overscroll-behavior:none;
-      touch-action:manipulation;
-      min-height:100svh;
-      padding-bottom: max(14px, env(safe-area-inset-bottom));
-    }
-
-    .wrap{
-      min-height:100svh;
-      width:100%;
-      padding:
-        calc(14px + var(--sat))
-        calc(14px + var(--sar))
-        calc(14px + var(--sab))
-        calc(14px + var(--sal));
-      display:block;
-    }
-
-    .container{
-      width:100%;
-      min-height:100svh;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      max-width:none;
-    }
-
-    /* =========================================================
-       HEADER (TOPBAR)
-       ========================================================= */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding:16px 18px;
-      background:rgba(8,28,46,.60);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(8px);
-      flex:0 0 auto;
-      width:100%;
-      position:relative;
-      overflow:hidden;
-    }
-
-    /* TOPBAR com imagem de fundo */
-    .topbar::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background-image: var(--topbar-bg);
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      opacity: var(--topbar-img-opacity);
-      transform: scale(1.03);
-      pointer-events:none;
-    }
-
-    /* Overlay escuro premium (corrigido) */
-    .topbar::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(90deg, rgba(5,20,35,.92), rgba(5,20,35,.70)),
-        radial-gradient(900px 420px at 20% 20%, rgba(0,0,0,.45), transparent 60%);
-      pointer-events:none;
-    }
-
-    .topbar > *{ position:relative; z-index:1; }
-
-    .brand{
-      display:flex;
-      flex-direction:column;
-      gap:3px;
-      min-width:0;
-      flex:1 1 auto;
-    }
-
-    #titulo{
-      margin:0;
-      font-size: calc(22px * var(--ui2));
-      font-weight:900;
-      letter-spacing:.2px;
-      white-space: normal;
-      overflow: visible;
-      text-overflow: unset;
-      overflow-wrap:anywhere;
-      word-break:break-word;
-      line-height: 1.08;
-    }
-
-    #subtitulo{
-      margin:0;
-      font-size: calc(12.5px * var(--ui));
-      color:var(--muted);
-      font-weight:700;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    /* Linha compacta exclusiva do CELULAR (status + hora) */
-    .subMobileLine{
-      display:none;
-      margin-top:2px;
-      font-size: calc(12.5px * var(--ui));
-      color: rgba(234,242,255,.84);
-      font-weight: 850;
-      gap: 8px;
-      align-items:center;
-      justify-content:center;
-      flex-wrap:wrap;
-      text-align:center;
-    }
-    .subMobileLine .sep{ opacity:.55; font-weight:900; }
-
-    .condoCenter{
-      flex:1 1 auto;
-      min-width:0;
-      text-align:center;
-      font-weight:950;
-      letter-spacing:.2px;
-      color:rgba(234,242,255,.92);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      padding:0 8px;
-    }
-
-    .rightInfo{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      flex:0 0 auto;
-    }
-
-    .badge{
-      display:flex;align-items:center;gap:10px;
-      padding:10px 12px;border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(12,35,56,.55);
-      color:var(--muted);font-weight:900;font-size:12px;
-      white-space:nowrap;
-    }
-    .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
-    #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
-
-    .btnInstall{
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(12,35,56,.55);
-      color:rgba(234,242,255,.92);
-      padding:10px 12px;
-      border-radius:999px;
-      font-weight:900;
-      cursor:pointer;
-      font-size:14px;
-      white-space:nowrap;
-    }
-
-    .updateBanner{
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(120,190,255,.35);
-      background:rgba(7,20,34,.28);
-      box-shadow:var(--shadow);
-      font-weight:900;
-      flex:0 0 auto;
-      width:100%;
-    }
-
-    /* =========================================================
-       MAIN
-       ========================================================= */
-    .main{
-      flex:1 1 auto;
-      min-height:0;
-      display:grid;
-      grid-template-columns: 1.20fr .80fr;
-      gap:12px;
-      width:100%;
-    }
-
-    .panel{
-      background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      display:flex;
-      flex-direction:column;
-      min-height:0;
-      overflow:hidden;
-    }
-
-    .panelHead{
-      padding:10px 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      background:rgba(7,20,34,.20);
-      flex:0 0 auto;
-    }
-
-    .panelTitle{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:950;
-      letter-spacing:.6px;
-      color:rgba(234,242,255,.95);
-      text-transform:uppercase;
-      font-size: calc(18px * var(--ui2));
-    }
-
-    .pill{
-      font-size:12px;
-      font-weight:900;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(12,35,56,.35);
-      color:var(--muted);
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      white-space:nowrap;
-      max-width:100%;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      user-select:none;
-    }
-    .pill:hover{ filter:brightness(1.08); }
-    .pill:active{ transform:scale(.98); }
-
-    /* =========================================================
-       AVISOS
-       ========================================================= */
-    @keyframes avisoIn{
-      from{ opacity:0; transform: translateY(10px) scale(.99); }
-      to  { opacity:1; transform: translateY(0) scale(1); }
-    }
-    @keyframes glowPulseRed{
-      0%,100%{ box-shadow: 0 0 14px rgba(255,80,80,.35), inset 0 1px 0 rgba(255,255,255,.15); }
-      50%    { box-shadow: 0 0 20px rgba(255,80,80,.55), inset 0 1px 0 rgba(255,255,255,.18); }
-    }
-    #avisos.fade-out{ opacity:0; transition: opacity .22s ease; }
-    #avisos.fade-in { opacity:1; transition: opacity .22s ease; }
-
-    .avisos{
-      padding:14px;
-      min-height:0;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      overflow:visible;
-    }
-
-    .aviso{
-      padding:16px;
-      border-radius:18px;
-      background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      border:1px solid rgba(140,200,255,.22);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.14),
-        inset 0 -14px 22px rgba(0,0,0,.28),
-        0 14px 34px rgba(0,0,0,.55);
-      transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
-      animation: avisoIn .28s ease both;
-      will-change: transform, opacity;
-      position:relative;
-      padding-left:18px;
-      height:auto;
-      min-height:auto;
-      overflow:visible;
-    }
-
-    .aviso:hover{
-      transform: translateY(-2px);
-      filter: saturate(1.05);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.16),
-        0 10px 28px rgba(0,0,0,.62);
-    }
-
-    .aviso::before{
-      content:"";
-      position:absolute;
-      inset:10px auto 10px 10px;
-      width:6px;
-      border-radius:999px;
-      background:rgba(255,255,255,.15);
-    }
-
-    .aviso.alta{
-      border:1px solid rgba(255,90,90,.9);
-      background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.92));
-      animation: avisoIn .28s ease both, glowPulseRed 2.2s ease-in-out infinite;
-    }
-    .aviso.alta::before{ background:linear-gradient(180deg,#ff5a5a,#c0392b); }
-
-    .aviso.media{
-      border:1px solid rgba(255,179,71,.85);
-      background:linear-gradient(180deg, rgba(255,180,70,.25), rgba(12,30,50,.92));
-    }
-    .aviso.media::before{ background:linear-gradient(180deg,#ffb347,#e67e22); }
-
-    .aviso.baixa{
-      border:1px solid rgba(77,166,255,.85);
-      background:linear-gradient(180deg, rgba(100,170,255,.25), rgba(12,30,50,.92));
-    }
-    .aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
-
-    .aviso .t{
-      margin:0;
-      font-weight:900;
-      font-size: calc(22px * var(--ui2));
-      letter-spacing:.3px;
-      color:#fff;
-      text-shadow:0 1px 2px rgba(0,0,0,.6);
-      line-height:1.15;
-      display:block;
-      white-space:normal;
-      overflow:visible;
-      overflow-wrap:anywhere;
-      word-break:break-word;
-    }
-
-    .aviso.alta  .t::before{ content:"⚠️"; }
-    .aviso.media .t::before{ content:"🔶"; }
-    .aviso.baixa .t::before{ content:"ℹ️"; }
-
-    .aviso .d{
-      margin:0;
-      color:#e0ecff;
-      line-height:1.35;
-      font-size:clamp(14px, 1.7vw, 17px);
-      display:block;
-      white-space:normal;
-      overflow:visible;
-      overflow-wrap:anywhere;
-      word-break:break-word;
-    }
-
-    /* =========================================================
-   PC / TV — descrição ocupa o espaço disponível (não celular)
-   ========================================================= */
-@media (min-width: 981px){
-
-  #avisos.avisos{
-    height:100%;
-    min-height:0;
-    overflow:hidden;
-    display:grid;
-    gap:12px;
-    grid-template-rows: repeat(var(--rows, 3), minmax(0, 1fr));
+    /* NEWS premium tokens */
+    --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+    --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
+    --news-bg: rgba(8, 24, 40, .62);
+    --news-border: rgba(255,255,255,.12);
+    --news-shadow: 0 18px 40px rgba(0,0,0,.38);
+    --news-title: rgba(234,242,255,.96);
+    --news-text: rgba(234,242,255,.78);
+    --news-muted: rgba(234,242,255,.62);
+    --news-chip-bg: rgba(255,255,255,.10);
+    --news-chip-border: rgba(255,255,255,.14);
   }
 
-  #avisos.avisos .aviso{
-    height:100%;
-    min-height:0;
+  *{box-sizing:border-box}
+  html,body{height:100%;width:100%}
+
+  body{
+    margin:0;
+    font-family:"Segoe UI",Arial,sans-serif;
+    color:var(--txt);
+    background:
+      radial-gradient(1200px 700px at 15% 10%, rgba(16,56,91,0.55), transparent 60%),
+      radial-gradient(900px 600px at 85% 15%, rgba(11,52,84,0.55), transparent 60%),
+      linear-gradient(180deg,var(--bg1),var(--bg2));
     overflow:hidden;
+    overscroll-behavior:none;
+    touch-action:manipulation;
+    min-height:100svh;
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+  }
+
+  .wrap{
+    min-height:100svh;
+    width:100%;
+    padding:
+      calc(14px + var(--sat))
+      calc(14px + var(--sar))
+      calc(14px + var(--sab))
+      calc(14px + var(--sal));
+    display:block;
+  }
+
+  .container{
+    width:100%;
+    min-height:100svh;
     display:flex;
     flex-direction:column;
+    gap:12px;
+    max-width:none;
   }
 
-  /* título e meta não crescem */
-  #avisos.avisos .aviso .t,
-  #avisos.avisos .aviso .metaLine{
+  /* =========================================================
+     HEADER (TOPBAR)
+     ========================================================= */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:16px 18px;
+    background:rgba(8,28,46,.60);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    backdrop-filter: blur(8px);
+    flex:0 0 auto;
+    width:100%;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* TOPBAR com imagem de fundo */
+  .topbar::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image: var(--topbar-bg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: var(--topbar-img-opacity);
+    transform: scale(1.03);
+    pointer-events:none;
+  }
+
+  /* Overlay escuro premium (corrigido) */
+  .topbar::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(90deg, rgba(5,20,35,.92), rgba(5,20,35,.70)),
+      radial-gradient(900px 420px at 20% 20%, rgba(0,0,0,.45), transparent 60%);
+    pointer-events:none;
+  }
+
+  .topbar > *{ position:relative; z-index:1; }
+
+  .brand{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    min-width:0;
+    flex:1 1 auto;
+  }
+
+  #titulo{
+    margin:0;
+    font-size: calc(22px * var(--ui2));
+    font-weight:900;
+    letter-spacing:.2px;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+    line-height: 1.08;
+  }
+
+  #subtitulo{
+    margin:0;
+    font-size: calc(12.5px * var(--ui));
+    color:var(--muted);
+    font-weight:700;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  /* Linha compacta exclusiva do CELULAR (status + hora) */
+  .subMobileLine{
+    display:none;
+    margin-top:2px;
+    font-size: calc(12.5px * var(--ui));
+    color: rgba(234,242,255,.84);
+    font-weight: 850;
+    gap: 8px;
+    align-items:center;
+    justify-content:center;
+    flex-wrap:wrap;
+    text-align:center;
+  }
+  .subMobileLine .sep{ opacity:.55; font-weight:900; }
+
+  .condoCenter{
+    flex:1 1 auto;
+    min-width:0;
+    text-align:center;
+    font-weight:950;
+    letter-spacing:.2px;
+    color:rgba(234,242,255,.92);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    padding:0 8px;
+  }
+
+  .rightInfo{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+    justify-content:flex-end;
     flex:0 0 auto;
   }
 
-  /* SOMENTE a descrição cresce */
-  #avisos.avisos .aviso .d{
+  .badge{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;border-radius:999px;
+    border:1px solid var(--line);
+    background:rgba(12,35,56,.55);
+    color:var(--muted);font-weight:900;font-size:12px;
+    white-space:nowrap;
+  }
+  .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
+  #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
+
+  .btnInstall{
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(12,35,56,.55);
+    color:rgba(234,242,255,.92);
+    padding:10px 12px;
+    border-radius:999px;
+    font-weight:900;
+    cursor:pointer;
+    font-size:14px;
+    white-space:nowrap;
+  }
+
+  .updateBanner{
+    padding:10px 12px;
+    border-radius:14px;
+    border:1px solid rgba(120,190,255,.35);
+    background:rgba(7,20,34,.28);
+    box-shadow:var(--shadow);
+    font-weight:900;
+    flex:0 0 auto;
+    width:100%;
+  }
+
+  /* =========================================================
+     MAIN
+     ========================================================= */
+  .main{
     flex:1 1 auto;
     min-height:0;
+    display:grid;
+    grid-template-columns: 1.20fr .80fr;
+    gap:12px;
+    width:100%;
+  }
+
+  .panel{
+    background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    min-height:0;
     overflow:hidden;
-    line-height:1.15;
-    font-size: var(--desc-font, 18px) !important;
-  }
-}
-    
-    .metaLine{
-      margin-top:auto;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      color:rgba(234,242,255,.92);
-      font-size: 0.60em;
-      font-weight:900;
-      line-height: 1.15;
-    }
-    @media (max-width: 520px){ .metaLine{ font-size: 0.70em; } }
-    @media (min-width: 1200px){ .metaLine{ font-size: 0.70em; } }
-
-    .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
-    .metaItem b{ font-weight:950; color:#fff; }
-    .metaSep{ opacity:.35; font-weight:900; }
-
-    .prioBadge{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:6px 10px;
-      border-radius:999px;
-      font-weight:950;
-      letter-spacing:.4px;
-      text-transform:uppercase;
-      font-size: calc(12px * var(--ui));
-      line-height:1;
-      border:1px solid rgba(255,255,255,.22);
-      background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.35),
-        inset 0 -2px 6px rgba(0,0,0,.35),
-        0 6px 14px rgba(0,0,0,.35);
-    }
-    .prioBadge.alta{
-      border-color: rgba(255,90,90,.80);
-      background: linear-gradient(180deg, rgba(255,120,120,.50), rgba(160,0,0,.35));
-      text-shadow: 0 1px 0 rgba(0,0,0,.55);
-    }
-    .prioBadge.media{
-      border-color: rgba(255,179,71,.75);
-      background: linear-gradient(180deg, rgba(255,210,120,.55), rgba(160,90,0,.35));
-      text-shadow: 0 1px 0 rgba(0,0,0,.50);
-    }
-    .prioBadge.baixa{
-      border-color: rgba(120,190,255,.70);
-      background: linear-gradient(180deg, rgba(160,210,255,.55), rgba(0,80,160,.32));
-      text-shadow: 0 1px 0 rgba(0,0,0,.45);
-    }
-/* ===== AVISOS OCUPANDO TODA A ÁREA DISPONÍVEL ===== */
-
-#listaAvisos{
-  height:100%;
-  display:grid;
-  gap:12px;
-  grid-template-rows: repeat(var(--avisos-rows, 3), minmax(0, 1fr));
-}
-
-/* cada aviso ocupa sua faixa inteira */
-.aviso{
-  height:100%;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-}
-
-/* título e meta fixos */
-.aviso .titulo{
-  flex:0 0 auto;
-}
-
-/* descrição cresce e ajusta fonte */
-.aviso .desc{
-  flex:1 1 auto;
-  min-height:0;
-  overflow:hidden;
-  line-height:1.15;
-  font-size: var(--desc-font, 18px);
-}
-    /* =========================================================
-       PUBLICIDADE / VÍDEO
-       ========================================================= */
-    .adBody{
-      padding:14px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      min-height:0;
-      overflow:auto;
-    }
-    .adCard{
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(7,20,34,.18);
-      border-radius:14px;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      min-height:0;
-    }
-    .adLabel{
-      padding:10px 12px;
-      font-weight:950;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      color:rgba(234,242,255,.92);
-      background:rgba(12,35,56,.35);
-    }
-
-    .videoWrap{
-      width:100%;
-      aspect-ratio:16/9;
-      background:#000;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex:0 0 auto;
-      max-height: 38vh;
-      overflow:hidden;
-      border-radius: 12px;
-      position:relative; /* overlay dos botões */
-    }
-
-    #adVideo{ position:relative; z-index:1; }
-
-    video{
-      width:100%;
-      height:100%;
-      display:block;
-      object-fit:cover;
-      object-position:center;
-      background:#000;
-    }
-    video.fit-contain{ object-fit:contain; }
-
-    /* =========================================================
-       CONTROLES DE VÍDEO — TV/PC (4 botões)
-       ========================================================= */
-    .tvVideoControls{
-      position:absolute;
-      right:12px;
-      bottom:12px;
-      display:flex;
-      gap:8px;
-      z-index:50;
-      user-select:none;
-      pointer-events:auto;
-      padding:8px;
-      border-radius:16px;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 26px rgba(0,0,0,.45);
-    }
-
-    .tvBtn{
-      min-width: 44px;
-      height: 40px;
-      padding: 0 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-      color: rgba(255,255,255,.95);
-      font-weight: 950;
-      font-size: 16px;
-      line-height: 1;
-      cursor: pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.18),
-        0 10px 18px rgba(0,0,0,.35);
-      transition: transform .12s ease, filter .12s ease, border-color .12s ease;
-    }
-    .tvBtn:hover{ filter: brightness(1.08); border-color: rgba(255,255,255,.24); }
-    .tvBtn:active{ transform: translateY(1px) scale(.98); }
-
-    /* =========================================================
-       CONTROLES DE VÍDEO — CELULAR (só 2 botões)
-       ========================================================= */
-    @media (max-width: 980px){
-      /* esconde os 2 de 10s */
-      #btnBack10, #btnFwd10{ display:none !important; }
-
-      /* mantém prev/next visíveis */
-      #btnPrevAd, #btnNextAd{ display:flex !important; }
-
-      .tvVideoControls{
-        right:10px;
-        bottom:10px;
-        gap:8px;
-        padding:6px;
-        border-radius:14px;
-      }
-      .tvBtn{
-        min-width: 40px;
-        height: 36px;
-        border-radius: 12px;
-        font-size: 14px;
-        padding: 0 10px;
-      }
-    }
-
-    /* =========================================================
-       FOOTER (TICKER)
-       ========================================================= */
-    .ticker{
-      flex:0 0 auto;
-      width:100%;
-      padding:10px 12px;
-      border-radius:var(--radius);
-      border:1px solid var(--line);
-      background:rgba(8,28,46,.60);
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(8px);
-      display:flex;
-      flex-direction:column;
-      align-items:stretch;
-      gap:6px;
-      margin-bottom: max(14px, env(safe-area-inset-bottom));
-    }
-    .tickerLine1{
-      width:100%;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-      overflow:hidden;
-      flex-wrap: wrap;
-    }
-    .wxInline{
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 900;
-      color: rgba(234,242,255,.92);
-      font-size: clamp(13px, 1.9vw, 18px);
-      white-space: nowrap;
-    }
-    .tickerLine2{ display:none !important; }
-
-    .tickerIcon{
-      font-size:clamp(22px, 3.1vw, 28px);
-      opacity:.95;
-      flex:0 0 auto;
-    }
-    #dataBiblica{
-      font-weight:950;
-      white-space:nowrap;
-      color:rgba(234,242,255,.95);
-      font-size: calc(16px * var(--ui2));
-      flex:0 0 auto;
-    }
-    #ref{
-      color:rgba(234,242,255,.88);
-      font-weight:850;
-      font-size: calc(16px * var(--ui2));
-      flex:1 1 auto;
-      min-width:0;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    @media (max-width: 980px){
-      #dataBiblica{ white-space: normal; }
-      #ref{
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        line-height: 1.3;
-      }
-      .wxInline{
-        white-space: normal;
-        flex: 1 1 100%;
-        justify-content:flex-start;
-        margin-left: 0;
-        font-size: calc(14px * var(--ui2));
-      }
-    }
-
-    /* =========================================================
-       MOBILE LAYOUT (TOPBAR centralizado + linha compacta)
-       ========================================================= */
-    @media (max-width: 980px){
-      body{
-        overflow:auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 0;
-      }
-      .container{ min-height:auto; }
-
-      .topbar{
-        flex-wrap:wrap;
-        justify-content:center;
-        text-align:center;
-      }
-
-      /* remove o “2º hífen sozinho” (condomínio some no mobile) */
-      .condoCenter{ display:none !important; }
-
-      .brand{
-        width:100%;
-        align-items:center;
-        text-align:center;
-      }
-
-      /* badges somem e entra a linha compacta */
-      .rightInfo{ display:none !important; }
-      .subMobileLine{ display:flex; width:100%; }
-
-      .main{ display:flex; flex-direction:column; }
-      section.panel{ order:1; }
-      #adBox{ order:2; min-height:0; }
-      .panel{ min-height:auto; }
-
-      .ticker{
-        position:sticky;
-        bottom:0;
-        z-index:50;
-        margin-bottom: 0;
-        padding-bottom: max(12px, env(safe-area-inset-bottom));
-      }
-    }
-
-    /* =========================================================
-       MODO TV (grande)
-       ========================================================= */
-    @media (min-width: 1200px){
-      .topbar{
-        padding: 2.2vh 2.2vw;
-        gap: 1.4vw;
-        border-radius: 24px;
-      }
-      .brand .title{
-        font-size: clamp(34px, 3.2vw, 56px);
-        line-height: 1.05;
-      }
-      .brand .sub{
-        font-size: clamp(18px, 1.6vw, 28px);
-      }
-      .condoCenter{
-        font-size: clamp(20px, 1.8vw, 32px);
-      }
-      .badge{
-        font-size: clamp(16px, 1.3vw, 22px);
-        padding: 12px 16px;
-      }
-      #clock{
-        font-size: clamp(30px, 2.8vw, 50px);
-        letter-spacing: 1px;
-      }
-      .btnInstall{
-        font-size: clamp(16px, 1.2vw, 22px);
-        padding: 12px 16px;
-      }
-      .main{ gap: 1.2vw; }
-      .panel{ border-radius: 26px; }
-      .panelHead{ padding: 1.4vh 1.2vw; }
-      .panelTitle{
-        font-size: clamp(26px, 2.4vw, 44px);
-        letter-spacing: 1px;
-      }
-      .pill{
-        font-size: clamp(18px, 1.6vw, 28px);
-        padding: 10px 18px;
-      }
-      .avisos{
-        padding: 1.4vw;
-        gap: 1.0vw;
-      }
-      .aviso{
-        padding: 2.6vh 2.0vw;
-        gap: 1.4vh;
-        border-radius: 24px;
-      }
-      .aviso .t{
-        font-size: clamp(32px, 3.2vw, 58px);
-        line-height: 1.15;
-      }
-      .aviso .d{
-        font-size: clamp(24px, 2.4vw, 44px);
-        line-height: 1.35;
-      }
-      .metaLine{
-        font-size: clamp(20px, 2.0vw, 34px);
-        gap: 18px;
-      }
-      .prioBadge{
-        font-size: clamp(16px, 1.6vw, 26px);
-        padding: 10px 18px;
-      }
-      .adBody{
-        padding: 1.2vw;
-        gap: 1.0vw;
-      }
-      .adLabel{
-        font-size: clamp(18px, 1.5vw, 26px);
-        padding: 14px 16px;
-      }
-      .videoWrap{
-        max-height: 44vh;
-        border-radius: 16px;
-      }
-      .ticker{
-        padding: 1.4vh 1.2vw;
-        border-radius: 24px;
-        gap: 10px;
-      }
-      .tickerIcon{
-        font-size: clamp(26px, 2.2vw, 38px);
-      }
-      #dataBiblica{
-        font-size: clamp(18px, 1.6vw, 28px);
-      }
-      #ref{
-        font-size: clamp(18px, 1.6vw, 28px);
-        line-height: 1.25;
-      }
-      .wxInline{
-        font-size: clamp(16px, 1.4vw, 26px);
-        gap: 10px;
-      }
-    }
-
-    /* =========================================================
-       NEWS (Mensagens da Cidade)
-       ========================================================= */
-    #newsBox{
-      background: var(--news-bg);
-      border: 1px solid var(--news-border);
-      box-shadow: var(--news-shadow);
-      border-radius: 18px;
-      overflow: hidden;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      display:flex;
-      flex-direction:column;
-      min-height:0;
-    }
-
-    .newsHead{
-      padding:10px 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      background:rgba(12,35,56,.35);
-    }
-
-    .newsTitle{ font-weight:950; color:rgba(234,242,255,.92); }
-    #newsPill{ display:none !important; }
-
-    #newsBody{
-      padding: 12px 14px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 34vh;
-      overflow: auto;
-      overscroll-behavior: contain;
-      scrollbar-width: thin;
-    }
-    #newsBody::-webkit-scrollbar{ width: 10px; }
-    #newsBody::-webkit-scrollbar-track{ background: transparent; }
-    #newsBody::-webkit-scrollbar-thumb{
-      background: rgba(255,255,255,.18);
-      border-radius: 999px;
-      border: 3px solid transparent;
-      background-clip: padding-box;
-    }
-
-    .newsItem{
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-      padding: 12px 12px 10px;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
-    }
-    .newsItem:hover{
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,.16);
-      background: rgba(0,0,0,.22);
-    }
-    .newsItem .h{
-      font-family: var(--font-soft);
-      font-weight: 900;
-      font-size: calc(16px * var(--ui));
-      line-height: 1.25;
-      letter-spacing: .2px;
-      color: var(--news-title);
-      margin: 0;
-      display:block;
-      white-space:normal;
-      overflow:visible;
-    }
-
-    .newsHeader{
-      font-size: calc(11px * var(--ui));
-      color:rgba(255,255,255,.55);
-      margin-bottom:8px;
-      padding-left:4px;
-    }
-
-    /* ===== LAYOUT FIX PC (não corta rodapé) ===== */
-html, body { height: 100%; }
-body { overflow: hidden; }
-
-.container{
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  min-height: 0; /* MUITO importante p/ não cortar */
-}
-
-.topbar{ flex: 0 0 auto; }
-.main{ flex: 1 1 auto; min-height: 0; }  /* main ocupa o resto */
-.ticker, .footer, #ticker{ flex: 0 0 auto; } /* rodapé sempre visível */
-
- /* TÍTULO DO CABEÇALHO — 2x maior (PC/TV) */
-@media (min-width: 981px){
-  #titulo{
-   font-size: clamp(2.5rem, 3vw, 3.4rem);
-    /*font-size: 4rem !important;*/
-    line-height: 1.15;
-  }
-}
-
-
-    /* =========================================================
-   AJUSTE FINO DE TAMANHOS — AVISOS (PC / TV)
-   ========================================================= */
-@media (min-width: 981px){
-
-  /* CABEÇALHO */
-  #titulo{
-    font-size: 3.2rem;
-    line-height: 1.15;
-    font-weight: 700;
   }
 
-  /* BLOCO DE AVISO */
+  .panelHead{
+    padding:10px 12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:rgba(7,20,34,.20);
+    flex:0 0 auto;
+  }
+
+  .panelTitle{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:950;
+    letter-spacing:.6px;
+    color:rgba(234,242,255,.95);
+    text-transform:uppercase;
+    font-size: calc(18px * var(--ui2));
+  }
+
+  .pill{
+    font-size:12px;
+    font-weight:900;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:rgba(12,35,56,.35);
+    color:var(--muted);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    white-space:nowrap;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    user-select:none;
+  }
+  .pill:hover{ filter:brightness(1.08); }
+  .pill:active{ transform:scale(.98); }
+
+  /* =========================================================
+     AVISOS
+     ========================================================= */
+  @keyframes avisoIn{
+    from{ opacity:0; transform: translateY(10px) scale(.99); }
+    to  { opacity:1; transform: translateY(0) scale(1); }
+  }
+  @keyframes glowPulseRed{
+    0%,100%{ box-shadow: 0 0 14px rgba(255,80,80,.35), inset 0 1px 0 rgba(255,255,255,.15); }
+    50%    { box-shadow: 0 0 20px rgba(255,80,80,.55), inset 0 1px 0 rgba(255,255,255,.18); }
+  }
+  #avisos.fade-out{ opacity:0; transition: opacity .22s ease; }
+  #avisos.fade-in { opacity:1; transition: opacity .22s ease; }
+
+  .avisos{
+    padding:14px;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    overflow:visible;
+  }
+
   .aviso{
-    padding-top: 6px;   /* aproxima título do topo */
+    padding:16px;
+    border-radius:18px;
+    background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    border:1px solid rgba(140,200,255,.22);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.14),
+      inset 0 -14px 22px rgba(0,0,0,.28),
+      0 14px 34px rgba(0,0,0,.55);
+    transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+    animation: avisoIn .28s ease both;
+    will-change: transform, opacity;
+    position:relative;
+    padding-left:18px;
+    height:auto;
+    min-height:auto;
+    overflow:visible;
   }
 
-  /* TÍTULO DO AVISO */
+  .aviso:hover{
+    transform: translateY(-2px);
+    filter: saturate(1.05);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.16),
+      0 10px 28px rgba(0,0,0,.62);
+  }
+
+  .aviso::before{
+    content:"";
+    position:absolute;
+    inset:10px auto 10px 10px;
+    width:6px;
+    border-radius:999px;
+    background:rgba(255,255,255,.15);
+  }
+
+  .aviso.alta{
+    border:1px solid rgba(255,90,90,.9);
+    background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.92));
+    animation: avisoIn .28s ease both, glowPulseRed 2.2s ease-in-out infinite;
+  }
+  .aviso.alta::before{ background:linear-gradient(180deg,#ff5a5a,#c0392b); }
+
+  .aviso.media{
+    border:1px solid rgba(255,179,71,.85);
+    background:linear-gradient(180deg, rgba(255,180,70,.25), rgba(12,30,50,.92));
+  }
+  .aviso.media::before{ background:linear-gradient(180deg,#ffb347,#e67e22); }
+
+  .aviso.baixa{
+    border:1px solid rgba(77,166,255,.85);
+    background:linear-gradient(180deg, rgba(100,170,255,.25), rgba(12,30,50,.92));
+  }
+  .aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
+
   .aviso .t{
-    font-size: 1.6rem;   /* destaque */
-    line-height: 1.2;
-    margin-top: 0;
-    margin-bottom: 4px;
+    margin:0;
+    font-weight:900;
+    font-size: calc(22px * var(--ui2));
+    letter-spacing:.3px;
+    color:#fff;
+    text-shadow:0 1px 2px rgba(0,0,0,.6);
+    line-height:1.15;
+    display:block;
+    white-space:normal;
+    overflow:visible;
+    overflow-wrap:anywhere;
+    word-break:break-word;
   }
 
-  /*  DESCRIÇÃO */
+  .aviso.alta  .t::before{ content:"⚠️"; }
+  .aviso.media .t::before{ content:"🔶"; }
+  .aviso.baixa .t::before{ content:"ℹ️"; }
+
   .aviso .d{
-    font-size: 1.25rem;   /* descrição mais legível */
-  line-height: 1.5;
-  margin: 4px 0 6px 0;
+    margin:0;
+    color:#e0ecff;
+    line-height:1.35;
+    font-size:clamp(14px, 1.7vw, 17px);
+    display:block;
+    white-space:normal;
+    overflow:visible;
+    overflow-wrap:anywhere;
+    word-break:break-word;
   }
 
-  /* METADADOS: tipo, local, data, prioridade */
-  .aviso .metaLine{
-    font-size: 0.5rem;   /* bem pequeno */
-    opacity: 0.85;
-    margin-top: 2px;
+  .metaLine{
+    margin-top:auto;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    color:rgba(234,242,255,.92);
+    font-size: 0.60em;
+    font-weight:900;
+    line-height: 1.15;
   }
+  @media (max-width: 520px){ .metaLine{ font-size: 0.70em; } }
+  @media (min-width: 1200px){ .metaLine{ font-size: 0.70em; } }
 
-  .aviso .metaItem{
-    font-size: 0.65rem;
-  }
+  .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
+  .metaItem b{ font-weight:950; color:#fff; }
+  .metaSep{ opacity:.35; font-weight:900; }
 
   .prioBadge{
-    font-size: 0.6rem;
-    padding: 2px 6px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px 10px;
+    border-radius:999px;
+    font-weight:950;
+    letter-spacing:.4px;
+    text-transform:uppercase;
+    font-size: calc(12px * var(--ui));
+    line-height:1;
+    border:1px solid rgba(255,255,255,.22);
+    background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.35),
+      inset 0 -2px 6px rgba(0,0,0,.35),
+      0 6px 14px rgba(0,0,0,.35);
+  }
+  .prioBadge.alta{
+    border-color: rgba(255,90,90,.80);
+    background: linear-gradient(180deg, rgba(255,120,120,.50), rgba(160,0,0,.35));
+    text-shadow: 0 1px 0 rgba(0,0,0,.55);
+  }
+  .prioBadge.media{
+    border-color: rgba(255,179,71,.75);
+    background: linear-gradient(180deg, rgba(255,210,120,.55), rgba(160,90,0,.35));
+    text-shadow: 0 1px 0 rgba(0,0,0,.50);
+  }
+  .prioBadge.baixa{
+    border-color: rgba(120,190,255,.70);
+    background: linear-gradient(180deg, rgba(160,210,255,.55), rgba(0,80,160,.32));
+    text-shadow: 0 1px 0 rgba(0,0,0,.45);
   }
 
-}
+  /* =========================================================
+     PUBLICIDADE / VÍDEO
+     ========================================================= */
+  .adBody{
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    min-height:0;
+    overflow:auto;
+  }
+  .adCard{
+    border:1px solid rgba(255,255,255,.14);
+    background:rgba(7,20,34,.18);
+    border-radius:14px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  .adLabel{
+    padding:10px 12px;
+    font-weight:950;
+    border-bottom:1px solid rgba(255,255,255,.10);
+    color:rgba(234,242,255,.92);
+    background:rgba(12,35,56,.35);
+  }
 
-/* ===== AVISOS ESTICANDO (sem alterar cabeçalho/rodapé) ===== */
-/* ===== DESCRIÇÃO ENCHE O ESPAÇO DISPONÍVEL ===== */
-#avisos{
-  height:100%;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  overflow:hidden;
-}
+  .videoWrap{
+    width:100%;
+    aspect-ratio:16/9;
+    background:#000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 auto;
+    max-height: 38vh;
+    overflow:hidden;
+    border-radius: 12px;
+    position:relative; /* overlay dos botões */
+  }
 
-/* cada aviso divide o espaço vertical */
-#avisos .aviso{
-  flex:1 1 0;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-}
+  #adVideo{ position:relative; z-index:1; }
 
-/* título e meta NÃO crescem */
-#avisos .aviso .t,
-#avisos .aviso .metaLine{
-  flex:0 0 auto;
-}
+  video{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    object-position:center;
+    background:#000;
+  }
+  video.fit-contain{ object-fit:contain; }
 
-/* só a descrição cresce e ocupa tudo */
-#avisos .aviso .d{
-  flex:1 1 auto;
-  min-height:0;
-  overflow:hidden;
-  line-height:1.15;
-  font-size: var(--desc-font, 18px);
-}
+  /* =========================================================
+     CONTROLES DE VÍDEO — TV/PC (4 botões)
+     ========================================================= */
+  .tvVideoControls{
+    position:absolute;
+    right:12px;
+    bottom:12px;
+    display:flex;
+    gap:8px;
+    z-index:50;
+    user-select:none;
+    pointer-events:auto;
+    padding:8px;
+    border-radius:16px;
+    background: rgba(0,0,0,.18);
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 26px rgba(0,0,0,.45);
+  }
+
+  .tvBtn{
+    min-width: 44px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+    color: rgba(255,255,255,.95);
+    font-weight: 950;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.18),
+      0 10px 18px rgba(0,0,0,.35);
+    transition: transform .12s ease, filter .12s ease, border-color .12s ease;
+  }
+  .tvBtn:hover{ filter: brightness(1.08); border-color: rgba(255,255,255,.24); }
+  .tvBtn:active{ transform: translateY(1px) scale(.98); }
+
+  /* =========================================================
+     CONTROLES DE VÍDEO — CELULAR (só 2 botões)
+     ========================================================= */
+  @media (max-width: 980px){
+    /* esconde os 2 de 10s */
+    #btnBack10, #btnFwd10{ display:none !important; }
+
+    /* mantém prev/next visíveis */
+    #btnPrevAd, #btnNextAd{ display:flex !important; }
+
+    .tvVideoControls{
+      right:10px;
+      bottom:10px;
+      gap:8px;
+      padding:6px;
+      border-radius:14px;
+    }
+    .tvBtn{
+      min-width: 40px;
+      height: 36px;
+      border-radius: 12px;
+      font-size: 14px;
+      padding: 0 10px;
+    }
+  }
+
+  /* =========================================================
+     FOOTER (TICKER)
+     ========================================================= */
+  .ticker{
+    flex:0 0 auto;
+    width:100%;
+    padding:10px 12px;
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    background:rgba(8,28,46,.60);
+    box-shadow:var(--shadow);
+    backdrop-filter: blur(8px);
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:6px;
+    margin-bottom: max(14px, env(safe-area-inset-bottom));
+  }
+  .tickerLine1{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+    overflow:hidden;
+    flex-wrap: wrap;
+  }
+  .wxInline{
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 900;
+    color: rgba(234,242,255,.92);
+    font-size: clamp(13px, 1.9vw, 18px);
+    white-space: nowrap;
+  }
+  .tickerLine2{ display:none !important; }
+
+  .tickerIcon{
+    font-size:clamp(22px, 3.1vw, 28px);
+    opacity:.95;
+    flex:0 0 auto;
+  }
+  #dataBiblica{
+    font-weight:950;
+    white-space:nowrap;
+    color:rgba(234,242,255,.95);
+    font-size: calc(16px * var(--ui2));
+    flex:0 0 auto;
+  }
+  #ref{
+    color:rgba(234,242,255,.88);
+    font-weight:850;
+    font-size: calc(16px * var(--ui2));
+    flex:1 1 auto;
+    min-width:0;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  @media (max-width: 980px){
+    #dataBiblica{ white-space: normal; }
+    #ref{
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      line-height: 1.3;
+    }
+    .wxInline{
+      white-space: normal;
+      flex: 1 1 100%;
+      justify-content:flex-start;
+      margin-left: 0;
+      font-size: calc(14px * var(--ui2));
+    }
+  }
+
+  /* =========================================================
+     MOBILE LAYOUT (TOPBAR centralizado + linha compacta)
+     ========================================================= */
+  @media (max-width: 980px){
+    body{
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 0;
+    }
+    .container{ min-height:auto; }
+
+    .topbar{
+      flex-wrap:wrap;
+      justify-content:center;
+      text-align:center;
+    }
+
+    /* remove o “2º hífen sozinho” (condomínio some no mobile) */
+    .condoCenter{ display:none !important; }
+
+    .brand{
+      width:100%;
+      align-items:center;
+      text-align:center;
+    }
+
+    /* badges somem e entra a linha compacta */
+    .rightInfo{ display:none !important; }
+    .subMobileLine{ display:flex; width:100%; }
+
+    .main{ display:flex; flex-direction:column; }
+    section.panel{ order:1; }
+    #adBox{ order:2; min-height:0; }
+    .panel{ min-height:auto; }
+
+    .ticker{
+      position:sticky;
+      bottom:0;
+      z-index:50;
+      margin-bottom: 0;
+      padding-bottom: max(12px, env(safe-area-inset-bottom));
+    }
+  }
+
+  /* =========================================================
+     MODO TV (grande)
+     ========================================================= */
+  @media (min-width: 1200px){
+    .topbar{
+      padding: 2.2vh 2.2vw;
+      gap: 1.4vw;
+      border-radius: 24px;
+    }
+    .brand .title{
+      font-size: clamp(34px, 3.2vw, 56px);
+      line-height: 1.05;
+    }
+    .brand .sub{
+      font-size: clamp(18px, 1.6vw, 28px);
+    }
+    .condoCenter{
+      font-size: clamp(20px, 1.8vw, 32px);
+    }
+    .badge{
+      font-size: clamp(16px, 1.3vw, 22px);
+      padding: 12px 16px;
+    }
+    #clock{
+      font-size: clamp(30px, 2.8vw, 50px);
+      letter-spacing: 1px;
+    }
+    .btnInstall{
+      font-size: clamp(16px, 1.2vw, 22px);
+      padding: 12px 16px;
+    }
+    .main{ gap: 1.2vw; }
+    .panel{ border-radius: 26px; }
+    .panelHead{ padding: 1.4vh 1.2vw; }
+    .panelTitle{
+      font-size: clamp(26px, 2.4vw, 44px);
+      letter-spacing: 1px;
+    }
+    .pill{
+      font-size: clamp(18px, 1.6vw, 28px);
+      padding: 10px 18px;
+    }
+    .avisos{
+      padding: 1.4vw;
+      gap: 1.0vw;
+    }
+    .aviso{
+      padding: 2.6vh 2.0vw;
+      gap: 1.4vh;
+      border-radius: 24px;
+    }
+    .aviso .t{
+      font-size: clamp(32px, 3.2vw, 58px);
+      line-height: 1.15;
+    }
+    .aviso .d{
+      font-size: clamp(24px, 2.4vw, 44px);
+      line-height: 1.35;
+    }
+    .metaLine{
+      font-size: clamp(20px, 2.0vw, 34px);
+      gap: 18px;
+    }
+    .prioBadge{
+      font-size: clamp(16px, 1.6vw, 26px);
+      padding: 10px 18px;
+    }
+    .adBody{
+      padding: 1.2vw;
+      gap: 1.0vw;
+    }
+    .adLabel{
+      font-size: clamp(18px, 1.5vw, 26px);
+      padding: 14px 16px;
+    }
+    .videoWrap{
+      max-height: 44vh;
+      border-radius: 16px;
+    }
+    .ticker{
+      padding: 1.4vh 1.2vw;
+      border-radius: 24px;
+      gap: 10px;
+    }
+    .tickerIcon{
+      font-size: clamp(26px, 2.2vw, 38px);
+    }
+    #dataBiblica{
+      font-size: clamp(18px, 1.6vw, 28px);
+    }
+    #ref{
+      font-size: clamp(18px, 1.6vw, 28px);
+      line-height: 1.25;
+    }
+    .wxInline{
+      font-size: clamp(16px, 1.4vw, 26px);
+      gap: 10px;
+    }
+  }
+
+  /* =========================================================
+     NEWS (Mensagens da Cidade)
+     ========================================================= */
+  #newsBox{
+    background: var(--news-bg);
+    border: 1px solid var(--news-border);
+    box-shadow: var(--news-shadow);
+    border-radius: 18px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+
+  .newsHead{
+    padding:10px 12px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    border-bottom:1px solid rgba(255,255,255,.10);
+    background:rgba(12,35,56,.35);
+  }
+
+  .newsTitle{ font-weight:950; color:rgba(234,242,255,.92); }
+  #newsPill{ display:none !important; }
+
+  #newsBody{
+    padding: 12px 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 34vh;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #newsBody::-webkit-scrollbar{ width: 10px; }
+  #newsBody::-webkit-scrollbar-track{ background: transparent; }
+  #newsBody::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,.18);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .newsItem{
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.18);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    padding: 12px 12px 10px;
+    transition: transform .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .newsItem:hover{
+    transform: translateY(-1px);
+    border-color: rgba(255,255,255,.16);
+    background: rgba(0,0,0,.22);
+  }
+  .newsItem .h{
+    font-family: var(--font-soft);
+    font-weight: 900;
+    font-size: calc(16px * var(--ui));
+    line-height: 1.25;
+    letter-spacing: .2px;
+    color: var(--news-title);
+    margin: 0;
+    display:block;
+    white-space:normal;
+    overflow:visible;
+  }
+
+  .newsHeader{
+    font-size: calc(11px * var(--ui));
+    color:rgba(255,255,255,.55);
+    margin-bottom:8px;
+    padding-left:4px;
+  }
+
+  /* ===== LAYOUT FIX PC (não corta rodapé) ===== */
+  html, body { height: 100%; }
+  body { overflow: hidden; }
+
+  .container{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .topbar{ flex: 0 0 auto; }
+  .main{ flex: 1 1 auto; min-height: 0; }
+  .ticker, .footer, #ticker{ flex: 0 0 auto; }
+
+  /* TÍTULO DO CABEÇALHO — 2x maior (PC/TV) */
+  @media (min-width: 981px){
+    #titulo{
+      font-size: clamp(2.5rem, 3vw, 3.4rem);
+      line-height: 1.15;
+    }
+  }
+
+  /* =========================================================
+     AJUSTE FINO DE TAMANHOS — AVISOS (PC / TV)
+     ========================================================= */
+  @media (min-width: 981px){
+
+    /* CABEÇALHO */
+    #titulo{
+      font-size: 3.2rem;
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    /* BLOCO DE AVISO */
+    .aviso{
+      padding-top: 6px;
+    }
+
+    /* TÍTULO DO AVISO */
+    .aviso .t{
+      font-size: 1.6rem;
+      line-height: 1.2;
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
+
+    /* DESCRIÇÃO (base) — JS vai ajustar via --desc-font */
+    .aviso .d{
+      font-size: 1.25rem;
+      line-height: 1.5;
+      margin: 4px 0 6px 0;
+    }
+
+    /* METADADOS */
+    .aviso .metaLine{
+      font-size: 0.5rem;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    .aviso .metaItem{
+      font-size: 0.65rem;
+    }
+
+    .prioBadge{
+      font-size: 0.6rem;
+      padding: 2px 6px;
+    }
+  }
+
+  /* =========================================================
+     ✅ CORREÇÃO FINAL — AVISOS (somente PC/TV) + proteção iPhone
+     ========================================================= */
+
+  /* MOBILE: garante que nada do PC/TV afete iPhone */
+  @media (max-width: 980px){
+    #avisos{
+      height:auto !important;
+      display:flex !important;
+      flex-direction:column !important;
+      overflow:visible !important;
+    }
+    #avisos .aviso{
+      height:auto !important;
+      min-height:auto !important;
+      overflow:visible !important;
+    }
+    #avisos .aviso .d{
+      overflow:visible !important;
+      font-size:clamp(14px, 1.7vw, 17px) !important;
+      line-height:1.35 !important;
+    }
+  }
+
+  /* PC/TV: 3 por tela e a DESCRIÇÃO preenche (via --desc-font) */
+  @media (min-width: 981px){
+    #avisos{
+      height:100%;
+      min-height:0;
+      overflow:hidden;
+      display:grid;
+      gap:12px;
+      grid-template-rows: repeat(var(--rows, 3), minmax(0, 1fr));
+    }
+    #avisos .aviso{
+      height:100%;
+      min-height:0;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+    #avisos .aviso .t,
+    #avisos .aviso .metaLine{
+      flex:0 0 auto;
+    }
+    #avisos .aviso .d{
+      flex:1 1 auto;
+      min-height:0;
+      overflow:hidden;
+      line-height:1.15;
+      font-size: var(--desc-font, 18px) !important;
+    }
+  }
 
 
 
+  
+</style>
 
 
-    
-  </style>
   <!-- =========================================================
        FIM — CSS (ESTILOS)
        ========================================================= -->
