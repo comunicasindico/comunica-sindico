@@ -352,7 +352,7 @@
     }
     .aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
 
-    .aviso .t{
+  .aviso .t{
   margin:0;
   font-weight:900;
   font-size: calc(22px * var(--ui2));
@@ -361,35 +361,42 @@
   text-shadow:0 1px 2px rgba(0,0,0,.6);
   line-height:1.15;
 
-  display:-webkit-box;
-  -webkit-line-clamp: 3;               /* << era 2 */
-  -webkit-box-orient: vertical;
-  overflow:hidden;
+  /* PATCH: não cortar */
+  display:block;
+  overflow:visible;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
 }
 
     .aviso.alta  .t::before{ content:"⚠️"; }
     .aviso.media .t::before{ content:"🔶"; }
     .aviso.baixa .t::before{ content:"ℹ️"; }
 
-    .aviso .d{
+  .aviso .d{
   margin:0;
   color:#e0ecff;
   line-height:1.35;
   font-size:clamp(14px, 1.7vw, 17px);
-  display:-webkit-box;
-  -webkit-line-clamp: 6;               /* << era 4 */
-  -webkit-box-orient: vertical;
-  overflow:hidden;
+
+  /* PATCH: não cortar */
+  display:block;
+  overflow:visible;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:break-word;
 }
 
-   .metaLine{
+ .metaLine{
   margin-top:auto;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   align-items:center;
   color:rgba(234,242,255,.92);
-  font-size: calc(13px * var(--ui));
+
+  /* PATCH: ~60% menor */
+  font-size: calc(13px * var(--ui) * 0.60);
   font-weight:900;
 }
 
@@ -867,6 +874,58 @@
       margin-bottom:8px;
       padding-left:4px;
     }
+ 
+  /* =========================
+   PATCH 1 (SEGURO)
+   1) Título não corta
+   2) Descrição do aviso quebra e aparece inteira
+   3) Campos (metaLine / metaItem / prioBadge) ~60% menores (responsivo)
+   ========================= */
+
+/* 1) Título (topo) não cortar */
+#titulo{
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.08;
+}
+
+/* 2) Aviso: título/descrição não cortar */
+#avisos .aviso .t,
+#avisos .aviso .d{
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  -webkit-line-clamp: unset !important;
+  line-clamp: unset !important;
+  max-height: none !important;
+}
+
+/* 3) Campos do aviso (linha de meta) 60% menores, sem afetar botões */
+#avisos .metaLine{
+  font-size: 0.60em !important;
+  line-height: 1.15 !important;
+  gap: 10px !important;
+}
+#avisos .metaLine .metaItem,
+#avisos .metaLine .prioBadge{
+  font-size: 1em !important; /* mantém proporcional dentro da metaLine */
+}
+
+/* Ajuste fino por tela (PC/TV/celular) */
+@media (max-width: 520px){
+  #avisos .metaLine{ font-size: 0.70em !important; } /* celular: não some */
+}
+@media (min-width: 1200px){
+  #avisos .metaLine{ font-size: 0.70em !important; } /* TV: ainda menor, mas legível */
+}
+
+  
+  
   </style>
   <!-- =========================================================
        FIM — CSS (ESTILOS)
@@ -1391,7 +1450,7 @@
           html += `
             <div class="newsItem">
               <p class="h">${escapeHtml(titulo)}</p>
-              <p class="p">${escapeHtml(resumo)}.</p>
+        
             </div>
           `;
         });
