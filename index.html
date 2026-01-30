@@ -70,7 +70,7 @@
     }
 
     *{box-sizing:border-box}
-   html,body{height:100%;width:100%; overflow:hidden;}
+    html,body{height:100%;width:100%}
 
     body{
       margin:0;
@@ -83,12 +83,12 @@
       overflow:hidden;
       overscroll-behavior:none;
       touch-action:manipulation;
-      height:100svh;
-      padding-bottom: 0; /*max(14px, env(safe-area-inset-bottom));*/
+      min-height:100svh;
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
     }
 
     .wrap{
-      height:100svh;
+      min-height:100svh;
       width:100%;
       padding:
         calc(14px + var(--sat))
@@ -100,8 +100,7 @@
 
     .container{
       width:100%;
-      height:100%;
-      min-height:0;
+      min-height:100svh;
       display:flex;
       flex-direction:column;
       gap:12px;
@@ -176,23 +175,13 @@
       padding:10px 12px;border-radius:999px;
       border:1px solid var(--line);
       background:rgba(12,35,56,.55);
-      color:var(--muted);
-      font-weight:900;
-      font-size: calc(16px * var(--ui));
+      color:var(--muted);font-weight:900;font-size:12px;
       white-space:nowrap;
     }
-    .dot{
-      width: calc(12px * var(--ui));
-      height: calc(12px * var(--ui));
-      border-radius:50%;
-      background:#ff5a5a;
-    }
+    .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
+    #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
+    font-size: calc(22px * var(--ui2));
 
-    #statusJson{
-      font-weight:950;
-      color:rgba(234,242,255,.92);
-      font-size: inherit; /* usa o mesmo tamanho do .badge */
-    }
     .btnInstall{
       border:1px solid rgba(255,255,255,.18);
       background:rgba(12,35,56,.55);
@@ -300,7 +289,7 @@
       min-height:0;
       overflow:hidden;
       display:grid;
-      grid-template-rows: repeat(var(--rows, 4), minmax(0, 1fr));
+      grid-template-rows: repeat(4, minmax(0, 1fr));
       gap:12px;
       scroll-behavior:smooth;
     }
@@ -392,26 +381,18 @@
   -webkit-box-orient: vertical;
   overflow:hidden;
 }
- .metaLine{
+
+   .metaLine{
   margin-top:auto;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   align-items:center;
   color:rgba(234,242,255,.92);
+  font-size: calc(13px * var(--ui));
   font-weight:900;
-  /* ✅ pequeno, tipo “Mensagens da Cidade” */
-  font-size: calc(11px * var(--ui));
-  opacity: .88;
 }
-.metaItem{ opacity:.92; }
-.metaItem b{ font-weight:950; color:#fff; }
-.metaSep{
-  opacity:.35;
-  font-weight:900;
-  /* separador também pequeno */
-  font-size: calc(11px * var(--ui));
-}
+
     .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
     .metaItem b{ font-weight:950; color:#fff; }
     .metaSep{ opacity:.35; font-weight:900; }
@@ -420,12 +401,12 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding:5px 9px;
+      padding:6px 10px;
       border-radius:999px;
       font-weight:950;
       letter-spacing:.4px;
       text-transform:uppercase;
-      font-size: calc(11px * var(--ui));
+      font-size: calc(12px * var(--ui));
       line-height:1;
       border:1px solid rgba(255,255,255,.22);
       background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
@@ -511,7 +492,7 @@
       flex-direction:column;
       align-items:stretch;
       gap:6px;
-      margin-bottom: 0;
+      margin-bottom: max(14px, env(safe-area-inset-bottom));
     }
     .tickerLine1{
       width:100%;
@@ -593,24 +574,14 @@
       section.panel{ order:1; }
       #adBox{ order:2; min-height:0; }
       .panel{ min-height:auto; }
-      /* o container dos avisos não pode cortar */
-  .avisos{
-    overflow: visible !important;    /* <-- ERA hidden */
-    min-height: auto !important;
-    height: auto !important;
-
-    /* se estiver em grid, não force “linhas fixas” no mobile */
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-  }
-
-  /* cada aviso pode crescer */
-  .avisos .aviso{
-    height: auto !important;
-    min-height: 72px !important;
-    overflow: visible !important;
-  }
+      .avisos{ grid-template-rows: repeat(4, minmax(0, 1fr)); overflow:hidden; }
+      .ticker{
+        position:sticky;
+        bottom:0;
+        z-index:50;
+        margin-bottom: 0;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+      }
     }
 
   /* ===========================
@@ -620,26 +591,32 @@
    - cabeçalho/rodapé/msgs cidade/publicidade escalados
    =========================== */
 @media (min-width: 1200px){
+
   /* ===== HEADER (TOPO) ===== */
   .topbar{
     padding: 2.2vh 2.2vw;
     gap: 1.4vw;
     border-radius: 24px;
   }
+
   .brand .title{
     font-size: clamp(34px, 3.2vw, 56px);
     line-height: 1.05;
   }
+
   .brand .sub{
     font-size: clamp(18px, 1.6vw, 28px);
   }
+
   .condoCenter{
     font-size: clamp(20px, 1.8vw, 32px);
   }
+
   .badge{
     font-size: clamp(16px, 1.3vw, 22px);
     padding: 12px 16px;
   }
+
   #clock{
     font-size: clamp(30px, 2.8vw, 50px);
     letter-spacing: 1px;
@@ -649,20 +626,25 @@
     font-size: clamp(16px, 1.2vw, 22px);
     padding: 12px 16px;
   }
+
   /* ===== LAYOUT / PAINÉIS ===== */
   .main{
     gap: 1.2vw;
   }
+
   .panel{
     border-radius: 26px;
   }
+
   .panelHead{
     padding: 1.4vh 1.2vw;
   }
+
   .panelTitle{
     font-size: clamp(26px, 2.4vw, 44px);
     letter-spacing: 1px;
   }
+
   .pill{
     font-size: clamp(18px, 1.6vw, 28px);
     padding: 10px 18px;
@@ -685,77 +667,94 @@
     line-height: 1.15;
     -webkit-line-clamp: 2;
   }
+
   .aviso .d{
     font-size: clamp(24px, 2.4vw, 44px);
     line-height: 1.35;
     -webkit-line-clamp: 4;
   }
+
   .metaLine{
     font-size: clamp(20px, 2.0vw, 34px);
     gap: 18px;
   }
+
   .prioBadge{
     font-size: clamp(16px, 1.6vw, 26px);
     padding: 10px 18px;
   }
+
   /* ===== PUBLICIDADE ===== */
   .adBody{
     padding: 1.2vw;
     gap: 1.0vw;
   }
+
   .adLabel{
     font-size: clamp(18px, 1.5vw, 26px);
     padding: 14px 16px;
   }
+
   .videoWrap{
     max-height: 44vh; /* mais alto em TV */
     border-radius: 16px;
   }
+
   /* ===== MENSAGENS DA CIDADE ===== */
   #newsBody{
     max-height: 34vh;          /* ocupa bem o espaço */
     padding: 1.0vw 1.0vw 1.2vw;
     gap: 0.9vw;
   }
+
   .newsHeader{
     font-size: clamp(14px, 1.1vw, 18px);
     margin-bottom: 10px;
     padding-left: 6px;
   }
+
   .newsItem{
     padding: 1.0vw;
     border-radius: 16px;
   }
+
   .newsItem .h{
     font-size: clamp(22px, 1.8vw, 30px);
     line-height: 1.2;
     -webkit-line-clamp: 2;
   }
+
   .newsItem .p{
     font-size: clamp(18px, 1.5vw, 26px);
     line-height: 1.35;
     -webkit-line-clamp: 3;
   }
+
   /* ===== RODAPÉ (VERSÍCULO + CLIMA) ===== */
   .ticker{
     padding: 1.4vh 1.2vw;
     border-radius: 24px;
     gap: 10px;
   }
+
   .tickerIcon{
     font-size: clamp(26px, 2.2vw, 38px);
   }
+
   #dataBiblica{
     font-size: clamp(18px, 1.6vw, 28px);
   }
+
   #ref{
     font-size: clamp(18px, 1.6vw, 28px);
     line-height: 1.25;
   }
+
   .wxInline{
     font-size: clamp(16px, 1.4vw, 26px);
     gap: 10px;
   }
+
 }
 
     /* ===== NEWS (Mensagens da Cidade) ===== */
@@ -868,171 +867,6 @@
       margin-bottom:8px;
       padding-left:4px;
     }
-/* =========================
-   PATCH MOBILE — Campos do Aviso (Prioridade/Tipo/Local/Data/Hora/Início/Fim)
-   - evita “3 caixinhas minúsculas”
-   - força quebra/linha e visibilidade no celular
-   ========================= */
-
-@media (max-width: 520px){
-
-  /* 1) GARANTE que o “bloco do aviso” não esteja cortando conteúdo */
-  :where(.aviso, .card, .item, .notice, .msgCard){
-    height: auto !important;
-    min-height: unset !important;
-    overflow: visible !important;
-  }
-
-  /* 2) FORÇA a “linha de campos” a aparecer e quebrar linha (wrap) */
-  :where(.aviso, .card, .item, .notice, .msgCard)
-  :where(.meta, .metas, .tags, .chips, .campos, .fields, .infoRow, .linhaInfo, .detalhes, .infos){
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    gap: 6px !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow: visible !important;
-  }
-
-  /* 3) Se os campos estiverem em GRID apertado, derruba para 1 coluna */
-  :where(.aviso, .card, .item, .notice, .msgCard)
-  :where(.meta, .metas, .tags, .chips, .campos, .fields, .infoRow, .linhaInfo, .detalhes, .infos){
-    grid-template-columns: 1fr !important;
-    grid-auto-flow: row !important;
-  }
-
-  /* 4) GARANTE que cada “chip/caixa” não fique microscópico */
-  :where(.aviso, .card, .item, .notice, .msgCard)
-  :where(.badge, .pill, .chip, .tag, .campo, .field){
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 5px !important;
-    padding: 4px 8px !important;
-    border-radius: 999px !important;
-    font-size: 12px !important;
-    line-height: 1.15 !important;
-    min-height: 24px !important;
-    white-space: nowrap !important;
-  }
-
-  /* 5) Se algum CSS estiver “sumindo” os campos */
-  :where(.aviso, .card, .item, .notice, .msgCard)
-  :where(.meta, .metas, .tags, .chips, .campos, .fields, .infoRow, .linhaInfo, .detalhes, .infos,
-         .badge, .pill, .chip, .tag, .campo, .field){
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
-    position: static !important;
-  }
-}
-
-
-    /* =========================
-   PATCH: Avisos IMPORTANTES no celular (texto sumindo)
-   Cole no FINAL do <style> do index.html
-   ========================= */
-
-@media (max-width: 520px){
-
-  /* 1) Qualquer “linha de aviso” dentro de painéis: não pode colapsar */
-  :where(.panel, .card, .box, section, .bloco) :where(.item, .row, .linha, .avisoItem, .noticeItem){
-    min-width: 0 !important;
-    overflow: visible !important;
-  }
-
-  /* 2) Se a linha do aviso for GRID, força 2 colunas: indicador + texto */
-  :where(.panel, .card, .box, section, .bloco) :where(.item, .row, .linha, .avisoItem, .noticeItem){
-    display: grid !important;
-    grid-template-columns: 14px 1fr !important; /* <- impede “texto = 0” */
-    column-gap: 10px !important;
-    align-items: center !important;
-  }
-
-  /* 3) O bloco do texto tem que poder encolher e quebrar */
-  :where(.panel, .card, .box, section, .bloco)
-  :where(.item, .row, .linha, .avisoItem, .noticeItem)
-  :where(.txt, .text, .conteudo, .label, .titulo, .desc, span, div){
-    min-width: 0 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-  }
-
-  /* 4) Se o seu item for um “pill” (retângulo arredondado), garante altura/padding */
-  :where(.pill, .chip, .tag, .badge, .avisoPill, .noticePill){
-    min-height: 42px !important;
-    padding: 10px 12px !important;
-  }
-}
-/* =========================
-   PATCH MOBILE — Texto dos avisos não pode sumir
-   Alvo real do seu HTML: #avisos .aviso.alta / .aviso.media
-   ========================= */
-
-@media (max-width: 520px){
-
-  /* O grid pai não pode esmagar conteúdo */
-  #avisos{
-    display: block !important;
-  }
-
-  /* Cada aviso: vira coluna (não deixa “texto = 0”) */
-  #avisos .aviso{
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 8px !important;
-
-    min-width: 0 !important;
-    width: 100% !important;
-
-    height: auto !important;
-    min-height: 64px !important;
-
-    overflow: visible !important;
-  }
-
-  /* “Reset” para qualquer filho que esteja sendo colapsado/absoluto/transparente */
-  #avisos .aviso *{
-    min-width: 0 !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
-    filter: none !important;
-    font-size: inherit !important;
-  }
-
-  /* Se algum bloco interno estiver com position absolute (muito comum em pills) */
-  #avisos .aviso > *{
-    position: static !important;
-  }
-
-  /* Linhas internas: quebra e aparece */
-  #avisos .aviso .linha,
-  #avisos .aviso .row,
-  #avisos .aviso .meta,
-  #avisos .aviso .tags,
-  #avisos .aviso .chips{
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-    overflow: visible !important;
-  }
-
-  /* Texto: nunca pode ficar invisível ou “fora” */
-  #avisos .aviso span,
-  #avisos .aviso p,
-  #avisos .aviso div{
-    white-space: normal !important;
-    overflow: visible !important;
-    text-overflow: unset !important;
-    overflow-wrap: anywhere !important;
-    word-break: break-word !important;
-  }
-}
-
-    
   </style>
   <!-- =========================================================
        FIM — CSS (ESTILOS)
@@ -1051,7 +885,9 @@
           <div class="title" id="titulo">Comunica Síndico — Condôminos</div>
           <div class="sub" id="subtitulo">Painel informativo</div>
         </div>
+
         <div class="condoCenter" id="condoCenter">Condomínio</div>
+
         <div class="rightInfo">
           <div class="badge" title="Status do painel">
             <span class="dot" id="dotOnline"></span>
@@ -1252,15 +1088,7 @@
       const ativar = !!rot.ativar;
 
       const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
-
-// padrão: tenta 4, mas cai pra 3 se ficar apertado
-let qtd = Math.min(4, qtdCfg);
-
-// “caber na tela”: se o container estiver baixo, usa 3
-if (root.clientHeight < 520) qtd = Math.min(qtd, 3);
-
-// avisa o CSS quantas linhas usar
-root.style.setProperty("--rows", String(qtd));
+      const qtd = Math.min(4, qtdCfg);
 
       const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
 
