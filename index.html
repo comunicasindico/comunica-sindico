@@ -858,6 +858,64 @@
       margin-bottom:8px;
       padding-left:4px;
     }
+/* =========================
+   PATCH MOBILE — Campos do Aviso (Prioridade/Tipo/Local/Data/Hora/Início/Fim)
+   - evita “3 caixinhas minúsculas”
+   - força quebra/linha e visibilidade no celular
+   ========================= */
+
+@media (max-width: 520px){
+
+  /* 1) GARANTE que o “bloco do aviso” não esteja cortando conteúdo */
+  :where(.aviso, .card, .item, .notice, .msgCard){
+    height: auto !important;
+    min-height: unset !important;
+    overflow: visible !important;
+  }
+
+  /* 2) FORÇA a “linha de campos” a aparecer e quebrar linha (wrap) */
+  :where(.aviso, .card, .item, .notice, .msgCard)
+  :where(.meta, .metas, .tags, .chips, .campos, .fields, .infoRow, .linhaInfo, .detalhes, .infos){
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* 3) Se os campos estiverem em GRID apertado, derruba para 1 coluna */
+  :where(.aviso, .card, .item, .notice, .msgCard)
+  :where(.meta, .metas, .tags, .chips, .campos, .fields, .infoRow, .linhaInfo, .detalhes, .infos){
+    grid-template-columns: 1fr !important;
+    grid-auto-flow: row !important;
+  }
+
+  /* 4) GARANTE que cada “chip/caixa” não fique microscópico */
+  :where(.aviso, .card, .item, .notice, .msgCard)
+  :where(.badge, .pill, .chip, .tag, .campo, .field){
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 4px 8px !important;
+    border-radius: 999px !important;
+    font-size: 12px !important;
+    line-height: 1.15 !important;
+    min-height: 24px !important;
+    white-space: nowrap !important;
+  }
+
+  /* 5) Se algum CSS estiver “sumindo” os campos */
+  :where(.aviso, .card, .item, .notice, .msgCard)
+  :where(.meta, .metas, .tags, .chips, .campos, .fields, .infoRow, .linhaInfo, .detalhes, .infos,
+         .badge, .pill, .chip, .tag, .campo, .field){
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    position: static !important;
+  }
+}
 
     
   </style>
