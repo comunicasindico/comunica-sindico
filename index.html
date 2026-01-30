@@ -593,14 +593,24 @@
       section.panel{ order:1; }
       #adBox{ order:2; min-height:0; }
       .panel{ min-height:auto; }
-      .avisos{ grid-template-rows: repeat(4, minmax(0, 1fr)); overflow:hidden; }
-      .ticker{
-        position:sticky;
-        bottom:0;
-        z-index:50;
-        margin-bottom: 0;
-        padding-bottom: max(12px, env(safe-area-inset-bottom));
-      }
+      /* o container dos avisos não pode cortar */
+  .avisos{
+    overflow: visible !important;    /* <-- ERA hidden */
+    min-height: auto !important;
+    height: auto !important;
+
+    /* se estiver em grid, não force “linhas fixas” no mobile */
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  /* cada aviso pode crescer */
+  .avisos .aviso{
+    height: auto !important;
+    min-height: 72px !important;
+    overflow: visible !important;
+  }
     }
 
   /* ===========================
