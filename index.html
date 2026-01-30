@@ -1072,6 +1072,19 @@
   }
 }
 
+@media (min-width: 981px){
+  #avisos .aviso .t,
+  #avisos .aviso .d{
+    display:block !important;
+    overflow:visible !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    max-height:none !important;
+    text-overflow: unset !important;
+    white-space: normal !important;
+  }
+  #avisos{ overflow:hidden !important; } /* sem rolagem */
+}
 
     
   
@@ -1296,8 +1309,63 @@
       const rot = data?.rotacao || {};
       const ativar = !!rot.ativar;
 
-      const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
-      const qtd = Math.min(4, qtdCfg);
+    const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
+    const maxPerScreen = Math.min(4, qtdCfg);
+    let qtd = maxPerScreen; // <- ADICIONE esta linha
+
+/* ===== PATCH: escolher 1..4 conforme COUBER (TV/PC) ===== */
+function buildAvisoEl(a){
+  const el = document.createElement("div");
+  el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+
+  const titulo = safeText(a.titulo || "Aviso");
+  const desc = safeText(a.descricao || "");
+  const tipo = safeText(a.tipo || "");
+  const local = safeText(a.local || "");
+  const ini = formatDT_BR(a.inicio || "");
+  const fim = formatDT_BR(a.fim || "");
+
+  const itens = [];
+  if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
+  if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
+  const pr = safeText(a.prioridade || "Baixa");
+  itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
+  if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
+
+  el.innerHTML = `
+    <p class="t">${escapeHtml(titulo)}</p>
+    ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : ""}
+    <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
+  `;
+  return el;
+}
+
+function escolherQtdQueCabe(){
+  for(let n = maxPerScreen; n >= 1; n--){
+    root.innerHTML = "";
+    avisosAll.slice(0, n).forEach(a => root.appendChild(buildAvisoEl(a)));
+    if (root.scrollHeight <= root.clientHeight + 2) return n;
+  }
+  return 1;
+}
+// ===== usa o que couber (TV/PC) =====
+if (window.matchMedia("(min-width: 981px)").matches) {
+  // garante medida correta antes de testar
+  requestAnimationFrame(() => {
+    qtd = escolherQtdQueCabe();
+    root.style.setProperty("--rows", String(qtd));
+  });
+} else {
+  root.style.setProperty("--rows", String(qtd));
+}
+
+// padrão
+let qtd = maxPerScreen;
+
+// TV/PC: escolhe o que couber (1..4), sem rolagem e sem “...”
+if (window.matchMedia("(min-width: 981px)").matches){
+  qtd = escolherQtdQueCabe();
+}
 
       const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
 
