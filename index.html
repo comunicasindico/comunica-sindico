@@ -1086,6 +1086,42 @@
   #avisos{ overflow:hidden !important; } /* sem rolagem */
 }
 
+    /* =========================
+   AUTO-FIT (TV/PC) — reduz fonte para caber (até 4 avisos)
+   usa variáveis --tScale e --dScale definidas pelo JS
+   ========================= */
+@media (min-width: 981px){
+
+  #avisos .aviso{
+    --tScale: 1;
+    --dScale: 1;
+    overflow: hidden; /* sem rolagem no aviso */
+  }
+
+  /* remove clamp/reticências no TV/PC e deixa o JS encaixar */
+  #avisos .aviso .t,
+  #avisos .aviso .d{
+    display:block !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    text-overflow: unset !important;
+    white-space: normal !important;
+  }
+
+  /* título escala leve */
+  #avisos .aviso .t{
+    font-size: calc(22px * var(--ui2) * var(--tScale)) !important;
+    line-height: 1.12 !important;
+  }
+
+  /* descrição escala mais (é aqui que “cabe” melhor) */
+  #avisos .aviso .d{
+    font-size: calc(16px * var(--ui) * var(--dScale)) !important;
+    line-height: 1.25 !important;
+    overflow: hidden !important;
+  }
+}
+
     
   
   
@@ -1368,7 +1404,7 @@ if (window.matchMedia("(min-width: 981px)").matches){
       const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
       ROT_STATE = { page: 0, totalPages, paused: false };
 
-      function renderPage(pageIdx){
+    function renderPage(pageIdx){
         root.classList.remove("fade-in");
         root.classList.add("fade-out");
 
@@ -1408,6 +1444,39 @@ if (window.matchMedia("(min-width: 981px)").matches){
 
           root.classList.remove("fade-out");
           root.classList.add("fade-in");
+      // ===== AUTO-FIT (TV/PC): reduz fonte para caber no card (sem rolagem) =====
+function autoFitAvisoCard(card){
+  // reseta
+  card.style.setProperty("--tScale", "1");
+  card.style.setProperty("--dScale", "1");
+
+  // só TV/PC
+  if (!window.matchMedia("(min-width: 981px)").matches) return;
+
+  let dScale = 1.00;
+  let tScale = 1.00;
+
+  // tenta reduzir descrição primeiro; se ainda não couber, reduz título um pouco
+  for (let i = 0; i < 10; i++){
+    if (card.scrollHeight <= card.clientHeight + 1) break;
+
+    if (dScale > 0.72){
+      dScale = Math.max(0.72, dScale - 0.05);
+      card.style.setProperty("--dScale", dScale.toFixed(2));
+    } else if (tScale > 0.86){
+      tScale = Math.max(0.86, tScale - 0.03);
+      card.style.setProperty("--tScale", tScale.toFixed(2));
+    } else {
+      break;
+    }
+  }
+}
+
+// roda após o layout estabilizar
+requestAnimationFrame(() => {
+  root.querySelectorAll(".aviso").forEach(autoFitAvisoCard);
+});
+
         };
 
         setTimeout(doRender, 220);
@@ -1432,7 +1501,7 @@ if (window.matchMedia("(min-width: 981px)").matches){
     }
 
     /* ===== VERSÍCULO ===== */
-    function hojeKeyMMDD() {
+   function hojeKeyMMDD() {
       const d = new Date();
       const mm = String(d.getMonth() + 1).padStart(2, "0");
       const dd = String(d.getDate()).padStart(2, "0");
