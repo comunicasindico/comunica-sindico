@@ -97,12 +97,12 @@
     {
       "id": "002",
       "titulo": "Carrinho interno",
-      "descricao": "Caso optem por colocar várias sacolas menores dentro de um saco grande de lixo, pedimos que levem esse saco diretamente até a lixeira externa, e não ao carrinho que fica dentro do prédio (ele é exclusivo para sacolas menores). O excesso de peso acaba rasgando as sacolas dentro do carrinho, dificultando bastante o manuseio pela prestadora de serviços e os sacos maiores \"trancam\" ali dentro ocupando muito mais espaço do que um descarte do dia a dia.",
+      "descricao": "Caso optem por colocar várias sacolas menores dentro de um saco grande de lixo, pedimos que levem esse saco diretamente até a lixeira externa, e não ao carrinho que fica dentro do prédio (ele é exclusivo para sacolas menores).",
       "prioridade": "Média",
       "tipo": "Serviços",
       "local": "Garagem",
-      "inicio": "28/01/26 - 12:57",
-      "fim": "14/02/26 - 12:57",
+      "inicio": "",
+      "fim": "",
       "emergencia": true
     },
     {
