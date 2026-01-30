@@ -1024,30 +1024,31 @@ body { overflow: hidden; }
 
 /* ===== AVISOS ESTICANDO (sem alterar cabeçalho/rodapé) ===== */
 
-/* O container real dos avisos no seu JS é #avisos */
+/* ===== AVISOS NÃO FIXOS: crescem/encolhem pelo texto ===== */
 #avisos{
   height:100%;
   min-height:0;
-  display:grid;
+  display:flex;
+  flex-direction:column;
   gap:12px;
-  grid-template-rows: repeat(var(--rows, 3), minmax(0, 1fr));
+  overflow:hidden; /* não invade rodapé */
 }
 
-/* Cada card ocupa a linha inteira */
+/* cada aviso com altura automática (não fixa) */
 #avisos .aviso{
-  height:100%;
+  flex:0 0 auto;
   min-height:0;
   display:flex;
   flex-direction:column;
 }
 
-/* Descrição é o bloco que cresce (pra preencher o card) */
+/* descrição continua sendo o bloco flexível interno */
 #avisos .aviso .d{
   flex:1 1 auto;
   min-height:0;
   overflow:hidden;
-  /* mantém seu line-height do @media; se quiser, não precisa repetir */
-  font-size: var(--desc-font, 1.25rem); /* JS pode reduzir quando necessário */
+  line-height:1.15;
+  font-size: var(--desc-font, 1.25rem);
 }
 
 
@@ -1324,8 +1325,42 @@ function ajustarAvisosTelaCheia(){
   const root = document.getElementById("avisos");
   if(!root) return;
 
-  const cards = root.querySelectorAll(".aviso");
-  cards.forEach(fitDescFontInCard);
+  const cards = Array.from(root.querySelectorAll(".aviso"));
+  if(!cards.length) return;
+
+  // 1) tenta um tamanho “confortável”
+  cards.forEach(c => {
+    const d = c.querySelector(".d");
+    if(d) d.style.setProperty("--desc-font", "28px");
+  });
+
+  // 2) se estourou a área, vai reduzindo (tudo junto)
+  const MAX = 28, MIN = 12;
+  let lo = MIN, hi = MAX, best = MIN;
+
+  while(lo <= hi){
+    const mid = (lo + hi) >> 1;
+    cards.forEach(c => {
+      const d = c.querySelector(".d");
+      if(d) d.style.setProperty("--desc-font", mid + "px");
+    });
+
+    // mede se o conjunto cabe no espaço do root
+    const ok = (root.scrollHeight <= root.clientHeight + 2);
+
+    if(ok){
+      best = mid;
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+
+  // aplica o melhor tamanho encontrado
+  cards.forEach(c => {
+    const d = c.querySelector(".d");
+    if(d) d.style.setProperty("--desc-font", best + "px");
+  });
 }
     
     function renderAvisos(data){
