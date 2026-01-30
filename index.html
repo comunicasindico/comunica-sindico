@@ -438,6 +438,44 @@
       word-break:break-word;
     }
 
+    /* =========================================================
+   PC / TV — descrição ocupa o espaço disponível (não celular)
+   ========================================================= */
+@media (min-width: 981px){
+
+  #avisos.avisos{
+    height:100%;
+    min-height:0;
+    overflow:hidden;
+    display:grid;
+    gap:12px;
+    grid-template-rows: repeat(var(--rows, 3), minmax(0, 1fr));
+  }
+
+  #avisos.avisos .aviso{
+    height:100%;
+    min-height:0;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* título e meta não crescem */
+  #avisos.avisos .aviso .t,
+  #avisos.avisos .aviso .metaLine{
+    flex:0 0 auto;
+  }
+
+  /* SOMENTE a descrição cresce */
+  #avisos.avisos .aviso .d{
+    flex:1 1 auto;
+    min-height:0;
+    overflow:hidden;
+    line-height:1.15;
+    font-size: var(--desc-font, 18px) !important;
+  }
+}
+    
     .metaLine{
       margin-top:auto;
       display:flex;
@@ -1351,9 +1389,8 @@ function ajustarAvisosTelaCheia(){
       const rot = data?.rotacao || {};
       const ativar = !!rot.ativar;
 
-      const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 3));
-      let qtd = Math.min(3, qtdCfg);
-
+      let qtd = 3; // sempre 3 por tela (regra)
+      
       const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
 
       if(!avisosAll.length){
