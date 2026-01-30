@@ -917,6 +917,22 @@
       margin-bottom:8px;
       padding-left:4px;
     }
+
+    /* ===== LAYOUT FIX PC (não corta rodapé) ===== */
+html, body { height: 100%; }
+body { overflow: hidden; }
+
+.container{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* MUITO importante p/ não cortar */
+}
+
+.topbar{ flex: 0 0 auto; }
+.main{ flex: 1 1 auto; min-height: 0; }  /* main ocupa o resto */
+.ticker, .footer, #ticker{ flex: 0 0 auto; } /* rodapé sempre visível */
+    
   </style>
   <!-- =========================================================
        FIM — CSS (ESTILOS)
