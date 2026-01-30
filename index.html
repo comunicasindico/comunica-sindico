@@ -936,7 +936,8 @@ body { overflow: hidden; }
  /* TÍTULO DO CABEÇALHO — 2x maior (PC/TV) */
 @media (min-width: 981px){
   #titulo{
-    font-size: 4rem !important;
+   font-size: clamp(2.5rem, 3vw, 3.4rem);
+    /*font-size: 4rem !important;*/
     line-height: 1.15;
   }
 }
