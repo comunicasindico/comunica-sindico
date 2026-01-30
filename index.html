@@ -381,18 +381,27 @@
   -webkit-box-orient: vertical;
   overflow:hidden;
 }
-
-   .metaLine{
+ .metaLine{
   margin-top:auto;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   align-items:center;
   color:rgba(234,242,255,.92);
-  font-size: calc(13px * var(--ui));
   font-weight:900;
-}
 
+  /* ✅ pequeno, tipo “Mensagens da Cidade” */
+  font-size: calc(11px * var(--ui));
+  opacity: .88;
+}
+.metaItem{ opacity:.92; }
+.metaItem b{ font-weight:950; color:#fff; }
+.metaSep{
+  opacity:.35;
+  font-weight:900;
+  /* separador também pequeno */
+  font-size: calc(11px * var(--ui));
+}
     .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
     .metaItem b{ font-weight:950; color:#fff; }
     .metaSep{ opacity:.35; font-weight:900; }
@@ -401,12 +410,12 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding:6px 10px;
+      padding:5px 9px;
       border-radius:999px;
       font-weight:950;
       letter-spacing:.4px;
       text-transform:uppercase;
-      font-size: calc(12px * var(--ui));
+      font-size: calc(11px * var(--ui));
       line-height:1;
       border:1px solid rgba(255,255,255,.22);
       background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
@@ -591,32 +600,26 @@
    - cabeçalho/rodapé/msgs cidade/publicidade escalados
    =========================== */
 @media (min-width: 1200px){
-
   /* ===== HEADER (TOPO) ===== */
   .topbar{
     padding: 2.2vh 2.2vw;
     gap: 1.4vw;
     border-radius: 24px;
   }
-
   .brand .title{
     font-size: clamp(34px, 3.2vw, 56px);
     line-height: 1.05;
   }
-
   .brand .sub{
     font-size: clamp(18px, 1.6vw, 28px);
   }
-
   .condoCenter{
     font-size: clamp(20px, 1.8vw, 32px);
   }
-
   .badge{
     font-size: clamp(16px, 1.3vw, 22px);
     padding: 12px 16px;
   }
-
   #clock{
     font-size: clamp(30px, 2.8vw, 50px);
     letter-spacing: 1px;
@@ -626,25 +629,20 @@
     font-size: clamp(16px, 1.2vw, 22px);
     padding: 12px 16px;
   }
-
   /* ===== LAYOUT / PAINÉIS ===== */
   .main{
     gap: 1.2vw;
   }
-
   .panel{
     border-radius: 26px;
   }
-
   .panelHead{
     padding: 1.4vh 1.2vw;
   }
-
   .panelTitle{
     font-size: clamp(26px, 2.4vw, 44px);
     letter-spacing: 1px;
   }
-
   .pill{
     font-size: clamp(18px, 1.6vw, 28px);
     padding: 10px 18px;
@@ -667,94 +665,77 @@
     line-height: 1.15;
     -webkit-line-clamp: 2;
   }
-
   .aviso .d{
     font-size: clamp(24px, 2.4vw, 44px);
     line-height: 1.35;
     -webkit-line-clamp: 4;
   }
-
   .metaLine{
     font-size: clamp(20px, 2.0vw, 34px);
     gap: 18px;
   }
-
   .prioBadge{
     font-size: clamp(16px, 1.6vw, 26px);
     padding: 10px 18px;
   }
-
   /* ===== PUBLICIDADE ===== */
   .adBody{
     padding: 1.2vw;
     gap: 1.0vw;
   }
-
   .adLabel{
     font-size: clamp(18px, 1.5vw, 26px);
     padding: 14px 16px;
   }
-
   .videoWrap{
     max-height: 44vh; /* mais alto em TV */
     border-radius: 16px;
   }
-
   /* ===== MENSAGENS DA CIDADE ===== */
   #newsBody{
     max-height: 34vh;          /* ocupa bem o espaço */
     padding: 1.0vw 1.0vw 1.2vw;
     gap: 0.9vw;
   }
-
   .newsHeader{
     font-size: clamp(14px, 1.1vw, 18px);
     margin-bottom: 10px;
     padding-left: 6px;
   }
-
   .newsItem{
     padding: 1.0vw;
     border-radius: 16px;
   }
-
   .newsItem .h{
     font-size: clamp(22px, 1.8vw, 30px);
     line-height: 1.2;
     -webkit-line-clamp: 2;
   }
-
   .newsItem .p{
     font-size: clamp(18px, 1.5vw, 26px);
     line-height: 1.35;
     -webkit-line-clamp: 3;
   }
-
   /* ===== RODAPÉ (VERSÍCULO + CLIMA) ===== */
   .ticker{
     padding: 1.4vh 1.2vw;
     border-radius: 24px;
     gap: 10px;
   }
-
   .tickerIcon{
     font-size: clamp(26px, 2.2vw, 38px);
   }
-
   #dataBiblica{
     font-size: clamp(18px, 1.6vw, 28px);
   }
-
   #ref{
     font-size: clamp(18px, 1.6vw, 28px);
     line-height: 1.25;
   }
-
   .wxInline{
     font-size: clamp(16px, 1.4vw, 26px);
     gap: 10px;
   }
-
 }
 
     /* ===== NEWS (Mensagens da Cidade) ===== */
