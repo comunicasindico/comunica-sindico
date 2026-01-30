@@ -1851,17 +1851,43 @@ adVideo.addEventListener("click", () => {
     }
 
     function aplicarImagemTopbar(data){
-  // usa cidade do rodapé para escolher a imagem
   const cidade = String(data?.clima?.cidade || "").toLowerCase();
+  const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
 
-  let img = "./img/tubarao01.jpg"; // padrão
+  // fallback sempre válido
+  let img = "./img/tubarao01.jpg";
 
-  // se um dia trocar a cidade, você pode expandir aqui:
-  if(!(cidade.includes("tubarão") || cidade.includes("tubarao"))){
-    img = "./img/tubarao01.jpg"; // fallback (mantém a mesma por enquanto)
+  // regras:
+  // - NOITE: 18h–04h
+  // - FRIO: temp <= 16°C (se já tiver clima carregado)
+  const h = new Date().getHours();
+
+  // tenta pegar temperatura do texto do rodapé (se já tiver)
+  let temp = null;
+  try{
+    const t = String(document.getElementById("wxTextInline")?.textContent || "");
+    const m = t.match(/(-?\d+)\s*°C/i);
+    if(m) temp = parseInt(m[1], 10);
+  }catch(e){}
+
+  const estaNoite = (h >= 18 || h <= 4);
+  const estaFrio = (typeof temp === "number" && !isNaN(temp) && temp <= 16);
+
+  if(isTubarao){
+    if(estaNoite) img = "./img/tubarao_noite.jpg";
+    else if(estaFrio) img = "./img/tubarao_frio.jpg";
+    else img = "./img/tubarao01.jpg";
   }
 
-  document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
+  // fallback automático se a imagem escolhida não existir
+  const test = new Image();
+  test.onload = () => {
+    document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
+  };
+  test.onerror = () => {
+    document.documentElement.style.setProperty("--topbar-bg", `url('./img/tubarao01.jpg')`);
+  };
+  test.src = img + "?ts=" + Date.now();
 }
     
 
@@ -1876,8 +1902,9 @@ adVideo.addEventListener("click", () => {
         const ct = (res.headers.get("content-type") || "").toLowerCase();
         if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
         const data = await res.json();
-        aplicarImagemTopbar(data);
+        window.__lastDataForTopbar = data;
 
+        
         setText("condoCenter", safeText(data.condominio || "—"));
 
         if (status) status.textContent = "Atualizado";
@@ -1896,6 +1923,7 @@ adVideo.addEventListener("click", () => {
 
         await carregarVersiculo(data);
         await carregarClima(data);
+        aplicarImagemTopbar(data);
 
         // ✅ NÃO reinicia publicidade se já está ativa com o mesmo set de vídeos
         iniciarPublicidade(data);
@@ -1911,7 +1939,11 @@ adVideo.addEventListener("click", () => {
     }
 
     loadAll();
-    setInterval(loadAll, 60000);
+    setInterval(() => {
+  try{
+    if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar);
+  }catch(e){}
+}, 60000);
 
 </script>
   <!-- =========================================================
