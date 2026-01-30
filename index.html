@@ -55,7 +55,8 @@
       --sal: env(safe-area-inset-left);
       --ui: clamp(1, calc(100vmin / 900), 2.10);
       --ui2: clamp(1, calc(100vmin / 850), 2.70);
-
+      --topbar-bg: none;
+      
       /* NEWS premium tokens */
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
@@ -121,8 +122,37 @@
       backdrop-filter: blur(8px);
       flex:0 0 auto;
       width:100%;
+      position:relative;
+      overflow:hidden;
+    }
+    /* ===== TOPBAR com imagem de fundo ===== */
+    .topbar::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: var(--topbar-bg);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: .28;
+      transform: scale(1.03);
+      pointer-events:none;
     }
 
+    .topbar::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(8,28,46,.78), rgba(8,28,46,.55)),
+        radial-gradient(900px 420px at 20% 20%, rgba(0,0,0,.22), transparent 60%);
+      pointer-events:none;
+    }
+
+    .topbar > *{
+      position:relative;
+      z-index:1;
+    }
     .brand{
       display:flex;
       flex-direction:column;
@@ -1813,6 +1843,21 @@ adVideo.addEventListener("click", () => {
       }
     }
 
+    function aplicarImagemTopbar(data){
+  // usa cidade do rodapé para escolher a imagem
+  const cidade = String(data?.clima?.cidade || "").toLowerCase();
+
+  let img = "./img/tubarao01.jpg"; // padrão
+
+  // se um dia trocar a cidade, você pode expandir aqui:
+  if(!(cidade.includes("tubarão") || cidade.includes("tubarao"))){
+    img = "./img/tubarao01.jpg"; // fallback (mantém a mesma por enquanto)
+  }
+
+  document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
+}
+    
+
     /* ===== LOAD ALL ===== */
     async function loadAll(){
       const status = document.getElementById("statusJson");
@@ -1824,6 +1869,7 @@ adVideo.addEventListener("click", () => {
         const ct = (res.headers.get("content-type") || "").toLowerCase();
         if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
         const data = await res.json();
+        aplicarImagemTopbar(data);
 
         setText("condoCenter", safeText(data.condominio || "—"));
 
