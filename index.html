@@ -1409,61 +1409,58 @@
       el.textContent = String(t);
     }
 
-    function bindTvVideoControls(pub){
-      const v = document.getElementById("adVideo");
-      const controls = document.getElementById("tvVideoControls");
-      if(!v || !controls) return;
+   function bindTvVideoControls(pub){
+  const v = document.getElementById("adVideo");
+  const controls = document.getElementById("tvVideoControls");
+  if(!v || !controls) return;
 
-      // só TV/PC
-      if (isMobile()){
-        controls.style.display = "none";
-        return;
-      } else {
-        controls.style.display = "flex";
-      }
+  // agora aparece em qualquer tela
+  controls.style.display = "flex";
 
-      const bPrev = document.getElementById("btnPrevAd");
-      const bNext = document.getElementById("btnNextAd");
-      const bBack = document.getElementById("btnBack10");
-      const bFwd  = document.getElementById("btnFwd10");
+  const bPrev = document.getElementById("btnPrevAd");
+  const bNext = document.getElementById("btnNextAd");
+  const bBack = document.getElementById("btnBack10");
+  const bFwd  = document.getElementById("btnFwd10");
 
-      function setIdx(nextIdx){
-        const list = Array.isArray(pub?.videos) ? pub.videos : [];
-        if(!list.length) return;
+  function setIdx(nextIdx){
+    const list = Array.isArray(pub?.videos) ? pub.videos : [];
+    if(!list.length) return;
 
-        let i = nextIdx;
-        if(i < 0) i = list.length - 1;
-        if(i >= list.length) i = 0;
+    let i = nextIdx;
+    if(i < 0) i = list.length - 1;
+    if(i >= list.length) i = 0;
 
-        const st = adLoadState();
-        st.idx = i;
-        st.t = 0;
-        st.paused = false;
-        adSaveState(st);
+    const st = adLoadState();
+    st.idx = i;
+    st.t = 0;
+    st.paused = false;
+    adSaveState(st);
 
-        // troca e toca
-        adPlayByState(pub, true);
-      }
+    // troca e toca
+    adPlayByState(pub, true);
+  }
 
-      if(bPrev) bPrev.onclick = () => {
-        const st = adLoadState();
-        setIdx((Number.isFinite(st.idx) ? st.idx : 0) - 1);
-      };
-      if(bNext) bNext.onclick = () => {
-        const st = adLoadState();
-        setIdx((Number.isFinite(st.idx) ? st.idx : 0) + 1);
-      };
-      if(bBack) bBack.onclick = () => adSeek(-10);
-      if(bFwd)  bFwd.onclick  = () => adSeek(+10);
+  if(bPrev) bPrev.onclick = () => {
+    const st = adLoadState();
+    setIdx((Number.isFinite(st.idx) ? st.idx : 0) - 1);
+  };
+  if(bNext) bNext.onclick = () => {
+    const st = adLoadState();
+    setIdx((Number.isFinite(st.idx) ? st.idx : 0) + 1);
+  };
 
-      // atalhos teclado (TV)
-      window.addEventListener("keydown", (e)=>{
-        if(isMobile()) return;
-        const k = String(e.key || "").toLowerCase();
-        if(k === "arrowleft") setIdx((adLoadState().idx ?? 0) - 1);
-        if(k === "arrowright") setIdx((adLoadState().idx ?? 0) + 1);
-      });
-    }
+  // seek pode falhar em alguns streams, mas em mp4 local funciona bem
+  if(bBack) bBack.onclick = () => adSeek(-10);
+  if(bFwd)  bFwd.onclick  = () => adSeek(+10);
+
+  // atalho teclado só em PC/TV
+  window.addEventListener("keydown", (e)=>{
+    if(isMobile()) return;
+    const k = String(e.key || "").toLowerCase();
+    if(k === "arrowleft") setIdx((adLoadState().idx ?? 0) - 1);
+    if(k === "arrowright") setIdx((adLoadState().idx ?? 0) + 1);
+  });
+}
 
     function adApplyFitContain(v){
       try{
@@ -1603,8 +1600,18 @@
           }
           .tvBtn:active{ transform:scale(.98); }
           @media (max-width: 980px){
-            .tvVideoControls{ display:none !important; }
-          }
+  .tvVideoControls{
+    display:flex !important;
+    right:10px;
+    bottom:10px;
+    gap:6px;
+  }
+  .tvBtn{
+    padding:8px 10px;
+    font-size:14px;
+    border-radius:10px;
+  }
+}
         `;
         document.head.appendChild(s);
       })();
