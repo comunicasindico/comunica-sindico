@@ -126,6 +126,17 @@
       "inicio": "",
       "fim": "",
       "emergencia": false
+    },
+    {
+      "id": "005",
+      "titulo": "Carrinho interno",
+      "descricao": "O excesso de peso acaba rasgando as sacolas dentro do carrinho, dificultando bastante o manuseio pela prestadora de serviços e os sacos maiores \"trancam\" ali dentro ocupando muito mais espaço do que um descarte do dia a dia.",
+      "prioridade": "Baixa",
+      "tipo": "Serviços",
+      "local": "Lixeira",
+      "inicio": "30/01/26 - 01:00",
+      "fim": "25/02/26 - 01:00",
+      "emergencia": false
     }
   ]
 }
