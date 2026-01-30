@@ -489,7 +489,36 @@
       background: linear-gradient(180deg, rgba(160,210,255,.55), rgba(0,80,160,.32));
       text-shadow: 0 1px 0 rgba(0,0,0,.45);
     }
+/* ===== AVISOS OCUPANDO TODA A ÁREA DISPONÍVEL ===== */
 
+#listaAvisos{
+  height:100%;
+  display:grid;
+  gap:12px;
+  grid-template-rows: repeat(var(--avisos-rows, 3), minmax(0, 1fr));
+}
+
+/* cada aviso ocupa sua faixa inteira */
+.aviso{
+  height:100%;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+
+/* título e meta fixos */
+.aviso .titulo{
+  flex:0 0 auto;
+}
+
+/* descrição cresce e ajusta fonte */
+.aviso .desc{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:hidden;
+  line-height:1.15;
+  font-size: var(--desc-font, 18px);
+}
     /* =========================================================
        PUBLICIDADE / VÍDEO
        ========================================================= */
@@ -993,7 +1022,33 @@ body { overflow: hidden; }
 
 }
 
+/* ===== AVISOS ESTICANDO (sem alterar cabeçalho/rodapé) ===== */
 
+/* O container real dos avisos no seu JS é #avisos */
+#avisos{
+  height:100%;
+  min-height:0;
+  display:grid;
+  gap:12px;
+  grid-template-rows: repeat(var(--rows, 3), minmax(0, 1fr));
+}
+
+/* Cada card ocupa a linha inteira */
+#avisos .aviso{
+  height:100%;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Descrição é o bloco que cresce (pra preencher o card) */
+#avisos .aviso .d{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:hidden;
+  /* mantém seu line-height do @media; se quiser, não precisa repetir */
+  font-size: var(--desc-font, 1.25rem); /* JS pode reduzir quando necessário */
+}
 
 
 
@@ -1241,6 +1296,38 @@ body { overflow: hidden; }
       return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
     }
 
+
+    function fitDescFontInCard(card){
+  const desc = card.querySelector(".d");
+  if(!desc) return;
+
+  const MAX = 28; // px
+  const MIN = 12; // px
+
+  desc.style.setProperty("--desc-font", MAX + "px");
+  if(desc.scrollHeight <= desc.clientHeight) return;
+
+  let lo = MIN, hi = MAX, best = MIN;
+  while(lo <= hi){
+    const mid = (lo + hi) >> 1;
+    desc.style.setProperty("--desc-font", mid + "px");
+    if(desc.scrollHeight <= desc.clientHeight){
+      best = mid; lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  desc.style.setProperty("--desc-font", best + "px");
+}
+
+function ajustarAvisosTelaCheia(){
+  const root = document.getElementById("avisos");
+  if(!root) return;
+
+  const cards = root.querySelectorAll(".aviso");
+  cards.forEach(fitDescFontInCard);
+}
+    
     function renderAvisos(data){
       const root = document.getElementById("avisos");
       if (!root) return;
@@ -1290,6 +1377,8 @@ body { overflow: hidden; }
           <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
         `;
         return el;
+        
+        
       }
 
       function escolherQtdQueCabe(){
@@ -1325,6 +1414,7 @@ body { overflow: hidden; }
           const start = pageIdx * qtd;
           const slice = avisosAll.slice(start, start + qtd);
           slice.forEach(a => root.appendChild(buildAvisoEl(a)));
+          ajustarAvisosTelaCheia();
           void root.offsetWidth;
           root.classList.remove("fade-out");
           root.classList.add("fade-in");
@@ -1841,6 +1931,57 @@ body { overflow: hidden; }
         if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar);
       }catch(e){}
     }, 60000);
+
+     function setAvisosRowsByCount(){
+  const list = document.querySelector('#listaAvisos');
+  if(!list) return;
+
+  const cards = list.querySelectorAll('.aviso');
+  const count = Math.min(3, Math.max(1, cards.length || 1));
+
+  list.style.setProperty('--avisos-rows', count);
+}
+
+function fitDescFont(card){
+  const desc = card.querySelector('.desc');
+  if(!desc) return;
+
+  const MAX = 28;
+  const MIN = 12;
+
+  desc.style.setProperty('--desc-font', MAX + 'px');
+
+  if(desc.scrollHeight <= desc.clientHeight) return;
+
+  let lo = MIN, hi = MAX, best = MIN;
+
+  while(lo <= hi){
+    const mid = (lo + hi) >> 1;
+    desc.style.setProperty('--desc-font', mid + 'px');
+
+    if(desc.scrollHeight <= desc.clientHeight){
+      best = mid;
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+
+  desc.style.setProperty('--desc-font', best + 'px');
+}
+
+function ajustarAvisosTela(){
+  const list = document.querySelector('#listaAvisos');
+  if(!list) return;
+
+  setAvisosRowsByCount();
+
+  requestAnimationFrame(()=>{
+    list.querySelectorAll('.aviso').forEach(fitDescFont);
+  });
+}
+
+    
   </script>
   <!-- =========================================================
        FIM — JS (APP / UI / DADOS)
