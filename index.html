@@ -1336,156 +1336,127 @@
       return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
     }
 
-    function renderAvisos(data){
-      const root = document.getElementById("avisos");
-      if (!root) return;
+function renderAvisos(data){
+  const root = document.getElementById("avisos");
+  if (!root) return;
+  root.innerHTML = "";
+
+  if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
+
+  const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
+  const rot = data?.rotacao || {};
+  const ativar = !!rot.ativar;
+
+  const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
+  let qtd = Math.min(4, qtdCfg);
+
+  const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
+
+  if(!avisosAll.length){
+    const div = document.createElement("div");
+    div.className = "aviso baixa";
+    div.innerHTML = `<p class="t">Sem avisos no momento</p><p class="d">${safeText(data.fallback || "—")}</p>`;
+    root.appendChild(div);
+    ROT_STATE = { page: 0, totalPages: 1, paused: false };
+    return;
+  }
+
+  // ===== cria 1 card de aviso (sem auto-reduzir fonte) =====
+  function buildAvisoEl(a){
+    const el = document.createElement("div");
+    el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+
+    const titulo = safeText(a.titulo || "Aviso");
+    const desc = safeText(a.descricao || "");
+    const tipo = safeText(a.tipo || "");
+    const local = safeText(a.local || "");
+    const ini = formatDT_BR(a.inicio || "");
+    const fim = formatDT_BR(a.fim || "");
+
+    const itens = [];
+    if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
+    if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
+    const pr = safeText(a.prioridade || "Baixa");
+    itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
+    if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
+
+    el.innerHTML = `
+      <p class="t">${escapeHtml(titulo)}</p>
+      ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : ""}
+      <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
+    `;
+    return el;
+  }
+
+  // ===== TV/PC (>=981px): escolhe 1..4 que COUBER SEM rolagem e SEM cortar =====
+  function escolherQtdQueCabe(){
+    const maxPerScreen = Math.min(4, qtd);
+    for(let n = maxPerScreen; n >= 1; n--){
+      root.innerHTML = "";
+      avisosAll.slice(0, n).forEach(a => root.appendChild(buildAvisoEl(a)));
+
+      // espera layout “assentar”
+      const ok = (root.scrollHeight <= root.clientHeight + 2);
+      if (ok) return n;
+    }
+    return 1;
+  }
+
+  if (window.matchMedia("(min-width: 981px)").matches){
+    // mede com o DOM real antes de fixar qtd
+    requestAnimationFrame(() => {
+      qtd = escolherQtdQueCabe();
+      root.style.setProperty("--rows", String(qtd));
+      // re-render “limpo” já com qtd final
+      renderPage(0);
+    });
+  } else {
+    // celular: usa o config (até 4) e deixa rotação normal
+    root.style.setProperty("--rows", String(qtd));
+  }
+
+  const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
+  ROT_STATE = { page: 0, totalPages, paused: false };
+
+  function renderPage(pageIdx){
+    root.classList.remove("fade-in");
+    root.classList.add("fade-out");
+
+    const doRender = () => {
       root.innerHTML = "";
 
-      if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
+      const start = pageIdx * qtd;
+      const slice = avisosAll.slice(start, start + qtd);
 
-      const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
-      const rot = data?.rotacao || {};
-      const ativar = !!rot.ativar;
+      slice.forEach(a => root.appendChild(buildAvisoEl(a)));
 
-    const qtdCfg = Math.max(1, Number(rot.quantidadePorTela || 4));
-    const maxPerScreen = Math.min(4, qtdCfg);
-    let qtd = maxPerScreen; // <- ADICIONE esta linha
+      void root.offsetWidth;
 
-/* ===== PATCH: escolher 1..4 conforme COUBER (TV/PC) ===== */
-function buildAvisoEl(a){
-  const el = document.createElement("div");
-  el.className = `aviso ${prioridadeClass(a.prioridade)}`;
-
-  const titulo = safeText(a.titulo || "Aviso");
-  const desc = safeText(a.descricao || "");
-  const tipo = safeText(a.tipo || "");
-  const local = safeText(a.local || "");
-  const ini = formatDT_BR(a.inicio || "");
-  const fim = formatDT_BR(a.fim || "");
-
-  const itens = [];
-  if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
-  if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
-  const pr = safeText(a.prioridade || "Baixa");
-  itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
-  if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
-
-  el.innerHTML = `
-    <p class="t">${escapeHtml(titulo)}</p>
-    ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : ""}
-    <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
-  `;
-  return el;
-}
-
-function escolherQtdQueCabe(){
-  for(let n = maxPerScreen; n >= 1; n--){
-    root.innerHTML = "";
-    avisosAll.slice(0, n).forEach(a => root.appendChild(buildAvisoEl(a)));
-    if (root.scrollHeight <= root.clientHeight + 2) return n;
-  }
-  return 1;
-}
-
-// TV/PC: escolhe o que couber (1..4), sem rolagem e sem “...”
-if (window.matchMedia("(min-width: 981px)").matches){
-  qtd = escolherQtdQueCabe();
-}
-
-      const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
-
-      if(!avisosAll.length){
-        const div = document.createElement("div");
-        div.className = "aviso baixa";
-        div.innerHTML = `<p class="t">Sem avisos no momento</p><p class="d">${safeText(data.fallback || "—")}</p>`;
-        root.appendChild(div);
-        ROT_STATE = { page: 0, totalPages: 1, paused: false };
-        return;
-      }
-
-      const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
-      ROT_STATE = { page: 0, totalPages, paused: false };
-
-    function renderPage(pageIdx){
-        root.classList.remove("fade-in");
-        root.classList.add("fade-out");
-
-        const doRender = () => {
-          root.innerHTML = "";
-
-          const start = pageIdx * qtd;
-          const slice = avisosAll.slice(start, start + qtd);
-
-          slice.forEach(a=>{
-            const el = document.createElement("div");
-            el.className = `aviso ${prioridadeClass(a.prioridade)}`;
-
-            const titulo = safeText(a.titulo || "Aviso");
-            const desc = safeText(a.descricao || "");
-            const tipo = safeText(a.tipo || "");
-            const local = safeText(a.local || "");
-            const ini = formatDT_BR(a.inicio || "");
-            const fim = formatDT_BR(a.fim || "");
-
-            const itens = [];
-            if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
-            if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
-            const pr = safeText(a.prioridade || "Baixa");
-            itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
-            if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
-
-            el.innerHTML = `
-              <p class="t">${escapeHtml(titulo)}</p>
-              ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : ""}
-              <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
-            `;
-            root.appendChild(el);
-          });
-
-          void root.offsetWidth;
-
-          root.classList.remove("fade-out");
-          root.classList.add("fade-in");
-      // ===== AUTO-FIT (TV/PC): reduz fonte para caber no card (sem rolagem) =====
-
-
-requestAnimationFrame(() => {
-  const cards = [...root.querySelectorAll(".aviso")];
-  cards.forEach(autoFitAvisoCard);
-
-  // Se ainda estourar, é melhor reduzir qtd do que esmagar fonte
-  const algumEstoura = cards.some(c => c.scrollHeight > c.clientHeight + 1);
-
-  if (algumEstoura && qtd > 1){
-    qtd = qtd - 1;      // 4→3→2→1 só se realmente precisar
-    ROT_STATE.page = 0;
-    renderPage(0);
-  }
-});
-
-
-        };
-
-        setTimeout(doRender, 220);
-      }
-
-      renderPage(0);
+      root.classList.remove("fade-out");
       root.classList.add("fade-in");
+    };
 
-      if (ativar && totalPages > 1){
-        if (rot.pausarNoMouse){
-          root.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
-          root.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
-          root.addEventListener("touchstart", ()=>{ ROT_STATE.paused = !ROT_STATE.paused; }, {passive:true});
-        }
+    setTimeout(doRender, 220);
+  }
 
-        ROT_TIMER = setInterval(()=>{
-          if (ROT_STATE.paused) return;
-          ROT_STATE.page = (ROT_STATE.page + 1) % totalPages;
-          renderPage(ROT_STATE.page);
-        }, intervaloMs);
-      }
+  renderPage(0);
+  root.classList.add("fade-in");
+
+  if (ativar && totalPages > 1){
+    if (rot.pausarNoMouse){
+      root.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
+      root.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
+      root.addEventListener("touchstart", ()=>{ ROT_STATE.paused = !ROT_STATE.paused; }, {passive:true});
     }
+
+    ROT_TIMER = setInterval(()=>{
+      if (ROT_STATE.paused) return;
+      ROT_STATE.page = (ROT_STATE.page + 1) % totalPages;
+      renderPage(ROT_STATE.page);
+    }, intervaloMs);
+  }
+}
+
 
     /* ===== VERSÍCULO ===== */
    function hojeKeyMMDD() {
