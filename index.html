@@ -1023,33 +1023,39 @@ body { overflow: hidden; }
 }
 
 /* ===== AVISOS ESTICANDO (sem alterar cabeçalho/rodapé) ===== */
-
-/* ===== AVISOS NÃO FIXOS: crescem/encolhem pelo texto ===== */
+/* ===== DESCRIÇÃO ENCHE O ESPAÇO DISPONÍVEL ===== */
 #avisos{
   height:100%;
   min-height:0;
   display:flex;
   flex-direction:column;
   gap:12px;
-  overflow:hidden; /* não invade rodapé */
+  overflow:hidden;
 }
 
-/* cada aviso com altura automática (não fixa) */
+/* cada aviso divide o espaço vertical */
 #avisos .aviso{
-  flex:0 0 auto;
+  flex:1 1 0;
   min-height:0;
   display:flex;
   flex-direction:column;
 }
 
-/* descrição continua sendo o bloco flexível interno */
+/* título e meta NÃO crescem */
+#avisos .aviso .t,
+#avisos .aviso .metaLine{
+  flex:0 0 auto;
+}
+
+/* só a descrição cresce e ocupa tudo */
 #avisos .aviso .d{
   flex:1 1 auto;
   min-height:0;
   overflow:hidden;
   line-height:1.15;
-  font-size: var(--desc-font, 1.25rem);
+  font-size: var(--desc-font, 18px);
 }
+
 
 
 
@@ -1297,70 +1303,41 @@ body { overflow: hidden; }
       return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
     }
 
-
-    function fitDescFontInCard(card){
+function fillDescFontInCard(card){
   const desc = card.querySelector(".d");
   if(!desc) return;
 
-  const MAX = 28; // px
-  const MIN = 12; // px
+  // limites (ajuste se quiser)
+  const MIN = 12;  // px
+  const MAX = 90;  // px (TV aguenta)
 
-  desc.style.setProperty("--desc-font", MAX + "px");
-  if(desc.scrollHeight <= desc.clientHeight) return;
-
+  // começa pequeno e cresce até quase estourar
   let lo = MIN, hi = MAX, best = MIN;
+
+  // garante medidas consistentes
+  desc.style.setProperty("--desc-font", MIN + "px");
+
   while(lo <= hi){
     const mid = (lo + hi) >> 1;
     desc.style.setProperty("--desc-font", mid + "px");
-    if(desc.scrollHeight <= desc.clientHeight){
-      best = mid; lo = mid + 1;
+
+    const ok = (desc.scrollHeight <= desc.clientHeight + 1);
+    if(ok){
+      best = mid;
+      lo = mid + 1;   // tenta maior
     } else {
-      hi = mid - 1;
+      hi = mid - 1;   // grande demais
     }
   }
+
   desc.style.setProperty("--desc-font", best + "px");
 }
-
+  
 function ajustarAvisosTelaCheia(){
   const root = document.getElementById("avisos");
   if(!root) return;
 
-  const cards = Array.from(root.querySelectorAll(".aviso"));
-  if(!cards.length) return;
-
-  // 1) tenta um tamanho “confortável”
-  cards.forEach(c => {
-    const d = c.querySelector(".d");
-    if(d) d.style.setProperty("--desc-font", "28px");
-  });
-
-  // 2) se estourou a área, vai reduzindo (tudo junto)
-  const MAX = 28, MIN = 12;
-  let lo = MIN, hi = MAX, best = MIN;
-
-  while(lo <= hi){
-    const mid = (lo + hi) >> 1;
-    cards.forEach(c => {
-      const d = c.querySelector(".d");
-      if(d) d.style.setProperty("--desc-font", mid + "px");
-    });
-
-    // mede se o conjunto cabe no espaço do root
-    const ok = (root.scrollHeight <= root.clientHeight + 2);
-
-    if(ok){
-      best = mid;
-      lo = mid + 1;
-    } else {
-      hi = mid - 1;
-    }
-  }
-
-  // aplica o melhor tamanho encontrado
-  cards.forEach(c => {
-    const d = c.querySelector(".d");
-    if(d) d.style.setProperty("--desc-font", best + "px");
-  });
+  root.querySelectorAll(".aviso").forEach(fillDescFontInCard);
 }
     
     function renderAvisos(data){
