@@ -636,13 +636,14 @@
         padding-bottom: 0;
       }
       .container{ min-height:auto; }
-      .topbar{ flex-wrap:wrap; }
+      .topbar{
+  flex-wrap:wrap;
+  justify-content:center;   /* centraliza no celular */
+  text-align:center;
+}
       .condoCenter{
-        order:3;
-        width:100%;
-        text-align:left;
-        padding:0;
-      }
+  display:none !important;  /* remove o 2º hífen e libera espaço */
+}
       .main{ display:flex; flex-direction:column; }
       section.panel{ order:1; }
       #adBox{ order:2; min-height:0; }
@@ -655,6 +656,17 @@
         margin-bottom: 0;
         padding-bottom: max(12px, env(safe-area-inset-bottom));
       }
+      .brand{
+  width:100%;
+  align-items:center;
+  text-align:center;
+}
+
+.rightInfo{
+  width:100%;
+  justify-content:center;
+  gap:10px;
+}
     }
 
     /* ===========================
@@ -1023,7 +1035,7 @@
           <div class="sub" id="subtitulo">Painel informativo</div>
         </div>
 
-        <div class="condoCenter" id="condoCenter">Condomínio</div>
+        <div class="condoCenter" id="condoCenter"></div>
 
         <div class="rightInfo">
           <div class="badge" title="Status do painel">
@@ -1626,14 +1638,22 @@
         const s = document.createElement("style");
         s.id = "tvControlsCss";
         s.textContent = `
-        /* BLINDADO: no celular NUNCA esconder */
+  
+/* BLINDADO: no celular mostrar só Anterior e Próximo */
 @media (max-width: 980px){
- /* mostra só os dois desejados */
-  .tvVideoControls .tvBtn.prev,
-  .tvVideoControls .tvBtn.next{
+
+  /* esconde todos os botões */
+  .tvVideoControls .tvBtn{
+    display:none !important;
+  }
+
+  /* mostra apenas os dois desejados */
+  #btnPrevAd,
+  #btnNextAd{
     display:flex !important;
   }
 
+}
   .tvVideoControls{
     position:absolute;
     right:12px;
