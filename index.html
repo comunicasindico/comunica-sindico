@@ -40,7 +40,9 @@
        INÍCIO — CSS (ESTILOS)
        ========================================================= -->
   <style>
-    /* ===== BASE ===== */
+    /* =========================================================
+       BASE
+       ========================================================= */
     :root{
       --bg1:#061726;
       --bg2:#0b1f33;
@@ -55,8 +57,11 @@
       --sal: env(safe-area-inset-left);
       --ui: clamp(1, calc(100vmin / 900), 2.10);
       --ui2: clamp(1, calc(100vmin / 850), 2.70);
+
+      /* Topbar BG */
       --topbar-bg: none;
-      
+      --topbar-img-opacity: .22; /* mais forte */
+
       /* NEWS premium tokens */
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
@@ -108,7 +113,9 @@
       max-width:none;
     }
 
-    /* ===== HEADER (TOPBAR) ===== */
+    /* =========================================================
+       HEADER (TOPBAR)
+       ========================================================= */
     .topbar{
       display:flex;
       align-items:center;
@@ -125,7 +132,8 @@
       position:relative;
       overflow:hidden;
     }
-    /* ===== TOPBAR com imagem de fundo ===== */
+
+    /* TOPBAR com imagem de fundo */
     .topbar::before{
       content:"";
       position:absolute;
@@ -134,32 +142,24 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      opacity: .12;
+      opacity: var(--topbar-img-opacity);
       transform: scale(1.03);
       pointer-events:none;
     }
 
+    /* Overlay escuro premium (corrigido) */
     .topbar::after{
       content:"";
       position:absolute;
       inset:0;
       background:
-        .topbar::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(90deg, rgba(5,20,35,.92), rgba(5,20,35,.75)),
-    radial-gradient(900px 420px at 20% 20%, rgba(0,0,0,.45), transparent 60%);
-  pointer-events:none;
-}
+        linear-gradient(90deg, rgba(5,20,35,.92), rgba(5,20,35,.70)),
+        radial-gradient(900px 420px at 20% 20%, rgba(0,0,0,.45), transparent 60%);
       pointer-events:none;
     }
 
-    .topbar > *{
-      position:relative;
-      z-index:1;
-    }
+    .topbar > *{ position:relative; z-index:1; }
+
     .brand{
       display:flex;
       flex-direction:column;
@@ -167,16 +167,21 @@
       min-width:0;
       flex:1 1 auto;
     }
-    .brand .title{
+
+    #titulo{
       margin:0;
       font-size: calc(22px * var(--ui2));
       font-weight:900;
       letter-spacing:.2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      line-height: 1.08;
     }
-    .brand .sub{
+
+    #subtitulo{
       margin:0;
       font-size: calc(12.5px * var(--ui));
       color:var(--muted);
@@ -185,6 +190,21 @@
       overflow:hidden;
       text-overflow:ellipsis;
     }
+
+    /* Linha compacta exclusiva do CELULAR (status + hora) */
+    .subMobileLine{
+      display:none;
+      margin-top:2px;
+      font-size: calc(12.5px * var(--ui));
+      color: rgba(234,242,255,.84);
+      font-weight: 850;
+      gap: 8px;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      text-align:center;
+    }
+    .subMobileLine .sep{ opacity:.55; font-weight:900; }
 
     .condoCenter{
       flex:1 1 auto;
@@ -207,6 +227,7 @@
       justify-content:flex-end;
       flex:0 0 auto;
     }
+
     .badge{
       display:flex;align-items:center;gap:10px;
       padding:10px 12px;border-radius:999px;
@@ -241,7 +262,9 @@
       width:100%;
     }
 
-    /* ===== MAIN ===== */
+    /* =========================================================
+       MAIN
+       ========================================================= */
     .main{
       flex:1 1 auto;
       min-height:0;
@@ -262,7 +285,6 @@
       overflow:hidden;
     }
 
-    /* ✅ TOPO DO PAINEL (sem o traço) */
     .panelHead{
       padding:10px 12px;
       display:flex;
@@ -284,7 +306,6 @@
       font-size: calc(18px * var(--ui2));
     }
 
-    /* ===== PILL (BOTÕES/STATUS) ===== */
     .pill{
       font-size:12px;
       font-weight:900;
@@ -305,7 +326,9 @@
     .pill:hover{ filter:brightness(1.08); }
     .pill:active{ transform:scale(.98); }
 
-    /* ===== AVISOS – PREMIUM ===== */
+    /* =========================================================
+       AVISOS
+       ========================================================= */
     @keyframes avisoIn{
       from{ opacity:0; transform: translateY(10px) scale(.99); }
       to  { opacity:1; transform: translateY(0) scale(1); }
@@ -333,20 +356,16 @@
       display:flex;
       flex-direction:column;
       gap:10px;
-
       border:1px solid rgba(140,200,255,.22);
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.14),
         inset 0 -14px 22px rgba(0,0,0,.28),
         0 14px 34px rgba(0,0,0,.55);
-
       transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
       animation: avisoIn .28s ease both;
       will-change: transform, opacity;
-
       position:relative;
       padding-left:18px;
-
       height:auto;
       min-height:auto;
       overflow:visible;
@@ -359,7 +378,6 @@
         inset 0 1px 0 rgba(255,255,255,.16),
         0 10px 28px rgba(0,0,0,.62);
     }
-    .aviso:active{ transform: translateY(0); }
 
     .aviso::before{
       content:"";
@@ -398,8 +416,8 @@
       text-shadow:0 1px 2px rgba(0,0,0,.6);
       line-height:1.15;
       display:block;
-      overflow:visible;
       white-space:normal;
+      overflow:visible;
       overflow-wrap:anywhere;
       word-break:break-word;
     }
@@ -414,8 +432,8 @@
       line-height:1.35;
       font-size:clamp(14px, 1.7vw, 17px);
       display:block;
-      overflow:visible;
       white-space:normal;
+      overflow:visible;
       overflow-wrap:anywhere;
       word-break:break-word;
     }
@@ -427,9 +445,12 @@
       gap:10px;
       align-items:center;
       color:rgba(234,242,255,.92);
-      font-size: calc(13px * var(--ui) * 0.60);
+      font-size: 0.60em;
       font-weight:900;
+      line-height: 1.15;
     }
+    @media (max-width: 520px){ .metaLine{ font-size: 0.70em; } }
+    @media (min-width: 1200px){ .metaLine{ font-size: 0.70em; } }
 
     .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
     .metaItem b{ font-weight:950; color:#fff; }
@@ -469,7 +490,9 @@
       text-shadow: 0 1px 0 rgba(0,0,0,.45);
     }
 
-    /* ===== AD ===== */
+    /* =========================================================
+       PUBLICIDADE / VÍDEO
+       ========================================================= */
     .adBody{
       padding:14px;
       display:flex;
@@ -494,6 +517,7 @@
       color:rgba(234,242,255,.92);
       background:rgba(12,35,56,.35);
     }
+
     .videoWrap{
       width:100%;
       aspect-ratio:16/9;
@@ -505,11 +529,11 @@
       max-height: 38vh;
       overflow:hidden;
       border-radius: 12px;
-
-      /* ✅ para o overlay dos botões */
-      position:relative;
-      #adVideo{ position:relative; z-index:1; }
+      position:relative; /* overlay dos botões */
     }
+
+    #adVideo{ position:relative; z-index:1; }
+
     video{
       width:100%;
       height:100%;
@@ -520,7 +544,9 @@
     }
     video.fit-contain{ object-fit:contain; }
 
-    /* ===== Controles do vídeo (TV) ===== */
+    /* =========================================================
+       CONTROLES DE VÍDEO — TV/PC (4 botões)
+       ========================================================= */
     .tvVideoControls{
       position:absolute;
       right:12px;
@@ -530,28 +556,67 @@
       z-index:50;
       user-select:none;
       pointer-events:auto;
+      padding:8px;
+      border-radius:16px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 26px rgba(0,0,0,.45);
     }
-    .tvBtn{
-      border:1px solid rgba(255,255,255,.22);
-      background:rgba(0,0,0,.35);
-      color:#fff;
-      padding:10px 12px;
-      border-radius:12px;
-      font-size:16px;
-      line-height:1;
-      cursor:pointer;
-    }
-    .tvBtn:active{ transform:scale(.98); }
-    @media (max-width: 980px){
-  .tvVideoControls{
-    display:flex !important;
-    right:10px;
-    bottom:10px;
-    gap:6px;
-  }
-}
 
-    /* ===== FOOTER (TICKER) ===== */
+    .tvBtn{
+      min-width: 44px;
+      height: 40px;
+      padding: 0 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+      color: rgba(255,255,255,.95);
+      font-weight: 950;
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.18),
+        0 10px 18px rgba(0,0,0,.35);
+      transition: transform .12s ease, filter .12s ease, border-color .12s ease;
+    }
+    .tvBtn:hover{ filter: brightness(1.08); border-color: rgba(255,255,255,.24); }
+    .tvBtn:active{ transform: translateY(1px) scale(.98); }
+
+    /* =========================================================
+       CONTROLES DE VÍDEO — CELULAR (só 2 botões)
+       ========================================================= */
+    @media (max-width: 980px){
+      /* esconde os 2 de 10s */
+      #btnBack10, #btnFwd10{ display:none !important; }
+
+      /* mantém prev/next visíveis */
+      #btnPrevAd, #btnNextAd{ display:flex !important; }
+
+      .tvVideoControls{
+        right:10px;
+        bottom:10px;
+        gap:8px;
+        padding:6px;
+        border-radius:14px;
+      }
+      .tvBtn{
+        min-width: 40px;
+        height: 36px;
+        border-radius: 12px;
+        font-size: 14px;
+        padding: 0 10px;
+      }
+    }
+
+    /* =========================================================
+       FOOTER (TICKER)
+       ========================================================= */
     .ticker{
       flex:0 0 auto;
       width:100%;
@@ -628,7 +693,9 @@
       }
     }
 
-    /* ===== MOBILE LAYOUT ===== */
+    /* =========================================================
+       MOBILE LAYOUT (TOPBAR centralizado + linha compacta)
+       ========================================================= */
     @media (max-width: 980px){
       body{
         overflow:auto;
@@ -636,19 +703,31 @@
         padding-bottom: 0;
       }
       .container{ min-height:auto; }
+
       .topbar{
-  flex-wrap:wrap;
-  justify-content:center;   /* centraliza no celular */
-  text-align:center;
-}
-      .condoCenter{
-  display:none !important;  /* remove o 2º hífen e libera espaço */
-}
+        flex-wrap:wrap;
+        justify-content:center;
+        text-align:center;
+      }
+
+      /* remove o “2º hífen sozinho” (condomínio some no mobile) */
+      .condoCenter{ display:none !important; }
+
+      .brand{
+        width:100%;
+        align-items:center;
+        text-align:center;
+      }
+
+      /* badges somem e entra a linha compacta */
+      .rightInfo{ display:none !important; }
+      .subMobileLine{ display:flex; width:100%; }
+
       .main{ display:flex; flex-direction:column; }
       section.panel{ order:1; }
       #adBox{ order:2; min-height:0; }
       .panel{ min-height:auto; }
-      .avisos{ grid-template-rows: repeat(4, minmax(0, 1fr)); overflow:hidden; }
+
       .ticker{
         position:sticky;
         bottom:0;
@@ -656,179 +735,111 @@
         margin-bottom: 0;
         padding-bottom: max(12px, env(safe-area-inset-bottom));
       }
-      .brand{
-  width:100%;
-  align-items:center;
-  text-align:center;
-}
-
-.rightInfo{
-  width:100%;
-  justify-content:center;
-  gap:10px;
-}
     }
 
-    /* ===========================
-       MODO TV / FULLSCREEN (COMPLETO)
-       =========================== */
+    /* =========================================================
+       MODO TV (grande)
+       ========================================================= */
     @media (min-width: 1200px){
-
       .topbar{
         padding: 2.2vh 2.2vw;
         gap: 1.4vw;
         border-radius: 24px;
       }
-
       .brand .title{
         font-size: clamp(34px, 3.2vw, 56px);
         line-height: 1.05;
       }
-
       .brand .sub{
         font-size: clamp(18px, 1.6vw, 28px);
       }
-
       .condoCenter{
         font-size: clamp(20px, 1.8vw, 32px);
       }
-
       .badge{
         font-size: clamp(16px, 1.3vw, 22px);
         padding: 12px 16px;
       }
-
       #clock{
         font-size: clamp(30px, 2.8vw, 50px);
         letter-spacing: 1px;
       }
-
       .btnInstall{
         font-size: clamp(16px, 1.2vw, 22px);
         padding: 12px 16px;
       }
-
-      .main{
-        gap: 1.2vw;
-      }
-
-      .panel{
-        border-radius: 26px;
-      }
-
-      .panelHead{
-        padding: 1.4vh 1.2vw;
-      }
-
+      .main{ gap: 1.2vw; }
+      .panel{ border-radius: 26px; }
+      .panelHead{ padding: 1.4vh 1.2vw; }
       .panelTitle{
         font-size: clamp(26px, 2.4vw, 44px);
         letter-spacing: 1px;
       }
-
       .pill{
         font-size: clamp(18px, 1.6vw, 28px);
         padding: 10px 18px;
       }
-
       .avisos{
         padding: 1.4vw;
         gap: 1.0vw;
       }
-
       .aviso{
         padding: 2.6vh 2.0vw;
         gap: 1.4vh;
         border-radius: 24px;
       }
-
       .aviso .t{
         font-size: clamp(32px, 3.2vw, 58px);
         line-height: 1.15;
       }
-
       .aviso .d{
         font-size: clamp(24px, 2.4vw, 44px);
         line-height: 1.35;
       }
-
       .metaLine{
         font-size: clamp(20px, 2.0vw, 34px);
         gap: 18px;
       }
-
       .prioBadge{
         font-size: clamp(16px, 1.6vw, 26px);
         padding: 10px 18px;
       }
-
       .adBody{
         padding: 1.2vw;
         gap: 1.0vw;
       }
-
       .adLabel{
         font-size: clamp(18px, 1.5vw, 26px);
         padding: 14px 16px;
       }
-
       .videoWrap{
         max-height: 44vh;
         border-radius: 16px;
       }
-
-      #newsBody{
-        max-height: 34vh;
-        padding: 1.0vw 1.0vw 1.2vw;
-        gap: 0.9vw;
-      }
-
-      .newsHeader{
-        font-size: clamp(14px, 1.1vw, 18px);
-        margin-bottom: 10px;
-        padding-left: 6px;
-      }
-
-      .newsItem{
-        padding: 1.0vw;
-        border-radius: 16px;
-      }
-
-      .newsItem .h{
-        font-size: clamp(22px, 1.8vw, 30px);
-        line-height: 1.2;
-      }
-
-      .newsItem .p{
-        font-size: clamp(18px, 1.5vw, 26px);
-        line-height: 1.35;
-      }
-
       .ticker{
         padding: 1.4vh 1.2vw;
         border-radius: 24px;
         gap: 10px;
       }
-
       .tickerIcon{
         font-size: clamp(26px, 2.2vw, 38px);
       }
-
       #dataBiblica{
         font-size: clamp(18px, 1.6vw, 28px);
       }
-
       #ref{
         font-size: clamp(18px, 1.6vw, 28px);
         line-height: 1.25;
       }
-
       .wxInline{
         font-size: clamp(16px, 1.4vw, 26px);
         gap: 10px;
       }
     }
 
-    /* ===== NEWS (Mensagens da Cidade) ===== */
+    /* =========================================================
+       NEWS (Mensagens da Cidade)
+       ========================================================= */
     #newsBox{
       background: var(--news-bg);
       border: 1px solid var(--news-border);
@@ -852,23 +863,7 @@
       background:rgba(12,35,56,.35);
     }
 
-    .newsTitle{
-      font-weight:950;
-      color:rgba(234,242,255,.92);
-    }
-
-    #newsPill{
-      font-family: var(--font-ui);
-      font-weight: 800;
-      font-size: 12px;
-      color: var(--news-title);
-      background: var(--news-chip-bg);
-      border: 1px solid var(--news-chip-border);
-      padding: 6px 10px;
-      border-radius: 999px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
-    }
-
+    .newsTitle{ font-weight:950; color:rgba(234,242,255,.92); }
     #newsPill{ display:none !important; }
 
     #newsBody{
@@ -910,22 +905,10 @@
       line-height: 1.25;
       letter-spacing: .2px;
       color: var(--news-title);
-      margin: 0 0 6px 0;
-      display:block;
-      overflow:visible;
-      white-space:normal;
-    }
-
-    .newsItem .p{
-      font-family: var(--font-ui);
-      font-weight: 650;
-      font-size: calc(14px * var(--ui));
-      line-height: 1.35;
-      color: var(--news-text);
       margin: 0;
       display:block;
-      overflow:visible;
       white-space:normal;
+      overflow:visible;
     }
 
     .newsHeader{
@@ -933,88 +916,6 @@
       color:rgba(255,255,255,.55);
       margin-bottom:8px;
       padding-left:4px;
-    }
-
-    /* PATCH 1 (SEGURO) */
-    #titulo{
-      white-space: normal !important;
-      overflow: visible !important;
-      text-overflow: unset !important;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      line-height: 1.08;
-    }
-
-    #avisos .aviso .t,
-    #avisos .aviso .d{
-      white-space: normal !important;
-      overflow: visible !important;
-      text-overflow: unset !important;
-      overflow-wrap: anywhere !important;
-      word-break: break-word !important;
-      -webkit-line-clamp: unset !important;
-      line-clamp: unset !important;
-      max-height: none !important;
-    }
-
-    #avisos .metaLine{
-      font-size: 0.60em !important;
-      line-height: 1.15 !important;
-      gap: 10px !important;
-    }
-    #avisos .metaLine .metaItem,
-    #avisos .metaLine .prioBadge{
-      font-size: 1em !important;
-    }
-
-    @media (max-width: 520px){
-      #avisos .metaLine{ font-size: 0.70em !important; }
-    }
-    @media (min-width: 1200px){
-      #avisos .metaLine{ font-size: 0.70em !important; }
-    }
-
-    /* Rodapé sempre visível (PC/TV) */
-    @media (min-width: 981px){
-      :root{ --tickerH: 150px; }
-      @media (min-width: 1200px){
-        :root{ --tickerH: 160px; }
-      }
-
-      .wrap, .container{ min-height: 100vh; }
-
-      .main{
-        height: calc(100vh - var(--tickerH)) !important;
-        overflow: hidden !important;
-      }
-
-      #avisos{
-        max-height: 100% !important;
-        overflow: hidden !important;
-        padding-right: 0 !important;
-      }
-
-      .ticker{
-        position: sticky;
-        bottom: 0;
-        z-index: 20;
-      }
-    }
-
-    /* TV 32" — textos fixos */
-    #avisos .aviso .t{
-      font-size: clamp(26px, 2.4vw, 36px) !important;
-      line-height: 1.15 !important;
-      font-weight: 900 !important;
-    }
-    #avisos .aviso .d{
-      font-size: clamp(18px, 1.8vw, 22px) !important;
-      line-height: 1.35 !important;
-    }
-    #avisos .aviso{
-      --tScale: 1 !important;
-      --dScale: 1 !important;
-      transform: none !important;
     }
   </style>
   <!-- =========================================================
@@ -1031,8 +932,18 @@
            ========================================================= -->
       <div class="topbar">
         <div class="brand">
-          <div class="title" id="titulo">Comunica Síndico — Condôminos</div>
-          <div class="sub" id="subtitulo">Painel informativo</div>
+          <div class="title" id="titulo">Comunica Síndico - Condôminos</div>
+
+          <div class="sub" id="subtitulo">Painel Informativo</div>
+
+          <!-- CELULAR: linha compacta (modelo que você pediu) -->
+          <div class="subMobileLine" id="subMobileLine">
+            <span id="subInfoLabel">Painel Informativo</span>
+            <span class="sep">º</span>
+            <span id="statusJsonMini">Carregando...</span>
+            <span class="sep">º</span>
+            <span id="clockMini">--:--</span>
+          </div>
         </div>
 
         <div class="condoCenter" id="condoCenter"></div>
@@ -1057,7 +968,7 @@
 
       <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
-      <!-- =========================================================
+            <!-- =========================================================
            INÍCIO — MAIN
            ========================================================= -->
       <div class="main">
@@ -1078,15 +989,16 @@
           <div class="adBody">
             <div class="adCard">
               <div class="adLabel" id="adLabel">Anúncio</div>
+
               <div class="videoWrap">
                 <video id="adVideo" autoplay muted playsinline></video>
 
-                <!-- CONTROLES TV (não aparece no celular) -->
+                <!-- CONTROLES: PC/TV = 4 botões | CELULAR = 2 botões (via CSS) -->
                 <div class="tvVideoControls" id="tvVideoControls" aria-hidden="true">
-                  <button class="tvBtn" id="btnPrevAd" title="Vídeo anterior">◀</button>
-                  <button class="tvBtn" id="btnBack10" title="Voltar 10s">⟲10s</button>
-                  <button class="tvBtn" id="btnFwd10" title="Avançar 10s">10s⟳</button>
-                  <button class="tvBtn" id="btnNextAd" title="Próximo vídeo">▶</button>
+                  <button class="tvBtn" id="btnPrevAd" title="Vídeo anterior" aria-label="Vídeo anterior">⟨</button>
+                  <button class="tvBtn" id="btnBack10" title="Voltar 10s" aria-label="Voltar 10 segundos">↶10</button>
+                  <button class="tvBtn" id="btnFwd10" title="Avançar 10s" aria-label="Avançar 10 segundos">10↷</button>
+                  <button class="tvBtn" id="btnNextAd" title="Próximo vídeo" aria-label="Próximo vídeo">⟩</button>
                 </div>
               </div>
             </div>
@@ -1141,11 +1053,13 @@
     </div>
   </div>
 
-  <!-- =========================================================
+    <!-- =========================================================
        INÍCIO — JS (APP / UI / DADOS)
        ========================================================= -->
   <script>
-    /* ===== INSTALL APP ===== */
+    /* =========================================================
+       INSTALL APP
+       ========================================================= */
     let deferredPrompt = null;
 
     function mostrarBotaoInstalar(show){
@@ -1171,7 +1085,9 @@
       mostrarBotaoInstalar(false);
     }
 
-    /* ===== HELPERS ===== */
+    /* =========================================================
+       HELPERS
+       ========================================================= */
     function prioridadeClass(p){
       const x = String(p || "").toLowerCase();
       if (x === "alta") return "alta";
@@ -1190,7 +1106,11 @@
 
     function refreshPage(){ location.reload(); }
 
-    /* ===== CLOCK ===== */
+    function isMobile(){ return window.matchMedia("(max-width: 980px)").matches; }
+
+    /* =========================================================
+       CLOCK (ATUALIZA 2 RELÓGIOS)
+       ========================================================= */
     function footerDateTimeString(d){
       const dd = pad2(d.getDate());
       const mm = pad2(d.getMonth()+1);
@@ -1199,13 +1119,17 @@
     }
     function tickClock(){
       const d = new Date();
-      setText("clock", `${pad2(d.getHours())}:${pad2(d.getMinutes())}`);
+      const hhmm = `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+      setText("clock", hhmm);
+      setText("clockMini", hhmm);
       setText("footerDT", footerDateTimeString(d));
     }
     tickClock();
     setInterval(tickClock, 1000);
 
-    /* ===== BIND UI ===== */
+    /* =========================================================
+       BIND UI
+       ========================================================= */
     (function bindUI(){
       const btn = document.getElementById("btnInstalarApp");
       if(btn) btn.onclick = instalarApp;
@@ -1217,7 +1141,9 @@
       }
     })();
 
-    /* ===== ROTATION ===== */
+    /* =========================================================
+       ROTATION
+       ========================================================= */
     let ROT_TIMER = null;
     let ROT_STATE = { page: 0, totalPages: 1, paused: false };
 
@@ -1343,7 +1269,9 @@
       }
     }
 
-       /* ===== VERSÍCULO ===== */
+    /* =========================================================
+       VERSÍCULO
+       ========================================================= */
     function hojeKeyMMDD() {
       const d = new Date();
       const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -1366,7 +1294,9 @@
       } catch (e) {}
     }
 
-    /* ===== CLIMA ===== */
+    /* =========================================================
+       CLIMA
+       ========================================================= */
     function wxEmojiFromCode(code){
       if (code === 0) return "☀️";
       if ([1,2,3].includes(code)) return "⛅";
@@ -1422,15 +1352,11 @@
       }
     }
 
-    /* ===== PUBLICIDADE ===== */
-
-    // Estado do player (não reseta ao trocar página/rotacionar)
+    /* =========================================================
+       PUBLICIDADE — ESTADO + CONTROLES
+       ========================================================= */
     const AD_STATE_KEY = "CS_AD_STATE_V1";
     let AD_TIMER = null;
-
-    function isMobile(){
-      return window.matchMedia("(max-width: 980px)").matches;
-    }
 
     function adLoadState(){
       try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); }
@@ -1464,58 +1390,54 @@
       el.textContent = String(t);
     }
 
-   function bindTvVideoControls(pub){
-  const v = document.getElementById("adVideo");
-  const controls = document.getElementById("tvVideoControls");
-  if(!v || !controls) return;
+    function bindTvVideoControls(pub){
+      const v = document.getElementById("adVideo");
+      const controls = document.getElementById("tvVideoControls");
+      if(!v || !controls) return;
 
-  // agora aparece em qualquer tela
-  controls.style.display = "flex";
+      controls.style.display = "flex";
 
-  const bPrev = document.getElementById("btnPrevAd");
-  const bNext = document.getElementById("btnNextAd");
-  const bBack = document.getElementById("btnBack10");
-  const bFwd  = document.getElementById("btnFwd10");
+      const bPrev = document.getElementById("btnPrevAd");
+      const bNext = document.getElementById("btnNextAd");
+      const bBack = document.getElementById("btnBack10");
+      const bFwd  = document.getElementById("btnFwd10");
 
-  function setIdx(nextIdx){
-    const list = Array.isArray(pub?.videos) ? pub.videos : [];
-    if(!list.length) return;
+      function setIdx(nextIdx){
+        const list = Array.isArray(pub?.videos) ? pub.videos : [];
+        if(!list.length) return;
 
-    let i = nextIdx;
-    if(i < 0) i = list.length - 1;
-    if(i >= list.length) i = 0;
+        let i = nextIdx;
+        if(i < 0) i = list.length - 1;
+        if(i >= list.length) i = 0;
 
-    const st = adLoadState();
-    st.idx = i;
-    st.t = 0;
-    st.paused = false;
-    adSaveState(st);
+        const st = adLoadState();
+        st.idx = i;
+        st.t = 0;
+        st.paused = false;
+        adSaveState(st);
 
-    // troca e toca
-    adPlayByState(pub, true);
-  }
+        adPlayByState(pub, true);
+      }
 
-  if(bPrev) bPrev.onclick = () => {
-    const st = adLoadState();
-    setIdx((Number.isFinite(st.idx) ? st.idx : 0) - 1);
-  };
-  if(bNext) bNext.onclick = () => {
-    const st = adLoadState();
-    setIdx((Number.isFinite(st.idx) ? st.idx : 0) + 1);
-  };
+      if(bPrev) bPrev.onclick = () => {
+        const st = adLoadState();
+        setIdx((Number.isFinite(st.idx) ? st.idx : 0) - 1);
+      };
+      if(bNext) bNext.onclick = () => {
+        const st = adLoadState();
+        setIdx((Number.isFinite(st.idx) ? st.idx : 0) + 1);
+      };
 
-  // seek pode falhar em alguns streams, mas em mp4 local funciona bem
-  if(bBack) bBack.onclick = () => adSeek(-10);
-  if(bFwd)  bFwd.onclick  = () => adSeek(+10);
+      if(bBack) bBack.onclick = () => adSeek(-10);
+      if(bFwd)  bFwd.onclick  = () => adSeek(+10);
 
-  // atalho teclado só em PC/TV
-  window.addEventListener("keydown", (e)=>{
-    if(isMobile()) return;
-    const k = String(e.key || "").toLowerCase();
-    if(k === "arrowleft") setIdx((adLoadState().idx ?? 0) - 1);
-    if(k === "arrowright") setIdx((adLoadState().idx ?? 0) + 1);
-  });
-}
+      window.addEventListener("keydown", (e)=>{
+        if(isMobile()) return;
+        const k = String(e.key || "").toLowerCase();
+        if(k === "arrowleft") setIdx((adLoadState().idx ?? 0) - 1);
+        if(k === "arrowright") setIdx((adLoadState().idx ?? 0) + 1);
+      });
+    }
 
     function adApplyFitContain(v){
       try{
@@ -1534,7 +1456,6 @@
       adSaveState(st);
     }
 
-    // toca vídeo baseado no estado salvo (idx + currentTime)
     function adPlayByState(pub, forceFromStart){
       const adVideo = document.getElementById("adVideo");
       const adLabel = document.getElementById("adLabel");
@@ -1557,7 +1478,6 @@
       adLabel.textContent = String(item?.anunciante || "Anúncio");
       if (adPill) adPill.textContent = "No ar";
 
-      // NÃO resetar desnecessariamente: só troca src se mudou
       const cur = adVideo.currentSrc || adVideo.src || "";
       const baseCur = cur.split("?")[0];
       const baseNext = finalSrc.split("?")[0];
@@ -1583,7 +1503,6 @@
         }catch(e){}
       };
 
-      // se metadados já carregados, toca já
       if (adVideo.readyState >= 1) {
         adApplyFitContain(adVideo);
         playNow();
@@ -1594,17 +1513,16 @@
         };
       }
 
-      // salva idx atual
       st.idx = idx;
       st.paused = false;
       adSaveState(st);
     }
- function iniciarPublicidade(data){
+
+    function iniciarPublicidade(data){
       const pub = data?.publicidade;
       const adBox = document.getElementById("adBox");
       const adVideo = document.getElementById("adVideo");
       const adLabel = document.getElementById("adLabel");
-      const adPill = document.getElementById("adPill");
 
       if (!adBox || !adVideo || !adLabel) return;
 
@@ -1613,145 +1531,25 @@
         return;
       }
 
-      // garante overlay existir (TV)
- (function ensureControls(){
-        const wrap = adVideo?.closest(".videoWrap");
-        if(!wrap) return;
-        wrap.style.position = "relative";
-        if(!document.getElementById("tvVideoControls")){
-          const div = document.createElement("div");
-          div.className = "tvVideoControls";
-          div.id = "tvVideoControls";
-          div.innerHTML = `
-  <button class="tvBtn" id="btnPrevAd" title="Vídeo anterior" aria-label="Vídeo anterior">⟨</button>
-  <button class="tvBtn" id="btnBack10" title="Voltar 10s" aria-label="Voltar 10 segundos">↶10</button>
-  <button class="tvBtn" id="btnFwd10" title="Avançar 10s" aria-label="Avançar 10 segundos">10↷</button>
-  <button class="tvBtn" id="btnNextAd" title="Próximo vídeo" aria-label="Próximo vídeo">⟩</button>
-`;
-          wrap.appendChild(div);
-        }
-      })();
-
-      // estilo básico dos controles (seu CSS pode já ter; aqui é “seguro”)
-   (function ensureControlsCss(){
-        if(document.getElementById("tvControlsCss")) return;
-        const s = document.createElement("style");
-        s.id = "tvControlsCss";
-        s.textContent = `
-  
-/* BLINDADO: no celular mostrar só Anterior e Próximo */
-@media (max-width: 980px){
-
-  /* esconde todos os botões */
-  .tvVideoControls .tvBtn{
-    display:none !important;
-  }
-
-  /* mostra apenas os dois desejados */
-  #btnPrevAd,
-  #btnNextAd{
-    display:flex !important;
-  }
-
-}
-  .tvVideoControls{
-    position:absolute;
-    right:12px;
-    bottom:12px;
-    display:flex;
-    gap:10px;
-    z-index:60;
-    user-select:none;
-    padding:8px;
-    border-radius:16px;
-    background: rgba(0,0,0,.18);
-    border: 1px solid rgba(255,255,255,.14);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 10px 26px rgba(0,0,0,.45);
-  }
-
-  .tvBtn{
-    min-width: 44px;
-    height: 40px;
-    padding: 0 12px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,.18);
-    background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
-    color: rgba(255,255,255,.95);
-    font-weight: 950;
-    font-size: 16px;
-    line-height: 1;
-    cursor: pointer;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.18),
-      0 10px 18px rgba(0,0,0,.35);
-    transition: transform .12s ease, filter .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
-  }
-
-  .tvBtn:hover{
-    filter: brightness(1.08);
-    border-color: rgba(255,255,255,.24);
-  }
-
-  .tvBtn:active{
-    transform: translateY(1px) scale(.98);
-    filter: brightness(.98);
-  }
-
-  .tvBtn:focus{
-    outline: none;
-    box-shadow:
-      0 0 0 3px rgba(120,190,255,.25),
-      inset 0 1px 0 rgba(255,255,255,.18),
-      0 10px 18px rgba(0,0,0,.35);
-  }
-
-  /* Celular: menor e discreto */
-  @media (max-width: 980px){
-    .tvVideoControls{
-      right:10px;
-      bottom:10px;
-      gap:8px;
-      padding:6px;
-      border-radius:14px;
-    }
-    .tvBtn{
-      min-width: 40px;
-      height: 36px;
-      border-radius: 12px;
-      font-size: 14px;
-      padding: 0 10px;
-    }
-  }
-`;
-        document.head.appendChild(s);
-      })();
-
-      // bind botões TV
+      // bind botões
       bindTvVideoControls(pub);
-      // iPhone: 1 toque libera o play (quando autoplay é bloqueado)
-adVideo.addEventListener("click", () => {
-  try{
-    const st = adLoadState();
-    st.paused = false;
-    adSaveState(st);
-  }catch(e){}
-  adVideo.play().catch(()=>{});
-}, { passive:true });
 
-      // evento para salvar tempo
+      // iPhone: 1 toque libera play (quando autoplay bloqueia)
+      adVideo.addEventListener("click", () => {
+        try{
+          const st = adLoadState();
+          st.paused = false;
+          adSaveState(st);
+        }catch(e){}
+        adVideo.play().catch(()=>{});
+      }, { passive:true });
+
+      // salvar tempo (PC/TV e também celular quando pausa/troca aba)
       adVideo.addEventListener("timeupdate", ()=>{ if(!isMobile()) adSavePlayback(); }, {passive:true});
       adVideo.addEventListener("pause", adSavePlayback, {passive:true});
       adVideo.addEventListener("play", adSavePlayback, {passive:true});
-      document.addEventListener("visibilitychange", ()=>{
-        if(document.hidden) adSavePlayback();
-      });
+      document.addEventListener("visibilitychange", ()=>{ if(document.hidden) adSavePlayback(); });
 
-      // rotação automática (mas preservando estado)
       const intervalMs = Math.max(3, Number(pub.intervaloSeg || 10)) * 1000;
 
       function nextIdx(){
@@ -1767,31 +1565,25 @@ adVideo.addEventListener("click", () => {
         adPlayByState(pub, true);
       }
 
-      // se já tem timer, limpa
       if (AD_TIMER){ clearInterval(AD_TIMER); AD_TIMER = null; }
 
-      // mostra box
       adBox.style.display = "flex";
-
-      // toca a partir do estado salvo (NÃO volta pro 1º)
       adPlayByState(pub, false);
 
-      // timer de troca (mantém automático)
       AD_TIMER = setInterval(()=>{
-        // se usuário pausou manualmente, respeita
         const st = adLoadState();
         if(st.paused) return;
         nextIdx();
       }, intervalMs);
 
-      // fallback erro
       adVideo.onerror = () => setTimeout(()=>nextIdx(), 1200);
 
-      // ✅ notícias só quando bloco está visível
       carregarMensagensCidade();
     }
 
-    /* ===== MENSAGENS DA CIDADE ===== */
+    /* =========================================================
+       MENSAGENS DA CIDADE
+       ========================================================= */
     function decodeHtmlEntities_(s){
       const t = document.createElement("textarea");
       t.innerHTML = String(s ?? "");
@@ -1833,7 +1625,6 @@ adVideo.addEventListener("click", () => {
           newsBody.innerHTML = `
             <div class="newsItem">
               <p class="h">Sem mensagens no momento</p>
-              <p class="p">Aguardando atualização do feed.</p>
             </div>`;
           newsBox.style.display = "flex";
           return;
@@ -1851,16 +1642,9 @@ adVideo.addEventListener("click", () => {
         items.slice(0,8).forEach(x=>{
           let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
           titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
-          titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim(); // remove " | Site" no final
+          titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
           if(!titulo) titulo = "Mensagem";
-          let texto   = normalizeText_(x.texto || x.text || x.description || "");
 
-          texto = texto.replace(/<[^>]*>/g,"").trim();
-          if(texto.toLowerCase().startsWith(titulo.toLowerCase())){
-            texto = texto.slice(titulo.length).trim();
-          }
-
-          // mostra só o título (como você queria no exemplo anterior)
           html += `
             <div class="newsItem">
               <p class="h">${escapeHtml(titulo)}</p>
@@ -1872,62 +1656,59 @@ adVideo.addEventListener("click", () => {
         newsBox.style.display = "flex";
 
       }catch(e){
-        console.warn("Falha ao carregar mensagens_cidade.json:", e);
         newsBody.innerHTML = `
           <div class="newsHeader">Fonte: news.google.com — Offline</div>
           <div class="newsItem">
             <p class="h">Mensagens indisponíveis</p>
-            <p class="p">Não foi possível atualizar as notícias no momento.</p>
           </div>
         `;
         newsBox.style.display = "flex";
       }
     }
 
+    /* =========================================================
+       TOPBAR IMAGEM POR HORÁRIO / FRIO
+       ========================================================= */
     function aplicarImagemTopbar(data){
-  const cidade = String(data?.clima?.cidade || "").toLowerCase();
-  const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
+      const cidade = String(data?.clima?.cidade || "").toLowerCase();
+      const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
 
-  // fallback sempre válido
-  let img = "./img/tubarao01.jpg";
+      let img = "./img/tubarao01.jpg";
 
-  // regras:
-  // - NOITE: 18h–04h
-  // - FRIO: temp <= 16°C (se já tiver clima carregado)
-  const h = new Date().getHours();
+      const h = new Date().getHours();
 
-  // tenta pegar temperatura do texto do rodapé (se já tiver)
-  let temp = null;
-  try{
-    const t = String(document.getElementById("wxTextInline")?.textContent || "");
-    const m = t.match(/(-?\d+)\s*°C/i);
-    if(m) temp = parseInt(m[1], 10);
-  }catch(e){}
+      let temp = null;
+      try{
+        const t = String(document.getElementById("wxTextInline")?.textContent || "");
+        const m = t.match(/(-?\d+)\s*°C/i);
+        if(m) temp = parseInt(m[1], 10);
+      }catch(e){}
 
-  const estaNoite = (h >= 18 || h <= 4);
-  const estaFrio = (typeof temp === "number" && !isNaN(temp) && temp <= 16);
+      const estaNoite = (h >= 18 || h <= 4);
+      const estaFrio = (typeof temp === "number" && !isNaN(temp) && temp <= 16);
 
-  if(isTubarao){
-    if(estaNoite) img = "./img/tubarao_noite.jpg";
-    else if(estaFrio) img = "./img/tubarao_frio.jpg";
-    else img = "./img/tubarao01.jpg";
-  }
+      if(isTubarao){
+        if(estaNoite) img = "./img/tubarao_noite.jpg";
+        else if(estaFrio) img = "./img/tubarao_frio.jpg";
+        else img = "./img/tubarao01.jpg";
+      }
 
-  // fallback automático se a imagem escolhida não existir
-  const test = new Image();
-  test.onload = () => {
-    document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
-  };
-  test.onerror = () => {
-    document.documentElement.style.setProperty("--topbar-bg", `url('./img/tubarao01.jpg')`);
-  };
-  test.src = img + "?ts=" + Date.now();
-}
-    
+      const test = new Image();
+      test.onload = () => {
+        document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
+      };
+      test.onerror = () => {
+        document.documentElement.style.setProperty("--topbar-bg", `url('./img/tubarao01.jpg')`);
+      };
+      test.src = img + "?ts=" + Date.now();
+    }
 
-    /* ===== LOAD ALL ===== */
+    /* =========================================================
+       LOAD ALL
+       ========================================================= */
     async function loadAll(){
       const status = document.getElementById("statusJson");
+      const statusMini = document.getElementById("statusJsonMini");
       const dot = document.getElementById("dotOnline");
 
       try{
@@ -1938,10 +1719,10 @@ adVideo.addEventListener("click", () => {
         const data = await res.json();
         window.__lastDataForTopbar = data;
 
-        
         setText("condoCenter", safeText(data.condominio || "—"));
 
         if (status) status.textContent = "Atualizado";
+        if (statusMini) statusMini.textContent = "Atualizado";
         if (dot) dot.style.background = "#44d07a";
 
         setCityTitleFromConfig(data);
@@ -1959,27 +1740,26 @@ adVideo.addEventListener("click", () => {
         await carregarClima(data);
         aplicarImagemTopbar(data);
 
-        // ✅ NÃO reinicia publicidade se já está ativa com o mesmo set de vídeos
         iniciarPublicidade(data);
 
         return data;
 
       } catch(e){
-        console.warn("Falha ao carregar data.json:", e);
         if (status) status.textContent = "Offline";
+        if (statusMini) statusMini.textContent = "Offline";
         if (dot) dot.style.background = "#ff5a5a";
         return null;
       }
     }
 
     loadAll();
-    setInterval(() => {
-  try{
-    if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar);
-  }catch(e){}
-}, 60000);
 
-</script>
+    setInterval(() => {
+      try{
+        if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar);
+      }catch(e){}
+    }, 60000);
+  </script>
   <!-- =========================================================
        FIM — JS (APP / UI / DADOS)
        ========================================================= -->
