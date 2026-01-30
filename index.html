@@ -53,6 +53,9 @@
       --sar: env(safe-area-inset-right);
       --sab: env(safe-area-inset-bottom);
       --sal: env(safe-area-inset-left);
+      --ui: clamp(1, calc(100vmin / 900), 2.10);
+      --ui2: clamp(1, calc(100vmin / 900), 2.40);
+
 
       /* NEWS premium tokens */
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
@@ -130,7 +133,7 @@
     }
     .brand .title{
       margin:0;
-      font-size:22px;
+      font-size: calc(22px * var(--ui2));
       font-weight:900;
       letter-spacing:.2px;
       white-space:nowrap;
@@ -139,7 +142,7 @@
     }
     .brand .sub{
       margin:0;
-      font-size:12.5px;
+      font-size: calc(12.5px * var(--ui));
       color:var(--muted);
       font-weight:700;
       white-space:nowrap;
@@ -178,7 +181,7 @@
     }
     .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
     #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
-    #clock{font-size:22px;font-weight:950;letter-spacing:.6px;color:#fff}
+    font-size: calc(22px * var(--ui2));
 
     .btnInstall{
       border:1px solid rgba(255,255,255,.18);
@@ -238,7 +241,7 @@
 
     .panelTitle{
       display:flex;align-items:center;gap:10px;
-      font-size:13px;
+      font-size: calc(13px * var(--ui));
       font-weight:950;
       letter-spacing:.6px;
       color:rgba(234,242,255,.95);
@@ -349,7 +352,7 @@
     .aviso .t{
   margin:0;
   font-weight:900;
-  font-size:clamp(18px, 2.4vw, 28px);   /* << aumentei */
+  font-size: calc(clamp(18px, 2.4vw, 34px) * var(--ui));
   letter-spacing:.3px;
   color:#fff;
   text-shadow:0 1px 2px rgba(0,0,0,.6);
@@ -369,7 +372,7 @@
   margin:0;
   color:#e0ecff;
   line-height:1.35;
-  font-size:clamp(15px, 2.0vw, 22px);  /* << aumentei */
+  font-size: calc(clamp(15px, 2.0vw, 28px) * var(--ui));
   display:-webkit-box;
   -webkit-line-clamp: 6;               /* << era 4 */
   -webkit-box-orient: vertical;
@@ -383,7 +386,7 @@
   gap:10px;
   align-items:center;
   color:rgba(234,242,255,.92);
-  font-size:clamp(13px, 1.8vw, 18px);  /* << aumentei */
+  font-size: calc(clamp(13px, 1.8vw, 22px) * var(--ui));
   font-weight:900;
 }
 
@@ -400,7 +403,7 @@
       font-weight:950;
       letter-spacing:.4px;
       text-transform:uppercase;
-      font-size:14px;
+      font-size: calc(12px * var(--ui));
       line-height:1;
       border:1px solid rgba(255,255,255,.22);
       background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
@@ -518,13 +521,13 @@
       font-weight:950;
       white-space:nowrap;
       color:rgba(234,242,255,.95);
-      font-size:clamp(13px, 1.8vw, 16px);
+      font-size: calc(16px * var(--ui2));
       flex:0 0 auto;
     }
     #ref{
       color:rgba(234,242,255,.88);
       font-weight:850;
-      font-size:clamp(14px, 2.0vw, 18px);
+      font-size: calc(16px * var(--ui2));
       flex:1 1 auto;
       min-width:0;
       white-space:nowrap;
@@ -545,6 +548,7 @@
         flex: 1 1 100%;
         justify-content:flex-start;
         margin-left: 0;
+        font-size: calc(14px * var(--ui2));
       }
     }
 
@@ -675,7 +679,7 @@
     .newsItem .h{
   font-family: var(--font-soft);
   font-weight: 900;
-  font-size: 16px;              /* << aumentei */
+  font-size: calc(16px * var(--ui));
   line-height: 1.25;
   letter-spacing: .2px;
   color: var(--news-title);
@@ -689,7 +693,7 @@
    .newsItem .p{
   font-family: var(--font-ui);
   font-weight: 650;
-  font-size: 14px;              /* << aumentei */
+  font-size: calc(14px * var(--ui));
   line-height: 1.35;
   color: var(--news-text);
   margin: 0;
@@ -700,7 +704,8 @@
 }
 
     .newsHeader{
-      font-size:0.65em;
+      font-size: calc(11px * var(--ui));
+  
       color:rgba(255,255,255,.55);
       margin-bottom:8px;
       padding-left:4px;
