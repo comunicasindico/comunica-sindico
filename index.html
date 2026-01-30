@@ -1,23 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- =========================================================
-       INÍCIO — HEAD / CANONICAL (remove ?pwa= etc)
-       ========================================================= -->
   <link rel="canonical" href="./">
   <script>
   (function () {
     try {
       const u = new URL(location.href);
-
-      // Remove qualquer query (?pwa=1, ?ts=..., etc) para não "duplicar" o app
       if (u.search) {
         u.search = "";
         location.replace(u.toString());
         return;
       }
-
-      // Remove /index.html do final (mantém apenas /)
       if (u.pathname.endsWith("/index.html")) {
         u.pathname = u.pathname.replace(/\/index\.html$/i, "/");
         location.replace(u.toString());
@@ -26,13 +19,7 @@
     } catch (e) {}
   })();
   </script>
-  <!-- =========================================================
-       FIM — HEAD / CANONICAL
-       ========================================================= -->
 
-  <!-- =========================================================
-       INÍCIO — META / PWA
-       ========================================================= -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Comunica Síndico - Condôminos</title>
@@ -44,17 +31,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#0b223a">
-  <!-- =========================================================
-       FIM — META / PWA
-       ========================================================= -->
 
-  <!-- =========================================================
-       INÍCIO — CSS (ESTILOS)
-       ========================================================= -->
   <style>
-    /* =========================================================
-       BASE
-       ========================================================= */
     :root{
       --bg1:#061726;
       --bg2:#0b1f33;
@@ -70,11 +48,9 @@
       --ui: clamp(1, calc(100vmin / 900), 2.10);
       --ui2: clamp(1, calc(100vmin / 850), 2.70);
 
-      /* Topbar BG */
       --topbar-bg: none;
       --topbar-img-opacity: .22;
 
-      /* NEWS premium tokens */
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
       --news-bg: rgba(8, 24, 40, .62);
@@ -125,9 +101,6 @@
       max-width:none;
     }
 
-    /* =========================================================
-       HEADER (TOPBAR)
-       ========================================================= */
     .topbar{
       display:flex;
       align-items:center;
@@ -271,9 +244,6 @@
       width:100%;
     }
 
-    /* =========================================================
-       MAIN
-       ========================================================= */
     .main{
       flex:1 1 auto;
       min-height:0;
@@ -335,9 +305,6 @@
     .pill:hover{ filter:brightness(1.08); }
     .pill:active{ transform:scale(.98); }
 
-    /* =========================================================
-       AVISOS
-       ========================================================= */
     @keyframes avisoIn{
       from{ opacity:0; transform: translateY(10px) scale(.99); }
       to  { opacity:1; transform: translateY(0) scale(1); }
@@ -454,12 +421,12 @@
       gap:10px;
       align-items:center;
       color:rgba(234,242,255,.92);
-      font-size: 0.60em;
+      font-size: 0.35em;
       font-weight:900;
       line-height: 1.15;
     }
-    @media (max-width: 520px){ .metaLine{ font-size: 0.70em; } }
-    @media (min-width: 1200px){ .metaLine{ font-size: 0.70em; } }
+    @media (max-width: 520px){ .metaLine{ font-size: 0.45em; } }
+    @media (min-width: 1200px){ .metaLine{ font-size: 0.45em; } }
 
     .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
     .metaItem b{ font-weight:950; color:#fff; }
@@ -474,7 +441,7 @@
       font-weight:950;
       letter-spacing:.4px;
       text-transform:uppercase;
-      font-size: calc(12px * var(--ui));
+      font-size: calc(10px * var(--ui));
       line-height:1;
       border:1px solid rgba(255,255,255,.22);
       background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
@@ -499,9 +466,6 @@
       text-shadow: 0 1px 0 rgba(0,0,0,.45);
     }
 
-    /* =========================================================
-       PUBLICIDADE / VÍDEO
-       ========================================================= */
     .adBody{
       padding:14px;
       display:flex;
@@ -613,9 +577,6 @@
       }
     }
 
-    /* =========================================================
-       FOOTER (TICKER)
-       ========================================================= */
     .ticker{
       flex:0 0 auto;
       width:100%;
@@ -676,26 +637,6 @@
     }
 
     @media (max-width: 980px){
-      #dataBiblica{ white-space: normal; }
-      #ref{
-        white-space: normal;
-        overflow: visible;
-        text-overflow: unset;
-        line-height: 1.3;
-      }
-      .wxInline{
-        white-space: normal;
-        flex: 1 1 100%;
-        justify-content:flex-start;
-        margin-left: 0;
-        font-size: calc(14px * var(--ui2));
-      }
-    }
-
-    /* =========================================================
-       MOBILE LAYOUT
-       ========================================================= */
-    @media (max-width: 980px){
       body{
         overflow:auto;
         -webkit-overflow-scrolling: touch;
@@ -732,11 +673,38 @@
         margin-bottom: 0;
         padding-bottom: max(12px, env(safe-area-inset-bottom));
       }
+
+      .tickerLine1{
+        justify-content:center;
+        text-align:center;
+        gap:8px;
+      }
+      .tickerIcon{ display:none; }
+
+      #dataBiblica{
+        flex:0 0 auto;
+        font-size: calc(11px * var(--ui2));
+        white-space:nowrap;
+      }
+      #ref{
+        flex:1 1 100%;
+        min-width:0;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        line-height: 1.25;
+        font-size: calc(11px * var(--ui2));
+        text-align:center;
+      }
+      .wxInline{
+        flex:1 1 100%;
+        margin-left: 0;
+        justify-content:center;
+        white-space: normal;
+        font-size: calc(12px * var(--ui2));
+      }
     }
 
-    /* =========================================================
-       MODO TV (grande)
-       ========================================================= */
     @media (min-width: 1200px){
       .topbar{
         padding: 2.2vh 2.2vw;
@@ -794,12 +762,12 @@
         line-height: 1.35;
       }
       .metaLine{
-        font-size: clamp(20px, 2.0vw, 34px);
-        gap: 18px;
+        font-size: clamp(10px, 1.0vw, 18px);
+        gap: 14px;
       }
       .prioBadge{
-        font-size: clamp(16px, 1.6vw, 26px);
-        padding: 10px 18px;
+        font-size: clamp(10px, 1.0vw, 18px);
+        padding: 8px 14px;
       }
       .adBody{
         padding: 1.2vw;
@@ -834,9 +802,6 @@
       }
     }
 
-    /* =========================================================
-       NEWS (Mensagens da Cidade)
-       ========================================================= */
     #newsBox{
       background: var(--news-bg);
       border: 1px solid var(--news-border);
@@ -915,38 +880,21 @@
       padding-left:4px;
     }
 
-    /* ===== LAYOUT FIX PC (não corta rodapé) ===== */
-    html, body { height: 100%; }
-    body { overflow: hidden; }
-
-    .container{
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
-
-    .topbar{ flex: 0 0 auto; }
-    .main{ flex: 1 1 auto; min-height: 0; }
-    .ticker, .footer, #ticker{ flex: 0 0 auto; }
-
-    /* TÍTULO DO CABEÇALHO — PC/TV */
     @media (min-width: 981px){
-      #titulo{
-        font-size: 3.2rem;
-        line-height: 1.15;
-        font-weight: 700;
+      html, body { height: 100%; }
+      body { overflow: hidden; }
+      .container{
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
       }
+      .topbar{ flex: 0 0 auto; }
+      .main{ flex: 1 1 auto; min-height: 0; }
+      .ticker, .footer, #ticker{ flex: 0 0 auto; }
     }
-
-    /* =========================================================
-       ✅ CORREÇÃO FINAL — AVISOS
-       - NÃO mexe no celular
-       - PC/TV: 3 por tela e descrição ocupa o espaço
-       ========================================================= */
 
     @media (max-width: 980px){
-      /* proteção: nada do PC/TV afeta o mobile */
       #avisos{
         height:auto !important;
         display:flex !important;
@@ -966,7 +914,6 @@
     }
 
     @media (min-width: 981px){
-      /* grid 3 linhas; JS controla --rows (1..3) e --desc-font */
       #avisos{
         height:100%;
         min-height:0;
@@ -989,37 +936,27 @@
         flex:0 0 auto;
       }
 
-      /* SOMENTE a descrição cresce e usa o --desc-font calculado */
       #avisos .aviso .d{
         flex:1 1 auto;
         min-height:0;
         overflow:hidden;
-        line-height:1.15;
-        font-size: var(--desc-font, 18px) !important;
+        line-height:1.12;
+        font-size: var(--desc-font, 26px) !important;
       }
     }
   </style>
-  <!-- =========================================================
-       FIM — CSS (ESTILOS)
-       ========================================================= -->
 </head>
 
 <body>
   <div class="wrap">
     <div class="container">
 
-      <!-- =========================================================
-           INÍCIO — HEADER (TOPBAR)
-           ========================================================= -->
       <div class="topbar">
         <div class="brand">
           <div class="title" id="titulo">Comunica Síndico - Condôminos</div>
           <div class="sub" id="subtitulo">Painel Informativo</div>
 
-          <!-- CELULAR: linha compacta -->
           <div class="subMobileLine" id="subMobileLine">
-            <span id="subInfoLabel">Painel Informativo</span>
-            <span class="sep">º</span>
             <span id="statusJsonMini">Carregando...</span>
             <span class="sep">º</span>
             <span id="clockMini">--:--</span>
@@ -1042,15 +979,9 @@
           <button id="btnInstalarApp" class="btnInstall" style="display:none">⬇️ Instalar App</button>
         </div>
       </div>
-      <!-- =========================================================
-           FIM — HEADER (TOPBAR)
-           ========================================================= -->
 
       <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
-      <!-- =========================================================
-           INÍCIO — MAIN
-           ========================================================= -->
       <div class="main">
         <section class="panel">
           <div class="panelHead">
@@ -1073,7 +1004,6 @@
               <div class="videoWrap">
                 <video id="adVideo" autoplay muted playsinline></video>
 
-                <!-- CONTROLES: PC/TV = 4 botões | CELULAR = 2 botões (via CSS) -->
                 <div class="tvVideoControls" id="tvVideoControls" aria-hidden="true">
                   <button class="tvBtn" id="btnPrevAd" title="Vídeo anterior" aria-label="Vídeo anterior">⟨</button>
                   <button class="tvBtn" id="btnBack10" title="Voltar 10s" aria-label="Voltar 10 segundos">↶10</button>
@@ -1083,7 +1013,6 @@
               </div>
             </div>
 
-            <!-- Mensagens da Cidade -->
             <div class="newsBox" id="newsBox" style="display:none">
               <div class="newsHead">
                 <div class="newsTitle" id="cityTitle">📰 Mensagens da Cidade</div>
@@ -1095,13 +1024,7 @@
           </div>
         </aside>
       </div>
-      <!-- =========================================================
-           FIM — MAIN
-           ========================================================= -->
 
-      <!-- =========================================================
-           INÍCIO — FOOTER / TICKER
-           ========================================================= -->
       <div class="ticker">
         <div class="tickerLine1">
           <span class="tickerIcon">📖</span>
@@ -1126,20 +1049,11 @@
           </div>
         </div>
       </div>
-      <!-- =========================================================
-           FIM — FOOTER / TICKER
-           ========================================================= -->
 
     </div>
   </div>
 
-  <!-- =========================================================
-       INÍCIO — JS (APP / UI / DADOS)
-       ========================================================= -->
   <script>
-    /* =========================================================
-       INSTALL APP
-       ========================================================= */
     let deferredPrompt = null;
 
     function mostrarBotaoInstalar(show){
@@ -1165,9 +1079,6 @@
       mostrarBotaoInstalar(false);
     }
 
-    /* =========================================================
-       HELPERS
-       ========================================================= */
     function prioridadeClass(p){
       const x = String(p || "").toLowerCase();
       if (x === "alta") return "alta";
@@ -1187,9 +1098,6 @@
     function refreshPage(){ location.reload(); }
     function isMobile(){ return window.matchMedia("(max-width: 980px)").matches; }
 
-    /* =========================================================
-       CLOCK (ATUALIZA 2 RELÓGIOS)
-       ========================================================= */
     function footerDateTimeString(d){
       const dd = pad2(d.getDate());
       const mm = pad2(d.getMonth()+1);
@@ -1206,9 +1114,6 @@
     tickClock();
     setInterval(tickClock, 1000);
 
-    /* =========================================================
-       BIND UI
-       ========================================================= */
     (function bindUI(){
       const btn = document.getElementById("btnInstalarApp");
       if(btn) btn.onclick = instalarApp;
@@ -1220,9 +1125,6 @@
       }
     })();
 
-    /* =========================================================
-       ROTATION
-       ========================================================= */
     let ROT_TIMER = null;
     let ROT_STATE = { page: 0, totalPages: 1, paused: false };
 
@@ -1238,19 +1140,14 @@
       return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
     }
 
-    /* =========================================================
-       ✅ AVISOS — fonte da descrição preenche (PC/TV)
-       - Sempre 3 por tela (paginação por 3)
-       - Última página com 1-2: pode crescer, mas não passa do "cap" da página de 3
-       ========================================================= */
-    let DESC_CAP = null; // teto de fonte em px (definido na 1ª página cheia)
+    let DESC_CAP = null;
 
     function fitDescInCard(card, capPx){
       const desc = card.querySelector(".d");
-      if(!desc) return 12;
+      if(!desc) return 16;
 
-      const MIN = 12;             // px
-      const MAX = Math.max(MIN, Number(capPx || 90)); // cap por página
+      const MIN = 16;
+      const MAX = Math.max(MIN, Number(capPx || 140));
 
       let lo = MIN, hi = MAX, best = MIN;
 
@@ -1272,7 +1169,7 @@
     }
 
     function ajustarAvisosTelaCheia(pageIdx){
-      if(isMobile()) return; // NÃO mexe no celular
+      if(isMobile()) return;
 
       const root = document.getElementById("avisos");
       if(!root) return;
@@ -1280,17 +1177,14 @@
       const cards = Array.from(root.querySelectorAll(".aviso"));
       if(!cards.length) return;
 
-      // 1) Se for a primeira página e ainda não temos cap, calcula cap livre (até 90)
       if(pageIdx === 0 && DESC_CAP == null){
-        const bests = cards.map(c => fitDescInCard(c, 90));
+        const bests = cards.map(c => fitDescInCard(c, 140));
         DESC_CAP = Math.min(...bests);
-        // normaliza tudo no mesmo cap
         cards.forEach(c => fitDescInCard(c, DESC_CAP));
         return;
       }
 
-      // 2) Demais páginas usam o cap calculado na página "cheia"
-      const cap = (DESC_CAP == null ? 90 : DESC_CAP);
+      const cap = (DESC_CAP == null ? 140 : DESC_CAP);
       cards.forEach(c => fitDescInCard(c, cap));
     }
 
@@ -1301,13 +1195,13 @@
 
       if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
 
-      DESC_CAP = null; // reset quando recarrega avisos
+      DESC_CAP = null;
 
       const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
       const rot = data?.rotacao || {};
       const ativar = !!rot.ativar;
 
-      const qtd = 3; // regra: sempre 3 por tela
+      const qtd = 3;
       const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
 
       if(!avisosAll.length){
@@ -1358,13 +1252,10 @@
           const start = pageIdx * qtd;
           const slice = avisosAll.slice(start, start + qtd);
 
-          // PC/TV: linhas = quantidade real na página (1..3)
-          // Celular: esse CSS é ignorado pelo @media de proteção
           root.style.setProperty("--rows", String(Math.max(1, Math.min(3, slice.length))));
 
           slice.forEach(a => root.appendChild(buildAvisoEl(a)));
 
-          // ajusta fonte da descrição (PC/TV apenas)
           requestAnimationFrame(()=> ajustarAvisosTelaCheia(pageIdx));
 
           void root.offsetWidth;
@@ -1393,9 +1284,6 @@
       }
     }
 
-    /* =========================================================
-       VERSÍCULO
-       ========================================================= */
     function hojeKeyMMDD() {
       const d = new Date();
       const mm = String(d.getMonth() + 1).padStart(2, "0");
@@ -1418,9 +1306,6 @@
       } catch (e) {}
     }
 
-    /* =========================================================
-       CLIMA
-       ========================================================= */
     function wxEmojiFromCode(code){
       if (code === 0) return "☀️";
       if ([1,2,3].includes(code)) return "⛅";
@@ -1476,9 +1361,6 @@
       }
     }
 
-    /* =========================================================
-       PUBLICIDADE — ESTADO + CONTROLES
-       ========================================================= */
     const AD_STATE_KEY = "CS_AD_STATE_V1";
     let AD_TIMER = null;
 
@@ -1702,9 +1584,6 @@
       carregarMensagensCidade();
     }
 
-    /* =========================================================
-       MENSAGENS DA CIDADE
-       ========================================================= */
     function decodeHtmlEntities_(s){
       const t = document.createElement("textarea");
       t.innerHTML = String(s ?? "");
@@ -1787,9 +1666,6 @@
       }
     }
 
-    /* =========================================================
-       TOPBAR IMAGEM POR HORÁRIO / FRIO
-       ========================================================= */
     function aplicarImagemTopbar(data){
       const cidade = String(data?.clima?.cidade || "").toLowerCase();
       const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
@@ -1824,9 +1700,6 @@
       test.src = img + "?ts=" + Date.now();
     }
 
-    /* =========================================================
-       LOAD ALL
-       ========================================================= */
     async function loadAll(){
       const status = document.getElementById("statusJson");
       const statusMini = document.getElementById("statusJsonMini");
@@ -1881,13 +1754,7 @@
       }catch(e){}
     }, 60000);
   </script>
-  <!-- =========================================================
-       FIM — JS (APP / UI / DADOS)
-       ========================================================= -->
 
-  <!-- =========================================================
-       INÍCIO — JS (SERVICE WORKER)
-       ========================================================= -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
@@ -1913,13 +1780,7 @@
       });
     }
   </script>
-  <!-- =========================================================
-       FIM — JS (SERVICE WORKER)
-       ========================================================= -->
 
-  <!-- =========================================================
-       INÍCIO — JS (FUNDO DINÂMICO)
-       ========================================================= -->
   <script>
     const fundos = {
       azul:    ["#061726", "#0b1f33"],
@@ -1964,9 +1825,6 @@
 
     setInterval(fundoAleatorio, 300000);
   </script>
-  <!-- =========================================================
-       FIM — JS (FUNDO DINÂMICO)
-       ========================================================= -->
 
 </body>
 </html>
