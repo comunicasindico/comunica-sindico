@@ -54,8 +54,7 @@
       --sab: env(safe-area-inset-bottom);
       --sal: env(safe-area-inset-left);
       --ui: clamp(1, calc(100vmin / 900), 2.10);
-      --ui2: clamp(1, calc(100vmin / 900), 2.40);
-
+      --ui2: clamp(1, calc(100vmin / 850), 2.70);
 
       /* NEWS premium tokens */
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
@@ -240,13 +239,17 @@
     }
 
     .panelTitle{
-      display:flex;align-items:center;gap:10px;
-      font-size: calc(13px * var(--ui));
-      font-weight:950;
-      letter-spacing:.6px;
-      color:rgba(234,242,255,.95);
-      text-transform:uppercase;
-    }
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:950;
+  letter-spacing:.6px;
+  color:rgba(234,242,255,.95);
+  text-transform:uppercase;
+
+  /* 🔥 escala para TV e fullscreen */
+  font-size: calc(18px * var(--ui2));
+}
 
     /* ===== PILL (BOTÕES/STATUS) ===== */
     .pill{
@@ -352,7 +355,7 @@
     .aviso .t{
   margin:0;
   font-weight:900;
-  font-size: calc(clamp(18px, 2.4vw, 34px) * var(--ui));
+  font-size: calc(22px * var(--ui2));
   letter-spacing:.3px;
   color:#fff;
   text-shadow:0 1px 2px rgba(0,0,0,.6);
@@ -372,7 +375,7 @@
   margin:0;
   color:#e0ecff;
   line-height:1.35;
-  font-size: calc(clamp(15px, 2.0vw, 28px) * var(--ui));
+  font-size:clamp(14px, 1.7vw, 17px);
   display:-webkit-box;
   -webkit-line-clamp: 6;               /* << era 4 */
   -webkit-box-orient: vertical;
@@ -386,7 +389,7 @@
   gap:10px;
   align-items:center;
   color:rgba(234,242,255,.92);
-  font-size: calc(clamp(13px, 1.8vw, 22px) * var(--ui));
+  font-size: calc(13px * var(--ui));
   font-weight:900;
 }
 
