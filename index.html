@@ -1348,19 +1348,6 @@ function escolherQtdQueCabe(){
   }
   return 1;
 }
-// ===== usa o que couber (TV/PC) =====
-if (window.matchMedia("(min-width: 981px)").matches) {
-  // garante medida correta antes de testar
-  requestAnimationFrame(() => {
-    qtd = escolherQtdQueCabe();
-    root.style.setProperty("--rows", String(qtd));
-  });
-} else {
-  root.style.setProperty("--rows", String(qtd));
-}
-
-// padrão
-*/let qtd = maxPerScreen;*/  duplicidade
 
 // TV/PC: escolhe o que couber (1..4), sem rolagem e sem “...”
 if (window.matchMedia("(min-width: 981px)").matches){
