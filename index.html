@@ -998,7 +998,7 @@
           </div>
 
           <div class="adBody">
-            <div class="adCard">
+            <div class="adCard" id="adCard">
               <div class="adLabel" id="adLabel">Anúncio</div>
 
               <div class="videoWrap">
@@ -1525,65 +1525,69 @@
     }
 
     function iniciarPublicidade(data){
-      const pub = data?.publicidade;
-      const adBox = document.getElementById("adBox");
-      const adVideo = document.getElementById("adVideo");
-      const adLabel = document.getElementById("adLabel");
+  const pub = data?.publicidade;
+  const adBox = document.getElementById("adBox");
+  const adVideo = document.getElementById("adVideo");
+  const adLabel = document.getElementById("adLabel");
+  const adCard = document.getElementById("adCard");
+  if (!adBox) return;
+  // Se publicidade não estiver ativa, esconde tudo
+  if (!pub?.ativar){
+    adBox.style.display = "none";
+    return;
+  }
+  // Mostra o painel (para poder mostrar as mensagens da cidade)
+  adBox.style.display = "flex";
+  // Sempre tenta carregar Mensagens da Cidade
+  carregarMensagensCidade();
+  const hasVideos = Array.isArray(pub?.videos) && pub.videos.length;
+  // Se não tem vídeos, esconde só o card do vídeo e mantém as mensagens
+  if (!hasVideos){
+    if (adCard) adCard.style.display = "none";
+    return;
+  }
+  // Se tem vídeos, mostra o card e roda o player como antes
+  if (adCard) adCard.style.display = "flex";
 
-      if (!adBox || !adVideo || !adLabel) return;
+  if (!adVideo || !adLabel) return;
+  bindTvVideoControls(pub);
+  adVideo.addEventListener("click", () => {
+    try{
+      const st = adLoadState();
+      st.paused = false;
+      adSaveState(st);
+    }catch(e){}
+    adVideo.play().catch(()=>{});
+  }, { passive:true });
+  adVideo.addEventListener("timeupdate", ()=>{ if(!isMobile()) adSavePlayback(); }, {passive:true});
+  adVideo.addEventListener("pause", adSavePlayback, {passive:true});
+  adVideo.addEventListener("play", adSavePlayback, {passive:true});
+  document.addEventListener("visibilitychange", ()=>{ if(document.hidden) adSavePlayback(); });
+  const intervalMs = Math.max(3, Number(pub.intervaloSeg || 10)) * 1000;
+  function nextIdx(){
+    const st = adLoadState();
+    const list = Array.isArray(pub.videos) ? pub.videos : [];
+    let idx = Number.isFinite(st.idx) ? st.idx : 0;
+    idx++;
+    if(idx >= list.length) idx = 0;
+    st.idx = idx;
+    st.t = 0;
+    st.paused = false;
+    adSaveState(st);
+    adPlayByState(pub, true);
+  }
+  if (AD_TIMER){ clearInterval(AD_TIMER); AD_TIMER = null; }
+  adPlayByState(pub, false);
+  AD_TIMER = setInterval(()=>{
+    const st = adLoadState();
+    if(st.paused) return;
+    nextIdx();
+  }, intervalMs);
+  adVideo.onerror = () => setTimeout(()=>nextIdx(), 1200);
+}
 
-      if (!(pub?.ativar && Array.isArray(pub.videos) && pub.videos.length)) {
-        adBox.style.display = "none";
-        return;
-      }
 
-      bindTvVideoControls(pub);
-
-      adVideo.addEventListener("click", () => {
-        try{
-          const st = adLoadState();
-          st.paused = false;
-          adSaveState(st);
-        }catch(e){}
-        adVideo.play().catch(()=>{});
-      }, { passive:true });
-
-      adVideo.addEventListener("timeupdate", ()=>{ if(!isMobile()) adSavePlayback(); }, {passive:true});
-      adVideo.addEventListener("pause", adSavePlayback, {passive:true});
-      adVideo.addEventListener("play", adSavePlayback, {passive:true});
-      document.addEventListener("visibilitychange", ()=>{ if(document.hidden) adSavePlayback(); });
-
-      const intervalMs = Math.max(3, Number(pub.intervaloSeg || 10)) * 1000;
-
-      function nextIdx(){
-        const st = adLoadState();
-        const list = Array.isArray(pub.videos) ? pub.videos : [];
-        let idx = Number.isFinite(st.idx) ? st.idx : 0;
-        idx++;
-        if(idx >= list.length) idx = 0;
-        st.idx = idx;
-        st.t = 0;
-        st.paused = false;
-        adSaveState(st);
-        adPlayByState(pub, true);
-      }
-
-      if (AD_TIMER){ clearInterval(AD_TIMER); AD_TIMER = null; }
-
-      adBox.style.display = "flex";
-      adPlayByState(pub, false);
-
-      AD_TIMER = setInterval(()=>{
-        const st = adLoadState();
-        if(st.paused) return;
-        nextIdx();
-      }, intervalMs);
-
-      adVideo.onerror = () => setTimeout(()=>nextIdx(), 1200);
-
-      carregarMensagensCidade();
-    }
-
+    
     function decodeHtmlEntities_(s){
       const t = document.createElement("textarea");
       t.innerHTML = String(s ?? "");
