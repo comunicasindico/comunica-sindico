@@ -63,7 +63,13 @@
         "anunciante": "Em breve, Israel receberá a Palavra"
       }
     ],
-    },
+    "mensagens": [
+      {
+        "titulo": "📰 Notícias",
+        "texto": "Sem notícias no momento. (verifique RSS)"
+      }
+    ]
+  },
   "clima": {
     "cidade": "Tubarão/SC",
     "latitude": -28.4767,
@@ -80,8 +86,8 @@
       "prioridade": "Alta",
       "tipo": "Segurança",
       "local": "Hall de Entrada",
-      "inicio": "29/01/26 - 17:35",
-      "fim": "10/02/26 - 17:35",
+      "inicio": "2026-01-29T17:35:00-03:00",
+      "fim": "2026-02-10T17:35:00-03:00",
       "emergencia": true
     },
     {
@@ -102,8 +108,8 @@
       "prioridade": "Média",
       "tipo": "Informativo",
       "local": "Piscina",
-      "inicio": "28/01/26 - 12:57",
-      "fim": "10/02/26 - 12:57",
+      "inicio": "2026-01-28T12:57:00-03:00",
+      "fim": "2026-02-10T12:57:00-03:00",
       "emergencia": false
     },
     {
@@ -124,8 +130,8 @@
       "prioridade": "Baixa",
       "tipo": "Serviços",
       "local": "Lixeira",
-      "inicio": "30/01/26 - 01:00",
-      "fim": "25/02/26 - 01:00",
+      "inicio": "2026-01-30T01:00:00-03:00",
+      "fim": "2026-02-25T01:00:00-03:00",
       "emergencia": false
     }
   ]
