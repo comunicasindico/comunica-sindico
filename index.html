@@ -1122,6 +1122,8 @@
   }
 }
 
+
+    
     
   
   
@@ -1445,37 +1447,22 @@ if (window.matchMedia("(min-width: 981px)").matches){
           root.classList.remove("fade-out");
           root.classList.add("fade-in");
       // ===== AUTO-FIT (TV/PC): reduz fonte para caber no card (sem rolagem) =====
-function autoFitAvisoCard(card){
-  // reseta
-  card.style.setProperty("--tScale", "1");
-  card.style.setProperty("--dScale", "1");
 
-  // só TV/PC
-  if (!window.matchMedia("(min-width: 981px)").matches) return;
 
-  let dScale = 1.00;
-  let tScale = 1.00;
-
-  // tenta reduzir descrição primeiro; se ainda não couber, reduz título um pouco
-  for (let i = 0; i < 10; i++){
-    if (card.scrollHeight <= card.clientHeight + 1) break;
-
-    if (dScale > 0.72){
-      dScale = Math.max(0.72, dScale - 0.05);
-      card.style.setProperty("--dScale", dScale.toFixed(2));
-    } else if (tScale > 0.86){
-      tScale = Math.max(0.86, tScale - 0.03);
-      card.style.setProperty("--tScale", tScale.toFixed(2));
-    } else {
-      break;
-    }
-  }
-}
-
-// roda após o layout estabilizar
 requestAnimationFrame(() => {
-  root.querySelectorAll(".aviso").forEach(autoFitAvisoCard);
+  const cards = [...root.querySelectorAll(".aviso")];
+  cards.forEach(autoFitAvisoCard);
+
+  // Se ainda estourar, é melhor reduzir qtd do que esmagar fonte
+  const algumEstoura = cards.some(c => c.scrollHeight > c.clientHeight + 1);
+
+  if (algumEstoura && qtd > 1){
+    qtd = qtd - 1;      // 4→3→2→1 só se realmente precisar
+    ROT_STATE.page = 0;
+    renderPage(0);
+  }
 });
+
 
         };
 
