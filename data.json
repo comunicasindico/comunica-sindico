@@ -25,44 +25,7 @@
     "intervaloSeg": 8,
     "shuffle": true,
     "fit": "contain",
-    "videos": [
-      {
-        "arquivo": "./ads/rafinha_keyon.mp4",
-        "anunciante": "O melhor Corretor de Santa Catarina"
-      },
-      {
-        "arquivo": "./ads/02parque.mp4",
-        "anunciante": "Parque — Lazer e Diversão"
-      },
-      {
-        "arquivo": "./ads/03larissa.mp4",
-        "anunciante": "Larissa — Momentos Especiais"
-      },
-      {
-        "arquivo": "./ads/04paty.mp4",
-        "anunciante": "Paty — Experiência Internacional"
-      },
-      {
-        "arquivo": "./ads/05port.mp4",
-        "anunciante": "SWOT Cristão — Português"
-      },
-      {
-        "arquivo": "./ads/calibra01.mp4",
-        "anunciante": "Loja de Caminhões"
-      },
-      {
-        "arquivo": "./ads/calibra02.mp4",
-        "anunciante": "Visite-nos e veja o que temos de especial"
-      },
-      {
-        "arquivo": "./ads/rododis01.mp4",
-        "anunciante": "Nosso diferencial é te atender cada vez melhor"
-      },
-      {
-        "arquivo": "./ads/06heb.mp4",
-        "anunciante": "Em breve, Israel receberá a Palavra"
-      }
-    ],
+    "videos": [],
     "mensagens": [
       {
         "titulo": "📰 Notícias",
@@ -103,15 +66,15 @@
     },
     {
       "id": "003",
-      "titulo": "Piscina",
-      "descricao": "Evite nadar sozinho, qualquer anormalidade sempre uma pessoa próxima poderá auxiliar.",
-      "prioridade": "Média",
-      "tipo": "Informativo",
-      "local": "Piscina",
-      "inicio": "2026-01-28T12:57:00-03:00",
-      "fim": "2026-02-10T12:57:00-03:00",
+      "titulo": "Carrinho interno",
+      "descricao": "O excesso de peso acaba rasgando as sacolas dentro do carrinho, dificultando bastante o manuseio pela prestadora de serviços e os sacos maiores \"trancam\" ali dentro ocupando muito mais espaço do que um descarte do dia a dia.",
+      "prioridade": "Baixa",
+      "tipo": "Serviços",
+      "local": "Lixeira",
+      "inicio": "2026-01-30T01:00:00-03:00",
+      "fim": "2026-02-25T01:00:00-03:00",
       "emergencia": false
-    },
+          },
     {
       "id": "004",
       "titulo": "Limpeza",
@@ -125,13 +88,13 @@
     },
     {
       "id": "005",
-      "titulo": "Carrinho interno",
-      "descricao": "O excesso de peso acaba rasgando as sacolas dentro do carrinho, dificultando bastante o manuseio pela prestadora de serviços e os sacos maiores \"trancam\" ali dentro ocupando muito mais espaço do que um descarte do dia a dia.",
-      "prioridade": "Baixa",
-      "tipo": "Serviços",
-      "local": "Lixeira",
-      "inicio": "2026-01-30T01:00:00-03:00",
-      "fim": "2026-02-25T01:00:00-03:00",
+      "titulo": "Piscina",
+      "descricao": "Evite nadar sozinho, qualquer anormalidade sempre uma pessoa próxima poderá auxiliar.",
+      "prioridade": "Média",
+      "tipo": "Informativo",
+      "local": "Piscina",
+      "inicio": "2026-01-28T12:57:00-03:00",
+      "fim": "2026-02-10T12:57:00-03:00",
       "emergencia": false
     }
   ]
