@@ -1584,11 +1584,9 @@
   }
   if (AD_TIMER){ clearInterval(AD_TIMER); AD_TIMER = null; }
   adPlayByState(pub, false);
-  AD_TIMER = setInterval(()=>{
-    const st = adLoadState();
-    if(st.paused) return;
-    nextIdx();
-  }, intervalMs);
+  adVideo.onended = () => {
+  nextIdx(); // só troca quando o vídeo terminar
+};
   adVideo.onerror = () => setTimeout(()=>nextIdx(), 1200);
 }
 
