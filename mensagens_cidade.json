@@ -1,12 +1,6 @@
 {
-  "updatedAt": "2026-02-02T00:59:00-03:00",
+  "updatedAt": "2026-02-02T01:58:57-03:00",
   "items": [
-    {
-      "titulo": "Bala é encontrada na cabeça de corretora morta por síndico em Caldas Novas - Metrópoles",
-      "texto": "Bala é encontrada na cabeça de corretora morta por síndico em Caldas Novas &nbsp;&nbsp; Metrópoles",
-      "fonte": "news.google.com",
-      "data": "02-02-2026"
-    },
     {
       "titulo": "Quase metade dos síndicos do Brasil são profissionais, aponta levantamento - Jornal da Orla",
       "texto": "Quase metade dos síndicos do Brasil são profissionais, aponta levantamento &nbsp;&nbsp; Jornal da Orla",
@@ -24,6 +18,12 @@
       "texto": "Tragédia em Caldas Novas com corretora de imóveis expõe falhas na gestão de conflitos em condomínios, diz advogado &nbsp;&nbsp; Jornal Opção",
       "fonte": "news.google.com",
       "data": "01-02-2026"
+    },
+    {
+      "titulo": "Suspeito do crime, filho de síndico que confessou morte de corretora postou TBT em praia no dia do assassinato - Daqui",
+      "texto": "Suspeito do crime, filho de síndico que confessou morte de corretora postou TBT em praia no dia do assassinato &nbsp;&nbsp; Daqui",
+      "fonte": "news.google.com",
+      "data": "31-01-2026"
     }
   ]
 }
