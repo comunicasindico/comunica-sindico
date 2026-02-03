@@ -26,10 +26,11 @@
     "shuffle": true,
     "fit": "contain",
     "videos": [
-      { "arquivo": "ads/comunicasindico.mp4", "anunciante": "Acabe de vez com os problemas de comunicação." },
+      { "arquivo": "ads/comunica_sindico_logo.mp4", "anunciante": "Acabe de vez com os problemas de comunicação." },
       { "arquivo": "ads/luisa.mp4", "anunciante": "Luisa em seu primeiro trabalho" },
-      { "arquivo": "ads/calibra.mp4", "anunciante": "Calibra Ltda e-mail:sergio.adm@calibraacessorios.com.br -(48) 3628-1414 Br 101, 147 Km 336" },
-      { "arquivo": "ads/rafinhako.mp4", "anunciante": "Rafinha - Corretor de Imóveis" }
+      { "arquivo": "ads/calibram.mp4", "anunciante": "Calibra Ltda (48) 3628-1414 Br 101, 147 Km 336" },
+      { "arquivo": "ads/rafinhako.mp4", "anunciante": "Rafinha - Corretor de Imóveis" },
+      { "arquivo": "ads/cslogo.mp4", "anunciante": "Entre no novo mundo da tecnologia e respeito ao meio ambiente." }
     ],
     "mensagens": [
       {
