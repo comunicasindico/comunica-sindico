@@ -984,54 +984,6 @@
     }
 
 
-/* ===== ÍCONE DO CLIMA NO TOPO — SOMENTE CELULAR ===== */
-@media (max-width: 980px){
-
-  /* força o badge da direita a alinhar tudo */
-  .rightInfo{
-    width:100%;
-    justify-content:flex-end;
-  }
-
-  #wxIconTop{
-    font-size: 3.4rem;   /* bem maior */
-    margin-left:auto;
-    animation: climaPulse 2s infinite ease-in-out;
-  }
-
-  /* animações por tipo */
-  .clima-sol{
-    animation: solBrilho 2.5s infinite linear;
-  }
-
-  .clima-chuva{
-    animation: chuvaBalanco 1.6s infinite ease-in-out;
-  }
-
-  .clima-nuvem{
-    animation: nuvemFlutua 3s infinite ease-in-out;
-  }
-}
-
-/* animações */
-@keyframes solBrilho{
-  0%{ transform:scale(1) rotate(0deg); }
-  50%{ transform:scale(1.15) rotate(10deg); }
-  100%{ transform:scale(1) rotate(0deg); }
-}
-
-@keyframes chuvaBalanco{
-  0%{ transform:translateY(0); }
-  50%{ transform:translateY(6px); }
-  100%{ transform:translateY(0); }
-}
-
-@keyframes nuvemFlutua{
-  0%{ transform:translateX(0); }
-  50%{ transform:translateX(6px); }
-  100%{ transform:translateX(0); }
-}
-
 
 /* =========================================================
    WX ICON PREMIUM (SVG ANIMADO) — SOMENTE CELULAR
@@ -1636,7 +1588,7 @@ function wxSvgStorm(){
         setText("wxTextInline", `${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
       } catch (e) {
         const top = document.getElementById("wxIconTop");
-        if (top) top.textContent = "🌦️";
+       if (top) top.innerHTML = wxSvgCloud();
         const wxI = document.getElementById("wxIconInline");
         if (wxI) wxI.textContent = "🌦️";
         setText("wxTextInline", `${data?.clima?.cidade || "—"} (offline)`);
