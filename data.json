@@ -10,7 +10,7 @@
   "rotacao": {
     "ativar": true,
     "intervaloSeg": 10,
-    "quantidadePorTela": 4,
+    "quantidadePorTela": 3,
     "mostrarProgresso": true,
     "pausarNoMouse": true
   },
@@ -65,8 +65,8 @@
       "prioridade": "Alta",
       "tipo": "Serviços",
       "local": "Lixeira",
-      "inicio": "",
-      "fim": "",
+     "inicio": "29/01/26 - 17:35",
+      "fim": "10/02/26 - 17:35",
       "emergencia": true
     },
     {
@@ -76,8 +76,8 @@
       "prioridade": "Média",
       "tipo": "Serviços",
       "local": "Garagem",
-      "inicio": "",
-      "fim": "",
+     "inicio": "29/01/26 - 17:35",
+      "fim": "10/02/26 - 17:35",
       "emergencia": true
     },
     {
@@ -98,8 +98,8 @@
       "prioridade": "Baixa",
       "tipo": "Serviços",
       "local": "Lixeira",
-      "inicio": "",
-      "fim": "",
+      "inicio": "29/01/26 - 17:35",
+      "fim": "10/02/26 - 17:35",
       "emergencia": false
     }
   ]
