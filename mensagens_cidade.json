@@ -1,6 +1,12 @@
 {
-  "updatedAt": "2026-02-03T11:59:16-03:00",
+  "updatedAt": "2026-02-03T12:59:04-03:00",
   "items": [
+    {
+      "titulo": "Corpo de corretora assassinada por síndico é liberado do IML - O Popular",
+      "texto": "Corpo de corretora assassinada por síndico é liberado do IML &nbsp;&nbsp; O Popular",
+      "fonte": "news.google.com",
+      "data": "03-02-2026"
+    },
     {
       "titulo": "Moradores protestam contra gestão de síndico e apontam dívida de quase R$ 1 milhão em condomínio de Anápolis - Diário da Redação",
       "texto": "Moradores protestam contra gestão de síndico e apontam dívida de quase R$ 1 milhão em condomínio de Anápolis &nbsp;&nbsp; Diário da Redação",
@@ -14,16 +20,10 @@
       "data": "03-02-2026"
     },
     {
-      "titulo": "Mãe de corretora morta relata sangue em cômodo do subsolo do prédio - O Popular",
-      "texto": "Mãe de corretora morta relata sangue em cômodo do subsolo do prédio &nbsp;&nbsp; O Popular",
+      "titulo": "Morador defeca em 'vendinha' de condomínio e é flagrado por câmeras de vigilância - O Globo",
+      "texto": "Morador defeca em 'vendinha' de condomínio e é flagrado por câmeras de vigilância &nbsp;&nbsp; O Globo",
       "fonte": "news.google.com",
-      "data": "02-02-2026"
-    },
-    {
-      "titulo": "Condomínio de Anápolis é alvo de protesto após moradores alegarem manobras do síndico e dívida de quase R$ 1 milhão - Portal 6",
-      "texto": "Condomínio de Anápolis é alvo de protesto após moradores alegarem manobras do síndico e dívida de quase R$ 1 milhão &nbsp;&nbsp; Portal 6",
-      "fonte": "news.google.com",
-      "data": "02-02-2026"
+      "data": "03-02-2026"
     }
   ]
 }
