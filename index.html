@@ -1079,6 +1079,37 @@
   50%{ opacity: 1; transform: translateY(1px); }
 }
 
+
+
+/* ===== RODAPÉ CLIMA ORGANIZADO EM 2 LINHAS ===== */
+.wxInline{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  font-weight:900;
+  color: rgba(234,242,255,.92);
+}
+
+#wxLine1{
+  font-size: calc(12px * var(--ui2));
+}
+
+#wxLine2{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size: calc(11px * var(--ui2));
+}
+
+#wxIconInline{
+  font-size: 16px; /* pequeno */
+}
+
+
+
+
+
     
   </style>
 </head>
@@ -1588,7 +1619,14 @@ function wxSvgStorm(){
         const wxI = document.getElementById("wxIconInline");
         if (wxI) wxI.textContent = emoji;
 
-        setText("wxTextInline", `${c.cidade || "Cidade"} • ${t}°C • Vento ${w} km/h • Chuva ${p} mm`);
+       // linha 1: cidade + temperatura
+setText("wxLine1", `${c.cidade || "Cidade"} ${t}°C`);
+
+// linha 2: vento + chuva
+setText("wxTextInline", `Vento ${w} km/h • Chuva ${p} mm`);
+
+const wxI = document.getElementById("wxIconInline");
+if (wxI) wxI.textContent = emoji;
       } catch (e) {
         const top = document.getElementById("wxIconTop");
        if (top) top.innerHTML = wxSvgCloud();
