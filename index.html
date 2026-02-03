@@ -1627,21 +1627,8 @@ function wxSvgStorm(){
         const w = Math.round(cur.wind_speed_10m);
         const p = cur.precipitation;
 
-       // ÍCONE PREMIUM NO TOPO (SVG animado)
-wxSetTopIconSvg(cur.weather_code);
-
-  top.classList.remove("clima-sol","clima-chuva","clima-nuvem");
-
-  if (emoji.includes("☀")) {
-    top.classList.add("clima-sol");
-  } 
-  else if (emoji.includes("🌧") || emoji.includes("⛈")) {
-    top.classList.add("clima-chuva");
-  } 
-  else {
-    top.classList.add("clima-nuvem");
-  }
-}
+               // ÍCONE PREMIUM NO TOPO (SVG animado)
+        wxSetTopIconSvg(cur.weather_code);
 
         const wxI = document.getElementById("wxIconInline");
         if (wxI) wxI.textContent = emoji;
