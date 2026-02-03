@@ -40,8 +40,13 @@
       --sar: env(safe-area-inset-right);
       --sab: env(safe-area-inset-bottom);
       --sal: env(safe-area-inset-left);
-      --ui: clamp(1, calc(100vmin / 900), 2.10);
-      --ui2: clamp(1, calc(100vmin / 850), 2.70);
+
+      /* ✅ DESKTOP/TV: base por ALTURA (dvh) para não mudar quando abre meia-tela vs tela cheia */
+      --ui:  clamp(1, calc(100dvh / 980), 1.70);
+      --ui2: clamp(1, calc(100dvh / 920), 2.05);
+
+      /* “Sobra” de segurança para TVs (overscan) */
+      --tv-safe-bottom: 18px;
 
       --topbar-bg: none;
       --topbar-img-opacity: .92;
@@ -69,24 +74,28 @@
       overflow:hidden;
       overscroll-behavior:none;
       touch-action:manipulation;
-      min-height:100svh;
-      padding-bottom: max(14px, env(safe-area-inset-bottom));
+      min-height:100dvh;
+      height:100dvh;
+      width:100%;
+      padding:0; /* ✅ evita empurrar rodapé */
     }
 
     .wrap{
-      min-height:100svh;
+      height:100dvh;
+      min-height:100dvh;
       width:100%;
       padding:
-        calc(14px + var(--sat))
-        calc(14px + var(--sar))
-        calc(14px + var(--sab))
-        calc(14px + var(--sal));
+        calc(12px + var(--sat))
+        calc(12px + var(--sar))
+        calc(max(12px, var(--tv-safe-bottom)) + var(--sab))
+        calc(12px + var(--sal));
       display:block;
     }
 
     .container{
       width:100%;
-      min-height:100svh;
+      height:100%;
+      min-height:0;
       display:flex;
       flex-direction:column;
       gap:12px;
@@ -139,7 +148,7 @@
 
     #titulo{
       margin:0;
-      font-size: clamp(34px, 3.2vw, 56px);
+      font-size: clamp(32px, 3.2vw, 54px);
       font-weight: 950;
       letter-spacing:.2px;
       white-space: normal;
@@ -203,7 +212,7 @@
       background:rgba(12,35,56,.55);
       color:var(--muted);
       font-weight:900;
-      font-size:12px;
+      font-size: calc(12px * var(--ui));
       white-space:nowrap;
     }
 
@@ -218,7 +227,7 @@
       border-radius:999px;
       font-weight:900;
       cursor:pointer;
-      font-size:14px;
+      font-size: calc(14px * var(--ui));
       white-space:nowrap;
     }
 
@@ -257,6 +266,7 @@
       grid-template-columns: 1.20fr .80fr;
       gap:12px;
       width:100%;
+      height:100%;
     }
 
     .panel{
@@ -292,7 +302,7 @@
     }
 
     .pill{
-      font-size:12px;
+      font-size: calc(12px * var(--ui));
       font-weight:900;
       padding:6px 10px;
       border-radius:999px;
@@ -329,7 +339,7 @@
       display:flex;
       flex-direction:column;
       gap:12px;
-      overflow:visible;
+      overflow:hidden; /* ✅ evita overflow que empurra o rodapé */
     }
 
     .aviso{
@@ -351,7 +361,7 @@
       padding-left:18px;
       height:auto;
       min-height:auto;
-      overflow:visible;
+      overflow:hidden;
     }
 
     .aviso:hover{
@@ -392,7 +402,7 @@
 
     .aviso .t{
       margin:0;
-      font-weight:900;
+      font-weight:950;
       font-size: calc(22px * var(--ui2));
       letter-spacing:.3px;
       color:#fff;
@@ -412,11 +422,11 @@
     .aviso .d{
       margin:0;
       color:#e0ecff;
-      line-height:1.35;
-      font-size:clamp(14px, 1.7vw, 17px);
+      line-height:1.30;
+      font-size:clamp(16px, 1.9vw, 22px);
       display:block;
       white-space:normal;
-      overflow:visible;
+      overflow:hidden;
       overflow-wrap:anywhere;
       word-break:break-word;
     }
@@ -428,7 +438,7 @@
       gap:10px;
       align-items:center;
       color:rgba(234,242,255,.92);
-      font-size: 0.35em;
+      font-size: 0.42em;
       font-weight:900;
       line-height: 1.15;
     }
@@ -479,7 +489,7 @@
       flex-direction:column;
       gap:12px;
       min-height:0;
-      overflow:auto;
+      overflow:hidden; /* ✅ remove scroll geral do bloco */
     }
     .adCard{
       border:1px solid rgba(255,255,255,.14);
@@ -489,6 +499,7 @@
       display:flex;
       flex-direction:column;
       min-height:0;
+      flex:0 0 auto;
     }
     .adLabel{
       padding:10px 12px;
@@ -615,7 +626,7 @@
       flex-direction:column;
       align-items:stretch;
       gap:6px;
-      margin-bottom: max(14px, env(safe-area-inset-bottom));
+      margin:0; /* ✅ remove empurrão do rodapé */
     }
 
     .tickerLine1{
@@ -701,7 +712,7 @@
       filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
     }
 
-    /* ===== NEWS ===== */
+    /* ===== NEWS (SEM SCROLL) ===== */
     #newsBox{
       background: var(--news-bg);
       border: 1px solid var(--news-border);
@@ -713,6 +724,7 @@
       display:flex;
       flex-direction:column;
       min-height:0;
+      flex: 1 1 auto; /* ✅ ocupa o resto sem causar barra */
     }
 
     .newsHead{
@@ -723,6 +735,7 @@
       gap:10px;
       border-bottom:1px solid rgba(255,255,255,.10);
       background:rgba(12,35,56,.35);
+      flex:0 0 auto;
     }
 
     .newsTitle{ font-weight:950; color:rgba(234,242,255,.92); }
@@ -733,18 +746,9 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-height: 34vh;
-      overflow: auto;
-      overscroll-behavior: contain;
-      scrollbar-width: thin;
-    }
-    #newsBody::-webkit-scrollbar{ width: 10px; }
-    #newsBody::-webkit-scrollbar-track{ background: transparent; }
-    #newsBody::-webkit-scrollbar-thumb{
-      background: rgba(255,255,255,.18);
-      border-radius: 999px;
-      border: 3px solid transparent;
-      background-clip: padding-box;
+      min-height:0;
+      flex:1 1 auto;
+      overflow:hidden; /* ✅ sem barra */
     }
 
     .newsItem{
@@ -762,19 +766,31 @@
     }
     .newsItem .h{
       font-family: var(--font-soft);
-      font-weight: 900;
-      font-size: calc(16px * var(--ui));
-      line-height: 1.25;
-      letter-spacing: .2px;
+      font-weight: 750; /* ✅ menos negrito, mais legível */
+      font-size: clamp(14px, 1.8dvh, 20px);
+      line-height: 1.22;
+      letter-spacing: .15px;
       color: var(--news-title);
       margin: 0;
-      display:block;
-      white-space:normal;
-      overflow:visible;
+      display:-webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3; /* ✅ sempre cabe */
+      overflow:hidden;
     }
 
-    .newsFooter{ margin-top: 8px; font-size: 11px; color: rgba(255,255,255,.65); font-weight: 900; }
-    .newsFooterItem{ font-size: 11px; color: rgba(255,255,255,.55); margin-left: 6px; }
+    .newsFooter{
+      margin-top: 8px;
+      font-size: 11px;
+      color: rgba(255,255,255,.65);
+      font-weight: 900;
+      text-align:left;
+    }
+    .newsFooterItem{
+      font-size: 11px;
+      color: rgba(255,255,255,.55);
+      margin-left: 6px;
+      text-align:left;
+    }
 
     /* ===== GRID avisos desktop: 3 cards tela cheia ===== */
     @media (min-width: 981px){
@@ -799,15 +815,23 @@
         flex:1 1 auto;
         min-height:0;
         overflow:hidden;
-        line-height:1.12;
-        font-size: var(--desc-font, 26px) !important;
+        line-height:1.16;
+        font-size: var(--desc-font, 22px) !important;
       }
     }
 
-    /* ===== MOBILE ===== */
+    /* ===== MOBILE (MANTIDO) ===== */
     @media (max-width: 980px){
-      body{ overflow:auto; -webkit-overflow-scrolling: touch; padding-bottom: 0; }
-      .container{ min-height:auto; }
+      :root{
+        /* ✅ MOBILE continua como estava (base em vmin) */
+        --ui: clamp(1, calc(100vmin / 900), 2.10);
+        --ui2: clamp(1, calc(100vmin / 850), 2.70);
+        --tv-safe-bottom: 0px;
+      }
+
+      body{ overflow:auto; -webkit-overflow-scrolling: touch; padding:0; height:auto; min-height:100svh; }
+      .wrap{ min-height:100svh; height:auto; padding: calc(14px + var(--sat)) calc(14px + var(--sar)) calc(14px + var(--sab)) calc(14px + var(--sal)); }
+      .container{ min-height:auto; height:auto; }
 
       .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
       .condoCenter{ display:none !important; }
@@ -824,7 +848,7 @@
         position:sticky;
         bottom:0;
         z-index:50;
-        margin-bottom: 0;
+        margin:0;
         padding-bottom: max(12px, env(safe-area-inset-bottom));
       }
 
@@ -870,40 +894,6 @@
 
     .wxsvg .bolt{ animation: wx-bolt 1.4s ease-in-out infinite; }
     @keyframes wx-bolt{ 0%,100%{ opacity:.35; transform: translateY(0);} 50%{ opacity:1; transform: translateY(1px);} }
-
-    @media (min-width: 981px){
-      html, body { height: 100%; }
-      body { overflow: hidden; }
-      .container{ height: 100vh; display:flex; flex-direction:column; min-height:0; }
-      .topbar{ flex: 0 0 auto; }
-      .main{ flex: 1 1 auto; min-height: 0; }
-      .ticker{ flex: 0 0 auto; }
-    }
-
-    @media (min-width: 1200px){
-      .topbar{ padding: 2.2vh 2.2vw; gap: 1.4vw; border-radius: 24px; }
-      .badge{ font-size: clamp(16px, 1.3vw, 22px); padding: 12px 16px; }
-      #clock{ font-size: clamp(30px, 2.8vw, 50px); letter-spacing: 1px; }
-      .btnInstall{ font-size: clamp(16px, 1.2vw, 22px); padding: 12px 16px; }
-      .main{ gap: 1.2vw; }
-      .panel{ border-radius: 26px; }
-      .panelHead{ padding: 1.4vh 1.2vw; }
-      .panelTitle{ font-size: clamp(26px, 2.4vw, 44px); letter-spacing: 1px; }
-      .pill{ font-size: clamp(18px, 1.6vw, 28px); padding: 10px 18px; }
-      .avisos{ padding: 1.4vw; gap: 1.0vw; }
-      .aviso{ padding: 2.6vh 2.0vw; gap: 1.4vh; border-radius: 24px; }
-      .aviso .t{ font-size: clamp(32px, 3.2vw, 58px); line-height: 1.15; }
-      .aviso .d{ font-size: clamp(24px, 2.4vw, 44px); line-height: 1.35; }
-      .metaLine{ font-size: clamp(10px, 1.0vw, 18px); gap: 14px; }
-      .prioBadge{ font-size: clamp(10px, 1.0vw, 18px); padding: 8px 14px; }
-      .adBody{ padding: 1.2vw; gap: 1.0vw; }
-      .adLabel{ font-size: clamp(18px, 1.5vw, 26px); padding: 14px 16px; }
-      .videoWrap{ max-height: 44vh; border-radius: 16px; }
-      .ticker{ padding: 1.4vh 1.2vw; border-radius: 24px; gap: 10px; }
-      .tickerIcon{ font-size: clamp(26px, 2.2vw, 38px); }
-      #dataBiblica{ font-size: clamp(18px, 1.6vw, 28px); }
-      #ref{ font-size: clamp(18px, 1.6vw, 28px); line-height: 1.25; }
-    }
   </style>
 </head>
 
@@ -1061,7 +1051,6 @@
       const hhmm = `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
       setText("clock", hhmm);
       setText("clockMini", hhmm);
-      // se quiser exibir a data em algum lugar no futuro, use footerDateString(d)
     }
     tickClock();
     setInterval(tickClock, 1000);
@@ -1081,52 +1070,48 @@
     let DESC_CAP = null;
 
     function parseBRDateTime(v){
-  const s = String(v ?? "").trim();
-  if(!s) return null;
+      const s = String(v ?? "").trim();
+      if(!s) return null;
 
-  // Aceita:
-  // "29/01/26 - 17:35"
-  // "29/01/2026 - 17:35"
-  // (aceita também "29/01/26 17:35" sem hífen)
-  const m = s.match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})\s*(?:-\s*)?(\d{2}):(\d{2})$/);
-  if(m){
-    const dd = Number(m[1]);
-    const mm = Number(m[2]);
-    let yyyy = Number(m[3]);
-    if(String(m[3]).length === 2) yyyy = 2000 + yyyy; // 26 -> 2026
-    const HH = Number(m[4]);
-    const MM = Number(m[5]);
-    const d = new Date(yyyy, mm-1, dd, HH, MM, 0, 0);
-    if(!isNaN(d.getTime())) return d;
-  }
+      const m = s.match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})\s*(?:-\s*)?(\d{2}):(\d{2})$/);
+      if(m){
+        const dd = Number(m[1]);
+        const mm = Number(m[2]);
+        let yyyy = Number(m[3]);
+        if(String(m[3]).length === 2) yyyy = 2000 + yyyy;
+        const HH = Number(m[4]);
+        const MM = Number(m[5]);
+        const d = new Date(yyyy, mm-1, dd, HH, MM, 0, 0);
+        if(!isNaN(d.getTime())) return d;
+      }
 
-  // fallback: tenta Date normal
-  const d2 = new Date(s);
-  if(!isNaN(d2.getTime())) return d2;
+      const d2 = new Date(s);
+      if(!isNaN(d2.getTime())) return d2;
+      return null;
+    }
 
-  return null;
-}
+    function formatDT_BR(v){
+      if(!v) return "";
+      const d = parseBRDateTime(v);
+      if(!d) return String(v);
 
-function formatDT_BR(v){
-  if(!v) return "";
-  const d = parseBRDateTime(v);
+      const dd = pad2(d.getDate());
+      const mm = pad2(d.getMonth()+1);
+      const aa = String(d.getFullYear()).slice(-2);
+      const HH = pad2(d.getHours());
+      const MM = pad2(d.getMinutes());
+      return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
+    }
 
-  // se não conseguiu parsear, devolve o texto original (sem quebrar a tela)
-  if(!d) return String(v);
-
-  const dd = pad2(d.getDate());
-  const mm = pad2(d.getMonth()+1);
-  const aa = String(d.getFullYear()).slice(-2);
-  const HH = pad2(d.getHours());
-  const MM = pad2(d.getMinutes());
-  return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
-}
-
-    function fitDescInCard(card, capPx){
+    function fitDescInCard(card){
       const desc = card.querySelector(".d");
-      if(!desc) return 16;
-      const MIN = 16;
-      const MAX = Math.max(MIN, Number(capPx || 140));
+      if(!desc) return 18;
+
+      const h = Math.max(240, card.clientHeight || 0);
+      const cap = Math.max(22, Math.floor(h * 0.22));   // ✅ tenta grande
+      const MIN = 18;
+      const MAX = Math.max(MIN, cap);
+
       let lo = MIN, hi = MAX, best = MIN;
       while(lo <= hi){
         const mid = (lo + hi) >> 1;
@@ -1147,13 +1132,14 @@ function formatDT_BR(v){
       if(!cards.length) return;
 
       if(pageIdx === 0 && DESC_CAP == null){
-        const bests = cards.map(c => fitDescInCard(c, 140));
+        const bests = cards.map(c => fitDescInCard(c));
         DESC_CAP = Math.min(...bests);
-        cards.forEach(c => fitDescInCard(c, DESC_CAP));
+        cards.forEach(c => c.querySelector(".d")?.style.setProperty("--desc-font", DESC_CAP + "px"));
         return;
       }
-      const cap = (DESC_CAP == null ? 140 : DESC_CAP);
-      cards.forEach(c => fitDescInCard(c, cap));
+
+      const cap = (DESC_CAP == null ? 22 : DESC_CAP);
+      cards.forEach(c => c.querySelector(".d")?.style.setProperty("--desc-font", cap + "px"));
     }
 
     function renderAvisos(data){
@@ -1376,14 +1362,13 @@ function formatDT_BR(v){
         const p = cur.precipitation;
         const code = Number(cur.weather_code);
 
-        wxSetIcon("wxIconTop", code);      // topo grande
-        wxSetIcon("wxIconInline", code);   // rodapé mini (CSS controla tamanho)
+        wxSetIcon("wxIconTop", code);
+        wxSetIcon("wxIconInline", code);
 
         setText("wxCityTemp", `${c.cidade || "Tubarão/SC"} ${t}°C`);
         setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
 
       } catch (e) {
-        console.warn("Clima offline:", e);
         const cloud = wxSvgCloud();
         const top = document.getElementById("wxIconTop");
         const mini = document.getElementById("wxIconInline");
@@ -1395,9 +1380,10 @@ function formatDT_BR(v){
     }
 
     /* =========================================================
-       Publicidade — SÓ MP4 + SEM INTERVALO (troca no onended)
+       Publicidade — MP4 + troca no onended
        ========================================================= */
     const AD_STATE_KEY = "CS_AD_STATE_V1";
+    const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V1";
 
     function adLoadState(){
       try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); }
@@ -1492,60 +1478,56 @@ function formatDT_BR(v){
       st.paused = v.paused;
       adSaveState(st);
     }
-const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V1";
 
-function adShuffleCopy(arr){
-  const a = arr.slice();
-  for(let i=a.length-1; i>0; i--){
-    const j = Math.floor(Math.random() * (i+1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function adGetShuffledList(originalList){
-  // mantém o embaralhamento estável na sessão
-  try{
-    const raw = sessionStorage.getItem(AD_SHUFFLE_KEY);
-    if(raw){
-      const saved = JSON.parse(raw);
-      const filesNow = originalList.map(x => String(x?.arquivo||""));
-      const filesSaved = Array.isArray(saved?.files) ? saved.files : [];
-      if(filesSaved.join("|") === filesNow.join("|") && Array.isArray(saved?.order)){
-        const order = saved.order;
-        const map = new Map(originalList.map(x => [String(x?.arquivo||""), x]));
-        const rebuilt = order.map(f => map.get(f)).filter(Boolean);
-        filesNow.forEach(f=>{ if(!order.includes(f)) rebuilt.push(map.get(f)); });
-        return rebuilt;
+    function adShuffleCopy(arr){
+      const a = arr.slice();
+      for(let i=a.length-1; i>0; i--){
+        const j = Math.floor(Math.random() * (i+1));
+        [a[i], a[j]] = [a[j], a[i]];
       }
+      return a;
     }
-  }catch(e){}
 
-  const shuffled = adShuffleCopy(originalList);
+    function adGetShuffledList(originalList){
+      try{
+        const raw = sessionStorage.getItem(AD_SHUFFLE_KEY);
+        if(raw){
+          const saved = JSON.parse(raw);
+          const filesNow = originalList.map(x => String(x?.arquivo||""));
+          const filesSaved = Array.isArray(saved?.files) ? saved.files : [];
+          if(filesSaved.join("|") === filesNow.join("|") && Array.isArray(saved?.order)){
+            const order = saved.order;
+            const map = new Map(originalList.map(x => [String(x?.arquivo||""), x]));
+            const rebuilt = order.map(f => map.get(f)).filter(Boolean);
+            filesNow.forEach(f=>{ if(!order.includes(f)) rebuilt.push(map.get(f)); });
+            return rebuilt;
+          }
+        }
+      }catch(e){}
 
-  try{
-    const order = shuffled.map(x => String(x?.arquivo||""));
-    const files = originalList.map(x => String(x?.arquivo||""));
-    sessionStorage.setItem(AD_SHUFFLE_KEY, JSON.stringify({ files, order }));
-  }catch(e){}
+      const shuffled = adShuffleCopy(originalList);
+      try{
+        const order = shuffled.map(x => String(x?.arquivo||""));
+        const files = originalList.map(x => String(x?.arquivo||""));
+        sessionStorage.setItem(AD_SHUFFLE_KEY, JSON.stringify({ files, order }));
+      }catch(e){}
+      return shuffled;
+    }
 
-  return shuffled;
-}
     function adPlayByState(videos, forceFromStart){
       const adVideo = document.getElementById("adVideo");
       const adLabel = document.getElementById("adLabel");
       const adPill  = document.getElementById("adPill");
       if(!adVideo || !adLabel) return;
 
-     let list = Array.isArray(videos) ? videos : [];
-if(!list.length) return;
+      let list = Array.isArray(videos) ? videos : [];
+      if(!list.length) return;
 
-// embaralha quando config.shuffle = true
-try{
-  const cfg = (window.__lastDataForTopbar || window.__cfg || {});
-  const pub = cfg?.publicidade || {};
-  if (pub.shuffle) list = adGetShuffledList(list);
-}catch(e){}
+      try{
+        const cfg = (window.__lastDataForTopbar || window.__cfg || {});
+        const pub = cfg?.publicidade || {};
+        if (pub.shuffle) list = adGetShuffledList(list);
+      }catch(e){}
 
       const st = adLoadState();
       let idx = Number.isFinite(st.idx) ? st.idx : 0;
@@ -1574,7 +1556,6 @@ try{
       }
 
       const desiredTime = (forceFromStart ? 0 : Number(st.t || 0));
-
       const playNow = () => {
         try{
           if(!forceFromStart && desiredTime > 0 && Number.isFinite(desiredTime)){
@@ -1630,7 +1611,6 @@ try{
       carregarMensagensCidade();
 
       const videosMp4 = adFilterMp4(pub?.videos);
-
       if (!videosMp4.length){
         if (adCard) adCard.style.display = "none";
         return;
@@ -1655,14 +1635,13 @@ try{
       adVideo.addEventListener("play", adSavePlayback, {passive:true});
       document.addEventListener("visibilitychange", ()=>{ if(document.hidden) adSavePlayback(); });
 
-      // ✅ SEM INTERVALO: troca somente quando termina
       adPlayByState(videosMp4, false);
       adVideo.onended = () => adNext(videosMp4);
       adVideo.onerror = () => setTimeout(()=>adNext(videosMp4), 1200);
     }
 
     /* =========================================================
-       Mensagens da Cidade
+       Mensagens da Cidade (SEM SCROLL)
        ========================================================= */
     function decodeHtmlEntities_(s){
       const t = document.createElement("textarea");
@@ -1671,6 +1650,14 @@ try{
     }
     function normalizeText_(s){
       return decodeHtmlEntities_(s).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+    }
+
+    function getNewsMaxItems(){
+      const h = window.innerHeight || 900;
+      if (isMobile()) return 8;
+      if (h < 720) return 3;
+      if (h < 880) return 4;
+      return 5;
     }
 
     async function carregarMensagensCidade(){
@@ -1684,6 +1671,7 @@ try{
 
         const j = await res.json();
         const items = Array.isArray(j.items) ? j.items : [];
+        const maxItems = getNewsMaxItems();
 
         if(!items.length){
           newsBody.innerHTML = `
@@ -1697,14 +1685,13 @@ try{
         let html = "";
         const fontes = new Set();
 
-        items.slice(0,8).forEach(x=>{
+        items.slice(0, maxItems).forEach(x=>{
           let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
           titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
           titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
           if(!titulo) titulo = "Mensagem";
 
           if(x.fonte) fontes.add(normalizeText_(x.fonte));
-
           html += `<div class="newsItem"><p class="h">${escapeHtml(titulo)}</p></div>`;
         });
 
@@ -1802,6 +1789,12 @@ try{
     setInterval(() => {
       try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
     }, 60000);
+
+    /* ✅ recalcula “news max items” quando muda tamanho (PC/Wix/TV) */
+    window.addEventListener("resize", ()=>{
+      if(!isMobile()) carregarMensagensCidade();
+      try{ if(window.__lastDataForTopbar) ajustarAvisosTelaCheia(ROT_STATE.page || 0); }catch(e){}
+    }, {passive:true});
   </script>
 
   <script>
