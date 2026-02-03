@@ -1172,8 +1172,26 @@
   0%,100%{ opacity: .35; transform: translateY(0); }
   50%{ opacity: 1; transform: translateY(1px); }
 }
+
+
     
 
+  /* ===== Fonte das notícias no final ===== */
+  .newsFooter{
+    margin-top: 8px;
+    font-size: 11px;
+    color: rgba(255,255,255,.65);
+    font-weight: 900;
+  }
+
+  .newsFooterItem{
+    font-size: 11px;
+    color: rgba(255,255,255,.55);
+    margin-left: 6px;
+  }
+
+
+    
     
   </style>
 </head>
@@ -1246,7 +1264,7 @@
 
             <div class="newsBox" id="newsBox" style="display:none">
               <div class="newsHead">
-                <div class="newsTitle" id="cityTitle">📰 Mensagens da Cidade</div>
+                <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
                 <div class="pill" id="newsPill">—</div>
               </div>
               <div id="newsBody"></div>
@@ -1733,17 +1751,17 @@ if (wxI) wxI.textContent = emoji;
       }catch(e){}
     }
 
-    function setCityTitleFromConfig(cfg){
-      const el = document.getElementById("cityTitle");
-      if(!el) return;
+  function setCityTitleFromConfig(cfg){
+  const el = document.getElementById("cityTitle");
+  if(!el) return;
 
-      const t =
-        cfg?.publicidade?.cidadeTitulo ||
-        cfg?.cidadeTitulo ||
-        "📰 Mensagens da Cidade";
+  const t =
+    cfg?.publicidade?.cidadeTitulo ||
+    cfg?.cidadeTitulo ||
+    "📰 Mensagens no Brasil";
 
-      el.textContent = String(t);
-    }
+  el.textContent = String(t);
+}
 
     function bindTvVideoControls(pub){
       const v = document.getElementById("adVideo");
@@ -1961,61 +1979,68 @@ if (wxI) wxI.textContent = emoji;
     }
 
     async function carregarMensagensCidade(){
-      const newsBox  = document.getElementById("newsBox");
-      const newsBody = document.getElementById("newsBody");
-      if(!newsBox || !newsBody) return;
+  const newsBox  = document.getElementById("newsBox");
+  const newsBody = document.getElementById("newsBody");
+  if(!newsBox || !newsBody) return;
 
-      try{
-        const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
-        if(!res.ok) throw new Error("HTTP " + res.status);
+  try{
+    const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
+    if(!res.ok) throw new Error("HTTP " + res.status);
 
-        const j = await res.json();
-        const items = Array.isArray(j.items) ? j.items : [];
+    const j = await res.json();
+    const items = Array.isArray(j.items) ? j.items : [];
 
-        if(!items.length){
-          newsBody.innerHTML = `
-            <div class="newsItem">
-              <p class="h">Sem mensagens no momento</p>
-            </div>`;
-          newsBox.style.display = "flex";
-          return;
-        }
-
-        const fonte = normalizeText_(items[0].fonte || "news.google.com");
-        const data  = toBRDate_(items[0].data || "");
-
-        let html = `
-          <div class="newsHeader">
-            Fonte: ${escapeHtml(fonte)} — ${escapeHtml(data)}
-          </div>
-        `;
-
-        items.slice(0,8).forEach(x=>{
-          let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
-          titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
-          titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
-          if(!titulo) titulo = "Mensagem";
-
-          html += `
-            <div class="newsItem">
-              <p class="h">${escapeHtml(titulo)}</p>
-            </div>
-          `;
-        });
-
-        newsBody.innerHTML = html;
-        newsBox.style.display = "flex";
-
-      }catch(e){
-        newsBody.innerHTML = `
-          <div class="newsHeader">Fonte: news.google.com — Offline</div>
-          <div class="newsItem">
-            <p class="h">Mensagens indisponíveis</p>
-          </div>
-        `;
-        newsBox.style.display = "flex";
-      }
+    if(!items.length){
+      newsBody.innerHTML = `
+        <div class="newsItem">
+          <p class="h">Sem mensagens no momento</p>
+        </div>
+        <div class="newsFooter">Fonte: indisponível</div>
+      `;
+      newsBox.style.display = "flex";
+      return;
     }
+
+    let html = "";
+    const fontes = new Set();
+
+    items.slice(0,8).forEach(x=>{
+      let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
+      titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
+      titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
+      if(!titulo) titulo = "Mensagem";
+
+      if(x.fonte) fontes.add(normalizeText_(x.fonte));
+
+      html += `
+        <div class="newsItem">
+          <p class="h">${escapeHtml(titulo)}</p>
+        </div>
+      `;
+    });
+
+    // fontes no final (uma por linha)
+    let fontesHtml = "";
+    if(fontes.size){
+      fontesHtml = `<div class="newsFooter">Fonte:</div>`;
+      fontes.forEach(f=>{
+        fontesHtml += `<div class="newsFooterItem">${escapeHtml(f)}</div>`;
+      });
+    }
+
+    newsBody.innerHTML = html + fontesHtml;
+    newsBox.style.display = "flex";
+
+  }catch(e){
+    newsBody.innerHTML = `
+      <div class="newsItem">
+        <p class="h">Mensagens indisponíveis</p>
+      </div>
+      <div class="newsFooter">Fonte: news.google.com (offline)</div>
+    `;
+    newsBox.style.display = "flex";
+  }
+}
 
     function aplicarImagemTopbar(data){
       const cidade = String(data?.clima?.cidade || "").toLowerCase();
