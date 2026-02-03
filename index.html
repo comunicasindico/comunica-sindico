@@ -957,7 +957,74 @@
   }
 }
   
-  
+  /* =========================================================
+   RODAPÉ — sempre 1 linha no PC/TV (fonte adapta)
+   Só quebra em 2 linhas se ficar extremo
+   Celular permanece igual
+   ========================================================= */
+
+@media (min-width: 981px){
+
+  .tickerLine1{
+    flex-wrap: nowrap;              /* força 1 linha */
+    justify-content: center;
+    gap: 12px;
+  }
+
+  #ref{
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    /* 🔑 fonte adaptativa */
+    font-size: clamp(11px, 1.1vw, 16px);
+  }
+
+  .wxInline{
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+
+    font-size: clamp(10px, 1vw, 14px);
+  }
+
+  .wxInline .wxL1,
+  .wxInline .wxL2{
+    line-height: 1.1;
+  }
+
+  .wxInline .wxL2::before{
+    content: " • ";
+    opacity: .6;
+    font-weight: 900;
+    margin-right: 2px;
+  }
+}
+
+
+/* fallback extremo (janelas muito estreitas): no máx 2 linhas */
+@media (min-width: 981px) and (max-width: 900px){
+  .tickerLine1{
+    flex-wrap: wrap;
+  }
+
+  #ref{
+    white-space: normal;
+    text-align: center;
+  }
+
+  .wxInline{
+    width: 100%;
+    justify-content: center;
+  }
+
+  .wxInline .wxL2::before{
+    content: "";
+  }
+}
   
   
   </style>
