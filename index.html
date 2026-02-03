@@ -655,18 +655,18 @@
       flex:0 0 auto;
     }
 
-    #ref{
-      color:rgba(234,242,255,.88);
-      font-weight:850;
-      font-size: calc(16px * var(--ui2));
-      flex:1 1 100%;
-      min-width:0;
-      white-space: normal;
-      overflow: visible;
-      text-overflow: unset;
-      line-height: 1.25;
-      text-align:center;
-    }
+   #ref{
+  color:rgba(234,242,255,.88);
+  font-weight:850;
+  font-size: calc(16px * var(--ui2));
+  flex: 1 1 auto;             /* ✅ deixa tentar 1 linha */
+  min-width: 280px;           /* ✅ ajuda a não esmagar */
+  white-space: nowrap;        /* ✅ 1 linha por padrão */
+  overflow: hidden;
+  text-overflow: ellipsis;    /* ✅ se ficar grande demais, corta com ... */
+  line-height: 1.25;
+  text-align:center;
+}
 
     /* ===== RODAPÉ CLIMA (2 LINHAS) ===== */
     .wxInline{
@@ -894,6 +894,72 @@
 
     .wxsvg .bolt{ animation: wx-bolt 1.4s ease-in-out infinite; }
     @keyframes wx-bolt{ 0%,100%{ opacity:.35; transform: translateY(0);} 50%{ opacity:1; transform: translateY(1px);} }
+  
+  /* =========================================================
+   RODAPÉ — PC/TV: 1 linha; se não couber, vira 2 linhas
+   (Celular mantém como está)
+   ========================================================= */
+
+/* PC/TV (>= 981px): tenta TUDO em 1 linha */
+@media (min-width: 981px){
+  .tickerLine1{
+    flex-wrap: nowrap;        /* ✅ 1 linha */
+    justify-content: center;
+  }
+
+  .wxInline{
+    flex-direction: row;      /* ✅ clima em linha */
+    align-items: center;
+    gap: 10px;
+    margin-top: 0;
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .wxInline .wxL1,
+  .wxInline .wxL2{
+    font-size: clamp(12px, 1.2vw, 16px);
+    line-height: 1.15;
+  }
+
+  /* coloca separador entre “cidade/temp” e “vento/chuva” */
+  .wxInline .wxL2::before{
+    content: " • ";
+    opacity: .65;
+    font-weight: 900;
+    margin-right: 2px;
+  }
+}
+
+/* PC/TV menor / janela meia tela: se apertar, cai pra 2 linhas */
+@media (min-width: 981px) and (max-width: 1200px){
+  .tickerLine1{
+    flex-wrap: wrap;          /* ✅ 2 linhas quando precisar */
+  }
+
+  #ref{
+    flex: 1 1 100%;
+    min-width: 0;
+    white-space: normal;      /* ✅ permite quebrar */
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .wxInline{
+    width: 100%;
+    justify-content: center;  /* ✅ fica bonito centralizado */
+    margin-top: 6px;
+    white-space: normal;
+  }
+
+  .wxInline .wxL2::before{
+    content: "";              /* ✅ sem separador quando quebra linha */
+  }
+}
+  
+  
+  
+  
   </style>
 </head>
 
