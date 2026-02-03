@@ -931,30 +931,21 @@
   }
 }
 
-/* PC/TV menor / janela meia tela: se apertar, cai pra 2 linhas */
-@media (min-width: 981px) and (max-width: 1200px){
-  .tickerLine1{
-    flex-wrap: wrap;          /* ✅ 2 linhas quando precisar */
-  }
+/* fallback extremo: só quebra em 2 linhas MUITO estreito */
+@media (min-width: 981px) and (max-width: 760px){
+  .tickerLine1{ flex-wrap: wrap; }
 
   #ref{
-    flex: 1 1 100%;
-    min-width: 0;
-    white-space: normal;      /* ✅ permite quebrar */
-    overflow: visible;
-    text-overflow: unset;
+    white-space: normal;
+    text-align: center;
   }
 
   .wxInline{
     width: 100%;
-    justify-content: center;  /* ✅ fica bonito centralizado */
-    margin-top: 6px;
-    white-space: normal;
+    justify-content: center;
   }
 
-  .wxInline .wxL2::before{
-    content: "";              /* ✅ sem separador quando quebra linha */
-  }
+  .wxInline .wxL2::before{ content: ""; }
 }
   
   /* =========================================================
@@ -968,7 +959,7 @@
   .tickerLine1{
     flex-wrap: nowrap;              /* força 1 linha */
     justify-content: center;
-    gap: 12px;
+    gap: 8px;
   }
 
   #ref{
