@@ -1080,17 +1080,47 @@
     let ROT_STATE = { page: 0, totalPages: 1, paused: false };
     let DESC_CAP = null;
 
-    function formatDT_BR(v){
-      if(!v) return "";
-      const d = new Date(v);
-      if(isNaN(d.getTime())) return String(v);
-      const dd = pad2(d.getDate());
-      const mm = pad2(d.getMonth()+1);
-      const aa = String(d.getFullYear()).slice(-2);
-      const HH = pad2(d.getHours());
-      const MM = pad2(d.getMinutes());
-      return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
-    }
+    function parseBRDateTime(v){
+  const s = String(v ?? "").trim();
+  if(!s) return null;
+
+  // Aceita:
+  // "29/01/26 - 17:35"
+  // "29/01/2026 - 17:35"
+  // (aceita também "29/01/26 17:35" sem hífen)
+  const m = s.match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})\s*(?:-\s*)?(\d{2}):(\d{2})$/);
+  if(m){
+    const dd = Number(m[1]);
+    const mm = Number(m[2]);
+    let yyyy = Number(m[3]);
+    if(String(m[3]).length === 2) yyyy = 2000 + yyyy; // 26 -> 2026
+    const HH = Number(m[4]);
+    const MM = Number(m[5]);
+    const d = new Date(yyyy, mm-1, dd, HH, MM, 0, 0);
+    if(!isNaN(d.getTime())) return d;
+  }
+
+  // fallback: tenta Date normal
+  const d2 = new Date(s);
+  if(!isNaN(d2.getTime())) return d2;
+
+  return null;
+}
+
+function formatDT_BR(v){
+  if(!v) return "";
+  const d = parseBRDateTime(v);
+
+  // se não conseguiu parsear, devolve o texto original (sem quebrar a tela)
+  if(!d) return String(v);
+
+  const dd = pad2(d.getDate());
+  const mm = pad2(d.getMonth()+1);
+  const aa = String(d.getFullYear()).slice(-2);
+  const HH = pad2(d.getHours());
+  const MM = pad2(d.getMinutes());
+  return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
+}
 
     function fitDescInCard(card, capPx){
       const desc = card.querySelector(".d");
@@ -1462,15 +1492,60 @@
       st.paused = v.paused;
       adSaveState(st);
     }
+const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V1";
 
+function adShuffleCopy(arr){
+  const a = arr.slice();
+  for(let i=a.length-1; i>0; i--){
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function adGetShuffledList(originalList){
+  // mantém o embaralhamento estável na sessão
+  try{
+    const raw = sessionStorage.getItem(AD_SHUFFLE_KEY);
+    if(raw){
+      const saved = JSON.parse(raw);
+      const filesNow = originalList.map(x => String(x?.arquivo||""));
+      const filesSaved = Array.isArray(saved?.files) ? saved.files : [];
+      if(filesSaved.join("|") === filesNow.join("|") && Array.isArray(saved?.order)){
+        const order = saved.order;
+        const map = new Map(originalList.map(x => [String(x?.arquivo||""), x]));
+        const rebuilt = order.map(f => map.get(f)).filter(Boolean);
+        filesNow.forEach(f=>{ if(!order.includes(f)) rebuilt.push(map.get(f)); });
+        return rebuilt;
+      }
+    }
+  }catch(e){}
+
+  const shuffled = adShuffleCopy(originalList);
+
+  try{
+    const order = shuffled.map(x => String(x?.arquivo||""));
+    const files = originalList.map(x => String(x?.arquivo||""));
+    sessionStorage.setItem(AD_SHUFFLE_KEY, JSON.stringify({ files, order }));
+  }catch(e){}
+
+  return shuffled;
+}
     function adPlayByState(videos, forceFromStart){
       const adVideo = document.getElementById("adVideo");
       const adLabel = document.getElementById("adLabel");
       const adPill  = document.getElementById("adPill");
       if(!adVideo || !adLabel) return;
 
-      const list = videos;
-      if(!list.length) return;
+     let list = Array.isArray(videos) ? videos : [];
+if(!list.length) return;
+
+// embaralha quando config.shuffle = true
+try{
+  const cfg = (window.__lastDataForTopbar || window.__cfg || {});
+  const pub = cfg?.publicidade || {};
+  if (pub.shuffle) list = adGetShuffledList(list);
+}catch(e){}
 
       const st = adLoadState();
       let idx = Number.isFinite(st.idx) ? st.idx : 0;
