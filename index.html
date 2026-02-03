@@ -1257,19 +1257,19 @@
       </div>
 
       <div class="ticker">
-        <div class="tickerLine1">
-          <span class="tickerIcon">📖</span>
-          <span id="dataBiblica">—</span>
-          <span id="ref">—</span>
+      <div class="tickerLine1">
+  <span class="tickerIcon">📖</span>
+  <span id="dataBiblica">—</span>
+  <span id="ref">—</span>
 
-          <div class="wxInline" id="wxInline">
-  <div id="wxLine1">—</div>
-  <div id="wxLine2">
-    <span id="wxIconInline" class="wxMiniSvg" aria-hidden="true"></span>
-    <span id="wxTextInline">—</span>
+  <div class="wxInline" id="wxInline">
+    <div class="wxL1">
+      <span id="wxIconInline" class="wxMiniSvg" aria-hidden="true"></span>
+      <span id="wxCityTemp">—</span>
+    </div>
+    <div class="wxL2" id="wxWindRain">—</div>
   </div>
 </div>
-        </div>
 
         <div class="tickerLine2">
           <div class="wxMini">
@@ -1665,7 +1665,8 @@ function wxSvgStorm(){
       const c = data?.clima;
 
       if (!c?.latitude || !c?.longitude) {
-        setText("wxTextInline", "Clima: configure latitude/longitude no data.json");
+        setText("wxCityTemp", `${c.cidade || "Tubarão/SC"} ${t}°C`);
+setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
         return;
       }
 
