@@ -1,14 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Comunica Síndico - Condôminos</title>
+  <link rel="canonical" href="./">
 
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon-192.png">
+  <script>
+  (function () {
+    try {
+      const u = new URL(location.href);
 
-<style>
+      /* remove querystring (?pwa=1 etc) */
+      if (u.search) {
+        u.search = "";
+        location.replace(u.toString());
+        return;
+      }
+
+      /* troca /index.html por / */
+      if (u.pathname.endsWith("/index.html")) {
+        u.pathname = u.pathname.replace(/\/index\.html$/i, "/");
+        location.replace(u.toString());
+        return;
+      }
+    } catch (e) {}
+  })();
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Comunica Síndico - Condôminos</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#0b223a">
+
+  <style>
 :root{
 --bg1:#061726;
 --bg2:#0b1f33;
