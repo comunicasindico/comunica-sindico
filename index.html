@@ -1190,7 +1190,63 @@
     margin-left: 6px;
   }
 
+/* ===== RODAPÉ: CLIMA EM 2 LINHAS ABAIXO DO VERSÍCULO ===== */
+.wxInline{
+  margin-left: 0 !important;            /* não empurra pra direita */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;                   /* centraliza no rodapé */
+  gap: 2px;
+  margin-top: 6px;
+  white-space: normal !important;
+}
 
+.wxInline .wxL1{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-weight: 950;
+  color: rgba(234,242,255,.92);
+  font-size: clamp(13px, 1.9vw, 18px);
+  line-height: 1.15;
+}
+
+.wxInline .wxL2{
+  font-weight: 900;
+  color: rgba(234,242,255,.78);
+  font-size: clamp(12px, 1.7vw, 16px);
+  line-height: 1.15;
+}
+
+/* ícone mini premium */
+.wxMiniSvg{
+  display:inline-flex;
+  width: 18px;
+  height: 18px;
+  line-height: 1;
+}
+.wxMiniSvg svg{
+  width: 18px;
+  height: 18px;
+  display:block;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
+}
+
+/* mantém o versículo acima em 1 bloco */
+.tickerLine1{
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+}
+#ref{
+  flex: 1 1 100%;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  line-height: 1.25;
+  text-align:center;
+}
     
     
   </style>
@@ -1571,20 +1627,41 @@
     }
 
 
-
 function wxSvgByCode(code){
-  // Retorna SVG (string) e um label simples
-  // Baseado nos weather_code do Open-Meteo
-  const isSun   = (code === 0);
-  const isCloud = ([1,2,3].includes(code) || [45,48].includes(code));
-  const isRain  = ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code));
-  const isStorm = ([95,96,99].includes(code));
+  const c = Number(code);
 
-  if(isSun)   return { label:"Ensolarado", svg: wxSvgSun() };
-  if(isStorm) return { label:"Tempestade", svg: wxSvgStorm() };
-  if(isRain)  return { label:"Chuva",      svg: wxSvgRain() };
-  if(isCloud) return { label:"Nublado",    svg: wxSvgCloud() };
-  return      { label:"Clima",             svg: wxSvgCloud() };
+  const isSun   = (c === 0);
+  const isCloud = ([1,2,3,45,48].includes(c));
+  const isRain  = ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(c));
+  const isStorm = ([95,96,99].includes(c));
+
+  try {
+    if (isSun && typeof wxSvgSun === "function") {
+      return { label:"Ensolarado", svg: wxSvgSun() };
+    }
+
+    if (isStorm && typeof wxSvgStorm === "function") {
+      return { label:"Tempestade", svg: wxSvgStorm() };
+    }
+
+    if (isRain && typeof wxSvgRain === "function") {
+      return { label:"Chuva", svg: wxSvgRain() };
+    }
+
+    if (isCloud && typeof wxSvgCloud === "function") {
+      return { label:"Nublado", svg: wxSvgCloud() };
+    }
+
+  } catch(e){
+    console.warn("Erro wxSvgByCode:", e);
+  }
+
+  // fallback absoluto
+  if (typeof wxSvgCloud === "function") {
+    return { label:"Clima", svg: wxSvgCloud() };
+  }
+
+  return { label:"Clima", svg: "☁️" };
 }
 
 function wxSetTopIconSvg(code){
@@ -1643,6 +1720,38 @@ function wxSvgCloud(){
   </svg>`;
 }
 
+function wxSvgMiniWrap(svg){
+  return `
+    <span class="wxMiniIcon" aria-hidden="true">
+      ${svg}
+    </span>
+  `;
+}
+
+function wxSetFooterMiniSvg(code){
+  const el = document.getElementById("wxIconInline");
+  if(!el) return;
+
+  try {
+    const o = wxSvgByCode(code);
+
+    if(!o || !o.svg){
+      el.innerHTML = wxSvgCloud(); // fallback seguro
+      el.setAttribute("aria-label","Clima");
+      return;
+    }
+
+    el.innerHTML = wxSvgMiniWrap(o.svg);
+    el.setAttribute("role","img");
+    el.setAttribute("aria-label", o.label || "Clima");
+
+  } catch(e){
+    console.warn("Erro SVG rodapé:", e);
+    el.innerHTML = wxSvgCloud();
+    el.setAttribute("aria-label","Clima");
+  }
+}
+    
 function wxSvgRain(){
   return `
   <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1677,56 +1786,59 @@ function wxSvgStorm(){
 
     
 
+async function carregarClima(data){
+  const c = data?.clima;
 
-    
-    async function carregarClima(data){
-      const c = data?.clima;
-
-      if (!c?.latitude || !c?.longitude) {
-        setText("wxCityTemp", `${c.cidade || "Tubarão/SC"} ${t}°C`);
-setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
-        return;
-      }
-
-      try {
-        const url =
-          "https://api.open-meteo.com/v1/forecast" +
-          `?latitude=${encodeURIComponent(c.latitude)}` +
-          `&longitude=${encodeURIComponent(c.longitude)}` +
-          `&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m` +
-          `&timezone=${encodeURIComponent(c.timezone || "America/Sao_Paulo")}`;
-
-        const res = await fetch(url, { cache: "no-store" });
-        const j = await res.json();
-
-        const cur = j?.current;
-        if (!cur) throw new Error("Sem current");
-
-        const emoji = wxEmojiFromCode(cur.weather_code);
-        const t = Math.round(cur.temperature_2m);
-        const w = Math.round(cur.wind_speed_10m);
-        const p = cur.precipitation;
-
-               // ÍCONE PREMIUM NO TOPO (SVG animado)
-        wxSetTopIconSvg(cur.weather_code);
-        wxSetFooterIconSvg(cur.weather_code);
-        
-       // linha 1: cidade + temperatura
-setText("wxLine1", `${c.cidade || "Cidade"} ${t}°C`);
-
-// linha 2: vento + chuva
-setText("wxTextInline", `Vento ${w} km/h • Chuva ${p} mm`);
-
-const wxI = document.getElementById("wxIconInline");
-if (wxI) wxI.textContent = emoji;
-      } catch (e) {
-        const top = document.getElementById("wxIconTop");
-       if (top) top.innerHTML = wxSvgCloud();
-        const wxI = document.getElementById("wxIconInline");
-        if (wxI) wxI.textContent = "🌦️";
-        setText("wxTextInline", `${data?.clima?.cidade || "—"} (offline)`);
-      }
+  try {
+    if (!c?.latitude || !c?.longitude) {
+      throw new Error("Sem coordenadas");
     }
+
+    const url =
+      "https://api.open-meteo.com/v1/forecast" +
+      `?latitude=${encodeURIComponent(c.latitude)}` +
+      `&longitude=${encodeURIComponent(c.longitude)}` +
+      `&current=temperature_2m,precipitation,weather_code,wind_speed_10m` +
+      `&timezone=${encodeURIComponent(c.timezone || "America/Sao_Paulo")}`;
+
+    const res = await fetch(url, { cache: "no-store" });
+    const j = await res.json();
+
+    const cur = j?.current;
+    if (!cur) throw new Error("Sem current");
+
+    const t = Math.round(cur.temperature_2m);
+    const w = Math.round(cur.wind_speed_10m);
+    const p = cur.precipitation;
+    const code = Number(cur.weather_code);
+
+    /* ===== TOPO (SVG premium grande) ===== */
+    wxSetTopIconSvg(code);
+
+    /* ===== RODAPÉ (SVG mini premium) ===== */
+    wxSetFooterMiniSvg(code);
+
+    /* ===== Linha 1: Cidade + Temperatura ===== */
+    setText("wxCityTemp", `${c.cidade || "Tubarão/SC"} ${t}°C`);
+
+    /* ===== Linha 2: Vento + Chuva ===== */
+    setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
+
+  } catch (e) {
+    console.warn("Clima offline:", e);
+
+    /* topo fallback */
+    const top = document.getElementById("wxIconTop");
+    if (top) top.innerHTML = wxSvgCloud();
+
+    /* rodapé fallback */
+    const mini = document.getElementById("wxIconInline");
+    if (mini) mini.innerHTML = wxSvgCloud();
+
+    setText("wxCityTemp", `${data?.clima?.cidade || "—"} (offline)`);
+    setText("wxWindRain", `Vento — km/h • Chuva — mm`);
+  }
+}
 
     const AD_STATE_KEY = "CS_AD_STATE_V1";
     let AD_TIMER = null;
