@@ -758,6 +758,14 @@
 }
     }
 
+    @media (min-width: 981px){
+  #newsBody{
+    display:grid;
+    grid-template-rows: repeat(4, minmax(0, 1fr)); /* 4 itens sempre cabem */
+    gap:10px;
+  }
+  .newsItem{ min-height:0; overflow:hidden; }
+}
     .newsItem{
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
@@ -771,22 +779,20 @@
       border-color: rgba(255,255,255,.16);
       background: rgba(0,0,0,.22);
     }
-    .newsItem .h{
+   .newsItem .h{
   font-family: var(--font-soft);
   font-weight: 750;
-  font-size: clamp(12px, 1.6dvh, 18px);
-  line-height: 1.22;
+  font-size: clamp(12px, 1.55dvh, 18px); /* reduz automaticamente em telas menores */
+  line-height: 1.18;
   letter-spacing: .15px;
   color: var(--news-title);
   margin: 0;
 
-  /* ✅ SEM reticências */
-  display:block;
-  overflow: hidden;          /* mantém o card “limpo” */
-  white-space: normal;
-  text-overflow: unset;
-  word-break: break-word;
-  overflow-wrap: anywhere;
+  display:block;              /* <- tira line-clamp */
+  overflow:visible;           /* <- sem cortar */
+  white-space:normal;         /* <- quebra linha */
+  overflow-wrap:anywhere;
+  word-break:break-word;
 }
 
     .newsFooter{
@@ -803,33 +809,30 @@
       text-align:left;
     }
 
-    /* ===== GRID avisos desktop: 3 cards tela cheia ===== */
-    @media (min-width: 981px){
-      #avisos{
-        height:100%;
-        min-height:0;
-        overflow:hidden;
-        display:grid;
-        gap:12px;
-        grid-template-rows: repeat(var(--rows, 3), minmax(0, 1fr));
-      }
-      #avisos .aviso{
-        height:100%;
-        min-height:0;
-        overflow:hidden;
-        display:flex;
-        flex-direction:column;
-      }
-      #avisos .aviso .t,
-      #avisos .aviso .metaLine{ flex:0 0 auto; }
-      #avisos .aviso .d{
-        flex:1 1 auto;
-        min-height:0;
-        overflow:hidden;
-        line-height:1.16;
-        font-size: var(--desc-font, 22px);
-      }
-    }
+   /* ===== AVISOS DESKTOP: altura pelo conteúdo (máx 3 avisos via JS) ===== */
+@media (min-width: 981px){
+  #avisos{
+    padding:14px;
+    min-height:0;
+    display:flex;              /* <- volta para flex (não força 3 alturas iguais) */
+    flex-direction:column;
+    gap:12px;
+    overflow:hidden;           /* sem scroll geral */
+  }
+
+  #avisos .aviso{
+    flex:0 0 auto;             /* <- NÃO estica */
+    height:auto;               /* <- cresce conforme conteúdo */
+    min-height:unset;
+  }
+
+  /* mantém a descrição como está (sem mexer na fonte), só garante quebra boa */
+  #avisos .aviso .d{
+    white-space:normal;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+}
 
     /* ===== MOBILE (MANTIDO) ===== */
     @media (max-width: 980px){
@@ -907,91 +910,71 @@
     @keyframes wx-bolt{ 0%,100%{ opacity:.35; transform: translateY(0);} 50%{ opacity:1; transform: translateY(1px);} }
 
 
-
 /* =========================================================
-   RODAPÉ — PC/TV: 1 linha; se apertar MUITO, vira 2 linhas
-   - Clima vai para o canto direito
-   - Versículo fica completo (sem "…")
-   - Mobile permanece como está
+   RODAPÉ — PC/TV: versículo completo + clima no fim à direita
+   (Celular mantém como está)
    ========================================================= */
-
 @media (min-width: 981px){
 
   .tickerLine1{
     display:flex;
     align-items:center;
-    justify-content: space-between; /* esquerda (versículo) | direita (clima) */
-    gap: 14px;
-    flex-wrap: nowrap;              /* ✅ 1 linha */
-    text-align: left;
+    justify-content:space-between; /* versículo no meio, clima vai pra direita */
+    gap:12px;
+    flex-wrap:nowrap;
+    text-align:left;
   }
 
   .tickerIcon,
   #dataBiblica{
-    flex: 0 0 auto;
-    white-space: nowrap;
+    flex:0 0 auto;
+    white-space:nowrap;
   }
 
-  /* Versículo ganha espaço e não fica com "..." */
+  /* Versículo: SEM "..." e com espaço máximo */
   #ref{
-    flex: 1 1 auto;
-    min-width: 0;
-    white-space: normal;     /* ✅ pode quebrar, mas só se precisar */
-    overflow: visible;       /* ✅ não corta */
-    text-overflow: unset;    /* ✅ sem ... */
-    line-height: 1.22;
-    font-size: clamp(12px, 1.15vw, 16px);
-    text-align: left;        /* ✅ dá mais “cara” de texto corrido */
+    flex:1 1 auto;
+    min-width:0;
+    margin:0 10px;
+    white-space:normal;        /* permite quebrar */
+    overflow:visible;          /* não corta */
+    text-overflow:unset;       /* remove ... */
+    line-height:1.22;
+    text-align:center;
+    font-size: clamp(12px, 1.05vw, 16px);
   }
 
-  /* Clima em 1 linha, colado à direita */
+  /* Clima: preso no canto direito */
   .wxInline{
-    flex: 0 0 auto;
-    margin-left: auto;
-    width: auto;
+    flex:0 0 auto;
+    width:auto;
+    margin-left:auto;
     display:flex;
-    flex-direction: row;     /* ✅ em linha */
+    flex-direction:row;
     align-items:center;
-    gap: 10px;
-    white-space: nowrap;
-    margin-top: 0;
+    gap:8px;
+    white-space:nowrap;
+    font-size: clamp(11px, 0.95vw, 14px);
   }
 
-  .wxInline .wxL1,
-  .wxInline .wxL2{
-    font-size: clamp(11px, 1vw, 14px);
-    line-height: 1.1;
-  }
-
+  /* separador entre L1 e L2 (só no desktop) */
   .wxInline .wxL2::before{
-    content: " • ";
-    opacity: .6;
-    font-weight: 900;
-    margin-right: 2px;
+    content:" • ";
+    opacity:.65;
+    font-weight:900;
+    margin-right:2px;
   }
 }
 
-/* ✅ Se ficar MUITO estreito: no máximo 2 linhas (versículo em cima, clima embaixo) */
-@media (min-width: 981px) and (max-width: 760px){
-
-  .tickerLine1{
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
-  }
-
-  #ref{
-    flex: 1 1 100%;
-    text-align: center;
-  }
-
+/* Janela PC menor: se apertar, vira 2 linhas (sem estragar) */
+@media (min-width: 981px) and (max-width: 1100px){
+  .tickerLine1{ flex-wrap:wrap; justify-content:center; }
+  #ref{ flex:1 1 100%; margin:0; }
   .wxInline{
-    width: 100%;
-    justify-content: center;
-    margin-top: 6px;
-    white-space: normal;
+    width:100%;
+    justify-content:center;
+    margin-left:0;
   }
-
   .wxInline .wxL2::before{ content:""; }
 }
   
