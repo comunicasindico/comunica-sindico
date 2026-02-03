@@ -542,23 +542,32 @@
     }
     video.fit-contain{ object-fit:contain; }
 
-    .tvVideoControls{
-      position:absolute;
-      right:12px;
-      bottom:12px;
-      display:flex;
-      gap:8px;
-      z-index:50;
-      user-select:none;
-      pointer-events:auto;
-      padding:8px;
-      border-radius:16px;
-      background: rgba(0,0,0,.18);
-      border: 1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 26px rgba(0,0,0,.45);
-    }
+   /* ===== CONTROLES DO VÍDEO (PC/TV + CELULAR) — laterais igual celular ===== */
+.tvVideoControls{
+  position:absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  display:flex;
+  justify-content: space-between; /* ⟨ esquerda | direita ⟩ */
+  align-items:center;
+  z-index:50;
+  user-select:none;
+
+  /* deixa clicável mas sem “caixa” escura */
+  pointer-events:none;
+  background: transparent;
+  border: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+
+  padding: 0 10px;
+  gap: 0;
+  border-radius: 0;
+}
 
     .tvBtn{
       min-width: 44px;
@@ -583,44 +592,26 @@
     .tvBtn:hover{ filter: brightness(1.08); border-color: rgba(255,255,255,.24); }
     .tvBtn:active{ transform: translateY(1px) scale(.98); }
 
-    @media (max-width: 980px){
-      #btnBack10, #btnFwd10{ display:none !important; }
-      #btnPrevAd, #btnNextAd{ display:flex !important; }
+   @media (max-width: 980px){
+  #btnBack10, #btnFwd10{ display:none !important; }
+  #btnPrevAd, #btnNextAd{ display:flex !important; }
 
-      .tvVideoControls{
-        left: 0;
-        right: 0;
-        top: 50%;
-        bottom: auto;
-        transform: translateY(-50%);
-        justify-content: space-between;
-        pointer-events: none;
-        background: transparent;
-        border: none;
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-        box-shadow: none;
-        padding: 0 8px;
-        gap: 0;
-        border-radius: 0;
-      }
+  .tvBtn{
+    pointer-events: auto;
+    min-width: 34px;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 999px;
+    font-size: 16px;
+    line-height: 1;
+    background: rgba(0,0,0,.28);
+    border: 1px solid rgba(255,255,255,.22);
+    box-shadow: 0 8px 18px rgba(0,0,0,.35);
+  }
 
-      .tvBtn{
-        pointer-events: auto;
-        min-width: 34px;
-        width: 34px;
-        height: 34px;
-        padding: 0;
-        border-radius: 999px;
-        font-size: 16px;
-        line-height: 1;
-        background: rgba(0,0,0,.28);
-        border: 1px solid rgba(255,255,255,.22);
-        box-shadow: 0 8px 18px rgba(0,0,0,.35);
-      }
-
-      #btnPrevAd, #btnNextAd{ width: 34px; min-width: 34px; }
-    }
+  #btnPrevAd, #btnNextAd{ width: 34px; min-width: 34px; }
+}
 
     .ticker{
       flex:0 0 auto;
