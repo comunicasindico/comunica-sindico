@@ -40,20 +40,13 @@
       --sar: env(safe-area-inset-right);
       --sab: env(safe-area-inset-bottom);
       --sal: env(safe-area-inset-left);
-
-      /* ✅ DESKTOP/TV: base por ALTURA (dvh) para não mudar quando abre meia-tela vs tela cheia */
       --ui:  clamp(1, calc(100dvh / 980), 1.70);
       --ui2: clamp(1, calc(100dvh / 920), 2.05);
-
-      /* “Sobra” de segurança para TVs (overscan) */
       --tv-safe-bottom: 18px;
-
       --topbar-bg: none;
       --topbar-img-opacity: .92;
-
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
-
       --news-bg: rgba(8, 24, 40, .62);
       --news-border: rgba(255,255,255,.12);
       --news-shadow: 0 18px 40px rgba(0,0,0,.38);
@@ -77,7 +70,7 @@
       min-height:100dvh;
       height:100dvh;
       width:100%;
-      padding:0; /* ✅ evita empurrar rodapé */
+      padding:0;
     }
 
     .wrap{
@@ -119,27 +112,20 @@
       overflow:hidden;
     }
 
-  .topbar::before{
-  content:"";
-  position:absolute;
-  inset:0;
-
-  /* imagem em alta resolução */
-  background-image: var(--topbar-bg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  /* remove zoom que causa blur */
-  transform: none !important;
-
-  /* melhora nitidez em telas grandes */
-  image-rendering: auto;
-  will-change: transform;
-
-  opacity: var(--topbar-img-opacity);
-  pointer-events:none;
-}
+    .topbar::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: var(--topbar-bg);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transform: none !important;
+      image-rendering: auto;
+      will-change: transform;
+      opacity: var(--topbar-img-opacity);
+      pointer-events:none;
+    }
 
     .topbar::after{
       content:"";
@@ -240,7 +226,6 @@
       white-space:nowrap;
     }
 
-    /* ===== WX TOP ICON (container) ===== */
     #wxIconTop{
       display:inline-flex;
       width: 46px;
@@ -348,7 +333,7 @@
       display:flex;
       flex-direction:column;
       gap:12px;
-      overflow:hidden; /* ✅ evita overflow que empurra o rodapé */
+      overflow:hidden;
     }
 
     .aviso{
@@ -451,12 +436,12 @@
       font-weight:900;
       line-height: 1.15;
     }
-    /* ===== REMOVE botões 10s (PC / TV / Mobile) ===== */
+
     #btnBack10,
     #btnFwd10{
       display:none !important;
     }
-    
+
     @media (max-width: 520px){ .metaLine{ font-size: 0.45em; } }
     @media (min-width: 1200px){ .metaLine{ font-size: 0.45em; } }
 
@@ -504,7 +489,7 @@
       flex-direction:column;
       gap:12px;
       min-height:0;
-      overflow:hidden; /* ✅ remove scroll geral do bloco */
+      overflow:hidden;
     }
     .adCard{
       border:1px solid rgba(255,255,255,.14);
@@ -548,78 +533,68 @@
     }
     video.fit-contain{ object-fit:contain; }
 
-   /* ===== CONTROLES DO VÍDEO (PC/TV + CELULAR) — laterais igual celular ===== */
-.tvVideoControls{
-  position:absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  bottom: auto;
-  transform: translateY(-50%);
-  display:flex;
-  justify-content: space-between; /* ⟨ esquerda | direita ⟩ */
-  align-items:center;
-  z-index:50;
-  user-select:none;
-
-  /* deixa clicável mas sem “caixa” escura */
-  pointer-events:none;
-  background: transparent;
-  border: none;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: none;
-
-  padding: 0 10px;
-  gap: 0;
-  border-radius: 0;
-}
+    .tvVideoControls{
+      position:absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      bottom: auto;
+      transform: translateY(-50%);
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      z-index:50;
+      user-select:none;
+      pointer-events:none;
+      background: transparent;
+      border: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      box-shadow: none;
+      padding: 0 10px;
+      gap: 0;
+      border-radius: 0;
+    }
 
     .tvBtn{
-  pointer-events: auto;      /* ✅ clica mesmo com container pointer-events:none */
-  min-width: 30px;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border-radius: 999px;
+      pointer-events: auto;
+      min-width: 30px;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 999px;
+      font-size: 14px;
+      line-height: 1;
+      cursor: pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: 0 6px 14px rgba(0,0,0,.35);
+      transition: transform .12s ease, filter .12s ease, border-color .12s ease;
+    }
+    .tvBtn:hover{ filter: brightness(1.08); border-color: rgba(255,255,255,.28); }
+    .tvBtn:active{ transform: translateY(1px) scale(.98); }
 
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  background: rgba(0,0,0,.28);
-  border: 1px solid rgba(255,255,255,.22);
-  box-shadow: 0 6px 14px rgba(0,0,0,.35);
-
-  transition: transform .12s ease, filter .12s ease, border-color .12s ease;
-}
-.tvBtn:hover{ filter: brightness(1.08); border-color: rgba(255,255,255,.28); }
-.tvBtn:active{ transform: translateY(1px) scale(.98); }
-
-   @media (max-width: 980px){
-  #btnBack10, #btnFwd10{ display:none !important; }
-  #btnPrevAd, #btnNextAd{ display:flex !important; }
-
-  .tvBtn{
-    pointer-events: auto;
-    min-width: 34px;
-    width: 34px;
-    height: 34px;
-    padding: 0;
-    border-radius: 999px;
-    font-size: 16px;
-    line-height: 1;
-    background: rgba(0,0,0,.28);
-    border: 1px solid rgba(255,255,255,.22);
-    box-shadow: 0 8px 18px rgba(0,0,0,.35);
-  }
-
-  #btnPrevAd, #btnNextAd{ width: 34px; min-width: 34px; }
-}
+    @media (max-width: 980px){
+      #btnBack10, #btnFwd10{ display:none !important; }
+      #btnPrevAd, #btnNextAd{ display:flex !important; }
+      .tvBtn{
+        pointer-events: auto;
+        min-width: 34px;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        border-radius: 999px;
+        font-size: 16px;
+        line-height: 1;
+        background: rgba(0,0,0,.28);
+        border: 1px solid rgba(255,255,255,.22);
+        box-shadow: 0 8px 18px rgba(0,0,0,.35);
+      }
+      #btnPrevAd, #btnNextAd{ width: 34px; min-width: 34px; }
+    }
 
     .ticker{
       flex:0 0 auto;
@@ -634,7 +609,7 @@
       flex-direction:column;
       align-items:stretch;
       gap:6px;
-      margin:0; /* ✅ remove empurrão do rodapé */
+      margin:0;
     }
 
     .tickerLine1{
@@ -663,48 +638,47 @@
       flex:0 0 auto;
     }
 
-  #ref{
-  color:rgba(234,242,255,.88);
-  font-weight:850;
-  font-size: calc(16px * var(--ui2));
-  flex: 1 1 auto;          /* ocupa o máximo de espaço */
-  min-width: 0;
-  white-space: normal;    /* permite quebrar linha se precisar */
-  overflow: visible;      /* não corta */
-  text-overflow: unset;   /* remove os ... */
-  line-height: 1.25;
-  text-align:center;
-}
+    #ref{
+      color:rgba(234,242,255,.88);
+      font-weight:850;
+      font-size: calc(16px * var(--ui2));
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      line-height: 1.25;
+      text-align:center;
+    }
 
-   /* ===== RODAPÉ CLIMA (2 LINHAS) — SÓ MOBILE ===== */
-@media (max-width: 980px){
-  .wxInline{
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:2px;
-    margin-top: 6px;
-    white-space: normal !important;
-  }
+    @media (max-width: 980px){
+      .wxInline{
+        width:100%;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:2px;
+        margin-top: 6px;
+        white-space: normal !important;
+      }
 
-  .wxInline .wxL1{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-weight: 950;
-    color: rgba(234,242,255,.92);
-    font-size: clamp(13px, 1.9vw, 18px);
-    line-height: 1.15;
-  }
+      .wxInline .wxL1{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        font-weight: 950;
+        color: rgba(234,242,255,.92);
+        font-size: clamp(13px, 1.9vw, 18px);
+        line-height: 1.15;
+      }
 
-  .wxInline .wxL2{
-    font-weight: 900;
-    color: rgba(234,242,255,.78);
-    font-size: clamp(12px, 1.7vw, 16px);
-    line-height: 1.15;
-  }
-}
+      .wxInline .wxL2{
+        font-weight: 900;
+        color: rgba(234,242,255,.78);
+        font-size: clamp(12px, 1.7vw, 16px);
+        line-height: 1.15;
+      }
+    }
 
     .wxMiniSvg{
       display:inline-flex;
@@ -722,7 +696,6 @@
       filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
     }
 
-    /* ===== NEWS (SEM SCROLL) ===== */
     #newsBox{
       background: var(--news-bg);
       border: 1px solid var(--news-border);
@@ -734,7 +707,7 @@
       display:flex;
       flex-direction:column;
       min-height:0;
-      flex: 1 1 auto; /* ✅ ocupa o resto sem causar barra */
+      flex: 1 1 auto;
     }
 
     .newsHead{
@@ -758,22 +731,18 @@
       gap: 10px;
       min-height:0;
       flex:1 1 auto;
-      overflow:hidden; /* ✅ sem barra */
-      if (window.innerWidth >= 981) {
-  requestAnimationFrame(() => {
-    autoFitNews();
-  });
-}
+      overflow:hidden;
     }
 
     @media (min-width: 981px){
-  #newsBody{
-    display:grid;
-    grid-template-rows: repeat(4, minmax(0, 1fr)); /* 4 itens sempre cabem */
-    gap:10px;
-  }
-  .newsItem{ min-height:0; overflow:hidden; }
-}
+      #newsBody{
+        display:grid;
+        grid-template-rows: repeat(4, minmax(0, 1fr));
+        gap:10px;
+      }
+      .newsItem{ min-height:0; overflow:hidden; }
+    }
+
     .newsItem{
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
@@ -787,21 +756,21 @@
       border-color: rgba(255,255,255,.16);
       background: rgba(0,0,0,.22);
     }
-   .newsItem .h{
-  font-family: var(--font-soft);
-  font-weight: 750;
-  font-size: clamp(12px, 1.55dvh, 18px); /* reduz automaticamente em telas menores */
-  line-height: 1.18;
-  letter-spacing: .15px;
-  color: var(--news-title);
-  margin: 0;
 
-  display:block;              /* <- tira line-clamp */
-  overflow:visible;           /* <- sem cortar */
-  white-space:normal;         /* <- quebra linha */
-  overflow-wrap:anywhere;
-  word-break:break-word;
-}
+    .newsItem .h{
+      font-family: var(--font-soft);
+      font-weight: 750;
+      font-size: clamp(12px, 1.55dvh, 18px);
+      line-height: 1.18;
+      letter-spacing: .15px;
+      color: var(--news-title);
+      margin: 0;
+      display:block;
+      overflow:visible;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
 
     .newsFooter{
       margin-top: 8px;
@@ -817,35 +786,31 @@
       text-align:left;
     }
 
-   /* ===== AVISOS DESKTOP: altura pelo conteúdo (máx 3 avisos via JS) ===== */
-@media (min-width: 981px){
-  #avisos{
-    padding:14px;
-    min-height:0;
-    display:flex;              /* <- volta para flex (não força 3 alturas iguais) */
-    flex-direction:column;
-    gap:12px;
-    overflow:hidden;           /* sem scroll geral */
-  }
+    @media (min-width: 981px){
+      #avisos{
+        padding:14px;
+        min-height:0;
+        display:flex;
+        flex-direction:column;
+        gap:12px;
+        overflow:hidden;
+      }
 
-  #avisos .aviso{
-    flex:0 0 auto;             /* <- NÃO estica */
-    height:auto;               /* <- cresce conforme conteúdo */
-    min-height:unset;
-  }
+      #avisos .aviso{
+        flex:0 0 auto;
+        height:auto;
+        min-height:unset;
+      }
 
-  /* mantém a descrição como está (sem mexer na fonte), só garante quebra boa */
-  #avisos .aviso .d{
-    white-space:normal;
-    overflow-wrap:anywhere;
-    word-break:break-word;
-  }
-}
+      #avisos .aviso .d{
+        white-space:normal;
+        overflow-wrap:anywhere;
+        word-break:break-word;
+      }
+    }
 
-    /* ===== MOBILE (MANTIDO) ===== */
     @media (max-width: 980px){
       :root{
-        /* ✅ MOBILE continua como estava (base em vmin) */
         --ui: clamp(1, calc(100vmin / 900), 2.10);
         --ui2: clamp(1, calc(100vmin / 850), 2.70);
         --tv-safe-bottom: 0px;
@@ -874,7 +839,6 @@
         padding-bottom: max(12px, env(safe-area-inset-bottom));
       }
 
-      /* WX TOP premium no celular (flutuante topo-direito) */
       .rightInfo{
         display:flex !important;
         position:absolute;
@@ -899,7 +863,6 @@
       #wxIconTop svg{ width:56px; height:56px; }
     }
 
-    /* ===== Animações WX SVG ===== */
     .wxsvg .sun-rays{ transform-origin: 32px 32px; animation: wx-rotate 6s linear infinite; }
     @keyframes wx-rotate{ from{ transform: rotate(0deg);} to{ transform: rotate(360deg);} }
 
@@ -917,76 +880,199 @@
     .wxsvg .bolt{ animation: wx-bolt 1.4s ease-in-out infinite; }
     @keyframes wx-bolt{ 0%,100%{ opacity:.35; transform: translateY(0);} 50%{ opacity:1; transform: translateY(1px);} }
 
+    @media (min-width: 981px){
+      .tickerLine1{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        flex-wrap:nowrap;
+        text-align:left;
+      }
 
-/* =========================================================
-   RODAPÉ — PC/TV: versículo completo + clima no fim à direita
-   (Celular mantém como está)
-   ========================================================= */
-@media (min-width: 981px){
+      .tickerIcon,
+      #dataBiblica{
+        flex:0 0 auto;
+        white-space:nowrap;
+      }
 
-  .tickerLine1{
-    display:flex;
-    align-items:center;
-    justify-content:space-between; /* versículo no meio, clima vai pra direita */
-    gap:12px;
-    flex-wrap:nowrap;
-    text-align:left;
-  }
+      #ref{
+        flex:1 1 auto;
+        min-width:0;
+        margin:0 10px;
+        white-space:normal;
+        overflow:visible;
+        text-overflow:unset;
+        line-height:1.22;
+        text-align:center;
+        font-size: clamp(12px, 1.05vw, 16px);
+      }
 
-  .tickerIcon,
-  #dataBiblica{
-    flex:0 0 auto;
-    white-space:nowrap;
-  }
+      .wxInline{
+        flex:0 0 auto;
+        width:auto;
+        margin-left:auto;
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+        gap:8px;
+        white-space:nowrap;
+        font-size: clamp(11px, 0.95vw, 14px);
+      }
 
-  /* Versículo: SEM "..." e com espaço máximo */
-  #ref{
-    flex:1 1 auto;
-    min-width:0;
-    margin:0 10px;
-    white-space:normal;        /* permite quebrar */
-    overflow:visible;          /* não corta */
-    text-overflow:unset;       /* remove ... */
-    line-height:1.22;
-    text-align:center;
-    font-size: clamp(12px, 1.05vw, 16px);
-  }
+      .wxInline .wxL2::before{
+        content:" • ";
+        opacity:.65;
+        font-weight:900;
+        margin-right:2px;
+      }
+    }
 
-  /* Clima: preso no canto direito */
-  .wxInline{
-    flex:0 0 auto;
-    width:auto;
-    margin-left:auto;
-    display:flex;
-    flex-direction:row;
-    align-items:center;
-    gap:8px;
-    white-space:nowrap;
-    font-size: clamp(11px, 0.95vw, 14px);
-  }
+    @media (min-width: 981px) and (max-width: 1100px){
+      .tickerLine1{ flex-wrap:wrap; justify-content:center; }
+      #ref{ flex:1 1 100%; margin:0; }
+      .wxInline{
+        width:100%;
+        justify-content:center;
+        margin-left:0;
+      }
+      .wxInline .wxL2::before{ content:""; }
+    }
 
-  /* separador entre L1 e L2 (só no desktop) */
-  .wxInline .wxL2::before{
-    content:" • ";
-    opacity:.65;
-    font-weight:900;
-    margin-right:2px;
-  }
-}
+    @media (max-width: 980px) and (orientation: landscape) and (min-height: 480px){
+      :root{
+        --ui:  clamp(1, calc(100dvh / 980), 1.70);
+        --ui2: clamp(1, calc(100dvh / 920), 2.05);
+        --tv-safe-bottom: 32px;
+      }
 
-/* Janela PC menor: se apertar, vira 2 linhas (sem estragar) */
-@media (min-width: 981px) and (max-width: 1100px){
-  .tickerLine1{ flex-wrap:wrap; justify-content:center; }
-  #ref{ flex:1 1 100%; margin:0; }
-  .wxInline{
-    width:100%;
-    justify-content:center;
-    margin-left:0;
-  }
-  .wxInline .wxL2::before{ content:""; }
-}
-  
-  
+      body{
+        overflow:hidden;
+        height:100dvh;
+        min-height:100dvh;
+      }
+
+      .wrap{
+        height:100dvh;
+        min-height:100dvh;
+        padding:
+          calc(12px + var(--sat))
+          calc(12px + var(--sar))
+          calc(max(16px, var(--tv-safe-bottom)) + var(--sab))
+          calc(12px + var(--sal));
+      }
+
+      .container{ height:100%; min-height:0; }
+
+      .subMobileLine{ display:none !important; }
+      .condoCenter{ display:block !important; }
+      .rightInfo{ display:flex !important; position:relative !important; }
+
+      .main{
+        display:grid !important;
+        grid-template-columns: 1.20fr .80fr !important;
+        gap:12px !important;
+      }
+
+      section.panel{ order:0 !important; }
+      #adBox{ order:0 !important; }
+
+      .ticker{
+        position:relative !important;
+        bottom:auto !important;
+        padding-bottom: 10px !important;
+      }
+    }
+
+    @media (min-width: 981px) and (max-height: 720px){
+      :root{
+        --tv-safe-bottom: 44px;
+      }
+
+      #avisos{
+        display:flex !important;
+        flex-direction:column !important;
+        overflow:hidden !important;
+        height:auto !important;
+      }
+
+      #avisos .aviso{
+        flex: 0 0 auto !important;
+        height:auto !important;
+        min-height: 0 !important;
+      }
+
+      .avisos{
+        overflow:auto !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .avisos::-webkit-scrollbar{ width:0; height:0; }
+    }
+
+    html.isTV body{
+      overflow:hidden !important;
+      height:100dvh !important;
+      min-height:100dvh !important;
+    }
+
+    html.isTV{
+      --ui:  clamp(1, calc(100dvh / 980), 1.70);
+      --ui2: clamp(1, calc(100dvh / 920), 2.05);
+      --tv-safe-bottom: 44px;
+    }
+
+    html.isTV .wrap{
+      height:100dvh !important;
+      min-height:100dvh !important;
+      padding:
+        calc(12px + var(--sat))
+        calc(12px + var(--sar))
+        calc(max(16px, var(--tv-safe-bottom)) + var(--sab))
+        calc(12px + var(--sal)) !important;
+    }
+
+    html.isTV .container{ height:100% !important; min-height:0 !important; }
+
+    html.isTV .subMobileLine{ display:none !important; }
+    html.isTV .condoCenter{ display:block !important; }
+    html.isTV .rightInfo{ display:flex !important; position:relative !important; }
+
+    html.isTV .main{
+      display:grid !important;
+      grid-template-columns: 1.20fr .80fr !important;
+      gap:12px !important;
+    }
+
+    html.isTV #adBox{ order:0 !important; }
+    html.isTV section.panel{ order:0 !important; }
+
+    html.isTV .ticker{
+      position:relative !important;
+      bottom:auto !important;
+      margin:0 !important;
+      padding-bottom: 10px !important;
+    }
+
+    html.isTV #avisos{
+      display:flex !important;
+      flex-direction:column !important;
+      height:auto !important;
+      overflow:hidden !important;
+    }
+
+    html.isTV #avisos .aviso{
+      height:auto !important;
+      min-height:0 !important;
+      flex: 0 0 auto !important;
+    }
+
+    html.isTV .avisos{
+      overflow:auto !important;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    html.isTV .avisos::-webkit-scrollbar{ width:0; height:0; }
   </style>
 </head>
 
@@ -1087,654 +1173,470 @@
     </div>
   </div>
 
-  <script>
-    /* =========================================================
-       PWA install
-       ========================================================= */
-    let deferredPrompt = null;
-    function mostrarBotaoInstalar(show){
-      const b = document.getElementById("btnInstalarApp");
-      if (b) b.style.display = show ? "inline-flex" : "none";
-    }
-    window.addEventListener("beforeinstallprompt", (e)=>{
-      e.preventDefault();
-      deferredPrompt = e;
-      mostrarBotaoInstalar(true);
-    });
-    window.addEventListener("appinstalled", ()=>{
-      deferredPrompt = null;
-      mostrarBotaoInstalar(false);
-    });
-    async function instalarApp(){
-      if(!deferredPrompt) return;
-      await deferredPrompt.prompt();
-      deferredPrompt = null;
-      mostrarBotaoInstalar(false);
-    }
-
-    /* =========================================================
-       Utils
-       ========================================================= */
-    function prioridadeClass(p){
-      const x = String(p || "").toLowerCase();
-      if (x === "alta") return "alta";
-      if (x === "média" || x === "media") return "media";
-      return "baixa";
-    }
-    function safeText(v){ return (v == null ? "" : String(v)); }
-    function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
-    function pad2(n){ return String(n).padStart(2,"0"); }
-    function escapeHtml(s){
-      return String(s ?? "").replace(/[&<>"']/g, c => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-      }[c]));
-    }
-    function isMobile(){ return window.matchMedia("(max-width: 980px)").matches; }
-    function refreshPage(){ location.reload(); }
-
-    function footerDateString(d){
-      const dd = pad2(d.getDate());
-      const mm = pad2(d.getMonth()+1);
-      const yyyy = d.getFullYear();
-      return `${dd}/${mm}/${yyyy}`;
-    }
-
-    function tickClock(){
-      const d = new Date();
-      const hhmm = `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-      setText("clock", hhmm);
-      setText("clockMini", hhmm);
-    }
-    tickClock();
-    setInterval(tickClock, 1000);
-
-    (function bindUI(){
-      const btn = document.getElementById("btnInstalarApp");
-      if(btn) btn.onclick = instalarApp;
-      const refPill = document.getElementById("refPill");
-      if(refPill) refPill.onclick = refreshPage;
-    })();
-
-    /* =========================================================
-       Avisos (3 por tela + ajuste automático desktop)
-       ========================================================= */
-    let ROT_TIMER = null;
-    let ROT_STATE = { page: 0, totalPages: 1, paused: false };
-    let DESC_CAP = null;
-
-    function parseBRDateTime(v){
-      const s = String(v ?? "").trim();
-      if(!s) return null;
-
-      const m = s.match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})\s*(?:-\s*)?(\d{2}):(\d{2})$/);
-      if(m){
-        const dd = Number(m[1]);
-        const mm = Number(m[2]);
-        let yyyy = Number(m[3]);
-        if(String(m[3]).length === 2) yyyy = 2000 + yyyy;
-        const HH = Number(m[4]);
-        const MM = Number(m[5]);
-        const d = new Date(yyyy, mm-1, dd, HH, MM, 0, 0);
-        if(!isNaN(d.getTime())) return d;
-      }
-
-      const d2 = new Date(s);
-      if(!isNaN(d2.getTime())) return d2;
-      return null;
-    }
-
-    function formatDT_BR(v){
-      if(!v) return "";
-      const d = parseBRDateTime(v);
-      if(!d) return String(v);
-
-      const dd = pad2(d.getDate());
-      const mm = pad2(d.getMonth()+1);
-      const aa = String(d.getFullYear()).slice(-2);
-      const HH = pad2(d.getHours());
-      const MM = pad2(d.getMinutes());
-      return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
-    }
-
-    function fitDescInCard(card){
-      const desc = card.querySelector(".d");
-      if(!desc) return 18;
-
-      const h = Math.max(240, card.clientHeight || 0);
-      const cap = Math.max(22, Math.floor(h * 0.22));   // ✅ tenta grande
-      const MIN = 18;
-      const MAX = Math.max(MIN, cap);
-
-      let lo = MIN, hi = MAX, best = MIN;
-      while(lo <= hi){
-        const mid = (lo + hi) >> 1;
-        desc.style.setProperty("--desc-font", mid + "px");
-        const ok = (desc.scrollHeight <= desc.clientHeight + 1);
-        if(ok){ best = mid; lo = mid + 1; }
-        else { hi = mid - 1; }
-      }
-      desc.style.setProperty("--desc-font", best + "px");
-      return best;
-    }
-
-    function ajustarAvisosTelaCheia(pageIdx){
-      if(isMobile()) return;
-      const root = document.getElementById("avisos");
-      if(!root) return;
-      const cards = Array.from(root.querySelectorAll(".aviso"));
-      if(!cards.length) return;
-
-      if(pageIdx === 0 && DESC_CAP == null){
-        const bests = cards.map(c => fitDescInCard(c));
-        DESC_CAP = Math.min(...bests);
-        cards.forEach(c => c.querySelector(".d")?.style.setProperty("--desc-font", DESC_CAP + "px"));
-        return;
-      }
-
-      const cap = (DESC_CAP == null ? 22 : DESC_CAP);
-      cards.forEach(c => c.querySelector(".d")?.style.setProperty("--desc-font", cap + "px"));
-    }
-
-// ==========================================================
-// AUTO-FIT: reduz fonte até o texto caber no container
-// ==========================================================
-function fitTextToBox(el, opts = {}){
-  if(!el) return;
-  const {
-    maxPx = 44,
-    minPx = 12,
-    step  = 1
-  } = opts;
-
-  // reseta para um valor “alto” e desce até caber
-  el.style.fontSize = maxPx + "px";
-
-  // força reflow (garante medidas atualizadas)
-  // eslint-disable-next-line no-unused-expressions
-  el.offsetHeight;
-
-  let cur = maxPx;
-  // while: se estourar altura OU largura, reduz
-  while(cur > minPx && (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth)){
-    cur -= step;
-    el.style.fontSize = cur + "px";
+<script>
+  let deferredPrompt = null;
+  function mostrarBotaoInstalar(show){
+    const b = document.getElementById("btnInstalarApp");
+    if (b) b.style.display = show ? "inline-flex" : "none";
   }
-}
-
-function autoFitAvisos(){
-  // Ajusta título e descrição de cada aviso
-  document.querySelectorAll("#avisos .aviso").forEach(card => {
-    const t = card.querySelector(".t");
-    const d = card.querySelector(".d");
-
-    // título: não pode ficar gigante em janela menor
-    fitTextToBox(t, { maxPx: 34, minPx: 14, step: 1 });
-
-    // descrição: este é o principal
-    fitTextToBox(d, { maxPx: 42, minPx: 14, step: 1 });
+  window.addEventListener("beforeinstallprompt", (e)=>{
+    e.preventDefault();
+    deferredPrompt = e;
+    mostrarBotaoInstalar(true);
   });
-}
-
-function autoFitNews(){
-  // Ajusta cada manchete do bloco de notícias
-  document.querySelectorAll("#newsBody .newsItem .h").forEach(h => {
-    fitTextToBox(h, { maxPx: 20, minPx: 11, step: 1 });
+  window.addEventListener("appinstalled", ()=>{
+    deferredPrompt = null;
+    mostrarBotaoInstalar(false);
   });
-}
-    
-    function renderAvisos(data){
-      const root = document.getElementById("avisos");
-      if (!root) return;
-      root.innerHTML = "";
+  async function instalarApp(){
+    if(!deferredPrompt) return;
+    await deferredPrompt.prompt();
+    deferredPrompt = null;
+    mostrarBotaoInstalar(false);
+  }
 
-      if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
-      DESC_CAP = null;
+  function prioridadeClass(p){
+    const x = String(p || "").toLowerCase();
+    if (x === "alta") return "alta";
+    if (x === "média" || x === "media") return "media";
+    return "baixa";
+  }
+  function safeText(v){ return (v == null ? "" : String(v)); }
+  function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
+  function pad2(n){ return String(n).padStart(2,"0"); }
+  function escapeHtml(s){
+    return String(s ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+  function isMobile(){ return window.matchMedia("(max-width: 980px)").matches; }
+  function refreshPage(){ location.reload(); }
 
-      const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
-      const rot = data?.rotacao || {};
-      const ativar = !!rot.ativar;
+  function tickClock(){
+    const d = new Date();
+    const hhmm = `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+    setText("clock", hhmm);
+    setText("clockMini", hhmm);
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
 
-      const qtd = 3;
-      const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
+  (function bindUI(){
+    const btn = document.getElementById("btnInstalarApp");
+    if(btn) btn.onclick = instalarApp;
+    const refPill = document.getElementById("refPill");
+    if(refPill) refPill.onclick = refreshPage;
+  })();
 
-      if(!avisosAll.length){
-        const div = document.createElement("div");
-        div.className = "aviso baixa";
-        div.innerHTML = `<p class="t">Sem avisos no momento</p><p class="d">${escapeHtml(safeText(data.fallback || "—"))}</p><div class="metaLine"></div>`;
-        root.appendChild(div);
-        root.style.setProperty("--rows", "1");
-        ROT_STATE = { page: 0, totalPages: 1, paused: false };
-        return;
-        // ✅ AUTO-AJUSTE (desktop/janela pequena)
-if (window.innerWidth >= 981) {
-  // pequena espera pra garantir layout pronto
-  requestAnimationFrame(() => {
-    autoFitAvisos();
-  });
-}
+  let ROT_TIMER = null;
+  let ROT_STATE = { page: 0, totalPages: 1, paused: false };
+  let DESC_CAP = null;
+
+  function parseBRDateTime(v){
+    const s = String(v ?? "").trim();
+    if(!s) return null;
+
+    const m = s.match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})\s*(?:-\s*)?(\d{2}):(\d{2})$/);
+    if(m){
+      const dd = Number(m[1]);
+      const mm = Number(m[2]);
+      let yyyy = Number(m[3]);
+      if(String(m[3]).length === 2) yyyy = 2000 + yyyy;
+      const HH = Number(m[4]);
+      const MM = Number(m[5]);
+      const d = new Date(yyyy, mm-1, dd, HH, MM, 0, 0);
+      if(!isNaN(d.getTime())) return d;
+    }
+
+    const d2 = new Date(s);
+    if(!isNaN(d2.getTime())) return d2;
+    return null;
+  }
+
+  function formatDT_BR(v){
+    if(!v) return "";
+    const d = parseBRDateTime(v);
+    if(!d) return String(v);
+
+    const dd = pad2(d.getDate());
+    const mm = pad2(d.getMonth()+1);
+    const aa = String(d.getFullYear()).slice(-2);
+    const HH = pad2(d.getHours());
+    const MM = pad2(d.getMinutes());
+    return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
+  }
+
+  function fitDescInCard(card){
+    const desc = card.querySelector(".d");
+    if(!desc) return 18;
+
+    const h = Math.max(240, card.clientHeight || 0);
+    const cap = Math.max(22, Math.floor(h * 0.22));
+    const MIN = 18;
+    const MAX = Math.max(MIN, cap);
+
+    let lo = MIN, hi = MAX, best = MIN;
+    while(lo <= hi){
+      const mid = (lo + hi) >> 1;
+      desc.style.setProperty("--desc-font", mid + "px");
+      const ok = (desc.scrollHeight <= desc.clientHeight + 1);
+      if(ok){ best = mid; lo = mid + 1; }
+      else { hi = mid - 1; }
+    }
+    desc.style.setProperty("--desc-font", best + "px");
+    return best;
+  }
+
+  function ajustarAvisosTelaCheia(pageIdx){
+    if(isMobile()) return;
+    const root = document.getElementById("avisos");
+    if(!root) return;
+    const cards = Array.from(root.querySelectorAll(".aviso"));
+    if(!cards.length) return;
+
+    if(pageIdx === 0 && DESC_CAP == null){
+      const bests = cards.map(c => fitDescInCard(c));
+      DESC_CAP = Math.min(...bests);
+      cards.forEach(c => c.querySelector(".d")?.style.setProperty("--desc-font", DESC_CAP + "px"));
+      return;
+    }
+
+    const cap = (DESC_CAP == null ? 22 : DESC_CAP);
+    cards.forEach(c => c.querySelector(".d")?.style.setProperty("--desc-font", cap + "px"));
+  }
+
+  function fitTextToBox(el, opts = {}){
+    if(!el) return;
+    const { maxPx = 44, minPx = 12, step = 1 } = opts;
+    el.style.fontSize = maxPx + "px";
+    el.style.overflow = "hidden";
+    el.offsetHeight;
+
+    let cur = maxPx;
+    while(cur > minPx && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1)){
+      cur -= step;
+      el.style.fontSize = cur + "px";
+    }
+  }
+
+  function autoFitAvisos(){
+    document.querySelectorAll("#avisos .aviso").forEach(card => {
+      const t = card.querySelector(".t");
+      const d = card.querySelector(".d");
+      if(t) fitTextToBox(t, { maxPx: 34, minPx: 14, step: 1 });
+      if(d) fitTextToBox(d, { maxPx: 42, minPx: 14, step: 1 });
+    });
+  }
+
+  function autoFitNews(){
+    document.querySelectorAll("#newsBody .newsItem .h").forEach(h => {
+      h.style.display = "block";
+      h.style.whiteSpace = "normal";
+      h.style.overflow = "hidden";
+      h.style.textOverflow = "unset";
+      h.style.webkitLineClamp = "unset";
+      h.style.webkitBoxOrient = "unset";
+      fitTextToBox(h, { maxPx: 20, minPx: 11, step: 1 });
+    });
+  }
+
+  function renderAvisos(data){
+    const root = document.getElementById("avisos");
+    if (!root) return;
+    root.innerHTML = "";
+
+    if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
+    DESC_CAP = null;
+
+    const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
+    const rot = data?.rotacao || {};
+    const ativar = !!rot.ativar;
+
+    const qtd = 3;
+    const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
+
+    if(!avisosAll.length){
+      const div = document.createElement("div");
+      div.className = "aviso baixa";
+      div.innerHTML = `<p class="t">Sem avisos no momento</p><p class="d">${escapeHtml(safeText(data.fallback || "—"))}</p><div class="metaLine"></div>`;
+      root.appendChild(div);
+      root.style.setProperty("--rows", "1");
+      ROT_STATE = { page: 0, totalPages: 1, paused: false };
+      if (window.innerWidth >= 981) requestAnimationFrame(() => { autoFitAvisos(); });
+      return;
+    }
+
+    function buildAvisoEl(a){
+      const el = document.createElement("div");
+      el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+
+      const titulo = safeText(a.titulo || "Aviso");
+      const desc = safeText(a.descricao || "");
+      const tipo = safeText(a.tipo || "");
+      const local = safeText(a.local || "");
+      const ini = formatDT_BR(a.inicio || "");
+      const fim = formatDT_BR(a.fim || "");
+
+      const itens = [];
+      if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
+      if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
+      const pr = safeText(a.prioridade || "Baixa");
+      itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
+      if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
+
+      el.innerHTML = `
+        <p class="t">${escapeHtml(titulo)}</p>
+        ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : `<p class="d">—</p>`}
+        <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
+      `;
+      return el;
+    }
+
+    const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
+    ROT_STATE = { page: 0, totalPages, paused: false };
+
+    function renderPage(pageIdx){
+      root.classList.remove("fade-in");
+      root.classList.add("fade-out");
+
+      const doRender = () => {
+        root.innerHTML = "";
+        const start = pageIdx * qtd;
+        const slice = avisosAll.slice(start, start + qtd);
+        root.style.setProperty("--rows", String(Math.max(1, Math.min(3, slice.length))));
+        slice.forEach(a => root.appendChild(buildAvisoEl(a)));
+
+        requestAnimationFrame(()=> {
+          ajustarAvisosTelaCheia(pageIdx);
+          if (window.innerWidth >= 981) autoFitAvisos();
+        });
+
+        void root.offsetWidth;
+        root.classList.remove("fade-out");
+        root.classList.add("fade-in");
+      };
+      setTimeout(doRender, 220);
+    }
+
+    renderPage(0);
+    root.classList.add("fade-in");
+
+    if (ativar && totalPages > 1){
+      if (rot.pausarNoMouse){
+        root.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
+        root.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
+        root.addEventListener("touchstart", ()=>{ ROT_STATE.paused = !ROT_STATE.paused; }, {passive:true});
       }
-
-      function buildAvisoEl(a){
-        const el = document.createElement("div");
-        el.className = `aviso ${prioridadeClass(a.prioridade)}`;
-
-        const titulo = safeText(a.titulo || "Aviso");
-        const desc = safeText(a.descricao || "");
-        const tipo = safeText(a.tipo || "");
-        const local = safeText(a.local || "");
-        const ini = formatDT_BR(a.inicio || "");
-        const fim = formatDT_BR(a.fim || "");
-
-        const itens = [];
-        if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
-        if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
-        const pr = safeText(a.prioridade || "Baixa");
-        itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
-        if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
-
-        el.innerHTML = `
-          <p class="t">${escapeHtml(titulo)}</p>
-          ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : `<p class="d">—</p>`}
-          <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
-        `;
-        return el;
-      }
-
-      const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
-      ROT_STATE = { page: 0, totalPages, paused: false };
-
-      function renderPage(pageIdx){
-        root.classList.remove("fade-in");
-        root.classList.add("fade-out");
-
-        const doRender = () => {
-          root.innerHTML = "";
-          const start = pageIdx * qtd;
-          const slice = avisosAll.slice(start, start + qtd);
-          root.style.setProperty("--rows", String(Math.max(1, Math.min(3, slice.length))));
-          slice.forEach(a => root.appendChild(buildAvisoEl(a)));
-          requestAnimationFrame(()=> ajustarAvisosTelaCheia(pageIdx));
-          void root.offsetWidth;
-          root.classList.remove("fade-out");
-          root.classList.add("fade-in");
-        };
-        setTimeout(doRender, 220);
-      }
-
-      renderPage(0);
-      root.classList.add("fade-in");
-
-      if (ativar && totalPages > 1){
-        if (rot.pausarNoMouse){
-          root.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
-          root.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
-          root.addEventListener("touchstart", ()=>{ ROT_STATE.paused = !ROT_STATE.paused; }, {passive:true});
-        }
-        ROT_TIMER = setInterval(()=>{
-          if (ROT_STATE.paused) return;
-          ROT_STATE.page = (ROT_STATE.page + 1) % totalPages;
-          renderPage(ROT_STATE.page);
-        }, intervaloMs);
-      }
+      ROT_TIMER = setInterval(()=>{
+        if (ROT_STATE.paused) return;
+        ROT_STATE.page = (ROT_STATE.page + 1) % totalPages;
+        renderPage(ROT_STATE.page);
+      }, intervaloMs);
     }
+  }
 
-    /* =========================================================
-       Versículo anual
-       ========================================================= */
-    function hojeKeyMMDD() {
-      const d = new Date();
-      const mm = String(d.getMonth() + 1).padStart(2, "0");
-      const dd = String(d.getDate()).padStart(2, "0");
-      return `${mm}-${dd}`;
+  function hojeKeyMMDD() {
+    const d = new Date();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${mm}-${dd}`;
+  }
+
+  async function carregarVersiculo(data) {
+    if (!data?.temaDoDia || data.temaDoDia.modo !== "biblico-anual") return;
+    try {
+      const res = await fetch("versiculos.json?ts=" + Date.now(), { cache: "no-store" });
+      const v = await res.json();
+      const key = hojeKeyMMDD();
+      const texto = v?.versos?.[key];
+      setText("dataBiblica", v?.cabecalho || "");
+      setText("ref", texto ? texto : (v?.titulo ? v.titulo : "Verso não encontrado"));
+    } catch (e) {}
+  }
+
+  function wxSvgSun(){
+    return `
+    <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="sun-rays" fill="none" stroke="rgba(255,220,120,.95)" stroke-width="3" stroke-linecap="round">
+        <line x1="32" y1="6"  x2="32" y2="14"/>
+        <line x1="32" y1="50" x2="32" y2="58"/>
+        <line x1="6"  y1="32" x2="14" y2="32"/>
+        <line x1="50" y1="32" x2="58" y2="32"/>
+        <line x1="12" y1="12" x2="18" y2="18"/>
+        <line x1="46" y1="46" x2="52" y2="52"/>
+        <line x1="46" y1="18" x2="52" y2="12"/>
+        <line x1="12" y1="52" x2="18" y2="46"/>
+      </g>
+      <circle class="sun-core" cx="32" cy="32" r="12" fill="rgba(255,200,60,.98)"/>
+      <circle cx="32" cy="32" r="12" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+    </svg>`;
+  }
+
+  function wxSvgCloud(){
+    return `
+    <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="cloud">
+        <path d="M22 44h22a12 12 0 0 0 0-24 15 15 0 0 0-29-3A11 11 0 0 0 22 44z"
+          fill="rgba(235,245,255,.92)"/>
+        <path d="M22 44h22a12 12 0 0 0 0-24 15 15 0 0 0-29-3A11 11 0 0 0 22 44z"
+          fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+      </g>
+    </svg>`;
+  }
+
+  function wxSvgRain(){
+    return `
+    <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="cloud">
+        <path d="M20 40h24a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 20 40z"
+          fill="rgba(235,245,255,.92)"/>
+        <path d="M20 40h24a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 20 40z"
+          fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+      </g>
+      <g class="drops" stroke="rgba(120,200,255,.95)" stroke-width="3" stroke-linecap="round">
+        <line x1="26" y1="44" x2="24" y2="52"/>
+        <line x1="34" y1="44" x2="32" y2="52"/>
+        <line x1="42" y1="44" x2="40" y2="52"/>
+      </g>
+    </svg>`;
+  }
+
+  function wxSvgStorm(){
+    return `
+    <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="cloud">
+        <path d="M18 40h26a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 18 40z"
+          fill="rgba(235,245,255,.92)"/>
+        <path d="M18 40h26a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 18 40z"
+          fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+      </g>
+      <path class="bolt" d="M30 42l-4 10h6l-3 10 12-16h-6l3-4z"
+        fill="rgba(255,210,80,.98)"/>
+    </svg>`;
+  }
+
+  function wxSvgByCode(code){
+    const c = Number(code);
+    const isSun   = (c === 0);
+    const isCloud = ([1,2,3,45,48].includes(c));
+    const isRain  = ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(c));
+    const isStorm = ([95,96,99].includes(c));
+
+    if (isSun)   return { label:"Ensolarado", svg: wxSvgSun() };
+    if (isStorm) return { label:"Tempestade", svg: wxSvgStorm() };
+    if (isRain)  return { label:"Chuva", svg: wxSvgRain() };
+    if (isCloud) return { label:"Nublado", svg: wxSvgCloud() };
+    return { label:"Clima", svg: wxSvgCloud() };
+  }
+
+  function wxSetIcon(elId, code){
+    const el = document.getElementById(elId);
+    if(!el) return;
+    const o = wxSvgByCode(code);
+    el.innerHTML = o.svg;
+    el.setAttribute("role","img");
+    el.setAttribute("aria-label", o.label || "Clima");
+  }
+
+  async function carregarClima(data){
+    const c = data?.clima;
+    try {
+      if (!c?.latitude || !c?.longitude) throw new Error("Sem coordenadas");
+
+      const url =
+        "https://api.open-meteo.com/v1/forecast" +
+        `?latitude=${encodeURIComponent(c.latitude)}` +
+        `&longitude=${encodeURIComponent(c.longitude)}` +
+        `&current=temperature_2m,precipitation,weather_code,wind_speed_10m` +
+        `&timezone=${encodeURIComponent(c.timezone || "America/Sao_Paulo")}`;
+
+      const res = await fetch(url, { cache: "no-store" });
+      const j = await res.json();
+      const cur = j?.current;
+      if (!cur) throw new Error("Sem current");
+
+      const t = Math.round(cur.temperature_2m);
+      const w = Math.round(cur.wind_speed_10m);
+      const p = cur.precipitation;
+      const code = Number(cur.weather_code);
+
+      wxSetIcon("wxIconTop", code);
+      wxSetIcon("wxIconInline", code);
+
+      setText("wxCityTemp", `${c.cidade || "Tubarão/SC"} ${t}°C`);
+      setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
+
+    } catch (e) {
+      const cloud = wxSvgCloud();
+      const top = document.getElementById("wxIconTop");
+      const mini = document.getElementById("wxIconInline");
+      if (top) top.innerHTML = cloud;
+      if (mini) mini.innerHTML = cloud;
+      setText("wxCityTemp", `${data?.clima?.cidade || "—"} (offline)`);
+      setText("wxWindRain", `Vento — km/h • Chuva — mm`);
     }
+  }
 
-    async function carregarVersiculo(data) {
-      if (!data?.temaDoDia || data.temaDoDia.modo !== "biblico-anual") return;
-      try {
-        const res = await fetch("versiculos.json?ts=" + Date.now(), { cache: "no-store" });
-        const v = await res.json();
-        const key = hojeKeyMMDD();
-        const texto = v?.versos?.[key];
-        setText("dataBiblica", v?.cabecalho || "");
-        setText("ref", texto ? texto : (v?.titulo ? v.titulo : "Verso não encontrado"));
-      } catch (e) {}
-    }
+  const AD_STATE_KEY = "CS_AD_STATE_V1";
+  const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V1";
 
-    /* =========================================================
-       WX SVGs (premium)
-       ========================================================= */
-    function wxSvgSun(){
-      return `
-      <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g class="sun-rays" fill="none" stroke="rgba(255,220,120,.95)" stroke-width="3" stroke-linecap="round">
-          <line x1="32" y1="6"  x2="32" y2="14"/>
-          <line x1="32" y1="50" x2="32" y2="58"/>
-          <line x1="6"  y1="32" x2="14" y2="32"/>
-          <line x1="50" y1="32" x2="58" y2="32"/>
-          <line x1="12" y1="12" x2="18" y2="18"/>
-          <line x1="46" y1="46" x2="52" y2="52"/>
-          <line x1="46" y1="18" x2="52" y2="12"/>
-          <line x1="12" y1="52" x2="18" y2="46"/>
-        </g>
-        <circle class="sun-core" cx="32" cy="32" r="12" fill="rgba(255,200,60,.98)"/>
-        <circle cx="32" cy="32" r="12" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
-      </svg>`;
-    }
+  function adLoadState(){
+    try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); }
+    catch(e){ return {}; }
+  }
+  function adSaveState(st){
+    try { sessionStorage.setItem(AD_STATE_KEY, JSON.stringify(st || {})); } catch(e){}
+  }
 
-    function wxSvgCloud(){
-      return `
-      <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g class="cloud">
-          <path d="M22 44h22a12 12 0 0 0 0-24 15 15 0 0 0-29-3A11 11 0 0 0 22 44z"
-            fill="rgba(235,245,255,.92)"/>
-          <path d="M22 44h22a12 12 0 0 0 0-24 15 15 0 0 0-29-3A11 11 0 0 0 22 44z"
-            fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
-        </g>
-      </svg>`;
-    }
+  function adFilterMp4(list){
+    const arr = Array.isArray(list) ? list : [];
+    return arr.filter(x=>{
+      const src = String(x?.arquivo || "").trim();
+      return /\.mp4(\?.*)?$/i.test(src);
+    });
+  }
 
-    function wxSvgRain(){
-      return `
-      <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g class="cloud">
-          <path d="M20 40h24a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 20 40z"
-            fill="rgba(235,245,255,.92)"/>
-          <path d="M20 40h24a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 20 40z"
-            fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
-        </g>
-        <g class="drops" stroke="rgba(120,200,255,.95)" stroke-width="3" stroke-linecap="round">
-          <line x1="26" y1="44" x2="24" y2="52"/>
-          <line x1="34" y1="44" x2="32" y2="52"/>
-          <line x1="42" y1="44" x2="40" y2="52"/>
-        </g>
-      </svg>`;
-    }
-
-    function wxSvgStorm(){
-      return `
-      <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g class="cloud">
-          <path d="M18 40h26a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 18 40z"
-            fill="rgba(235,245,255,.92)"/>
-          <path d="M18 40h26a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 18 40z"
-            fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
-        </g>
-        <path class="bolt" d="M30 42l-4 10h6l-3 10 12-16h-6l3-4z"
-          fill="rgba(255,210,80,.98)"/>
-      </svg>`;
-    }
-
-    function wxSvgByCode(code){
-      const c = Number(code);
-      const isSun   = (c === 0);
-      const isCloud = ([1,2,3,45,48].includes(c));
-      const isRain  = ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(c));
-      const isStorm = ([95,96,99].includes(c));
-
-      if (isSun)   return { label:"Ensolarado", svg: wxSvgSun() };
-      if (isStorm) return { label:"Tempestade", svg: wxSvgStorm() };
-      if (isRain)  return { label:"Chuva", svg: wxSvgRain() };
-      if (isCloud) return { label:"Nublado", svg: wxSvgCloud() };
-      return { label:"Clima", svg: wxSvgCloud() };
-    }
-
-    function wxSetIcon(elId, code){
-      const el = document.getElementById(elId);
-      if(!el) return;
-      const o = wxSvgByCode(code);
-      el.innerHTML = o.svg;
-      el.setAttribute("role","img");
-      el.setAttribute("aria-label", o.label || "Clima");
-    }
-
-    async function carregarClima(data){
-      const c = data?.clima;
-      try {
-        if (!c?.latitude || !c?.longitude) throw new Error("Sem coordenadas");
-
-        const url =
-          "https://api.open-meteo.com/v1/forecast" +
-          `?latitude=${encodeURIComponent(c.latitude)}` +
-          `&longitude=${encodeURIComponent(c.longitude)}` +
-          `&current=temperature_2m,precipitation,weather_code,wind_speed_10m` +
-          `&timezone=${encodeURIComponent(c.timezone || "America/Sao_Paulo")}`;
-
-        const res = await fetch(url, { cache: "no-store" });
-        const j = await res.json();
-        const cur = j?.current;
-        if (!cur) throw new Error("Sem current");
-
-        const t = Math.round(cur.temperature_2m);
-        const w = Math.round(cur.wind_speed_10m);
-        const p = cur.precipitation;
-        const code = Number(cur.weather_code);
-
-        wxSetIcon("wxIconTop", code);
-        wxSetIcon("wxIconInline", code);
-
-        setText("wxCityTemp", `${c.cidade || "Tubarão/SC"} ${t}°C`);
-        setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
-
-      } catch (e) {
-        const cloud = wxSvgCloud();
-        const top = document.getElementById("wxIconTop");
-        const mini = document.getElementById("wxIconInline");
-        if (top) top.innerHTML = cloud;
-        if (mini) mini.innerHTML = cloud;
-        setText("wxCityTemp", `${data?.clima?.cidade || "—"} (offline)`);
-        setText("wxWindRain", `Vento — km/h • Chuva — mm`);
-      }
-    }
-
-    /* =========================================================
-       Publicidade — MP4 + troca no onended
-       ========================================================= */
-    const AD_STATE_KEY = "CS_AD_STATE_V1";
-    const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V1";
-
-    function adLoadState(){
-      try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); }
-      catch(e){ return {}; }
-    }
-    function adSaveState(st){
-      try { sessionStorage.setItem(AD_STATE_KEY, JSON.stringify(st || {})); } catch(e){}
-    }
-
-    function adFilterMp4(list){
-      const arr = Array.isArray(list) ? list : [];
-      return arr.filter(x=>{
-        const src = String(x?.arquivo || "").trim();
-        return /\.mp4(\?.*)?$/i.test(src);
-      });
-    }
-
-    function adSeek(delta){
-      const v = document.getElementById("adVideo");
-      if(!v) return;
-      try{
-        v.currentTime = Math.max(0, (v.currentTime || 0) + delta);
-        const st = adLoadState();
-        st.t = v.currentTime || 0;
-        st.paused = v.paused;
-        adSaveState(st);
-      }catch(e){}
-    }
-
-    function setCityTitleFromConfig(cfg){
-      const el = document.getElementById("cityTitle");
-      if(!el) return;
-      const t = cfg?.publicidade?.cidadeTitulo || cfg?.cidadeTitulo || "📰 Mensagens no Brasil";
-      el.textContent = String(t);
-    }
-
-    function bindTvVideoControls(videos){
-      const v = document.getElementById("adVideo");
-      const controls = document.getElementById("tvVideoControls");
-      if(!v || !controls) return;
-
-      controls.style.display = "flex";
-
-      const bPrev = document.getElementById("btnPrevAd");
-      const bNext = document.getElementById("btnNextAd");
-      const bBack = document.getElementById("btnBack10");
-      const bFwd  = document.getElementById("btnFwd10");
-
-      function setIdx(nextIdx){
-        const list = videos;
-        if(!list.length) return;
-
-        let i = nextIdx;
-        if(i < 0) i = list.length - 1;
-        if(i >= list.length) i = 0;
-
-        const st = adLoadState();
-        st.idx = i;
-        st.t = 0;
-        st.paused = false;
-        adSaveState(st);
-
-        adPlayByState(list, true);
-      }
-
-      if(bPrev) bPrev.onclick = () => setIdx((adLoadState().idx ?? 0) - 1);
-      if(bNext) bNext.onclick = () => setIdx((adLoadState().idx ?? 0) + 1);
-      if(bBack) bBack.onclick = () => adSeek(-10);
-      if(bFwd)  bFwd.onclick  = () => adSeek(+10);
-
-      window.addEventListener("keydown", (e)=>{
-        if(isMobile()) return;
-        const k = String(e.key || "").toLowerCase();
-        if(k === "arrowleft") setIdx((adLoadState().idx ?? 0) - 1);
-        if(k === "arrowright") setIdx((adLoadState().idx ?? 0) + 1);
-      });
-    }
-
-    function adApplyFitContain(v){
-      try{
-        const isVertical = v.videoHeight > v.videoWidth;
-        if (isVertical) v.classList.add("fit-contain");
-        else v.classList.remove("fit-contain");
-      }catch(e){}
-    }
-
-    function adSavePlayback(){
-      const v = document.getElementById("adVideo");
-      if(!v) return;
+  function adSeek(delta){
+    const v = document.getElementById("adVideo");
+    if(!v) return;
+    try{
+      v.currentTime = Math.max(0, (v.currentTime || 0) + delta);
       const st = adLoadState();
-      st.t = Number.isFinite(v.currentTime) ? v.currentTime : (st.t || 0);
+      st.t = v.currentTime || 0;
       st.paused = v.paused;
       adSaveState(st);
-    }
+    }catch(e){}
+  }
 
-    function adShuffleCopy(arr){
-      const a = arr.slice();
-      for(let i=a.length-1; i>0; i--){
-        const j = Math.floor(Math.random() * (i+1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
+  function setCityTitleFromConfig(cfg){
+    const el = document.getElementById("cityTitle");
+    if(!el) return;
+    const t = cfg?.publicidade?.cidadeTitulo || cfg?.cidadeTitulo || "📰 Mensagens no Brasil";
+    el.textContent = String(t);
+  }
 
-    function adGetShuffledList(originalList){
-      try{
-        const raw = sessionStorage.getItem(AD_SHUFFLE_KEY);
-        if(raw){
-          const saved = JSON.parse(raw);
-          const filesNow = originalList.map(x => String(x?.arquivo||""));
-          const filesSaved = Array.isArray(saved?.files) ? saved.files : [];
-          if(filesSaved.join("|") === filesNow.join("|") && Array.isArray(saved?.order)){
-            const order = saved.order;
-            const map = new Map(originalList.map(x => [String(x?.arquivo||""), x]));
-            const rebuilt = order.map(f => map.get(f)).filter(Boolean);
-            filesNow.forEach(f=>{ if(!order.includes(f)) rebuilt.push(map.get(f)); });
-            return rebuilt;
-          }
-        }
-      }catch(e){}
+  function bindTvVideoControls(videos){
+    const v = document.getElementById("adVideo");
+    const controls = document.getElementById("tvVideoControls");
+    if(!v || !controls) return;
 
-      const shuffled = adShuffleCopy(originalList);
-      try{
-        const order = shuffled.map(x => String(x?.arquivo||""));
-        const files = originalList.map(x => String(x?.arquivo||""));
-        sessionStorage.setItem(AD_SHUFFLE_KEY, JSON.stringify({ files, order }));
-      }catch(e){}
-      return shuffled;
-    }
+    controls.style.display = "flex";
 
-    function adPlayByState(videos, forceFromStart){
-      const adVideo = document.getElementById("adVideo");
-      const adLabel = document.getElementById("adLabel");
-      const adPill  = document.getElementById("adPill");
-      if(!adVideo || !adLabel) return;
+    const bPrev = document.getElementById("btnPrevAd");
+    const bNext = document.getElementById("btnNextAd");
+    const bBack = document.getElementById("btnBack10");
+    const bFwd  = document.getElementById("btnFwd10");
 
-      let list = Array.isArray(videos) ? videos : [];
-      if(!list.length) return;
-
-      try{
-        const cfg = (window.__lastDataForTopbar || window.__cfg || {});
-        const pub = cfg?.publicidade || {};
-        if (pub.shuffle) list = adGetShuffledList(list);
-      }catch(e){}
-
-      const st = adLoadState();
-      let idx = Number.isFinite(st.idx) ? st.idx : 0;
-      if(idx < 0) idx = 0;
-      if(idx >= list.length) idx = 0;
-
-      const item = list[idx];
-      const src = String(item?.arquivo || "");
-      const sep = src.includes("?") ? "&" : "?";
-      const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
-
-      adLabel.textContent = String(item?.anunciante || "Anúncio");
-      if (adPill) adPill.textContent = "No ar";
-
-      const cur = adVideo.currentSrc || adVideo.src || "";
-      const baseCur = cur.split("?")[0];
-      const baseNext = finalSrc.split("?")[0];
-
-      if (baseCur !== baseNext){
-        adVideo.pause();
-        adVideo.classList.remove("fit-contain");
-        adVideo.removeAttribute("src");
-        adVideo.load();
-        adVideo.src = finalSrc;
-        adVideo.load();
-      }
-
-      const desiredTime = (forceFromStart ? 0 : Number(st.t || 0));
-      const playNow = () => {
-        try{
-          if(!forceFromStart && desiredTime > 0 && Number.isFinite(desiredTime)){
-            try { adVideo.currentTime = desiredTime; } catch(e){}
-          }
-          const p = adVideo.play();
-          if(p && p.catch) p.catch(()=>{});
-        }catch(e){}
-      };
-
-      if (adVideo.readyState >= 1) {
-        adApplyFitContain(adVideo);
-        playNow();
-      } else {
-        adVideo.onloadedmetadata = () => { adApplyFitContain(adVideo); playNow(); };
-      }
-
-      st.idx = idx;
-      st.paused = false;
-      adSaveState(st);
-    }
-
-    function adNext(videos){
+    function setIdx(nextIdx){
       const list = videos;
       if(!list.length) return;
 
-      const st = adLoadState();
-      let idx = Number.isFinite(st.idx) ? st.idx : 0;
-      idx++;
-      if(idx >= list.length) idx = 0;
+      let i = nextIdx;
+      if(i < 0) i = list.length - 1;
+      if(i >= list.length) i = 0;
 
-      st.idx = idx;
+      const st = adLoadState();
+      st.idx = i;
       st.t = 0;
       st.paused = false;
       adSaveState(st);
@@ -1742,322 +1644,489 @@ if (window.innerWidth >= 981) {
       adPlayByState(list, true);
     }
 
-    function iniciarPublicidade(data){
-      const pub = data?.publicidade;
-      const adBox = document.getElementById("adBox");
-      const adVideo = document.getElementById("adVideo");
-      const adCard = document.getElementById("adCard");
-      if (!adBox) return;
+    if(bPrev) bPrev.onclick = () => setIdx((adLoadState().idx ?? 0) - 1);
+    if(bNext) bNext.onclick = () => setIdx((adLoadState().idx ?? 0) + 1);
 
-      if (!pub?.ativar){
-        adBox.style.display = "none";
-        return;
-      }
-
-      adBox.style.display = "flex";
-      carregarMensagensCidade();
-
-      const videosMp4 = adFilterMp4(pub?.videos);
-      if (!videosMp4.length){
-        if (adCard) adCard.style.display = "none";
-        return;
-      }
-
-      if (adCard) adCard.style.display = "flex";
-      bindTvVideoControls(videosMp4);
-
-      if (!adVideo) return;
-
-      adVideo.addEventListener("click", () => {
-        try{
-          const st = adLoadState();
-          st.paused = false;
-          adSaveState(st);
-        }catch(e){}
-        adVideo.play().catch(()=>{});
-      }, { passive:true });
-
-      adVideo.addEventListener("timeupdate", ()=>{ if(!isMobile()) adSavePlayback(); }, {passive:true});
-      adVideo.addEventListener("pause", adSavePlayback, {passive:true});
-      adVideo.addEventListener("play", adSavePlayback, {passive:true});
-      document.addEventListener("visibilitychange", ()=>{ if(document.hidden) adSavePlayback(); });
-
-      adPlayByState(videosMp4, false);
-      adVideo.onended = () => adNext(videosMp4);
-      adVideo.onerror = () => setTimeout(()=>adNext(videosMp4), 1200);
-    }
-
-    /* =========================================================
-       Mensagens da Cidade (SEM SCROLL)
-       ========================================================= */
-    function decodeHtmlEntities_(s){
-      const t = document.createElement("textarea");
-      t.innerHTML = String(s ?? "");
-      return t.value;
-    }
-    function normalizeText_(s){
-      return decodeHtmlEntities_(s).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
-    }
-
-    function getNewsMaxItems(){
-      const h = window.innerHeight || 900;
-      if (isMobile()) return 8;
-      if (h < 720) return 3;
-      if (h < 880) return 4;
-      return 5;
-    }
-
-    async function carregarMensagensCidade(){
-      const newsBox  = document.getElementById("newsBox");
-      const newsBody = document.getElementById("newsBody");
-      if(!newsBox || !newsBody) return;
-
-      try{
-        const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
-        if(!res.ok) throw new Error("HTTP " + res.status);
-
-        const j = await res.json();
-        const items = Array.isArray(j.items) ? j.items : [];
-        const maxItems = getNewsMaxItems();
-
-        if(!items.length){
-          newsBody.innerHTML = `
-            <div class="newsItem"><p class="h">Sem mensagens no momento</p></div>
-            <div class="newsFooter">Fonte: indisponível</div>
-          `;
-          newsBox.style.display = "flex";
-          return;
-        }
-
-        let html = "";
-        const fontes = new Set();
-
-        items.slice(0, maxItems).forEach(x=>{
-          let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
-          titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
-          titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
-          if(!titulo) titulo = "Mensagem";
-
-          if(x.fonte) fontes.add(normalizeText_(x.fonte));
-          html += `<div class="newsItem"><p class="h">${escapeHtml(titulo)}</p></div>`;
-        });
-
-        let fontesHtml = "";
-        if(fontes.size){
-          fontesHtml = `<div class="newsFooter">Fonte:</div>`;
-          fontes.forEach(f=>{ fontesHtml += `<div class="newsFooterItem">${escapeHtml(f)}</div>`; });
-        }
-
-        newsBody.innerHTML = html + fontesHtml;
-        newsBox.style.display = "flex";
-
-      }catch(e){
-        newsBody.innerHTML = `
-          <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
-          <div class="newsFooter">Fonte: news.google.com (offline)</div>
-        `;
-        newsBox.style.display = "flex";
-      }
-    }
-
-  /* =========================================================
-   Topbar imagem por cidade / horário / tamanho de tela (nítida)
-   ========================================================= */
-function aplicarImagemTopbar(data){
-
-  const cidade = String(data?.clima?.cidade || "").toLowerCase();
-  const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
-
-  const h = new Date().getHours();
-  const estaNoite = (h >= 18 || h <= 4);
-
-  const isMobile = window.matchMedia("(max-width: 980px)").matches;
-  const isBigScreen = Math.max(screen.width, screen.height) >= 1920;
-
-  let img = "./img/tubarao01.jpg"; // fallback padrão
-
-  if(isTubarao){
-
-    if(estaNoite){
-      if(isMobile)       img = "./img/tubarao_noite.jpg";
-      else if(isBigScreen) img = "./img/tubarao_noite-2560p.jpg";
-      else               img = "./img/tubarao_noite-1920p.jpg";
-    }else{
-      if(isMobile)       img = "./img/tubarao01.jpg";
-      else if(isBigScreen) img = "./img/tubarao01-2560p.jpg";
-      else               img = "./img/tubarao01-1920p.jpg";
-    }
-
-  }
-
-  const test = new Image();
-
-  test.onload = () => {
-    document.documentElement.style.setProperty(
-      "--topbar-bg",
-      `url('${img}')`
-    );
-  };
-
-  test.onerror = () => {
-    document.documentElement.style.setProperty(
-      "--topbar-bg",
-      `url('./img/tubarao01.jpg')`
-    );
-  };
-
-  // ✅ sem Date.now() (evita blur)
-  // troque v=1 somente quando atualizar a imagem
-  test.src = img + "?v=1";
-}
-
-    /* =========================================================
-       Load principal
-       ========================================================= */
-    async function loadAll(){
-      const status = document.getElementById("statusJson");
-      const statusMini = document.getElementById("statusJsonMini");
-      const dot = document.getElementById("dotOnline");
-
-      try{
-        const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const ct = (res.headers.get("content-type") || "").toLowerCase();
-        if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
-        const data = await res.json();
-        window.__lastDataForTopbar = data;
-
-        setText("condoCenter", safeText(data.condominio || "—"));
-
-        if (status) status.textContent = "Atualizado";
-        if (statusMini) statusMini.textContent = "Atualizado";
-        if (dot) dot.style.background = "#44d07a";
-
-        setCityTitleFromConfig(data);
-
-        renderAvisos(data);
-
-        if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
-          setText("dataBiblica", "📖");
-          setText("ref", "Carregando…");
-        } else {
-          setText("dataBiblica", "📌 Avisos");
-          setText("ref", safeText(data.referencia || "Atualizado"));
-        }
-
-        await carregarVersiculo(data);
-        await carregarClima(data);
-        aplicarImagemTopbar(data);
-        iniciarPublicidade(data);
-
-        return data;
-
-      } catch(e){
-        if (status) status.textContent = "Offline";
-        if (statusMini) statusMini.textContent = "Offline";
-        if (dot) dot.style.background = "#ff5a5a";
-        return null;
-      }
-    }
-
-    loadAll();
-
-    setInterval(() => {
-      try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
-    }, 60000);
-
-    /* ✅ recalcula “news max items” quando muda tamanho (PC/Wix/TV) */
-    window.addEventListener("resize", ()=>{
-      if(!isMobile()) carregarMensagensCidade();
-      try{ if(window.__lastDataForTopbar) ajustarAvisosTelaCheia(ROT_STATE.page || 0); }catch(e){}
-    }, {passive:true});
-
-
-window.addEventListener("resize", () => {
-  if (window.innerWidth >= 981) {
-    autoFitAvisos();
-    autoFitNews();
-  }
-});
-    
-  </script>
-
-  <script>
-    /* =========================================================
-       Service Worker update
-       ========================================================= */
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", async () => {
-        try {
-          const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
-          try { await reg.update(); } catch(e){}
-          reg.addEventListener("updatefound", () => {
-            const nw = reg.installing;
-            if(!nw) return;
-            nw.addEventListener("statechange", () => {
-              if (nw.state === "installed" && navigator.serviceWorker.controller) {
-                nw.postMessage("SKIP_WAITING");
-              }
-            });
-          });
-        } catch(e){}
-      });
-
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
-        const banner = document.getElementById("updateBanner");
-        if(banner) banner.style.display = "block";
-        setTimeout(()=>window.location.reload(), 1200);
-      });
-    }
-  </script>
-
-  <script>
-    /* =========================================================
-       Fundo dinâmico
-       ========================================================= */
-    const fundos = {
-      azul:    ["#061726", "#0b1f33"],
-      verde:   ["#0b2e1a", "#134d2c"],
-      amarelo: ["#3a3300", "#665c00"],
-      laranja: ["#3a1f00", "#663300"],
-      branco:  ["#f2f2f2", "#dcdcdc"],
-      preto:   ["#000000", "#111111"]
-    };
-
-    function setFundo(cor){
-      if(!fundos[cor]) return;
-      document.documentElement.style.setProperty("--bg1", fundos[cor][0]);
-      document.documentElement.style.setProperty("--bg2", fundos[cor][1]);
-      try { localStorage.setItem("fundoEscolhido", cor); } catch(e){}
-    }
-
-    function fundoAleatorio(){
-      const cores = Object.keys(fundos);
-      const cor = cores[Math.floor(Math.random() * cores.length)];
-      setFundo(cor);
-      return cor;
-    }
-
-    (function carregarFundoSalvo(){
-      try{
-        const salvo = localStorage.getItem("fundoEscolhido");
-        if(salvo && fundos[salvo]) setFundo(salvo);
-      }catch(e){}
-    })();
+    if(bBack) bBack.onclick = () => adSeek(-10);
+    if(bFwd)  bFwd.onclick  = () => adSeek(+10);
 
     window.addEventListener("keydown", (e)=>{
+      if(isMobile()) return;
       const k = String(e.key || "").toLowerCase();
-      if (k === "1") setFundo("azul");
-      else if (k === "2") setFundo("verde");
-      else if (k === "3") setFundo("amarelo");
-      else if (k === "4") setFundo("laranja");
-      else if (k === "5") setFundo("branco");
-      else if (k === "6") setFundo("preto");
-      else if (k === "r") fundoAleatorio();
+      if(k === "arrowleft") setIdx((adLoadState().idx ?? 0) - 1);
+      if(k === "arrowright") setIdx((adLoadState().idx ?? 0) + 1);
+    });
+  }
+
+  function adApplyFitContain(v){
+    try{
+      const isVertical = v.videoHeight > v.videoWidth;
+      if (isVertical) v.classList.add("fit-contain");
+      else v.classList.remove("fit-contain");
+    }catch(e){}
+  }
+
+  function adSavePlayback(){
+    const v = document.getElementById("adVideo");
+    if(!v) return;
+    const st = adLoadState();
+    st.t = Number.isFinite(v.currentTime) ? v.currentTime : (st.t || 0);
+    st.paused = v.paused;
+    adSaveState(st);
+  }
+
+  function adShuffleCopy(arr){
+    const a = arr.slice();
+    for(let i=a.length-1; i>0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function adGetShuffledList(originalList){
+    try{
+      const raw = sessionStorage.getItem(AD_SHUFFLE_KEY);
+      if(raw){
+        const saved = JSON.parse(raw);
+        const filesNow = originalList.map(x => String(x?.arquivo||""));
+        const filesSaved = Array.isArray(saved?.files) ? saved.files : [];
+        if(filesSaved.join("|") === filesNow.join("|") && Array.isArray(saved?.order)){
+          const order = saved.order;
+          const map = new Map(originalList.map(x => [String(x?.arquivo||""), x]));
+          const rebuilt = order.map(f => map.get(f)).filter(Boolean);
+          filesNow.forEach(f=>{ if(!order.includes(f)) rebuilt.push(map.get(f)); });
+          return rebuilt;
+        }
+      }
+    }catch(e){}
+
+    const shuffled = adShuffleCopy(originalList);
+    try{
+      const order = shuffled.map(x => String(x?.arquivo||""));
+      const files = originalList.map(x => String(x?.arquivo||""));
+      sessionStorage.setItem(AD_SHUFFLE_KEY, JSON.stringify({ files, order }));
+    }catch(e){}
+    return shuffled;
+  }
+
+  function adPlayByState(videos, forceFromStart){
+    const adVideo = document.getElementById("adVideo");
+    const adLabel = document.getElementById("adLabel");
+    const adPill  = document.getElementById("adPill");
+    if(!adVideo || !adLabel) return;
+
+    let list = Array.isArray(videos) ? videos : [];
+    if(!list.length) return;
+
+    try{
+      const cfg = (window.__lastDataForTopbar || window.__cfg || {});
+      const pub = cfg?.publicidade || {};
+      if (pub.shuffle) list = adGetShuffledList(list);
+    }catch(e){}
+
+    const st = adLoadState();
+    let idx = Number.isFinite(st.idx) ? st.idx : 0;
+    if(idx < 0) idx = 0;
+    if(idx >= list.length) idx = 0;
+
+    const item = list[idx];
+    const src = String(item?.arquivo || "");
+    const sep = src.includes("?") ? "&" : "?";
+    const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+
+    adLabel.textContent = String(item?.anunciante || "Anúncio");
+    if (adPill) adPill.textContent = "No ar";
+
+    const cur = adVideo.currentSrc || adVideo.src || "";
+    const baseCur = cur.split("?")[0];
+    const baseNext = finalSrc.split("?")[0];
+
+    if (baseCur !== baseNext){
+      adVideo.pause();
+      adVideo.classList.remove("fit-contain");
+      adVideo.removeAttribute("src");
+      adVideo.load();
+      adVideo.src = finalSrc;
+      adVideo.load();
+    }
+
+    const desiredTime = (forceFromStart ? 0 : Number(st.t || 0));
+    const playNow = () => {
+      try{
+        if(!forceFromStart && desiredTime > 0 && Number.isFinite(desiredTime)){
+          try { adVideo.currentTime = desiredTime; } catch(e){}
+        }
+        const p = adVideo.play();
+        if(p && p.catch) p.catch(()=>{});
+      }catch(e){}
+    };
+
+    if (adVideo.readyState >= 1) {
+      adApplyFitContain(adVideo);
+      playNow();
+    } else {
+      adVideo.onloadedmetadata = () => { adApplyFitContain(adVideo); playNow(); };
+    }
+
+    st.idx = idx;
+    st.paused = false;
+    adSaveState(st);
+  }
+
+  function adNext(videos){
+    const list = videos;
+    if(!list.length) return;
+
+    const st = adLoadState();
+    let idx = Number.isFinite(st.idx) ? st.idx : 0;
+    idx++;
+    if(idx >= list.length) idx = 0;
+
+    st.idx = idx;
+    st.t = 0;
+    st.paused = false;
+    adSaveState(st);
+
+    adPlayByState(list, true);
+  }
+
+  function iniciarPublicidade(data){
+    const pub = data?.publicidade;
+    const adBox = document.getElementById("adBox");
+    const adVideo = document.getElementById("adVideo");
+    const adCard = document.getElementById("adCard");
+    if (!adBox) return;
+
+    if (!pub?.ativar){
+      adBox.style.display = "none";
+      return;
+    }
+
+    adBox.style.display = "flex";
+    carregarMensagensCidade();
+
+    const videosMp4 = adFilterMp4(pub?.videos);
+    if (!videosMp4.length){
+      if (adCard) adCard.style.display = "none";
+      return;
+    }
+
+    if (adCard) adCard.style.display = "flex";
+    bindTvVideoControls(videosMp4);
+
+    if (!adVideo) return;
+
+    adVideo.addEventListener("click", () => {
+      try{
+        const st = adLoadState();
+        st.paused = false;
+        adSaveState(st);
+      }catch(e){}
+      adVideo.play().catch(()=>{});
+    }, { passive:true });
+
+    adVideo.addEventListener("timeupdate", ()=>{ if(!isMobile()) adSavePlayback(); }, {passive:true});
+    adVideo.addEventListener("pause", adSavePlayback, {passive:true});
+    adVideo.addEventListener("play", adSavePlayback, {passive:true});
+    document.addEventListener("visibilitychange", ()=>{ if(document.hidden) adSavePlayback(); });
+
+    adPlayByState(videosMp4, false);
+    adVideo.onended = () => adNext(videosMp4);
+    adVideo.onerror = () => setTimeout(()=>adNext(videosMp4), 1200);
+  }
+
+  function decodeHtmlEntities_(s){
+    const t = document.createElement("textarea");
+    t.innerHTML = String(s ?? "");
+    return t.value;
+  }
+  function normalizeText_(s){
+    return decodeHtmlEntities_(s).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+  }
+
+  function getNewsMaxItems(){
+    const h = window.innerHeight || 900;
+    if (isMobile()) return 8;
+    if (h < 720) return 3;
+    if (h < 880) return 4;
+    return 5;
+  }
+
+  async function carregarMensagensCidade(){
+    const newsBox  = document.getElementById("newsBox");
+    const newsBody = document.getElementById("newsBody");
+    if(!newsBox || !newsBody) return;
+
+    try{
+      const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
+      if(!res.ok) throw new Error("HTTP " + res.status);
+
+      const j = await res.json();
+      const items = Array.isArray(j.items) ? j.items : [];
+      const maxItems = getNewsMaxItems();
+
+      if(!items.length){
+        newsBody.innerHTML = `
+          <div class="newsItem"><p class="h">Sem mensagens no momento</p></div>
+          <div class="newsFooter">Fonte: indisponível</div>
+        `;
+        newsBox.style.display = "flex";
+        if (window.innerWidth >= 981) requestAnimationFrame(autoFitNews);
+        return;
+      }
+
+      let html = "";
+      const fontes = new Set();
+
+      items.slice(0, maxItems).forEach(x=>{
+        let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
+        titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
+        titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
+        if(!titulo) titulo = "Mensagem";
+
+        if(x.fonte) fontes.add(normalizeText_(x.fonte));
+        html += `<div class="newsItem"><p class="h">${escapeHtml(titulo)}</p></div>`;
+      });
+
+      let fontesHtml = "";
+      if(fontes.size){
+        fontesHtml = `<div class="newsFooter">Fonte:</div>`;
+        fontes.forEach(f=>{ fontesHtml += `<div class="newsFooterItem">${escapeHtml(f)}</div>`; });
+      }
+
+      newsBody.innerHTML = html + fontesHtml;
+      newsBox.style.display = "flex";
+      if (window.innerWidth >= 981) requestAnimationFrame(autoFitNews);
+
+    }catch(e){
+      newsBody.innerHTML = `
+        <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
+        <div class="newsFooter">Fonte: news.google.com (offline)</div>
+      `;
+      newsBox.style.display = "flex";
+      if (window.innerWidth >= 981) requestAnimationFrame(autoFitNews);
+    }
+  }
+
+  function aplicarImagemTopbar(data){
+    const cidade = String(data?.clima?.cidade || "").toLowerCase();
+    const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
+
+    const h = new Date().getHours();
+    const estaNoite = (h >= 18 || h <= 4);
+
+    const isMob = window.matchMedia("(max-width: 980px)").matches;
+
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    const longest = Math.max(vw, vh);
+
+    const is2560 = longest >= 2400;
+    const is1920 = longest >= 1700;
+
+    let img = "./img/tubarao01.jpg";
+
+    if(isTubarao){
+      if(estaNoite){
+        if(isMob)       img = "./img/tubarao_noite.jpg";
+        else if(is2560) img = "./img/tubarao_noite-2560p.jpg";
+        else if(is1920) img = "./img/tubarao_noite-1920p.jpg";
+        else            img = "./img/tubarao_noite-1280p.jpg";
+      }else{
+        if(isMob)       img = "./img/tubarao01.jpg";
+        else if(is2560) img = "./img/tubarao01-2560p.jpg";
+        else if(is1920) img = "./img/tubarao01-1920p.jpg";
+        else            img = "./img/tubarao01-1280p.jpg";
+      }
+    }
+
+    const test = new Image();
+    test.decoding = "async";
+
+    test.onload = () => {
+      document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
+    };
+    test.onerror = () => {
+      document.documentElement.style.setProperty("--topbar-bg", `url('./img/tubarao01.jpg')`);
+    };
+
+    test.src = img + "?v=1";
+  }
+
+  async function loadAll(){
+    const status = document.getElementById("statusJson");
+    const statusMini = document.getElementById("statusJsonMini");
+    const dot = document.getElementById("dotOnline");
+
+    try{
+      const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const ct = (res.headers.get("content-type") || "").toLowerCase();
+      if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
+
+      const data = await res.json();
+      window.__lastDataForTopbar = data;
+
+      setText("condoCenter", safeText(data.condominio || "—"));
+
+      if (status) status.textContent = "Atualizado";
+      if (statusMini) statusMini.textContent = "Atualizado";
+      if (dot) dot.style.background = "#44d07a";
+
+      setCityTitleFromConfig(data);
+      renderAvisos(data);
+
+      if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
+        setText("dataBiblica", "📖");
+        setText("ref", "Carregando…");
+      } else {
+        setText("dataBiblica", "📌 Avisos");
+        setText("ref", safeText(data.referencia || "Atualizado"));
+      }
+
+      await carregarVersiculo(data);
+      await carregarClima(data);
+
+      await carregarMensagensCidade();
+      aplicarImagemTopbar(data);
+
+      iniciarPublicidade(data);
+
+      return data;
+
+    } catch(e){
+      if (status) status.textContent = "Offline";
+      if (statusMini) statusMini.textContent = "Offline";
+      if (dot) dot.style.background = "#ff5a5a";
+      return null;
+    }
+  }
+
+  loadAll();
+
+  setInterval(() => {
+    try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
+  }, 60000);
+
+  let __rzT = null;
+  window.addEventListener("resize", ()=>{
+    clearTimeout(__rzT);
+    __rzT = setTimeout(()=>{
+      if (window.innerWidth >= 981){
+        try{ autoFitAvisos(); }catch(e){}
+        try{ autoFitNews(); }catch(e){}
+      }
+      try{ if(!isMobile()) carregarMensagensCidade(); }catch(e){}
+      try{ if(window.__lastDataForTopbar) ajustarAvisosTelaCheia(ROT_STATE.page || 0); }catch(e){}
+      try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
+    }, 180);
+  }, {passive:true});
+</script>
+
+<script>
+  const fundos = {
+    azul:    ["#061726", "#0b1f33"],
+    verde:   ["#0b2e1a", "#134d2c"],
+    amarelo: ["#3a3300", "#665c00"],
+    laranja: ["#3a1f00", "#663300"],
+    branco:  ["#f2f2f2", "#dcdcdc"],
+    preto:   ["#000000", "#111111"]
+  };
+
+  function setFundo(cor){
+    if(!fundos[cor]) return;
+    document.documentElement.style.setProperty("--bg1", fundos[cor][0]);
+    document.documentElement.style.setProperty("--bg2", fundos[cor][1]);
+    try { localStorage.setItem("fundoEscolhido", cor); } catch(e){}
+  }
+
+  function fundoAleatorio(){
+    const cores = Object.keys(fundos);
+    const cor = cores[Math.floor(Math.random() * cores.length)];
+    setFundo(cor);
+    return cor;
+  }
+
+  (function carregarFundoSalvo(){
+    try{
+      const salvo = localStorage.getItem("fundoEscolhido");
+      if(salvo && fundos[salvo]) setFundo(salvo);
+    }catch(e){}
+  })();
+
+  window.addEventListener("keydown", (e)=>{
+    const k = String(e.key || "").toLowerCase();
+    if (k === "1") setFundo("azul");
+    else if (k === "2") setFundo("verde");
+    else if (k === "3") setFundo("amarelo");
+    else if (k === "4") setFundo("laranja");
+    else if (k === "5") setFundo("branco");
+    else if (k === "6") setFundo("preto");
+    else if (k === "r") fundoAleatorio();
+  });
+
+  setInterval(fundoAleatorio, 300000);
+</script>
+
+<script>
+  (function detectAndMarkTV(){
+    try{
+      const ua = (navigator.userAgent || "").toLowerCase();
+
+      const isTV =
+        ua.includes("smart-tv") ||
+        ua.includes("smarttv") ||
+        ua.includes("hbbtv") ||
+        ua.includes("appletv") ||
+        ua.includes("googletv") ||
+        ua.includes("android tv") ||
+        ua.includes("aft") ||
+        ua.includes("bravia") ||
+        ua.includes("sonydtv") ||
+        ua.includes("netcast") ||
+        ua.includes("tizen") ||
+        ua.includes("web0s") || ua.includes("webos") ||
+        ua.includes("viera") ||
+        ua.includes("roku");
+
+      const likelyTVLandscape =
+        (window.innerWidth > window.innerHeight) &&
+        (Math.max(window.innerWidth, window.innerHeight) >= 900);
+
+      if(isTV || likelyTVLandscape){
+        document.documentElement.classList.add("isTV");
+      }else{
+        document.documentElement.classList.remove("isTV");
+      }
+    }catch(e){}
+  })();
+
+  setTimeout(()=>{ try{ window.dispatchEvent(new Event("resize")); }catch(e){} }, 400);
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+        try { await reg.update(); } catch(e){}
+        reg.addEventListener("updatefound", () => {
+          const nw = reg.installing;
+          if(!nw) return;
+          nw.addEventListener("statechange", () => {
+            if (nw.state === "installed" && navigator.serviceWorker.controller) {
+              nw.postMessage("SKIP_WAITING");
+            }
+          });
+        });
+      } catch(e){}
     });
 
-    setInterval(fundoAleatorio, 300000);
-  </script>
-
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      const banner = document.getElementById("updateBanner");
+      if(banner) banner.style.display = "block";
+      setTimeout(()=>window.location.reload(), 1200);
+    });
+  }
+</script>
 </body>
 </html>
