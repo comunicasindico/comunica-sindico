@@ -751,6 +751,11 @@
       min-height:0;
       flex:1 1 auto;
       overflow:hidden; /* ✅ sem barra */
+      if (window.innerWidth >= 981) {
+  requestAnimationFrame(() => {
+    autoFitNews();
+  });
+}
     }
 
     .newsItem{
@@ -767,18 +772,22 @@
       background: rgba(0,0,0,.22);
     }
     .newsItem .h{
-      font-family: var(--font-soft);
-      font-weight: 750; /* ✅ menos negrito, mais legível */
-      font-size: clamp(14px, 1.8dvh, 20px);
-      line-height: 1.22;
-      letter-spacing: .15px;
-      color: var(--news-title);
-      margin: 0;
-      display:-webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3; /* ✅ sempre cabe */
-      overflow:hidden;
-    }
+  font-family: var(--font-soft);
+  font-weight: 750;
+  font-size: clamp(12px, 1.6dvh, 18px);
+  line-height: 1.22;
+  letter-spacing: .15px;
+  color: var(--news-title);
+  margin: 0;
+
+  /* ✅ SEM reticências */
+  display:block;
+  overflow: hidden;          /* mantém o card “limpo” */
+  white-space: normal;
+  text-overflow: unset;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
 
     .newsFooter{
       margin-top: 8px;
@@ -818,7 +827,7 @@
         min-height:0;
         overflow:hidden;
         line-height:1.16;
-        font-size: var(--desc-font, 22px) !important;
+        font-size: var(--desc-font, 22px);
       }
     }
 
@@ -1235,6 +1244,53 @@
       cards.forEach(c => c.querySelector(".d")?.style.setProperty("--desc-font", cap + "px"));
     }
 
+// ==========================================================
+// AUTO-FIT: reduz fonte até o texto caber no container
+// ==========================================================
+function fitTextToBox(el, opts = {}){
+  if(!el) return;
+  const {
+    maxPx = 44,
+    minPx = 12,
+    step  = 1
+  } = opts;
+
+  // reseta para um valor “alto” e desce até caber
+  el.style.fontSize = maxPx + "px";
+
+  // força reflow (garante medidas atualizadas)
+  // eslint-disable-next-line no-unused-expressions
+  el.offsetHeight;
+
+  let cur = maxPx;
+  // while: se estourar altura OU largura, reduz
+  while(cur > minPx && (el.scrollHeight > el.clientHeight || el.scrollWidth > el.clientWidth)){
+    cur -= step;
+    el.style.fontSize = cur + "px";
+  }
+}
+
+function autoFitAvisos(){
+  // Ajusta título e descrição de cada aviso
+  document.querySelectorAll("#avisos .aviso").forEach(card => {
+    const t = card.querySelector(".t");
+    const d = card.querySelector(".d");
+
+    // título: não pode ficar gigante em janela menor
+    fitTextToBox(t, { maxPx: 34, minPx: 14, step: 1 });
+
+    // descrição: este é o principal
+    fitTextToBox(d, { maxPx: 42, minPx: 14, step: 1 });
+  });
+}
+
+function autoFitNews(){
+  // Ajusta cada manchete do bloco de notícias
+  document.querySelectorAll("#newsBody .newsItem .h").forEach(h => {
+    fitTextToBox(h, { maxPx: 20, minPx: 11, step: 1 });
+  });
+}
+    
     function renderAvisos(data){
       const root = document.getElementById("avisos");
       if (!root) return;
@@ -1258,6 +1314,13 @@
         root.style.setProperty("--rows", "1");
         ROT_STATE = { page: 0, totalPages: 1, paused: false };
         return;
+        // ✅ AUTO-AJUSTE (desktop/janela pequena)
+if (window.innerWidth >= 981) {
+  // pequena espera pra garantir layout pronto
+  requestAnimationFrame(() => {
+    autoFitAvisos();
+  });
+}
       }
 
       function buildAvisoEl(a){
@@ -1888,6 +1951,15 @@
       if(!isMobile()) carregarMensagensCidade();
       try{ if(window.__lastDataForTopbar) ajustarAvisosTelaCheia(ROT_STATE.page || 0); }catch(e){}
     }, {passive:true});
+
+
+window.addEventListener("resize", () => {
+  if (window.innerWidth >= 981) {
+    autoFitAvisos();
+    autoFitNews();
+  }
+});
+    
   </script>
 
   <script>
