@@ -119,18 +119,27 @@
       overflow:hidden;
     }
 
-    .topbar::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background-image: var(--topbar-bg);
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      opacity: var(--topbar-img-opacity);
-      transform: scale(1.03);
-      pointer-events:none;
-    }
+  .topbar::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  /* imagem em alta resolução */
+  background-image: var(--topbar-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  /* remove zoom que causa blur */
+  transform: none !important;
+
+  /* melhora nitidez em telas grandes */
+  image-rendering: auto;
+  will-change: transform;
+
+  opacity: var(--topbar-img-opacity);
+  pointer-events:none;
+}
 
     .topbar::after{
       content:"";
@@ -1852,27 +1861,56 @@ if (window.innerWidth >= 981) {
       }
     }
 
-    /* =========================================================
-       Topbar imagem por cidade/horário
-       ========================================================= */
-    function aplicarImagemTopbar(data){
-      const cidade = String(data?.clima?.cidade || "").toLowerCase();
-      const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
+  /* =========================================================
+   Topbar imagem por cidade / horário / tamanho de tela (nítida)
+   ========================================================= */
+function aplicarImagemTopbar(data){
 
-      let img = "./img/tubarao01.jpg";
-      const h = new Date().getHours();
-      const estaNoite = (h >= 18 || h <= 4);
+  const cidade = String(data?.clima?.cidade || "").toLowerCase();
+  const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
 
-      if(isTubarao){
-        if(estaNoite) img = "./img/tubarao_noite.jpg";
-        else img = "./img/tubarao01.jpg";
-      }
+  const h = new Date().getHours();
+  const estaNoite = (h >= 18 || h <= 4);
 
-      const test = new Image();
-      test.onload = () => { document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`); };
-      test.onerror = () => { document.documentElement.style.setProperty("--topbar-bg", `url('./img/tubarao01.jpg')`); };
-      test.src = img + "?ts=" + Date.now();
+  const isMobile = window.matchMedia("(max-width: 980px)").matches;
+  const isBigScreen = Math.max(screen.width, screen.height) >= 1920;
+
+  let img = "./img/tubarao01.jpg"; // fallback padrão
+
+  if(isTubarao){
+
+    if(estaNoite){
+      if(isMobile)       img = "./img/tubarao_noite.jpg";
+      else if(isBigScreen) img = "./img/tubarao_noite-2560.jpg";
+      else               img = "./img/tubarao_noite-1920.jpg";
+    }else{
+      if(isMobile)       img = "./img/tubarao01.jpg";
+      else if(isBigScreen) img = "./img/tubarao01-2560.jpg";
+      else               img = "./img/tubarao01-1920.jpg";
     }
+
+  }
+
+  const test = new Image();
+
+  test.onload = () => {
+    document.documentElement.style.setProperty(
+      "--topbar-bg",
+      `url('${img}')`
+    );
+  };
+
+  test.onerror = () => {
+    document.documentElement.style.setProperty(
+      "--topbar-bg",
+      `url('./img/tubarao01.jpg')`
+    );
+  };
+
+  // ✅ sem Date.now() (evita blur)
+  // troque v=1 somente quando atualizar a imagem
+  test.src = img + "?v=1";
+}
 
     /* =========================================================
        Load principal
