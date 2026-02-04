@@ -246,14 +246,34 @@
     }
 
     .main{
-      flex:1 1 auto;
-      min-height:0;
-      width:100%;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
+  flex:1 1 auto;
+  min-height:0;
+  width:100%;
+  gap:8px;
+  /* no desktop/TV vira GRID para não “crescer” e gerar rolagem */
+  display:grid;
+  grid-template-rows: auto minmax(0, 1fr) minmax(110px, 18dvh);
+}
 
+/* garante que o painel 2x2 ocupe exatamente a área do meio */
+#avisosPane{
+  min-height:0;
+  height:100%;
+}
+
+/* a caixa de notícias ocupa o “rodapé do meio” e não empurra a tela */
+#newsBox{
+  min-height:0;
+  height:100%;
+}
+
+/* MOBILE continua igual: volta a ser coluna/rolagem (somente quando não é TV) */
+@media (max-width: 980px){
+  html:not(.isTV) .main{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+}
     /* Cabeçalho único dos Avisos + botão Atualizar na mesma linha */
     .sectionBar{
       flex:0 0 auto;
@@ -1963,12 +1983,14 @@
   setInterval(fundoAleatorio, 300000);
 </script>
 
-<script>
-  /* ✅ DETECTOR TV ROBUSTO (não quebra com zoom) */
+
+
+  /* ✅ DETECTOR TV À PROVA DE ZOOM (Semp/Sony/etc) */
   (function detectAndMarkTV(){
     function apply(){
       try{
         const ua = (navigator.userAgent || "").toLowerCase();
+        const dpr = Number(window.devicePixelRatio || 1);
 
         const isMobileUA = /mobi|iphone|ipad|ipod|android.*mobile/.test(ua);
 
@@ -1988,15 +2010,21 @@
           ua.includes("viera") ||
           ua.includes("roku");
 
+        // 👇 “tamanho físico” real (não muda com zoom)
         const sw = Number(screen.width || 0);
         const sh = Number(screen.height || 0);
-        const maxS = Math.max(sw, sh);
-        const minS = Math.min(sw, sh);
+        const maxPhys = Math.max(sw, sh) * dpr;
+        const minPhys = Math.min(sw, sh) * dpr;
 
-        const isBigScreen = (maxS >= 1280 && minS >= 720);
-        const isLandscapeBig = (sw > sh && maxS >= 1200);
+        // critério forte para TV/monitor grande
+        const isPhysBig = (maxPhys >= 1280 && minPhys >= 720);
 
-        const shouldTV = !isMobileUA && (isTVua || isBigScreen || isLandscapeBig);
+        // fallback: viewport grande (mesmo se screen for bugado)
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+        const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+        const isViewportBig = (Math.max(vw, vh) >= 1100 && Math.min(vw, vh) >= 650);
+
+        const shouldTV = !isMobileUA && (isTVua || isPhysBig || isViewportBig);
 
         document.documentElement.classList.toggle("isTV", !!shouldTV);
       }catch(e){}
@@ -2006,6 +2034,7 @@
     window.addEventListener("resize", apply, { passive:true });
     window.addEventListener("orientationchange", apply, { passive:true });
   })();
+
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", async () => {
