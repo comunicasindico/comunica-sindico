@@ -105,10 +105,10 @@
     }
   ],
 
-  "alertaUrgente": {
-    "ativar": false,
-    "titulo": "ALERTA URGENTE",
-    "mensagem": "",
-    "piscar": true
-  }
+ "alertaUrgente": {
+  "ativar": true,
+  "titulo": "ALERTA URGENTE",
+  "mensagem": "ATENÇÃO! COMUNICA SÍNDICO está chegando, o melhor aplicativo digital para seu condomínio.",
+  "piscar": true
+}
 }
