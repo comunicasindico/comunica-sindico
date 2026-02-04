@@ -40,18 +40,22 @@
       --sar: env(safe-area-inset-right);
       --sab: env(safe-area-inset-bottom);
       --sal: env(safe-area-inset-left);
+
       --ui:  clamp(1, calc(100dvh / 980), 1.70);
       --ui2: clamp(1, calc(100dvh / 920), 2.05);
+
       --tv-safe-bottom: 18px;
+
       --topbar-bg: none;
       --topbar-img-opacity: .92;
+
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
-      --gap: 6px;
+
       --news-bg: rgba(8, 24, 40, .62);
       --news-border: rgba(255,255,255,.12);
       --news-shadow: 0 18px 40px rgba(0,0,0,.38);
-      --news-title: rgba(234,242,255,.96);
+      --news-title: rgba(190,235,255,.98);
     }
 
     *{box-sizing:border-box}
@@ -59,7 +63,7 @@
 
     body{
       margin:0;
-      font-family:var(--font-ui);
+      font-family:"Segoe UI",Arial,sans-serif;
       color:var(--txt);
       background:
         radial-gradient(1200px 700px at 15% 10%, rgba(16,56,91,0.55), transparent 60%),
@@ -92,7 +96,7 @@
       min-height:0;
       display:flex;
       flex-direction:column;
-      gap:var(--gap);
+      gap:8px;
       max-width:none;
     }
 
@@ -144,7 +148,7 @@
 
     #titulo{
       margin:0;
-      font-size: clamp(26px, 2.6vw, 46px);
+      font-size: clamp(28px, 2.7vw, 48px);
       font-weight: 950;
       letter-spacing:.2px;
       white-space: normal;
@@ -152,12 +156,12 @@
       text-overflow: unset;
       overflow-wrap:anywhere;
       word-break:break-word;
-      line-height: 1.08;
+      line-height: 1.06;
     }
 
     #subtitulo{
       margin:0;
-      font-size: calc(12.5px * var(--ui));
+      font-size: calc(12px * var(--ui));
       color:var(--muted);
       font-weight:800;
       white-space:nowrap;
@@ -179,18 +183,31 @@
     }
     .subMobileLine .sep{ opacity:.55; font-weight:900; }
 
+    .condoCenter{
+      flex:1 1 auto;
+      min-width:0;
+      text-align:center;
+      font-weight:950;
+      letter-spacing:.2px;
+      color:rgba(234,242,255,.92);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      padding:0 8px;
+    }
+
     .rightInfo{
       display:flex;
-      gap:10px;
+      gap:8px;
       align-items:center;
+      flex-wrap:wrap;
       justify-content:flex-end;
       flex:0 0 auto;
-      flex-wrap:nowrap;
     }
 
     .badge{
       display:flex;align-items:center;gap:10px;
-      padding:10px 12px;border-radius:999px;
+      padding:8px 10px;border-radius:999px;
       border:1px solid var(--line);
       background:rgba(12,35,56,.55);
       color:var(--muted);
@@ -199,32 +216,35 @@
       white-space:nowrap;
     }
 
+    .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
+    #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
+
+    .btnInstall{
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(12,35,56,.55);
+      color:rgba(234,242,255,.92);
+      padding:8px 10px;
+      border-radius:999px;
+      font-weight:900;
+      cursor:pointer;
+      font-size: calc(14px * var(--ui));
+      white-space:nowrap;
+    }
+
     #wxIconTop{
       display:inline-flex;
-      width: 42px;
-      height: 42px;
+      width: 46px;
+      height: 46px;
       line-height: 1;
       align-items:center;
       justify-content:center;
       transform: translateY(1px);
     }
     #wxIconTop svg{
-      width: 42px;
-      height: 42px;
+      width: 46px;
+      height: 46px;
       display:block;
       filter: drop-shadow(0 8px 16px rgba(0,0,0,.45));
-    }
-
-    .btnInstall{
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(12,35,56,.55);
-      color:rgba(234,242,255,.92);
-      padding:10px 12px;
-      border-radius:999px;
-      font-weight:900;
-      cursor:pointer;
-      font-size: calc(14px * var(--ui));
-      white-space:nowrap;
     }
 
     .updateBanner{
@@ -241,12 +261,11 @@
     .main{
       flex:1 1 auto;
       min-height:0;
+      display:grid;
+      grid-template-columns: 1.20fr .80fr;
+      gap:8px;
       width:100%;
       height:100%;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap:var(--gap);
     }
 
     .panel{
@@ -261,7 +280,7 @@
     }
 
     .panelHead{
-      padding:10px 12px;
+      padding:8px 10px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -278,7 +297,7 @@
       letter-spacing:.6px;
       color:rgba(234,242,255,.95);
       text-transform:uppercase;
-      font-size: calc(18px * var(--ui2));
+      font-size: calc(17px * var(--ui2));
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -291,47 +310,70 @@
       border-radius:999px;
       border:1px solid var(--line);
       background:rgba(12,35,56,.35);
-      color:rgba(234,242,255,.92);
+      color:rgba(234,242,255,.88);
       display:inline-flex;
       align-items:center;
       gap:8px;
       white-space:nowrap;
+      max-width:100%;
+      overflow:hidden;
+      text-overflow:ellipsis;
       user-select:none;
       cursor:pointer;
     }
     .pill:hover{ filter:brightness(1.08); }
     .pill:active{ transform:scale(.98); }
 
-    .slotInner{
+    @keyframes avisoIn{
+      from{ opacity:0; transform: translateY(10px) scale(.99); }
+      to  { opacity:1; transform: translateY(0) scale(1); }
+    }
+    @keyframes glowPulseRed{
+      0%,100%{ box-shadow: 0 0 14px rgba(255,80,80,.35), inset 0 1px 0 rgba(255,255,255,.15); }
+      50%    { box-shadow: 0 0 20px rgba(255,80,80,.55), inset 0 1px 0 rgba(255,255,255,.18); }
+    }
+    #avisosPane.fade-out{ opacity:0; transition: opacity .22s ease; }
+    #avisosPane.fade-in { opacity:1; transition: opacity .22s ease; }
+
+    .avisosPane{
       padding:10px;
       min-height:0;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap:8px;
+      overflow:hidden;
+      flex:1 1 auto;
+    }
+
+    .slot{
+      min-height:0;
+      overflow:hidden;
       display:flex;
       flex-direction:column;
-      gap:10px;
-      overflow:hidden;
     }
 
     .aviso{
       padding:14px;
-      border-radius:16px;
+      border-radius:18px;
       background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap:8px;
       border:1px solid rgba(140,200,255,.22);
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.14),
         inset 0 -14px 22px rgba(0,0,0,.28),
         0 14px 34px rgba(0,0,0,.55);
-      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+      animation: avisoIn .28s ease both;
+      will-change: transform, opacity;
       position:relative;
       padding-left:18px;
-      overflow:hidden;
+      height:100%;
       min-height:0;
-      flex:1 1 auto;
+      overflow:hidden;
     }
-
-    .aviso:hover{ transform: translateY(-1px); filter:saturate(1.03); }
 
     .aviso::before{
       content:"";
@@ -345,6 +387,7 @@
     .aviso.alta{
       border:1px solid rgba(255,90,90,.9);
       background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.92));
+      animation: avisoIn .28s ease both, glowPulseRed 2.2s ease-in-out infinite;
     }
     .aviso.alta::before{ background:linear-gradient(180deg,#ff5a5a,#c0392b); }
 
@@ -363,8 +406,8 @@
     .aviso .t{
       margin:0;
       font-weight:950;
-      font-size: calc(22px * var(--ui2));
-      letter-spacing:.2px;
+      font-size: calc(20px * var(--ui2));
+      letter-spacing:.3px;
       color:#fff;
       text-shadow:0 1px 2px rgba(0,0,0,.6);
       line-height:1.12;
@@ -381,8 +424,8 @@
     .aviso .d{
       margin:0;
       color:#e0ecff;
-      line-height:1.28;
-      font-size: var(--desc-font, clamp(15px, 1.7vw, 21px));
+      line-height:1.26;
+      font-size: clamp(14px, 1.55vw, 20px);
       white-space:normal;
       overflow:hidden;
       overflow-wrap:anywhere;
@@ -392,6 +435,7 @@
     }
 
     .metaLine{
+      margin-top:auto;
       display:flex;
       flex-wrap:wrap;
       gap:8px;
@@ -400,10 +444,11 @@
       font-size: 0.42em;
       font-weight:900;
       line-height: 1.15;
-      margin-top:8px;
     }
+    @media (max-width: 520px){ .metaLine{ font-size: 0.45em; } }
+    @media (min-width: 1200px){ .metaLine{ font-size: 0.45em; } }
 
-    .metaItem{ display:inline-flex; align-items:center; gap:6px; opacity:.95; }
+    .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
     .metaItem b{ font-weight:950; color:#fff; }
     .metaSep{ opacity:.35; font-weight:900; }
 
@@ -441,88 +486,90 @@
       text-shadow: 0 1px 0 rgba(0,0,0,.45);
     }
 
+    .rightColBody{
+      padding:10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-height:0;
+      flex:1 1 auto;
+      overflow:hidden;
+    }
+
+    .adCard{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(7,20,34,.18);
+      border-radius:14px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+      flex: 0 0 auto;
+    }
+
+    .adLabel{
+      padding:8px 10px;
+      font-weight:950;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      color:rgba(234,242,255,.92);
+      background:rgba(12,35,56,.35);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
     .videoWrap{
       width:100%;
-      height:100%;
+      min-height:0;
+      flex: 1 1 auto;
+      position:relative;
+      overflow:hidden;
       background:#000;
       display:flex;
       align-items:center;
       justify-content:center;
-      overflow:hidden;
-      border-radius: 14px;
-      position:relative;
-      min-height:0;
-      flex:1 1 auto;
+    }
+
+    #adVideoBg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
+      filter: blur(22px) saturate(1.05) brightness(.75);
+      transform: scale(1.12);
+      opacity:.95;
+      pointer-events:none;
     }
 
     #adVideo{
+      position:relative;
+      z-index:2;
       width:100%;
       height:100%;
       display:block;
       object-fit:contain;
       object-position:center;
-      background:#000;
+      background:transparent;
     }
 
-    #adVideo::-webkit-media-controls,
-    #adVideo::-webkit-media-controls-enclosure{
-      display:none !important;
-    }
-    #adVideo::-webkit-media-controls-fullscreen-button,
-    #adVideo::-webkit-media-controls-play-button,
-    #adVideo::-webkit-media-controls-timeline,
-    #adVideo::-webkit-media-controls-current-time-display,
-    #adVideo::-webkit-media-controls-time-remaining-display,
-    #adVideo::-webkit-media-controls-mute-button,
-    #adVideo::-webkit-media-controls-volume-slider,
-    #adVideo::-webkit-media-controls-toggle-closed-captions-button,
-    #adVideo::-webkit-media-controls-overflow-button{
+    video::-webkit-media-controls,
+    video::-webkit-media-controls-enclosure,
+    video::-webkit-media-controls-panel,
+    video::-webkit-media-controls-fullscreen-button,
+    video::-webkit-media-controls-play-button,
+    video::-webkit-media-controls-timeline,
+    video::-webkit-media-controls-current-time-display,
+    video::-webkit-media-controls-time-remaining-display,
+    video::-webkit-media-controls-mute-button,
+    video::-webkit-media-controls-volume-slider{
       display:none !important;
       -webkit-appearance:none !important;
-    }
-
-    .tvVideoControls{
-      position:absolute;
-      left: 0;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      display:flex;
-      justify-content: space-between;
-      align-items:center;
-      z-index:50;
-      user-select:none;
-      pointer-events:none;
-      padding: 0 10px;
-    }
-
-    .tvBtn{
-      pointer-events: auto;
-      min-width: 30px;
-      width: 30px;
-      height: 30px;
-      padding: 0;
-      border-radius: 999px;
-      font-size: 14px;
-      line-height: 1;
-      cursor: pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(0,0,0,.28);
-      border: 1px solid rgba(255,255,255,.22);
-      box-shadow: 0 6px 14px rgba(0,0,0,.35);
-      transition: transform .12s ease, filter .12s ease, border-color .12s ease;
-    }
-    .tvBtn:hover{ filter: brightness(1.08); border-color: rgba(255,255,255,.28); }
-    .tvBtn:active{ transform: translateY(1px) scale(.98); }
-
-    #btnBack10,#btnFwd10{display:none !important;}
-
-    .newsPanel{
-      flex:0 0 auto;
-      width:100%;
-      min-height:0;
     }
 
     #newsBox{
@@ -536,10 +583,11 @@
       display:flex;
       flex-direction:column;
       min-height:0;
+      flex: 1 1 auto;
     }
 
     .newsHead{
-      padding:10px 12px;
+      padding:8px 10px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -550,53 +598,123 @@
     }
 
     .newsTitle{ font-weight:950; color:rgba(234,242,255,.92); }
+    #newsPill{ display:none !important; }
 
     #newsBody{
-      padding: 10px 12px 12px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
       min-height:0;
+      flex:1 1 auto;
       overflow:hidden;
     }
 
+    @media (min-width: 981px){
+      #newsBody{
+        display:grid;
+        grid-template-rows: repeat(4, minmax(0, 1fr));
+        gap:8px;
+      }
+      .newsItem{ min-height:0; overflow:hidden; }
+    }
+
     .newsItem{
-      border-radius: 12px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.18);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-      padding: 8px 10px;
-      min-height:0;
-      overflow:hidden;
+      padding: 10px;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .newsItem:hover{
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
     }
 
     .newsItem .h{
       font-family: var(--font-soft);
-      font-weight: 750;
-      font-size: clamp(11px, 1.35dvh, 16px);
+      font-weight: 800;
+      font-size: clamp(12px, 1.55dvh, 18px);
       line-height: 1.18;
-      letter-spacing: .12px;
+      letter-spacing: .15px;
       color: var(--news-title);
       margin: 0;
+      text-shadow: 0 1px 1px rgba(0,0,0,.55);
       white-space:normal;
       overflow-wrap:anywhere;
       word-break:break-word;
     }
 
-    .newsFooterRow{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      margin-top:6px;
+    .newsFooter{
+      margin-top: 6px;
       font-size: 11px;
-      color: rgba(255,255,255,.60);
+      color: rgba(255,255,255,.65);
       font-weight: 900;
+      text-align:left;
+    }
+    .newsFooterItem{
+      font-size: 11px;
+      color: rgba(255,255,255,.55);
+      margin-left: 6px;
+      text-align:left;
+    }
+
+    .miniAdWrap{
+      border-radius:18px;
+      border:1px solid rgba(140,200,255,.18);
+      background:rgba(0,0,0,.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 12px 28px rgba(0,0,0,.45);
+      overflow:hidden;
+      flex:1 1 auto;
+      min-height:0;
+      position:relative;
+    }
+
+    .miniAdWrap::before{
+      content:"📣 Publicidade";
+      position:absolute;
+      top:10px; left:12px;
+      z-index:3;
+      font-weight:950;
+      letter-spacing:.4px;
+      font-size: calc(12px * var(--ui));
+      color: rgba(234,242,255,.90);
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.35);
+      backdrop-filter: blur(6px);
+    }
+
+    .miniAdBg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter: blur(18px) brightness(.72) saturate(1.05);
+      transform: scale(1.10);
+      opacity:.95;
+      pointer-events:none;
+    }
+
+    .miniAd{
+      position:relative;
+      z-index:2;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      background:transparent;
+      display:block;
     }
 
     .ticker{
       flex:0 0 auto;
       width:100%;
-      padding:10px 12px;
+      padding:8px 10px;
       border-radius:var(--radius);
       border:1px solid var(--line);
       background:rgba(8,28,46,.60);
@@ -604,6 +722,7 @@
       backdrop-filter: blur(8px);
       display:flex;
       flex-direction:column;
+      align-items:stretch;
       gap:6px;
       margin:0;
     }
@@ -613,17 +732,11 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
+      gap:12px;
       min-width:0;
+      overflow:hidden;
       flex-wrap:nowrap;
-    }
-
-    .tickerLeft{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-      flex:1 1 auto;
+      text-align:left;
     }
 
     .tickerIcon{
@@ -636,31 +749,43 @@
       font-weight:950;
       white-space:nowrap;
       color:rgba(234,242,255,.95);
-      font-size: calc(16px * var(--ui2));
+      font-size: calc(15px * var(--ui2));
       flex:0 0 auto;
     }
 
     #ref{
-      color:rgba(234,242,255,.88);
-      font-weight:850;
+      color:rgba(234,242,255,.92);
+      font-weight:900;
       font-size: clamp(12px, 1.05vw, 16px);
-      flex:1 1 auto;
-      min-width:0;
-      white-space:normal;
-      overflow:visible;
-      text-overflow:unset;
-      line-height: 1.22;
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      line-height: 1.20;
+      text-align:center;
+      margin:0 10px;
     }
 
     .wxInline{
       flex:0 0 auto;
+      width:auto;
+      margin-left:auto;
       display:flex;
+      flex-direction:row;
       align-items:center;
       gap:8px;
       white-space:nowrap;
       font-size: clamp(11px, 0.95vw, 14px);
+      color: rgba(234,242,255,.90);
       font-weight:900;
-      color: rgba(234,242,255,.86);
+    }
+
+    .wxInline .wxL2::before{
+      content:" • ";
+      opacity:.65;
+      font-weight:900;
+      margin-right:2px;
     }
 
     .wxMiniSvg{
@@ -679,31 +804,38 @@
       filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
     }
 
-    .wxInlineSep{ opacity:.65; font-weight:900; }
+    @media (min-width: 981px) and (max-width: 1100px){
+      .tickerLine1{ flex-wrap:wrap; justify-content:center; }
+      #ref{ flex:1 1 100%; margin:0; text-align:center; }
+      .wxInline{
+        width:100%;
+        justify-content:center;
+        margin-left:0;
+      }
+      .wxInline .wxL2::before{ content:""; }
+    }
 
     @media (max-width: 980px){
       :root{
         --ui: clamp(1, calc(100vmin / 900), 2.10);
         --ui2: clamp(1, calc(100vmin / 850), 2.70);
         --tv-safe-bottom: 0px;
-        --gap: 10px;
       }
 
       body{ overflow:auto; -webkit-overflow-scrolling: touch; padding:0; height:auto; min-height:100svh; }
       .wrap{ min-height:100svh; height:auto; padding: calc(14px + var(--sat)) calc(14px + var(--sar)) calc(14px + var(--sab)) calc(14px + var(--sal)); }
-      .container{ min-height:auto; height:auto; }
+      .container{ min-height:auto; height:auto; gap:10px; }
 
       .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
+      .condoCenter{ display:none !important; }
       .brand{ width:100%; align-items:center; text-align:center; }
       .rightInfo{ display:none !important; }
       .subMobileLine{ display:flex; width:100%; }
 
-      .main{
-        display:flex;
-        flex-direction:column;
-        gap:12px;
-        height:auto;
-      }
+      .main{ display:flex; flex-direction:column; gap:10px; }
+      section.panel{ order:1; }
+      #adBox{ order:2; min-height:0; }
+      .panel{ min-height:auto; }
 
       .ticker{
         position:sticky;
@@ -712,18 +844,6 @@
         margin:0;
         padding-bottom: max(12px, env(safe-area-inset-bottom));
       }
-
-      .tickerLine1{
-        flex-wrap:wrap;
-        justify-content:center;
-      }
-
-      .wxInline{
-        width:100%;
-        justify-content:center;
-      }
-
-      .badge[title="Hora e Clima"]{ display:none !important; }
 
       .rightInfo{
         display:flex !important;
@@ -735,17 +855,38 @@
         justify-content:flex-end;
         z-index: 5;
       }
-
+      .rightInfo .badge[title="Status do painel"]{ display:none !important; }
+      #clock{ display:none !important; }
+      #btnInstalarApp{ display:none !important; }
+      .rightInfo .badge[title="Hora e Clima"]{
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        gap: 0 !important;
+      }
       #wxIconTop{ width:56px; height:56px; transform:none !important; }
       #wxIconTop svg{ width:56px; height:56px; }
     }
+
+    .wxsvg .sun-rays{ transform-origin: 32px 32px; animation: wx-rotate 6s linear infinite; }
+    @keyframes wx-rotate{ from{ transform: rotate(0deg);} to{ transform: rotate(360deg);} }
+    .wxsvg .sun-core{ animation: wx-pulse 2.4s ease-in-out infinite; transform-origin: 32px 32px; }
+    @keyframes wx-pulse{ 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.08);} }
+    .wxsvg .cloud{ animation: wx-float 3.2s ease-in-out infinite; }
+    @keyframes wx-float{ 0%,100%{ transform: translateX(0);} 50%{ transform: translateX(2.5px);} }
+    .wxsvg .drops line{ animation: wx-rain 1.1s linear infinite; }
+    .wxsvg .drops line:nth-child(2){ animation-delay:.15s; }
+    .wxsvg .drops line:nth-child(3){ animation-delay:.30s; }
+    @keyframes wx-rain{ 0%{ transform: translateY(0); opacity:.15;} 15%{opacity:1;} 100%{ transform: translateY(8px); opacity:.05;} }
+    .wxsvg .bolt{ animation: wx-bolt 1.4s ease-in-out infinite; }
+    @keyframes wx-bolt{ 0%,100%{ opacity:.35; transform: translateY(0);} 50%{ opacity:1; transform: translateY(1px);} }
 
     @media (max-width: 980px) and (orientation: landscape) and (min-height: 480px){
       :root{
         --ui:  clamp(1, calc(100dvh / 980), 1.70);
         --ui2: clamp(1, calc(100dvh / 920), 2.05);
         --tv-safe-bottom: 32px;
-        --gap: 6px;
       }
       body{ overflow:hidden; height:100dvh; min-height:100dvh; }
       .wrap{
@@ -754,27 +895,29 @@
         padding:
           calc(10px + var(--sat))
           calc(10px + var(--sar))
-          calc(max(14px, var(--tv-safe-bottom)) + var(--sab))
+          calc(max(12px, var(--tv-safe-bottom)) + var(--sab))
           calc(10px + var(--sal));
       }
       .container{ height:100%; min-height:0; }
       .subMobileLine{ display:none !important; }
+      .condoCenter{ display:block !important; }
       .rightInfo{ display:flex !important; position:relative !important; }
       .main{
         display:grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        grid-template-rows: 1fr 1fr !important;
-        gap:var(--gap) !important;
-        height:100% !important;
+        grid-template-columns: 1.20fr .80fr !important;
+        gap:8px !important;
       }
-      .ticker{ position:relative !important; bottom:auto !important; padding-bottom: 10px !important; }
+      section.panel{ order:0 !important; }
+      #adBox{ order:0 !important; }
+      .ticker{ position:relative !important; bottom:auto !important; padding-bottom: 8px !important; }
     }
 
     @media (min-width: 981px) and (max-height: 720px){
       :root{ --tv-safe-bottom: 44px; }
-      .slotInner{ padding:8px; }
-      .panelHead{ padding:8px 10px; }
-      .newsItem{ padding:7px 9px; }
+      .avisosPane{ gap:6px; padding:8px; }
+      .rightColBody{ padding:8px; gap:6px; }
+      .panelHead{ padding:7px 9px; }
+      .topbar{ padding:10px 12px; }
     }
 
     html.isTV body{
@@ -787,7 +930,6 @@
       --ui:  clamp(1, calc(100dvh / 980), 1.70);
       --ui2: clamp(1, calc(100dvh / 920), 2.05);
       --tv-safe-bottom: 44px;
-      --gap: 6px;
     }
 
     html.isTV .wrap{
@@ -796,17 +938,26 @@
       padding:
         calc(10px + var(--sat))
         calc(10px + var(--sar))
-        calc(max(14px, var(--tv-safe-bottom)) + var(--sab))
+        calc(max(12px, var(--tv-safe-bottom)) + var(--sab))
         calc(10px + var(--sal)) !important;
     }
 
     html.isTV .container{ height:100% !important; min-height:0 !important; }
-
+    html.isTV .subMobileLine{ display:none !important; }
+    html.isTV .condoCenter{ display:block !important; }
+    html.isTV .rightInfo{ display:flex !important; position:relative !important; }
     html.isTV .main{
       display:grid !important;
-      grid-template-columns: 1fr 1fr !important;
-      grid-template-rows: 1fr 1fr !important;
-      gap:var(--gap) !important;
+      grid-template-columns: 1.20fr .80fr !important;
+      gap:8px !important;
+    }
+    html.isTV #adBox{ order:0 !important; }
+    html.isTV section.panel{ order:0 !important; }
+    html.isTV .ticker{
+      position:relative !important;
+      bottom:auto !important;
+      margin:0 !important;
+      padding-bottom: 8px !important;
     }
   </style>
 </head>
@@ -818,7 +969,7 @@
       <div class="topbar">
         <div class="brand">
           <div class="title" id="titulo">Comunica Síndico - Condôminos</div>
-          <div class="sub" id="subtitulo">Painel informativo</div>
+          <div class="sub" id="subtitulo">Painel Informativo</div>
           <div class="subMobileLine" id="subMobileLine">
             <span id="statusJsonMini">Carregando...</span>
             <span class="sep">º</span>
@@ -826,11 +977,19 @@
           </div>
         </div>
 
+        <div class="condoCenter" id="condoCenter"></div>
+
         <div class="rightInfo">
+          <div class="badge" title="Status do painel">
+            <span class="dot" id="dotOnline"></span>
+            <span id="statusJson">Carregando...</span>
+          </div>
+
           <div class="badge" title="Hora e Clima">
             <span id="wxIconTop" aria-label="Clima" role="img"></span>
             <span id="clock">--:--</span>
           </div>
+
           <button id="btnInstalarApp" class="btnInstall" style="display:none">⬇️ Instalar App</button>
         </div>
       </div>
@@ -838,28 +997,17 @@
       <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
       <div class="main">
-        <section class="panel" id="slotA">
+        <section class="panel">
           <div class="panelHead">
-            <div class="panelTitle">🔔 Avisos importantes</div>
+            <div class="panelTitle">🔔 Avisos Importantes</div>
             <div class="pill" id="refPill" title="Clique para atualizar">Atualizar</div>
           </div>
-          <div class="slotInner" id="avSlot1"></div>
-        </section>
-
-        <section class="panel" id="slotB">
-          <div class="panelHead">
-            <div class="panelTitle">🔔 Avisos importantes</div>
-            <div class="pill" style="visibility:hidden">—</div>
+          <div class="avisosPane" id="avisosPane">
+            <div class="slot" id="slot1"></div>
+            <div class="slot" id="slot2"></div>
+            <div class="slot" id="slot3"></div>
+            <div class="slot" id="slot4"></div>
           </div>
-          <div class="slotInner" id="avSlot2"></div>
-        </section>
-
-        <section class="panel" id="slotC">
-          <div class="panelHead">
-            <div class="panelTitle">🔔 Avisos importantes</div>
-            <div class="pill" style="visibility:hidden">—</div>
-          </div>
-          <div class="slotInner" id="avSlot3"></div>
         </section>
 
         <aside class="panel" id="adBox" style="display:none">
@@ -867,40 +1015,40 @@
             <div class="panelTitle">📣 Publicidade</div>
             <div class="pill" id="adPill">—</div>
           </div>
-          <div class="slotInner" style="padding:10px; flex:1 1 auto;">
-            <div class="videoWrap">
-              <video id="adVideo" autoplay muted playsinline disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
-              <div class="tvVideoControls" id="tvVideoControls" aria-hidden="true">
-                <button class="tvBtn" id="btnPrevAd" title="Vídeo anterior" aria-label="Vídeo anterior">⟨</button>
-                <button class="tvBtn" id="btnBack10" title="Voltar 10s" aria-label="Voltar 10 segundos">↶10</button>
-                <button class="tvBtn" id="btnFwd10" title="Avançar 10s" aria-label="Avançar 10 segundos">10↷</button>
-                <button class="tvBtn" id="btnNextAd" title="Próximo vídeo" aria-label="Próximo vídeo">⟩</button>
+
+          <div class="rightColBody">
+            <div class="adCard" id="adCard">
+              <div class="adLabel" id="adLabel">Anúncio</div>
+              <div class="videoWrap">
+                <video id="adVideoBg" autoplay muted playsinline></video>
+                <video id="adVideo" autoplay muted playsinline disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
               </div>
             </div>
+
+            <div class="newsBox" id="newsBox" style="display:none">
+              <div class="newsHead">
+                <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
+                <div class="pill" id="newsPill">—</div>
+              </div>
+              <div id="newsBody"></div>
+            </div>
+
           </div>
         </aside>
       </div>
 
-      <section class="panel newsPanel" id="newsBox" style="display:none">
-        <div class="newsHead">
-          <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
-          <div class="pill" style="visibility:hidden">—</div>
-        </div>
-        <div id="newsBody"></div>
-      </section>
-
       <div class="ticker">
         <div class="tickerLine1">
-          <div class="tickerLeft">
-            <span class="tickerIcon">📖</span>
-            <span id="dataBiblica">—</span>
-            <span id="ref">—</span>
-          </div>
+          <span class="tickerIcon">📖</span>
+          <span id="dataBiblica">—</span>
+          <span id="ref">—</span>
+
           <div class="wxInline" id="wxInline">
-            <span id="wxIconInline" class="wxMiniSvg" aria-hidden="true"></span>
-            <span id="wxCityTemp">—</span>
-            <span class="wxInlineSep">•</span>
-            <span id="wxWindRain">—</span>
+            <div class="wxL1">
+              <span id="wxIconInline" class="wxMiniSvg" aria-hidden="true"></span>
+              <span id="wxCityTemp">—</span>
+            </div>
+            <div class="wxL2" id="wxWindRain">—</div>
           </div>
         </div>
       </div>
@@ -910,23 +1058,19 @@
 
 <script>
   let deferredPrompt = null;
-
   function mostrarBotaoInstalar(show){
     const b = document.getElementById("btnInstalarApp");
     if (b) b.style.display = show ? "inline-flex" : "none";
   }
-
   window.addEventListener("beforeinstallprompt", (e)=>{
     e.preventDefault();
     deferredPrompt = e;
     mostrarBotaoInstalar(true);
   });
-
   window.addEventListener("appinstalled", ()=>{
     deferredPrompt = null;
     mostrarBotaoInstalar(false);
   });
-
   async function instalarApp(){
     if(!deferredPrompt) return;
     await deferredPrompt.prompt();
@@ -940,17 +1084,14 @@
     if (x === "média" || x === "media") return "media";
     return "baixa";
   }
-
   function safeText(v){ return (v == null ? "" : String(v)); }
   function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
   function pad2(n){ return String(n).padStart(2,"0"); }
-
   function escapeHtml(s){
     return String(s ?? "").replace(/[&<>"']/g, c => ({
       "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
     }[c]));
   }
-
   function isMobile(){ return window.matchMedia("(max-width: 980px)").matches; }
   function refreshPage(){ location.reload(); }
 
@@ -960,7 +1101,6 @@
     setText("clock", hhmm);
     setText("clockMini", hhmm);
   }
-
   tickClock();
   setInterval(tickClock, 1000);
 
@@ -970,10 +1110,6 @@
     const refPill = document.getElementById("refPill");
     if(refPill) refPill.onclick = refreshPage;
   })();
-
-  let ROT_TIMER = null;
-  let ROT_STATE = { page: 0, totalPages: 1, paused: false };
-  let DESC_CAP = null;
 
   function parseBRDateTime(v){
     const s = String(v ?? "").trim();
@@ -1006,40 +1142,6 @@
     return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
   }
 
-  function fitDescInCard(card){
-    const desc = card.querySelector(".d");
-    if(!desc) return 18;
-    const h = Math.max(240, card.clientHeight || 0);
-    const cap = Math.max(18, Math.floor(h * 0.22));
-    const MIN = 14;
-    const MAX = Math.max(MIN, cap);
-    let lo = MIN, hi = MAX, best = MIN;
-    while(lo <= hi){
-      const mid = (lo + hi) >> 1;
-      desc.style.setProperty("--desc-font", mid + "px");
-      const ok = (desc.scrollHeight <= desc.clientHeight + 1);
-      if(ok){ best = mid; lo = mid + 1; }
-      else { hi = mid - 1; }
-    }
-    desc.style.setProperty("--desc-font", best + "px");
-    return best;
-  }
-
-  function ajustarAvisosTelaCheia(){
-    if(isMobile()) return;
-    const cards = Array.from(document.querySelectorAll(".aviso"));
-    if(!cards.length) return;
-
-    if(DESC_CAP == null){
-      const bests = cards.map(c => fitDescInCard(c));
-      DESC_CAP = Math.min(...bests);
-      cards.forEach(c => c.querySelector(".d")?.style.setProperty("--desc-font", DESC_CAP + "px"));
-      return;
-    }
-
-    cards.forEach(c => c.querySelector(".d")?.style.setProperty("--desc-font", DESC_CAP + "px"));
-  }
-
   function fitTextToBox(el, opts = {}){
     if(!el) return;
     const { maxPx = 44, minPx = 12, step = 1 } = opts;
@@ -1057,18 +1159,9 @@
     document.querySelectorAll(".aviso").forEach(card => {
       const t = card.querySelector(".t");
       const d = card.querySelector(".d");
-      if(t) fitTextToBox(t, { maxPx: 32, minPx: 14, step: 1 });
-      if(d) fitTextToBox(d, { maxPx: 28, minPx: 13, step: 1 });
+      if(t) fitTextToBox(t, { maxPx: 30, minPx: 14, step: 1 });
+      if(d) fitTextToBox(d, { maxPx: 40, minPx: 14, step: 1 });
     });
-  }
-
-  function decodeHtmlEntities_(s){
-    const t = document.createElement("textarea");
-    t.innerHTML = String(s ?? "");
-    return t.value;
-  }
-  function normalizeText_(s){
-    return decodeHtmlEntities_(s).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
   }
 
   function autoFitNews(){
@@ -1077,8 +1170,110 @@
       h.style.whiteSpace = "normal";
       h.style.overflow = "hidden";
       h.style.textOverflow = "unset";
-      fitTextToBox(h, { maxPx: 16, minPx: 10, step: 1 });
+      fitTextToBox(h, { maxPx: 19, minPx: 11, step: 1 });
     });
+  }
+
+  const AD_STATE_KEY = "CS_AD_STATE_V1";
+  const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V1";
+  let AD_VIDEOS = [];
+
+  function adLoadState(){
+    try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); }
+    catch(e){ return {}; }
+  }
+  function adSaveState(st){
+    try { sessionStorage.setItem(AD_STATE_KEY, JSON.stringify(st || {})); } catch(e){}
+  }
+
+  function adShuffleCopy(arr){
+    const a = arr.slice();
+    for(let i=a.length-1; i>0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function adGetShuffledList(originalList){
+    try{
+      const raw = sessionStorage.getItem(AD_SHUFFLE_KEY);
+      if(raw){
+        const saved = JSON.parse(raw);
+        const filesNow = originalList.map(x => String(x?.arquivo||""));
+        const filesSaved = Array.isArray(saved?.files) ? saved.files : [];
+        if(filesSaved.join("|") === filesNow.join("|") && Array.isArray(saved?.order)){
+          const order = saved.order;
+          const map = new Map(originalList.map(x => [String(x?.arquivo||""), x]));
+          const rebuilt = order.map(f => map.get(f)).filter(Boolean);
+          filesNow.forEach(f=>{ if(!order.includes(f)) rebuilt.push(map.get(f)); });
+          return rebuilt;
+        }
+      }
+    }catch(e){}
+    const shuffled = adShuffleCopy(originalList);
+    try{
+      const order = shuffled.map(x => String(x?.arquivo||""));
+      const files = originalList.map(x => String(x?.arquivo||""));
+      sessionStorage.setItem(AD_SHUFFLE_KEY, JSON.stringify({ files, order }));
+    }catch(e){}
+    return shuffled;
+  }
+
+  function adFilterMp4(list){
+    const arr = Array.isArray(list) ? list : [];
+    return arr.filter(x=>{
+      const src = String(x?.arquivo || "").trim();
+      return /\.mp4(\?.*)?$/i.test(src);
+    });
+  }
+
+  function buildMiniAdEl(offset){
+    const wrap = document.createElement("div");
+    wrap.className = "miniAdWrap";
+
+    const bg = document.createElement("video");
+    bg.className = "miniAdBg";
+    bg.muted = true;
+    bg.autoplay = true;
+    bg.playsInline = true;
+
+    const fg = document.createElement("video");
+    fg.className = "miniAd";
+    fg.muted = true;
+    fg.autoplay = true;
+    fg.playsInline = true;
+
+    wrap.appendChild(bg);
+    wrap.appendChild(fg);
+
+    if(!AD_VIDEOS || !AD_VIDEOS.length){
+      const msg = document.createElement("div");
+      msg.style.padding = "16px";
+      msg.style.fontWeight = "900";
+      msg.textContent = "Sem avisos no momento";
+      wrap.appendChild(msg);
+      return wrap;
+    }
+
+    const st = adLoadState();
+    const baseIdx = Number.isFinite(st.idx) ? st.idx : 0;
+    let idx = baseIdx + (offset || 0);
+    idx = ((idx % AD_VIDEOS.length) + AD_VIDEOS.length) % AD_VIDEOS.length;
+
+    const src = String(AD_VIDEOS[idx]?.arquivo || "");
+    const sep = src.includes("?") ? "&" : "?";
+    const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+
+    bg.src = finalSrc;
+    fg.src = finalSrc;
+
+    setTimeout(()=>{
+      try{ bg.play().catch(()=>{}); }catch(e){}
+      try{ fg.play().catch(()=>{}); }catch(e){}
+    }, 0);
+
+    return wrap;
   }
 
   function buildAvisoEl(a){
@@ -1108,76 +1303,48 @@
   }
 
   function renderAvisos(data){
-    const s1 = document.getElementById("avSlot1");
-    const s2 = document.getElementById("avSlot2");
-    const s3 = document.getElementById("avSlot3");
-    if(!s1 || !s2 || !s3) return;
+    const pane = document.getElementById("avisosPane");
+    if (!pane) return;
 
-    s1.innerHTML = "";
-    s2.innerHTML = "";
-    s3.innerHTML = "";
+    const s1 = document.getElementById("slot1");
+    const s2 = document.getElementById("slot2");
+    const s3 = document.getElementById("slot3");
+    const s4 = document.getElementById("slot4");
+    if(!s1 || !s2 || !s3 || !s4) return;
 
-    if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
-    DESC_CAP = null;
+    s1.innerHTML = ""; s2.innerHTML = ""; s3.innerHTML = ""; s4.innerHTML = "";
+    pane.classList.remove("fade-in");
+    pane.classList.add("fade-out");
 
     const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
-    const rot = data?.rotacao || {};
-    const ativar = !!rot.ativar;
-    const qtd = 3;
-    const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 12)) * 1000;
-
-    const sorted = avisosAll.slice().sort((a,b)=>{
+    avisosAll.sort((a,b)=>{
       const pa = prioridadeClass(a?.prioridade);
       const pb = prioridadeClass(b?.prioridade);
-      const w = { alta:3, media:2, baixa:1 };
-      return (w[pb]||0) - (w[pa]||0);
+      const rank = { alta:3, media:2, baixa:1 };
+      return (rank[pb]||0) - (rank[pa]||0);
     });
 
-    const totalPages = Math.max(1, Math.ceil(sorted.length / qtd));
-    ROT_STATE = { page: 0, totalPages, paused: false };
+    const picks = avisosAll.slice(0,3);
 
-    function renderPage(pageIdx){
-      s1.innerHTML = "";
-      s2.innerHTML = "";
-      s3.innerHTML = "";
+    setTimeout(()=>{
+      if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
+      else s1.appendChild(buildMiniAdEl(1));
 
-      const start = pageIdx * qtd;
-      const slice = sorted.slice(start, start + qtd);
+      if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
+      else s2.appendChild(buildMiniAdEl(2));
 
-      const a1 = slice[0];
-      const a2 = slice[1];
-      const a3 = slice[2];
+      if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
+      else s3.appendChild(buildMiniAdEl(3));
 
-      if(a1) s1.appendChild(buildAvisoEl(a1));
-      else s1.appendChild(buildAvisoEl({ prioridade:"baixa", titulo:"Sem avisos", descricao:"—" }));
+      s4.appendChild(buildMiniAdEl(0));
 
-      if(a2) s2.appendChild(buildAvisoEl(a2));
-      else s2.appendChild(buildAvisoEl({ prioridade:"baixa", titulo:"Sem avisos", descricao:"—" }));
-
-      if(a3) s3.appendChild(buildAvisoEl(a3));
-      else s3.appendChild(buildAvisoEl({ prioridade:"baixa", titulo:"Sem avisos", descricao:"—" }));
-
-      requestAnimationFrame(()=> {
-        ajustarAvisosTelaCheia();
+      requestAnimationFrame(()=>{
         if (window.innerWidth >= 981) autoFitAvisos();
       });
-    }
 
-    renderPage(0);
-
-    if (ativar && totalPages > 1){
-      const main = document.querySelector(".main");
-      if(main && rot.pausarNoMouse){
-        main.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
-        main.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
-        main.addEventListener("touchstart", ()=>{ ROT_STATE.paused = !ROT_STATE.paused; }, {passive:true});
-      }
-      ROT_TIMER = setInterval(()=>{
-        if (ROT_STATE.paused) return;
-        ROT_STATE.page = (ROT_STATE.page + 1) % totalPages;
-        renderPage(ROT_STATE.page);
-      }, intervaloMs);
-    }
+      pane.classList.remove("fade-out");
+      pane.classList.add("fade-in");
+    }, 140);
   }
 
   function hojeKeyMMDD() {
@@ -1187,17 +1354,6 @@
     return `${mm}-${dd}`;
   }
 
-  function parseRefToShort(s){
-    const t = String(s || "").trim();
-    if(!t) return "";
-    const m = t.match(/^([1-3]\s*)?([A-Za-zÀ-ÿ]+)\s+(\d{1,3})[:.](\d{1,3})/);
-    if(m){
-      const book = (m[1] ? m[1].replace(/\s+/g," ") : "") + m[2];
-      return `${book} ${m[3]}:${m[4]}`;
-    }
-    return "";
-  }
-
   async function carregarVersiculo(data) {
     if (!data?.temaDoDia || data.temaDoDia.modo !== "biblico-anual") return;
     try {
@@ -1205,9 +1361,11 @@
       const v = await res.json();
       const key = hojeKeyMMDD();
       const texto = v?.versos?.[key];
-      const cab = String(v?.cabecalho || "").trim();
-      const refShort = parseRefToShort(cab);
-      setText("dataBiblica", refShort ? refShort : (cab || "📖"));
+      const ref = v?.referencias?.[key];
+
+      if (ref) setText("dataBiblica", String(ref));
+      else setText("dataBiblica", v?.cabecalho || "");
+
       setText("ref", texto ? texto : (v?.titulo ? v.titulo : "Verso não encontrado"));
     } catch (e) {}
   }
@@ -1322,6 +1480,7 @@
 
       setText("wxCityTemp", `${c.cidade || "Tubarão/SC"} ${t}°C`);
       setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
+
     } catch (e) {
       const cloud = wxSvgCloud();
       const top = document.getElementById("wxIconTop");
@@ -1333,209 +1492,6 @@
     }
   }
 
-  const AD_STATE_KEY = "CS_AD_STATE_V1";
-  const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V1";
-
-  function adLoadState(){
-    try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); }
-    catch(e){ return {}; }
-  }
-  function adSaveState(st){
-    try { sessionStorage.setItem(AD_STATE_KEY, JSON.stringify(st || {})); } catch(e){}
-  }
-
-  function adFilterMp4(list){
-    const arr = Array.isArray(list) ? list : [];
-    return arr.filter(x=>{
-      const src = String(x?.arquivo || "").trim();
-      return /\.mp4(\?.*)?$/i.test(src);
-    });
-  }
-
-  function adShuffleCopy(arr){
-    const a = arr.slice();
-    for(let i=a.length-1; i>0; i--){
-      const j = Math.floor(Math.random() * (i+1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
-  function adGetShuffledList(originalList){
-    try{
-      const raw = sessionStorage.getItem(AD_SHUFFLE_KEY);
-      if(raw){
-        const saved = JSON.parse(raw);
-        const filesNow = originalList.map(x => String(x?.arquivo||""));
-        const filesSaved = Array.isArray(saved?.files) ? saved.files : [];
-        if(filesSaved.join("|") === filesNow.join("|") && Array.isArray(saved?.order)){
-          const order = saved.order;
-          const map = new Map(originalList.map(x => [String(x?.arquivo||""), x]));
-          const rebuilt = order.map(f => map.get(f)).filter(Boolean);
-          filesNow.forEach(f=>{ if(!order.includes(f)) rebuilt.push(map.get(f)); });
-          return rebuilt;
-        }
-      }
-    }catch(e){}
-    const shuffled = adShuffleCopy(originalList);
-    try{
-      const order = shuffled.map(x => String(x?.arquivo||""));
-      const files = originalList.map(x => String(x?.arquivo||""));
-      sessionStorage.setItem(AD_SHUFFLE_KEY, JSON.stringify({ files, order }));
-    }catch(e){}
-    return shuffled;
-  }
-
-  function adPlayByState(videos, forceFromStart){
-    const adVideo = document.getElementById("adVideo");
-    const adPill  = document.getElementById("adPill");
-    if(!adVideo) return;
-
-    let list = Array.isArray(videos) ? videos : [];
-    if(!list.length) return;
-
-    try{
-      const cfg = (window.__lastDataForTopbar || window.__cfg || {});
-      const pub = cfg?.publicidade || {};
-      if (pub.shuffle) list = adGetShuffledList(list);
-    }catch(e){}
-
-    const st = adLoadState();
-    let idx = Number.isFinite(st.idx) ? st.idx : 0;
-    if(idx < 0) idx = 0;
-    if(idx >= list.length) idx = 0;
-
-    const item = list[idx];
-    const src = String(item?.arquivo || "");
-    const sep = src.includes("?") ? "&" : "?";
-    const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
-
-    if (adPill) adPill.textContent = "No ar";
-
-    const cur = adVideo.currentSrc || adVideo.src || "";
-    const baseCur = cur.split("?")[0];
-    const baseNext = finalSrc.split("?")[0];
-
-    if (baseCur !== baseNext){
-      try{ adVideo.pause(); }catch(e){}
-      adVideo.removeAttribute("src");
-      adVideo.load();
-      adVideo.src = finalSrc;
-      adVideo.load();
-    }
-
-    const desiredTime = (forceFromStart ? 0 : Number(st.t || 0));
-    const playNow = () => {
-      try{
-        if(!forceFromStart && desiredTime > 0 && Number.isFinite(desiredTime)){
-          try { adVideo.currentTime = desiredTime; } catch(e){}
-        }
-        const p = adVideo.play();
-        if(p && p.catch) p.catch(()=>{});
-      }catch(e){}
-    };
-
-    if (adVideo.readyState >= 1) playNow();
-    else adVideo.onloadedmetadata = () => { playNow(); };
-
-    st.idx = idx;
-    st.t = 0;
-    st.paused = false;
-    adSaveState(st);
-  }
-
-  function adNext(videos){
-    const list = videos;
-    if(!list.length) return;
-
-    const st = adLoadState();
-    let idx = Number.isFinite(st.idx) ? st.idx : 0;
-    idx++;
-    if(idx >= list.length) idx = 0;
-
-    st.idx = idx;
-    st.t = 0;
-    st.paused = false;
-    adSaveState(st);
-
-    adPlayByState(list, true);
-  }
-
-  function bindTvVideoControls(videos){
-    const v = document.getElementById("adVideo");
-    const controls = document.getElementById("tvVideoControls");
-    if(!v || !controls) return;
-
-    controls.style.display = "flex";
-
-    const bPrev = document.getElementById("btnPrevAd");
-    const bNext = document.getElementById("btnNextAd");
-
-    function setIdx(nextIdx){
-      const list = videos;
-      if(!list.length) return;
-
-      let i = nextIdx;
-      if(i < 0) i = list.length - 1;
-      if(i >= list.length) i = 0;
-
-      const st = adLoadState();
-      st.idx = i;
-      st.t = 0;
-      st.paused = false;
-      adSaveState(st);
-
-      adPlayByState(list, true);
-    }
-
-    if(bPrev) bPrev.onclick = () => setIdx((adLoadState().idx ?? 0) - 1);
-    if(bNext) bNext.onclick = () => setIdx((adLoadState().idx ?? 0) + 1);
-
-    window.addEventListener("keydown", (e)=>{
-      if(isMobile()) return;
-      const k = String(e.key || "").toLowerCase();
-      if(k === "arrowleft") setIdx((adLoadState().idx ?? 0) - 1);
-      if(k === "arrowright") setIdx((adLoadState().idx ?? 0) + 1);
-    });
-  }
-
-  function iniciarPublicidade(data){
-    const pub = data?.publicidade;
-    const adBox = document.getElementById("adBox");
-    const adVideo = document.getElementById("adVideo");
-    if (!adBox) return;
-
-    if (!pub?.ativar){
-      adBox.style.display = "none";
-      return;
-    }
-
-    adBox.style.display = "flex";
-
-    const videosMp4 = adFilterMp4(pub?.videos);
-    if (!videosMp4.length){
-      adBox.style.display = "none";
-      return;
-    }
-
-    bindTvVideoControls(videosMp4);
-
-    if (!adVideo) return;
-
-    adVideo.addEventListener("click", () => {
-      try{
-        const st = adLoadState();
-        st.paused = false;
-        adSaveState(st);
-      }catch(e){}
-      adVideo.play().catch(()=>{});
-    }, { passive:true });
-
-    adPlayByState(videosMp4, false);
-    adVideo.onended = () => adNext(videosMp4);
-    adVideo.onerror = () => setTimeout(()=>adNext(videosMp4), 1200);
-  }
-
   function setCityTitleFromConfig(cfg){
     const el = document.getElementById("cityTitle");
     if(!el) return;
@@ -1543,16 +1499,18 @@
     el.textContent = String(t);
   }
 
-  function footerDateString(d){
-    const dd = pad2(d.getDate());
-    const mm = pad2(d.getMonth()+1);
-    const yyyy = d.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
+  function decodeHtmlEntities_(s){
+    const t = document.createElement("textarea");
+    t.innerHTML = String(s ?? "");
+    return t.value;
+  }
+  function normalizeText_(s){
+    return decodeHtmlEntities_(s).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
   }
 
   function getNewsMaxItems(){
     const h = window.innerHeight || 900;
-    if (isMobile()) return 6;
+    if (isMobile()) return 8;
     if (h < 720) return 3;
     if (h < 880) return 4;
     return 5;
@@ -1574,7 +1532,7 @@
       if(!items.length){
         newsBody.innerHTML = `
           <div class="newsItem"><p class="h">Sem mensagens no momento</p></div>
-          <div class="newsFooterRow"><span>Fonte: indisponível</span><span>${footerDateString(new Date())}</span></div>
+          <div class="newsFooter">Fonte: indisponível</div>
         `;
         newsBox.style.display = "flex";
         if (window.innerWidth >= 981) requestAnimationFrame(autoFitNews);
@@ -1589,25 +1547,177 @@
         titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
         titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
         if(!titulo) titulo = "Mensagem";
+
         if(x.fonte) fontes.add(normalizeText_(x.fonte));
         html += `<div class="newsItem"><p class="h">${escapeHtml(titulo)}</p></div>`;
       });
 
-      const fonteTxt = fontes.size ? Array.from(fontes).join(" • ") : "news.google.com";
-      html += `<div class="newsFooterRow"><span>Fonte: ${escapeHtml(fonteTxt)}</span><span>${footerDateString(new Date())}</span></div>`;
+      let fontesHtml = "";
+      if(fontes.size){
+        fontesHtml = `<div class="newsFooter">Fonte:</div>`;
+        fontes.forEach(f=>{ fontesHtml += `<div class="newsFooterItem">${escapeHtml(f)}</div>`; });
+      }
 
-      newsBody.innerHTML = html;
+      newsBody.innerHTML = html + fontesHtml;
       newsBox.style.display = "flex";
       if (window.innerWidth >= 981) requestAnimationFrame(autoFitNews);
 
     }catch(e){
       newsBody.innerHTML = `
         <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
-        <div class="newsFooterRow"><span>Fonte: news.google.com (offline)</span><span>${footerDateString(new Date())}</span></div>
+        <div class="newsFooter">Fonte: news.google.com (offline)</div>
       `;
       newsBox.style.display = "flex";
       if (window.innerWidth >= 981) requestAnimationFrame(autoFitNews);
     }
+  }
+
+  function adPlayByState(videos, forceFromStart){
+    const adVideo = document.getElementById("adVideo");
+    const adVideoBg = document.getElementById("adVideoBg");
+    const adLabel = document.getElementById("adLabel");
+    const adPill  = document.getElementById("adPill");
+    if(!adVideo || !adLabel) return;
+
+    let list = Array.isArray(videos) ? videos : [];
+    if(!list.length) return;
+
+    try{
+      const cfg = (window.__lastDataForTopbar || window.__cfg || {});
+      const pub = cfg?.publicidade || {};
+      if (pub.shuffle) list = adGetShuffledList(list);
+    }catch(e){}
+
+    const st = adLoadState();
+    let idx = Number.isFinite(st.idx) ? st.idx : 0;
+    if(idx < 0) idx = 0;
+    if(idx >= list.length) idx = 0;
+
+    const item = list[idx];
+    const src = String(item?.arquivo || "");
+    const sep = src.includes("?") ? "&" : "?";
+    const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+
+    adLabel.textContent = String(item?.anunciante || "Anúncio");
+    if (adPill) adPill.textContent = "No ar";
+
+    const cur = adVideo.currentSrc || adVideo.src || "";
+    const baseCur = cur.split("?")[0];
+    const baseNext = finalSrc.split("?")[0];
+
+    if (baseCur !== baseNext){
+      try{ adVideo.pause(); }catch(e){}
+      try{
+        adVideo.removeAttribute("src");
+        adVideo.load();
+        adVideo.src = finalSrc;
+        adVideo.load();
+      }catch(e){}
+      if (adVideoBg){
+        try{ adVideoBg.pause(); }catch(e){}
+        try{
+          adVideoBg.removeAttribute("src");
+          adVideoBg.load();
+          adVideoBg.src = finalSrc;
+          adVideoBg.load();
+        }catch(e){}
+      }
+    }
+
+    const desiredTime = (forceFromStart ? 0 : Number(st.t || 0));
+    const playNow = () => {
+      try{
+        if(!forceFromStart && desiredTime > 0 && Number.isFinite(desiredTime)){
+          try { adVideo.currentTime = desiredTime; } catch(e){}
+          if(adVideoBg){
+            try { adVideoBg.currentTime = desiredTime; } catch(e){}
+          }
+        }
+        const p = adVideo.play();
+        if(p && p.catch) p.catch(()=>{});
+        if(adVideoBg){
+          const p2 = adVideoBg.play();
+          if(p2 && p2.catch) p2.catch(()=>{});
+        }
+      }catch(e){}
+    };
+
+    if (adVideo.readyState >= 1) playNow();
+    else adVideo.onloadedmetadata = playNow;
+
+    st.idx = idx;
+    st.paused = false;
+    adSaveState(st);
+  }
+
+  function adNext(videos){
+    const list = videos;
+    if(!list.length) return;
+
+    const st = adLoadState();
+    let idx = Number.isFinite(st.idx) ? st.idx : 0;
+    idx++;
+    if(idx >= list.length) idx = 0;
+
+    st.idx = idx;
+    st.t = 0;
+    st.paused = false;
+    adSaveState(st);
+
+    adPlayByState(list, true);
+  }
+
+  function iniciarPublicidade(data){
+    const pub = data?.publicidade;
+    const adBox = document.getElementById("adBox");
+    const adVideo = document.getElementById("adVideo");
+    const adVideoBg = document.getElementById("adVideoBg");
+    const adCard = document.getElementById("adCard");
+    if (!adBox) return;
+
+    if (!pub?.ativar){
+      adBox.style.display = "none";
+      return;
+    }
+
+    adBox.style.display = "flex";
+    setCityTitleFromConfig(data);
+
+    const videosMp4 = adFilterMp4(pub?.videos);
+    AD_VIDEOS = videosMp4.slice();
+
+    if (!videosMp4.length){
+      if (adCard) adCard.style.display = "none";
+      return;
+    }
+
+    if (adCard) adCard.style.display = "flex";
+
+    if (adVideo){
+      adVideo.controls = false;
+      adVideo.setAttribute("controlslist","nofullscreen noremoteplayback nodownload");
+      adVideo.setAttribute("disablepictureinpicture","");
+      adVideo.setAttribute("webkit-playsinline","true");
+      adVideo.setAttribute("playsinline","true");
+    }
+    if(adVideoBg){
+      adVideoBg.controls = false;
+      adVideoBg.setAttribute("webkit-playsinline","true");
+      adVideoBg.setAttribute("playsinline","true");
+    }
+
+    adPlayByState(videosMp4, false);
+
+    if(adVideo){
+      adVideo.onended = () => adNext(videosMp4);
+      adVideo.onerror = () => setTimeout(()=>adNext(videosMp4), 1200);
+      adVideo.addEventListener("pause", ()=>{ try{ adVideo.play().catch(()=>{}); }catch(e){} }, {passive:true});
+    }
+    if(adVideoBg){
+      adVideoBg.addEventListener("pause", ()=>{ try{ adVideoBg.play().catch(()=>{}); }catch(e){} }, {passive:true});
+    }
+
+    carregarMensagensCidade();
   }
 
   function aplicarImagemTopbar(data){
@@ -1616,16 +1726,13 @@
     const h = new Date().getHours();
     const estaNoite = (h >= 18 || h <= 4);
     const isMob = window.matchMedia("(max-width: 980px)").matches;
-
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
     const longest = Math.max(vw, vh);
-
     const is2560 = longest >= 2400;
     const is1920 = longest >= 1700;
 
     let img = "./img/tubarao01.jpg";
-
     if(isTubarao){
       if(estaNoite){
         if(isMob)       img = "./img/tubarao_noite.jpg";
@@ -1642,19 +1749,16 @@
 
     const test = new Image();
     test.decoding = "async";
-
-    test.onload = () => {
-      document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
-    };
-    test.onerror = () => {
-      document.documentElement.style.setProperty("--topbar-bg", `url('./img/tubarao01.jpg')`);
-    };
-
+    test.onload = () => { document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`); };
+    test.onerror = () => { document.documentElement.style.setProperty("--topbar-bg", `url('./img/tubarao01.jpg')`); };
     test.src = img + "?v=1";
   }
 
   async function loadAll(){
+    const status = document.getElementById("statusJson");
     const statusMini = document.getElementById("statusJsonMini");
+    const dot = document.getElementById("dotOnline");
+
     try{
       const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
       if (!res.ok) throw new Error("HTTP " + res.status);
@@ -1664,30 +1768,34 @@
       const data = await res.json();
       window.__lastDataForTopbar = data;
 
-      if (statusMini) statusMini.textContent = "Atualizado";
+      setText("condoCenter", safeText(data.condominio || "—"));
 
-      setCityTitleFromConfig(data);
+      if (status) status.textContent = "Atualizado";
+      if (statusMini) statusMini.textContent = "Atualizado";
+      if (dot) dot.style.background = "#44d07a";
 
       renderAvisos(data);
 
       if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
-        setText("dataBiblica", "📖");
+        setText("dataBiblica", "Carregando…");
         setText("ref", "Carregando…");
       } else {
-        setText("dataBiblica", "📖");
+        setText("dataBiblica", "📌 Avisos");
         setText("ref", safeText(data.referencia || "Atualizado"));
       }
 
       await carregarVersiculo(data);
       await carregarClima(data);
-      await carregarMensagensCidade();
+
       aplicarImagemTopbar(data);
       iniciarPublicidade(data);
 
       return data;
 
     } catch(e){
+      if (status) status.textContent = "Offline";
       if (statusMini) statusMini.textContent = "Offline";
+      if (dot) dot.style.background = "#ff5a5a";
       return null;
     }
   }
@@ -1706,15 +1814,62 @@
         try{ autoFitAvisos(); }catch(e){}
         try{ autoFitNews(); }catch(e){}
       }
-      try{ carregarMensagensCidade(); }catch(e){}
-      try{ ajustarAvisosTelaCheia(); }catch(e){}
+      try{ if(!isMobile()) carregarMensagensCidade(); }catch(e){}
       try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
-    }, 160);
+    }, 180);
   }, {passive:true});
+</script>
 
+<script>
+  const fundos = {
+    azul:    ["#061726", "#0b1f33"],
+    verde:   ["#0b2e1a", "#134d2c"],
+    amarelo: ["#3a3300", "#665c00"],
+    laranja: ["#3a1f00", "#663300"],
+    branco:  ["#f2f2f2", "#dcdcdc"],
+    preto:   ["#000000", "#111111"]
+  };
+
+  function setFundo(cor){
+    if(!fundos[cor]) return;
+    document.documentElement.style.setProperty("--bg1", fundos[cor][0]);
+    document.documentElement.style.setProperty("--bg2", fundos[cor][1]);
+    try { localStorage.setItem("fundoEscolhido", cor); } catch(e){}
+  }
+
+  function fundoAleatorio(){
+    const cores = Object.keys(fundos);
+    const cor = cores[Math.floor(Math.random() * cores.length)];
+    setFundo(cor);
+    return cor;
+  }
+
+  (function carregarFundoSalvo(){
+    try{
+      const salvo = localStorage.getItem("fundoEscolhido");
+      if(salvo && fundos[salvo]) setFundo(salvo);
+    }catch(e){}
+  })();
+
+  window.addEventListener("keydown", (e)=>{
+    const k = String(e.key || "").toLowerCase();
+    if (k === "1") setFundo("azul");
+    else if (k === "2") setFundo("verde");
+    else if (k === "3") setFundo("amarelo");
+    else if (k === "4") setFundo("laranja");
+    else if (k === "5") setFundo("branco");
+    else if (k === "6") setFundo("preto");
+    else if (k === "r") fundoAleatorio();
+  });
+
+  setInterval(fundoAleatorio, 300000);
+</script>
+
+<script>
   (function detectAndMarkTV(){
     try{
       const ua = (navigator.userAgent || "").toLowerCase();
+
       const isTV =
         ua.includes("smart-tv") ||
         ua.includes("smarttv") ||
@@ -1767,51 +1922,5 @@
     });
   }
 </script>
-
-<script>
-  const fundos = {
-    azul:    ["#061726", "#0b1f33"],
-    verde:   ["#0b2e1a", "#134d2c"],
-    amarelo: ["#3a3300", "#665c00"],
-    laranja: ["#3a1f00", "#663300"],
-    branco:  ["#f2f2f2", "#dcdcdc"],
-    preto:   ["#000000", "#111111"]
-  };
-
-  function setFundo(cor){
-    if(!fundos[cor]) return;
-    document.documentElement.style.setProperty("--bg1", fundos[cor][0]);
-    document.documentElement.style.setProperty("--bg2", fundos[cor][1]);
-    try { localStorage.setItem("fundoEscolhido", cor); } catch(e){}
-  }
-
-  function fundoAleatorio(){
-    const cores = Object.keys(fundos);
-    const cor = cores[Math.floor(Math.random() * cores.length)];
-    setFundo(cor);
-    return cor;
-  }
-
-  (function carregarFundoSalvo(){
-    try{
-      const salvo = localStorage.getItem("fundoEscolhido");
-      if(salvo && fundos[salvo]) setFundo(salvo);
-    }catch(e){}
-  })();
-
-  window.addEventListener("keydown", (e)=>{
-    const k = String(e.key || "").toLowerCase();
-    if (k === "1") setFundo("azul");
-    else if (k === "2") setFundo("verde");
-    else if (k === "3") setFundo("amarelo");
-    else if (k === "4") setFundo("laranja");
-    else if (k === "5") setFundo("branco");
-    else if (k === "6") setFundo("preto");
-    else if (k === "r") fundoAleatorio();
-  });
-
-  setInterval(fundoAleatorio, 300000);
-</script>
-
 </body>
 </html>
