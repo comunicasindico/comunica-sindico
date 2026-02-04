@@ -878,6 +878,48 @@ html.isTV .wrap{
     grid-template-rows: 1fr 1fr !important;
   }
 }
+
+/* ===== ALERTA URGENTE ===== */
+.urgentBox{
+  border-radius:18px;
+  border:2px solid rgba(255,255,255,.25);
+  background: linear-gradient(180deg, rgba(255,0,0,.92), rgba(140,0,0,.95));
+  color:#fff;
+  padding:18px;
+  box-shadow: 0 18px 44px rgba(0,0,0,.55);
+}
+
+.urgentTitle{
+  font-weight: 950;
+  text-transform: uppercase;
+  font-size: clamp(26px, 3vw, 48px);
+  line-height: 1.1;
+}
+
+.urgentMsg{
+  margin-top: 12px;
+  font-weight: 900;
+  font-size: clamp(22px, 2.8vw, 42px);
+  line-height: 1.15;
+}
+
+.urgentBlink{
+  animation: urgentBlink 1s steps(1) infinite;
+}
+
+@keyframes urgentBlink{
+  0%,49% { filter: brightness(1.1); }
+  50%,100% { filter: brightness(.75); }
+}
+
+
+
+
+
+
+
+
+
     
   </style>
 </head>
@@ -948,6 +990,11 @@ html.isTV .wrap{
           </div>
         </div>
 
+<div class="urgentBox" id="urgentBox" style="display:none">
+  <div class="urgentTitle" id="urgentTitle">ALERTA URGENTE</div>
+  <div class="urgentMsg" id="urgentMsg">—</div>
+</div>
+        
         <div class="newsBox" id="newsBox" style="display:none">
           <div class="newsHead">
             <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
@@ -1667,6 +1714,37 @@ html.isTV .wrap{
       el.textContent = String(t);
     }
 
+
+function applyUrgentAlert(data){
+  const urgent = data?.alertaUrgente || {};
+  const box = document.getElementById("urgentBox");
+  const newsBox = document.getElementById("newsBox");
+  if(!box || !newsBox) return;
+
+  const on = !!urgent.ativar && String(urgent.mensagem || "").trim().length > 0;
+
+ if(on){
+    document.getElementById("urgentTitle").textContent = urgent.titulo || "ALERTA URGENTE";
+    document.getElementById("urgentMsg").textContent = urgent.mensagem || "";
+    box.style.display = "block";
+    newsBox.style.display = "none";
+    box.classList.toggle("urgentBlink", !!urgent.piscar);
+  }else{
+    box.style.display = "none";
+    newsBox.style.display = "";
+  }
+}
+
+function applyHeaderCityImage(data){
+  const cfg = data?.publicidade?.cabecalhoImagem || {};
+  if(cfg.ativar && cfg.url){
+    document.querySelector(".topbar").style.backgroundImage = `url('${cfg.url}')`;
+    document.querySelector(".topbar").style.backgroundSize = "cover";
+    document.querySelector(".topbar").style.backgroundPosition = "center";
+  }
+}
+
+    
     async function loadAll(){
       const status = document.getElementById("statusJson");
       const statusMini = document.getElementById("statusJsonMini");
@@ -1681,6 +1759,10 @@ html.isTV .wrap{
         const data = await res.json();
         window.__lastDataForTopbar = data;
 
+
+        applyUrgentAlert(data);
+        applyHeaderCityImage(data);
+        
         if (status) status.textContent = "Atualizado";
         if (statusMini) statusMini.textContent = "Atualizado";
         if (dot) dot.style.background = "#44d07a";
