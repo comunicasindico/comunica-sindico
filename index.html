@@ -507,26 +507,20 @@
       gap:10px;
       pointer-events:none;
     }
-    
+
     .adTag{ display:none !important; }
-    
+
     .adText{
-  font-weight:950;
-  color:rgba(234,242,255,.96);
-
-  /* >>> REMOVER RETICÊNCIAS / 1 LINHA <<< */
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-
-  /* quebrar bem em telas menores */
-  overflow-wrap:anywhere;
-  word-break:break-word;
-
-  /* deixa passar para 2ª linha (ou mais) */
-  line-height: 1.15;
-  max-width: 100%;
-}
+      font-weight:950;
+      color:rgba(234,242,255,.96);
+      white-space: normal !important;
+      overflow: visible !important;
+      text-overflow: unset !important;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      line-height: 1.15;
+      max-width: 100%;
+    }
 
     video::-webkit-media-controls{ display:none !important; }
     video::-webkit-media-controls-panel{ display:none !important; }
@@ -585,7 +579,7 @@
       font-size: clamp(11px, 1.25dvh, 15px);
       line-height: 1.18;
       letter-spacing: .12px;
-      color: rgba(234,242,255,.95); /* texto padrão (não preto) */
+      color: rgba(234,242,255,.95);
       margin: 0;
       display:block;
       white-space:normal;
@@ -708,138 +702,139 @@
       filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
     }
 
-@media (max-width: 980px){
-  :root{
-    --ui: clamp(1, calc(100vmin / 900), 2.10);
-    --ui2: clamp(1, calc(100vmin / 850), 2.70);
-    --tv-safe-bottom: 0px;
-  }
+    /* ✅ MOBILE: só aplica se NÃO for TV */
+    @media (max-width: 980px){
+      html:not(.isTV){
+        --ui: clamp(1, calc(100vmin / 900), 2.10);
+        --ui2: clamp(1, calc(100vmin / 850), 2.70);
+        --tv-safe-bottom: 0px;
+      }
 
-  html, body{
-    height:auto !important;
-    min-height:100svh !important;
-    overflow:auto !important;
-    -webkit-overflow-scrolling: touch;
-  }
+      html:not(.isTV), html:not(.isTV) body{
+        height:auto !important;
+        min-height:100svh !important;
+        overflow:auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
 
-  body{ padding:0 !important; }
+      html:not(.isTV) body{ padding:0 !important; }
 
-  .wrap{
-    min-height:100svh !important;
-    height:auto !important;
-    overflow:visible !important;
-    padding:
-      calc(14px + var(--sat))
-      calc(14px + var(--sar))
-      calc(14px + var(--sab))
-      calc(14px + var(--sal));
-  }
+      html:not(.isTV) .wrap{
+        min-height:100svh !important;
+        height:auto !important;
+        overflow:visible !important;
+        padding:
+          calc(14px + var(--sat))
+          calc(14px + var(--sar))
+          calc(14px + var(--sab))
+          calc(14px + var(--sal));
+      }
 
-  .container{
-    min-height:auto !important;
-    height:auto !important;
-    overflow:visible !important;
-    gap:10px;
-  }
+      html:not(.isTV) .container{
+        min-height:auto !important;
+        height:auto !important;
+        overflow:visible !important;
+        gap:10px;
+      }
 
-  .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
-  .brand{ width:100%; align-items:center; text-align:center; }
-  .subMobileLine{ display:flex; width:100%; }
+      html:not(.isTV) .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
+      html:not(.isTV) .brand{ width:100%; align-items:center; text-align:center; }
+      html:not(.isTV) .subMobileLine{ display:flex; width:100%; }
 
-  .sectionBar{ justify-content:space-between; }
+      html:not(.isTV) .sectionBar{ justify-content:space-between; }
 
-  .quadTop{
-    display:flex;
-    flex-direction:column;
-    height:auto;
-    gap:10px;
-  }
+      html:not(.isTV) .quadTop{
+        display:flex;
+        flex-direction:column;
+        height:auto;
+        gap:10px;
+      }
 
-  .tileBody{ padding:12px; }
+      html:not(.isTV) .tileBody{ padding:12px; }
 
-  /* ticker no mobile sem sticky */
-  .ticker{
-    position:relative !important;
-    bottom:auto !important;
-    z-index:10;
-    margin:0;
-    padding-bottom:max(12px, env(safe-area-inset-bottom));
-  }
+      /* ticker no mobile sem sticky */
+      html:not(.isTV) .ticker{
+        position:relative !important;
+        bottom:auto !important;
+        z-index:10;
+        margin:0;
+        padding-bottom:max(12px, env(safe-area-inset-bottom));
+      }
 
-  /* ticker 2 linhas */
-  .tickerLine1{
-    flex-wrap:wrap !important;
-    justify-content:space-between;
-    row-gap:6px;
-  }
-  .tickerIcon{ order:1; }
-  #dataBiblica{ order:2; }
+      /* ticker 2 linhas */
+      html:not(.isTV) .tickerLine1{
+        flex-wrap:wrap !important;
+        justify-content:space-between;
+        row-gap:6px;
+      }
+      html:not(.isTV) .tickerIcon{ order:1; }
+      html:not(.isTV) #dataBiblica{ order:2; }
 
-  #ref{
-    order:3;
-    flex: 1 1 100% !important;
-    min-width: 0 !important;
-    margin:0 !important;
-    text-align:left !important;
-    white-space:normal !important;
-    overflow:visible !important;
-    text-overflow:unset !important;
-    overflow-wrap:anywhere;
-    word-break:break-word;
-  }
+      html:not(.isTV) #ref{
+        order:3;
+        flex: 1 1 100% !important;
+        min-width: 0 !important;
+        margin:0 !important;
+        text-align:left !important;
+        white-space:normal !important;
+        overflow:visible !important;
+        text-overflow:unset !important;
+        overflow-wrap:anywhere;
+        word-break:break-word;
+      }
 
-  #wxInline{
-    order:4;
-    width:100% !important;
-    justify-content:flex-end !important;
-    margin-left:0 !important;
-  }
+      html:not(.isTV) #wxInline{
+        order:4;
+        width:100% !important;
+        justify-content:flex-end !important;
+        margin-left:0 !important;
+      }
 
-  /* mantém clima/ícone do topo no celular */
-  .rightInfo{
-    display:flex !important;
-    position:absolute;
-    top: 12px;
-    right: 12px;
-    gap: 0;
-    align-items:center;
-    justify-content:flex-end;
-    z-index: 5;
-  }
-  .rightInfo .badge[title="Status do painel"]{ display:none !important; }
-  #clock{ display:none !important; }
-  #btnInstalarApp{ display:none !important; }
-  .rightInfo .badge[title="Hora e Clima"]{
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    gap: 0 !important;
-  }
-  #wxIconTop{ width:56px; height:56px; transform:none !important; }
-  #wxIconTop svg{ width:56px; height:56px; }
+      /* mantém clima/ícone do topo no celular */
+      html:not(.isTV) .rightInfo{
+        display:flex !important;
+        position:absolute;
+        top: 12px;
+        right: 12px;
+        gap: 0;
+        align-items:center;
+        justify-content:flex-end;
+        z-index: 5;
+      }
+      html:not(.isTV) .rightInfo .badge[title="Status do painel"]{ display:none !important; }
+      html:not(.isTV) #clock{ display:none !important; }
+      html:not(.isTV) #btnInstalarApp{ display:none !important; }
+      html:not(.isTV) .rightInfo .badge[title="Hora e Clima"]{
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        gap: 0 !important;
+      }
+      html:not(.isTV) #wxIconTop{ width:56px; height:56px; transform:none !important; }
+      html:not(.isTV) #wxIconTop svg{ width:56px; height:56px; }
 
-  /* ✅ MOBILE: garantir altura do vídeo (publicidade) */
-  #slot4{
-    display:block !important;
-    padding:12px !important;
-    min-height: 220px;
-  }
+      /* ✅ MOBILE: garantir altura do vídeo (publicidade) */
+      html:not(.isTV) #slot4{
+        display:block !important;
+        padding:12px !important;
+        min-height: 220px;
+      }
 
-  #slot4 .videoWrap{
-    width:100% !important;
-    aspect-ratio: 16 / 9;
-    height:auto !important;
-    min-height: 220px;
-    position:relative;
-  }
+      html:not(.isTV) #slot4 .videoWrap{
+        width:100% !important;
+        aspect-ratio: 16 / 9;
+        height:auto !important;
+        min-height: 220px;
+        position:relative;
+      }
 
-  @media (max-width: 420px){
-    #slot4{ min-height: 200px; }
-    #slot4 .videoWrap{ min-height: 200px; }
-  }
-}
-    
+      @media (max-width: 420px){
+        html:not(.isTV) #slot4{ min-height: 200px; }
+        html:not(.isTV) #slot4 .videoWrap{ min-height: 200px; }
+      }
+    }
+
     @media (min-width: 981px) and (max-width: 1100px){
       .tickerLine1{ flex-wrap:wrap; justify-content:center; }
       #ref{ flex:1 1 100%; margin:0; }
@@ -885,105 +880,103 @@
     @keyframes wx-rain{ 0%{ transform: translateY(0); opacity:.15;} 15%{opacity:1;} 100%{ transform: translateY(8px); opacity:.05;} }
     .wxsvg .bolt{ animation: wx-bolt 1.4s ease-in-out infinite; }
     @keyframes wx-bolt{ 0%,100%{ opacity:.35; transform: translateY(0);} 50%{ opacity:1; transform: translateY(1px);} }
-  
-  .adNav{
-  position:absolute;
-  top:50%;
-  transform: translateY(-50%);
-  width:30px;
-  height:30px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.22);
-  background:rgba(0,0,0,.28);
-  color:rgba(255,255,255,.92);
-  font-size:14px;
-  cursor:pointer;
-  z-index:6;
-  opacity:.35;
-  transition: opacity .15s ease, transform .15s ease, filter .15s ease;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:0;
-}
-.adNav:hover{ opacity:.85; filter:brightness(1.06); }
-.adNav:active{ transform: translateY(-50%) scale(.96); }
 
-.adPrev{ left:8px; }
-.adNext{ right:8px; }
+    .adNav{
+      position:absolute;
+      top:50%;
+      transform: translateY(-50%);
+      width:30px;
+      height:30px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      background:rgba(0,0,0,.28);
+      color:rgba(255,255,255,.92);
+      font-size:14px;
+      cursor:pointer;
+      z-index:6;
+      opacity:.35;
+      transition: opacity .15s ease, transform .15s ease, filter .15s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+    }
+    .adNav:hover{ opacity:.85; filter:brightness(1.06); }
+    .adNav:active{ transform: translateY(-50%) scale(.96); }
 
-/* no mobile: ainda mais discreto */
-@media (max-width: 980px){
-  .adNav{ width:28px; height:28px; font-size:13px; opacity:.28; }
-}
-  
+    .adPrev{ left:8px; }
+    .adNext{ right:8px; }
 
- .adCaptionIn{
-  position:absolute;
-  left:10px;
-  right:10px;
-  bottom:10px;
-  z-index:20;                 /* ✅ acima dos vídeos */
-  padding:10px 12px;
-  border-radius:14px;
-  background: rgba(0,0,0,.72); /* ✅ mais nítido */
-  border: 1px solid rgba(255,255,255,.20);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 14px 30px rgba(0,0,0,.55);
-  pointer-events:none;         /* não atrapalha clique */
-}
+    /* no mobile: ainda mais discreto */
+    @media (max-width: 980px){
+      .adNav{ width:28px; height:28px; font-size:13px; opacity:.28; }
+    }
 
-.adCaptionIn .adText{
-  font-weight:950;
-  color:#fff;
-  font-size: clamp(14px, 1.35vw, 20px);
-  line-height:1.15;
-  white-space:normal !important;   /* ✅ sem reticências */
-  overflow:visible !important;
-  text-overflow:unset !important;
-  overflow-wrap:anywhere;
-  word-break:break-word;
-  text-shadow: 0 2px 10px rgba(0,0,0,.55);
-}
+    .adCaptionIn{
+      position:absolute;
+      left:10px;
+      right:10px;
+      bottom:10px;
+      z-index:20;
+      padding:10px 12px;
+      border-radius:14px;
+      background: rgba(0,0,0,.72);
+      border: 1px solid rgba(255,255,255,.20);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 14px 30px rgba(0,0,0,.55);
+      pointer-events:none;
+    }
 
+    .adCaptionIn .adText{
+      font-weight:950;
+      color:#fff;
+      font-size: clamp(14px, 1.35vw, 20px);
+      line-height:1.15;
+      white-space:normal !important;
+      overflow:visible !important;
+      text-overflow:unset !important;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      text-shadow: 0 2px 10px rgba(0,0,0,.55);
+    }
 
     /* garante que o vídeo apareça com altura e o texto fique embaixo */
-#slot4{ display:flex; flex-direction:column; gap:10px; }
+    #slot4{ display:flex; flex-direction:column; gap:10px; }
 
-/* vídeo ocupa o espaço, sem nada por cima */
-#slot4 .videoWrap{
-  width:100%;
-  aspect-ratio: 16 / 9;
-  min-height: 240px;
-  border-radius:14px;
-  overflow:hidden;
-  position:relative;
-  background:#000;
-}
+    /* vídeo ocupa o espaço, sem nada por cima */
+    #slot4 .videoWrap{
+      width:100%;
+      aspect-ratio: 16 / 9;
+      min-height: 240px;
+      border-radius:14px;
+      overflow:hidden;
+      position:relative;
+      background:#000;
+    }
 
-/* anunciante fora do vídeo, centralizado e legível */
-.adBelow{
-  width:100%;
-  padding:10px 12px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(8,28,46,.55);
-  box-shadow: 0 14px 34px rgba(0,0,0,.35);
-}
+    /* anunciante fora do vídeo, centralizado e legível */
+    .adBelow{
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(8,28,46,.55);
+      box-shadow: 0 14px 34px rgba(0,0,0,.35);
+    }
 
-.adBelowText{
-  font-weight:950;
-  text-align:center;
-  color:rgba(234,242,255,.96);
-  font-size: clamp(14px, 1.25vw, 20px);
-  line-height:1.18;
-  white-space:normal;          /* quebra linha */
-  overflow:visible;
-  text-overflow:unset;
-  overflow-wrap:anywhere;
-  word-break:break-word;
-}
+    .adBelowText{
+      font-weight:950;
+      text-align:center;
+      color:rgba(234,242,255,.96);
+      font-size: clamp(14px, 1.25vw, 20px);
+      line-height:1.18;
+      white-space:normal;
+      overflow:visible;
+      text-overflow:unset;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
   </style>
 </head>
 
@@ -1033,28 +1026,29 @@
           <div class="panel tile"><div class="tileBody" id="slot2"></div></div>
           <div class="panel tile"><div class="tileBody" id="slot3"></div></div>
 
-         <!-- Publicidade: texto fica dentro do vídeo -->
-<div class="panel tile">
-  <div class="tileBody" id="slot4">
+          <!-- Publicidade: texto fica dentro do vídeo -->
+          <div class="panel tile">
+            <div class="tileBody" id="slot4">
 
-    <div class="videoWrap">
-      <button class="adNav adPrev" type="button" onclick="adPrevBtn()" aria-label="Anterior">⏮</button>
-      <button class="adNav adNext" type="button" onclick="adNextBtn()" aria-label="Próximo">⏭</button>
+              <div class="videoWrap">
+                <button class="adNav adPrev" type="button" onclick="adPrevBtn()" aria-label="Anterior">⏮</button>
+                <button class="adNav adNext" type="button" onclick="adNextBtn()" aria-label="Próximo">⏭</button>
 
-      <video id="adVideoBg" class="videoBg" autoplay muted playsinline webkit-playsinline loop
-        disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
-      <video id="adVideo" class="videoMain" autoplay muted playsinline webkit-playsinline
-        disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
-    </div>
+                <video id="adVideoBg" class="videoBg" autoplay muted playsinline webkit-playsinline loop
+                  disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
+                <video id="adVideo" class="videoMain" autoplay muted playsinline webkit-playsinline
+                  disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
+              </div>
 
-    <!-- anunciante FORA do vídeo, centralizado -->
-    <div class="adBelow">
-      <div class="adBelowText" id="adLabelBelow">—</div>
-    </div>
+              <!-- anunciante FORA do vídeo, centralizado -->
+              <div class="adBelow">
+                <div class="adBelowText" id="adLabelBelow">—</div>
+              </div>
 
-  </div>
-</div>
-      
+            </div>
+          </div>
+        </div>
+
         <div class="newsBox" id="newsBox" style="display:none">
           <div class="newsHead">
             <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
@@ -1119,7 +1113,13 @@
       "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
     }[c]));
   }
-  function isMobile(){ return window.matchMedia("(max-width: 980px)").matches; }
+
+  // ✅ IMPORTANTE: "mobile" só se não for TV (evita zoom derrubar o layout 2x2)
+  function isMobile(){
+    return window.matchMedia("(max-width: 980px)").matches &&
+           !document.documentElement.classList.contains("isTV");
+  }
+
   function refreshPage(){ location.reload(); }
 
   function tickClock(){
@@ -1191,17 +1191,12 @@
     return cur;
   }
 
-  // Padroniza TODOS pelo "maior aviso":
-  // 1) calcula o tamanho que cabe em cada card
-  // 2) pega o menor (pior caso) e aplica em todos
-  // 3) tenta crescer um pouco (opcional), mantendo TODOS cabendo
   function autoFitAvisosUniform(){
     const cards = Array.from(document.querySelectorAll(".aviso"));
     if(!cards.length) return;
 
     const big = isBigScreenMode();
 
-    // limites maiores em TV/tela cheia
     const tMax = big ? 44 : 30;
     const dMax = big ? 36 : 26;
     const tMin = big ? 16 : 14;
@@ -1218,7 +1213,6 @@
     let tUniform = Math.min(...results.map(r=>r.tSize));
     let dUniform = Math.min(...results.map(r=>r.dSize));
 
-    // aplica uniformemente
     cards.forEach(card=>{
       const t = card.querySelector(".t");
       const d = card.querySelector(".d");
@@ -1226,7 +1220,6 @@
       if(d) d.style.fontSize = dUniform + "px";
     });
 
-    // tenta aumentar mantendo todos cabendo (ganha “encher o quadro”)
     const tryGrow = (delta)=>{
       const tTry = tUniform + delta;
       const dTry = dUniform + delta;
@@ -1250,7 +1243,6 @@
       });
 
       if(!ok){
-        // volta
         cards.forEach(card=>{
           const t = card.querySelector(".t");
           const d = card.querySelector(".d");
@@ -1265,7 +1257,6 @@
       return true;
     };
 
-    // cresce em passos pequenos até o limite
     for(let i=0;i<20;i++){
       if(!tryGrow(1)) break;
     }
@@ -1305,7 +1296,7 @@
 
     const overlay = document.createElement("div");
     overlay.className = "adOverlay";
-   overlay.innerHTML = `<div class="adText">—</div>`;
+    overlay.innerHTML = `<div class="adText">—</div>`;
 
     const vbg = document.createElement("video");
     vbg.className = "videoBg";
@@ -1332,72 +1323,64 @@
     return wrap;
   }
 
-   let ROT_TIMER = null;
+  let ROT_TIMER = null;
 
-function renderAvisos(data){
-  const pane = document.getElementById("avisosPane");
-  const s1 = document.getElementById("slot1");
-  const s2 = document.getElementById("slot2");
-  const s3 = document.getElementById("slot3");
-  if(!pane || !s1 || !s2 || !s3) return;
+  function renderAvisos(data){
+    const pane = document.getElementById("avisosPane");
+    const s1 = document.getElementById("slot1");
+    const s2 = document.getElementById("slot2");
+    const s3 = document.getElementById("slot3");
+    if(!pane || !s1 || !s2 || !s3) return;
 
-  // limpa timer antigo (se recarregar data.json)
-  if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
+    if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
 
-  const avisosAll = Array.isArray(data.avisos) ? data.avisos.slice() : [];
+    const avisosAll = Array.isArray(data.avisos) ? data.avisos.slice() : [];
 
-  // ordena por prioridade (alta > média > baixa)
-  const rank = { alta:3, media:2, baixa:1 };
-  avisosAll.sort((a,b)=>{
-    const pa = prioridadeClass(a?.prioridade);
-    const pb = prioridadeClass(b?.prioridade);
-    return (rank[pb]||0) - (rank[pa]||0);
-  });
-
-  // se não tem avisos, mostra “mini ads” (ou vazio)
-  if(!avisosAll.length){
-    s1.innerHTML = ""; s2.innerHTML = ""; s3.innerHTML = "";
-    s1.appendChild(buildMiniAdEl(1));
-    s2.appendChild(buildMiniAdEl(2));
-    s3.appendChild(buildMiniAdEl(3));
-    return;
-  }
-
-  // ponteiro global (não trava)
-  if (!Number.isFinite(window.__rotStart)) window.__rotStart = 0;
-
-  function paint(){
-    const total = avisosAll.length;
-    const start = window.__rotStart % total;
-
-    s1.innerHTML = "";
-    s2.innerHTML = "";
-    s3.innerHTML = "";
-
-    // pega 3 avisos “em roda”
-    const a0 = avisosAll[start];
-    const a1 = avisosAll[(start + 1) % total];
-    const a2 = avisosAll[(start + 2) % total];
-
-    if(a0) s1.appendChild(buildAvisoEl(a0));
-    if(a1) s2.appendChild(buildAvisoEl(a1));
-    if(a2) s3.appendChild(buildAvisoEl(a2));
-
-    // ajusta fonte para ocupar o quadro
-    requestAnimationFrame(()=>{
-      try{ autoFitAvisos(); }catch(e){}
+    const rank = { alta:3, media:2, baixa:1 };
+    avisosAll.sort((a,b)=>{
+      const pa = prioridadeClass(a?.prioridade);
+      const pb = prioridadeClass(b?.prioridade);
+      return (rank[pb]||0) - (rank[pa]||0);
     });
-  }
 
-  // pinta agora
-  paint();
+    if(!avisosAll.length){
+      s1.innerHTML = ""; s2.innerHTML = ""; s3.innerHTML = "";
+      s1.appendChild(buildMiniAdEl(1));
+      s2.appendChild(buildMiniAdEl(2));
+      s3.appendChild(buildMiniAdEl(3));
+      return;
+    }
 
-  // ✅ gira a cada 8s
-  ROT_TIMER = setInterval(()=>{
-    window.__rotStart = (window.__rotStart + 1) % avisosAll.length;
+    if (!Number.isFinite(window.__rotStart)) window.__rotStart = 0;
+
+    function paint(){
+      const total = avisosAll.length;
+      const start = window.__rotStart % total;
+
+      s1.innerHTML = "";
+      s2.innerHTML = "";
+      s3.innerHTML = "";
+
+      const a0 = avisosAll[start];
+      const a1 = avisosAll[(start + 1) % total];
+      const a2 = avisosAll[(start + 2) % total];
+
+      if(a0) s1.appendChild(buildAvisoEl(a0));
+      if(a1) s2.appendChild(buildAvisoEl(a1));
+      if(a2) s3.appendChild(buildAvisoEl(a2));
+
+      requestAnimationFrame(()=>{
+        try{ autoFitAvisosUniform(); }catch(e){}
+      });
+    }
+
     paint();
-  }, 8000);
-}
+
+    ROT_TIMER = setInterval(()=>{
+      window.__rotStart = (window.__rotStart + 1) % avisosAll.length;
+      paint();
+    }, 8000);
+  }
 
   function hojeKeyMMDD() {
     const d = new Date();
@@ -1634,50 +1617,48 @@ function renderAvisos(data){
       const vMain = w.querySelector("video.videoMain");
       setVideoSrcPair(vMain, vBg, finalSrc);
 
-      // overlay texto do miniAd
       const label = w.querySelector(".adOverlay .adText");
       if(label) label.textContent = String(item?.anunciante || "—");
     });
   }
 
   function adPlayByState(videos){
-  const adVideo = document.getElementById("adVideo");
-  const adVideoBg = document.getElementById("adVideoBg");
-  const adBelow = document.getElementById("adLabelBelow"); // ✅ só fora do vídeo
-  if(!adVideo || !adVideoBg) return;
+    const adVideo = document.getElementById("adVideo");
+    const adVideoBg = document.getElementById("adVideoBg");
+    const adBelow = document.getElementById("adLabelBelow");
+    if(!adVideo || !adVideoBg) return;
 
-  let list = Array.isArray(videos) ? videos : [];
-  if(!list.length) return;
+    let list = Array.isArray(videos) ? videos : [];
+    if(!list.length) return;
 
-  try{
-    const cfg = (window.__lastDataForTopbar || {});
-    const pub = cfg?.publicidade || {};
-    if (pub.shuffle) list = adGetShuffledList(list);
-  }catch(e){}
+    try{
+      const cfg = (window.__lastDataForTopbar || {});
+      const pub = cfg?.publicidade || {};
+      if (pub.shuffle) list = adGetShuffledList(list);
+    }catch(e){}
 
-  const st = adLoadState();
-  let idx = Number.isFinite(st.idx) ? st.idx : 0;
-  if(idx < 0) idx = 0;
-  if(idx >= list.length) idx = 0;
+    const st = adLoadState();
+    let idx = Number.isFinite(st.idx) ? st.idx : 0;
+    if(idx < 0) idx = 0;
+    if(idx >= list.length) idx = 0;
 
-  const item = list[idx];
-  const src = String(item?.arquivo || "");
-  const sep = src.includes("?") ? "&" : "?";
-  const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+    const item = list[idx];
+    const src = String(item?.arquivo || "");
+    const sep = src.includes("?") ? "&" : "?";
+    const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
 
-  // ✅ anunciante só fora do vídeo
-  const txt = String(item?.anunciante || "—");
-  if(adBelow) adBelow.textContent = txt;
+    const txt = String(item?.anunciante || "—");
+    if(adBelow) adBelow.textContent = txt;
 
-  setVideoSrcPair(adVideo, adVideoBg, finalSrc);
+    setVideoSrcPair(adVideo, adVideoBg, finalSrc);
 
-  st.idx = idx;
-  st.paused = false;
-  st.t = 0;
-  adSaveState(st);
+    st.idx = idx;
+    st.paused = false;
+    st.t = 0;
+    adSaveState(st);
 
-  playMiniAds(list, idx);
-}
+    playMiniAds(list, idx);
+  }
 
   function adNext(videos){
     const list = videos;
@@ -1697,36 +1678,36 @@ function renderAvisos(data){
   }
 
   function adNextBtn(){
-  try{
-    const data = window.__lastDataForTopbar || {};
-    const pub = data.publicidade || {};
-    const videosMp4 = adFilterMp4(pub.videos);
-    if(!videosMp4.length) return;
-    adNext(videosMp4);
-  }catch(e){}
-}
+    try{
+      const data = window.__lastDataForTopbar || {};
+      const pub = data.publicidade || {};
+      const videosMp4 = adFilterMp4(pub.videos);
+      if(!videosMp4.length) return;
+      adNext(videosMp4);
+    }catch(e){}
+  }
 
-function adPrevBtn(){
-  try{
-    const data = window.__lastDataForTopbar || {};
-    const pub = data.publicidade || {};
-    const videosMp4 = adFilterMp4(pub.videos);
-    if(!videosMp4.length) return;
+  function adPrevBtn(){
+    try{
+      const data = window.__lastDataForTopbar || {};
+      const pub = data.publicidade || {};
+      const videosMp4 = adFilterMp4(pub.videos);
+      if(!videosMp4.length) return;
 
-    const st = adLoadState();
-    let idx = Number.isFinite(st.idx) ? st.idx : 0;
-    idx = idx - 1;
-    if(idx < 0) idx = videosMp4.length - 1;
+      const st = adLoadState();
+      let idx = Number.isFinite(st.idx) ? st.idx : 0;
+      idx = idx - 1;
+      if(idx < 0) idx = videosMp4.length - 1;
 
-    st.idx = idx;
-    st.t = 0;
-    st.paused = false;
-    adSaveState(st);
+      st.idx = idx;
+      st.t = 0;
+      st.paused = false;
+      adSaveState(st);
 
-    adPlayByState(videosMp4, true);
-  }catch(e){}
-}
-  
+      adPlayByState(videosMp4);
+    }catch(e){}
+  }
+
   function iniciarPublicidade(data){
     const pub = data?.publicidade;
     if (!pub?.ativar) return;
@@ -1794,7 +1775,6 @@ function adPrevBtn(){
         html += `<div class="newsItem"><p class="h">${escapeHtml(titulo)}</p></div>`;
       });
 
-      // Fonte na MESMA linha (ganha espaço)
       let fonteLine = "";
       if(fontes.size){
         const joined = Array.from(fontes).join(" • ");
@@ -1819,7 +1799,7 @@ function adPrevBtn(){
     const h = new Date().getHours();
     const estaNoite = (h >= 18 || h <= 4);
 
-    const isMob = window.matchMedia("(max-width: 980px)").matches;
+    const isMob = window.matchMedia("(max-width: 980px)").matches && !document.documentElement.classList.contains("isTV");
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
     const longest = Math.max(vw, vh);
@@ -1899,7 +1879,6 @@ function adPrevBtn(){
 
       iniciarPublicidade(data);
 
-      // garante padronização em TV/tela cheia também (após tudo renderizado)
       requestAnimationFrame(()=>{
         if(!isMobile()) autoFitAvisosUniform();
       });
@@ -1932,7 +1911,6 @@ function adPrevBtn(){
     }, 160);
   }, {passive:true});
 
-  // Ao entrar/sair de tela cheia, refaz o fit (aumenta automaticamente)
   document.addEventListener("fullscreenchange", ()=>{
     try{
       if(!isMobile()) autoFitAvisosUniform();
@@ -1986,35 +1964,47 @@ function adPrevBtn(){
 </script>
 
 <script>
+  /* ✅ DETECTOR TV ROBUSTO (não quebra com zoom) */
   (function detectAndMarkTV(){
-    try{
-      const ua = (navigator.userAgent || "").toLowerCase();
-      const isTV =
-        ua.includes("smart-tv") ||
-        ua.includes("smarttv") ||
-        ua.includes("hbbtv") ||
-        ua.includes("appletv") ||
-        ua.includes("googletv") ||
-        ua.includes("android tv") ||
-        ua.includes("aft") ||
-        ua.includes("bravia") ||
-        ua.includes("sonydtv") ||
-        ua.includes("netcast") ||
-        ua.includes("tizen") ||
-        ua.includes("web0s") || ua.includes("webos") ||
-        ua.includes("viera") ||
-        ua.includes("roku");
+    function apply(){
+      try{
+        const ua = (navigator.userAgent || "").toLowerCase();
 
-      const likelyTVLandscape =
-        (window.innerWidth > window.innerHeight) &&
-        (Math.max(window.innerWidth, window.innerHeight) >= 900);
+        const isMobileUA = /mobi|iphone|ipad|ipod|android.*mobile/.test(ua);
 
-      if(isTV || likelyTVLandscape){
-        document.documentElement.classList.add("isTV");
-      }else{
-        document.documentElement.classList.remove("isTV");
-      }
-    }catch(e){}
+        const isTVua =
+          ua.includes("smart-tv") ||
+          ua.includes("smarttv") ||
+          ua.includes("hbbtv") ||
+          ua.includes("appletv") ||
+          ua.includes("googletv") ||
+          ua.includes("android tv") ||
+          ua.includes("aft") ||
+          ua.includes("bravia") ||
+          ua.includes("sonydtv") ||
+          ua.includes("netcast") ||
+          ua.includes("tizen") ||
+          ua.includes("web0s") || ua.includes("webos") ||
+          ua.includes("viera") ||
+          ua.includes("roku");
+
+        const sw = Number(screen.width || 0);
+        const sh = Number(screen.height || 0);
+        const maxS = Math.max(sw, sh);
+        const minS = Math.min(sw, sh);
+
+        const isBigScreen = (maxS >= 1280 && minS >= 720);
+        const isLandscapeBig = (sw > sh && maxS >= 1200);
+
+        const shouldTV = !isMobileUA && (isTVua || isBigScreen || isLandscapeBig);
+
+        document.documentElement.classList.toggle("isTV", !!shouldTV);
+      }catch(e){}
+    }
+
+    apply();
+    window.addEventListener("resize", apply, { passive:true });
+    window.addEventListener("orientationchange", apply, { passive:true });
   })();
 
   if ("serviceWorker" in navigator) {
