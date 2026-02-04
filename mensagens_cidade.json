@@ -1,12 +1,6 @@
 {
-  "updatedAt": "2026-02-04T02:58:58-03:00",
+  "updatedAt": "2026-02-04T03:58:56-03:00",
   "items": [
-    {
-      "titulo": "Família de corretora morta por síndico em Caldas Novas organiza homenagem para o sepultamento - O Popular",
-      "texto": "Família de corretora morta por síndico em Caldas Novas organiza homenagem para o sepultamento &nbsp;&nbsp; O Popular",
-      "fonte": "news.google.com",
-      "data": "03-02-2026"
-    },
     {
       "titulo": "Síndico destituído há seis meses em Anápolis se mantém no cargo e é alvo de protestos - Diário de Goiás",
       "texto": "Síndico destituído há seis meses em Anápolis se mantém no cargo e é alvo de protestos &nbsp;&nbsp; Diário de Goiás",
@@ -22,6 +16,12 @@
     {
       "titulo": "Caso Daiane Alves: condomínio define novo gestor após prisão de síndico - Paranaíba Mais",
       "texto": "Caso Daiane Alves: condomínio define novo gestor após prisão de síndico &nbsp;&nbsp; Paranaíba Mais",
+      "fonte": "news.google.com",
+      "data": "03-02-2026"
+    },
+    {
+      "titulo": "Moradores protestam contra gestão de síndico e apontam dívida de quase R$ 1 milhão em condomínio de Anápolis - Diário da Redação",
+      "texto": "Moradores protestam contra gestão de síndico e apontam dívida de quase R$ 1 milhão em condomínio de Anápolis &nbsp;&nbsp; Diário da Redação",
       "fonte": "news.google.com",
       "data": "03-02-2026"
     }
