@@ -26,7 +26,7 @@
     html,body{ height:100%; margin:0; background: radial-gradient(1200px 700px at 20% 0%, #122b52 0%, var(--bg) 55%); color:var(--text); font-family:var(--sans); }
     a{ color:inherit; }
     .wrap{ min-height:100%; padding:16px; display:flex; justify-content:center; }
-    .app{ width:min(1200px, 100%); display:grid; grid-template-columns: 390px 1fr; gap:14px; align-items:start; }
+    .app{ width:min(1200px, 100%); display:grid; grid-template-columns: 430px 1fr; gap:14px; align-items:start; }
     @media (max-width: 980px){ .app{ grid-template-columns: 1fr; } }
 
     .card{
@@ -94,10 +94,32 @@
       color:var(--muted);
       white-space:nowrap;
     }
-
     .hr{ height:1px; background: rgba(255,255,255,.10); margin:4px 0; }
 
-    /* Lista de vídeos */
+    /* Tabs */
+    .tabs{ display:flex; gap:8px; flex-wrap:wrap; }
+    .tab{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      color: rgba(234,242,255,.90);
+      padding:10px 12px;
+      border-radius:999px;
+      font-weight:1000;
+      cursor:pointer;
+      user-select:none;
+    }
+    .tab.active{
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.22);
+      color: rgba(234,242,255,.96);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+    }
+    .tabSmall{ font-size:12px; font-weight:950; padding:8px 10px; }
+
+    .panel{ display:none; }
+    .panel.active{ display:block; }
+
+    /* Listas (vídeos/avisos) */
     .list{ display:flex; flex-direction:column; gap:10px; }
     .item{
       border:1px solid rgba(255,255,255,.10);
@@ -170,19 +192,102 @@
       padding: 10px 12px;
       line-height: 1.3;
     }
+
+    /* Login overlay */
+    .overlay{
+      position:fixed; inset:0;
+      background: radial-gradient(1200px 700px at 20% 0%, rgba(18,43,82,.92) 0%, rgba(11,18,32,.92) 55%);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      z-index:9999;
+    }
+    .overlay.show{ display:flex; }
+    .loginCard{
+      width:min(520px, 100%);
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(18,35,60,.92), rgba(12,22,40,.92));
+      box-shadow: 0 24px 60px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+    .loginBody{ padding:16px; display:flex; flex-direction:column; gap:12px; }
+    .bigTitle{ font-weight:1000; letter-spacing:.6px; font-size:18px; }
+    .muted{ color:var(--muted); font-weight:850; font-size:12px; line-height:1.35; }
+    .dangerSmall{ color: rgba(255,200,200,.92); font-weight:900; font-size:12px; }
+    .imgPrev{
+      width:100%; height:160px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .imgPrev img{ width:100%; height:100%; object-fit:cover; display:block; }
   </style>
 </head>
 
 <body>
+  <!-- LOGIN -->
+  <div class="overlay" id="loginOverlay">
+    <div class="loginCard">
+      <div class="head">
+        <div>
+          <div class="title">Acesso do Síndico</div>
+          <div class="sub">Senha simples (fica no navegador)</div>
+        </div>
+        <div class="pill" id="loginPill">Protegido</div>
+      </div>
+      <div class="loginBody">
+        <div class="hint">
+          🔒 Esta proteção é <b>local</b> (client-side). <br/>
+          Quem abrir este admin em outro navegador precisará definir/usar outra senha.
+        </div>
+
+        <div class="panel" id="panelCreatePass">
+          <div class="bigTitle">Criar senha (primeiro acesso)</div>
+          <div class="field">
+            <label>Nova senha</label>
+            <input id="newPass1" type="password" placeholder="Digite uma senha" />
+          </div>
+          <div class="field">
+            <label>Confirmar senha</label>
+            <input id="newPass2" type="password" placeholder="Repita a senha" />
+          </div>
+          <div class="btnRow">
+            <button class="btn ok" id="btnCreatePass">✅ Criar senha</button>
+          </div>
+          <div class="muted">Dica: depois você pode trocar a senha na aba <b>Config</b>.</div>
+        </div>
+
+        <div class="panel" id="panelEnterPass">
+          <div class="bigTitle">Digite sua senha</div>
+          <div class="field">
+            <label>Senha</label>
+            <input id="enterPass" type="password" placeholder="••••••••" />
+          </div>
+          <div class="btnRow">
+            <button class="btn ok" id="btnEnterPass">🔓 Entrar</button>
+            <button class="btn bad" id="btnResetPass">🧹 Esqueci / Resetar</button>
+          </div>
+          <div class="dangerSmall" id="loginError" style="display:none">Senha inválida.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
     <div class="app">
 
-      <!-- ESQUERDA: Controles -->
+      <!-- ESQUERDA: Admin -->
       <div class="card">
         <div class="head">
           <div>
             <div class="title">Admin (Discreto)</div>
-            <div class="sub">Edita e publica <b>data.json</b> no GitHub</div>
+            <div class="sub">Gerencia <b>Alerta</b>, <b>Avisos</b>, <b>Vídeos</b> e <b>Cidade</b></div>
           </div>
           <div class="pill" id="statusPill">Offline</div>
         </div>
@@ -190,139 +295,198 @@
         <div class="body">
 
           <div class="hint">
-            ✅ Fluxo: <b>Carregar</b> → ajustar campos → <b>Publicar no GitHub</b>. <br/>
-            🔒 Token fica somente no seu navegador (sessionStorage).
+            ✅ Fluxo: <b>Carregar</b> → editar nas abas → <b>Publicar no GitHub</b>. <br/>
+            🔒 Token do GitHub fica somente no navegador (sessionStorage).
           </div>
 
-          <div class="field">
-            <label>Token do GitHub (PAT com permissão repo)</label>
-            <input id="token" type="password" placeholder="ghp_..." />
-            <div class="mini">Dica: cole aqui, clique em <b>Salvar token</b>, depois <b>Publicar</b>.</div>
-            <div class="btnRow">
-              <button class="btn ghost" id="btnSaveToken">💾 Salvar token</button>
-              <button class="btn ghost" id="btnClearToken">🧹 Limpar token</button>
-              <button class="btn ghost" id="btnOpenPanel">🖥️ Abrir Painel do Síndico</button>
-            </div>
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="btnRow">
-            <button class="btn ok" id="btnLoad">⟳ Carregar data.json</button>
-            <button class="btn warn" id="btnDownload">⬇️ Baixar data.json</button>
-            <button class="btn bad" id="btnPublish">🚀 Publicar no GitHub</button>
+          <!-- Tabs -->
+          <div class="tabs" id="tabs">
+            <button class="tab active" data-tab="tAlerta">🚨 Alerta</button>
+            <button class="tab" data-tab="tAvisos">📌 Avisos</button>
+            <button class="tab" data-tab="tVideos">🎬 Vídeos</button>
+            <button class="tab" data-tab="tCidade">🏙️ Cidade</button>
+            <button class="tab tabSmall" data-tab="tConfig">⚙️ Config</button>
           </div>
 
           <div class="hr"></div>
 
-          <div class="field">
-            <label>Título</label>
-            <input id="fTitulo" placeholder="Comunica Síndico — Condôminos" />
-          </div>
-
-          <div class="field">
-            <label>Subtítulo</label>
-            <input id="fSubtitulo" placeholder="Painel Informativo" />
-          </div>
-
-          <div class="field">
-            <label>Referência (rodapé)</label>
-            <input id="fReferencia" placeholder="Atualizado automaticamente" />
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="row">
+          <!-- PANEL: ALERTA -->
+          <div class="panel active" id="tAlerta">
             <div class="field">
-              <label>Rotação: intervalo (seg)</label>
-              <input id="fRotInterval" type="number" min="3" max="60" step="1" />
-            </div>
-            <div class="field">
-              <label>Qtd avisos (por tela)</label>
-              <select id="fRotQtd">
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select>
-            </div>
-          </div>
+              <label>ALERTA URGENTE</label>
+              <div class="row">
+                <select id="fAlertAtivar">
+                  <option value="false">Desligado (normal)</option>
+                  <option value="true">Ligado (substitui Mensagens no Brasil)</option>
+                </select>
+                <select id="fAlertPiscar">
+                  <option value="true">Piscar: Sim</option>
+                  <option value="false">Piscar: Não</option>
+                </select>
+              </div>
+              <input id="fAlertTitulo" placeholder="ALERTA URGENTE" />
+              <textarea id="fAlertMsg" placeholder="Escreva a mensagem do alerta..."></textarea>
 
-          <div class="hr"></div>
+              <div class="btnRow">
+                <button class="btn bad" id="btnAlertOn">🚨 Ligar alerta</button>
+                <button class="btn ok" id="btnAlertOff">✅ Desligar alerta</button>
+              </div>
 
-          <div class="field">
-            <label>Cidade (Clima)</label>
-            <input id="fCidade" placeholder="São Paulo" />
-            <div class="btnRow">
-              <button class="btn ghost" id="btnBuscarCidade">🔎 Buscar coordenadas</button>
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="field">
-              <label>Latitude</label>
-              <input id="fLat" type="number" step="0.0001" />
-            </div>
-            <div class="field">
-              <label>Longitude</label>
-              <input id="fLon" type="number" step="0.0001" />
+              <div class="mini">Para “voltar tudo ao normal”: clique em <b>Desligar alerta</b> e publique.</div>
             </div>
           </div>
 
-          <div class="field">
-            <label>Timezone</label>
-            <input id="fTz" placeholder="America/Sao_Paulo" />
-          </div>
-
-          <div class="hr"></div>
-
-          <div class="field">
-            <label>Cabeçalho — Imagem da cidade</label>
+          <!-- PANEL: AVISOS -->
+          <div class="panel" id="tAvisos">
             <div class="row">
-              <select id="fCabAtivar">
-                <option value="false">Desligada</option>
-                <option value="true">Ligada</option>
-              </select>
-              <input id="fCabUrl" placeholder="https://..." />
+              <div class="field">
+                <label>Rotação: intervalo (seg)</label>
+                <input id="fRotInterval" type="number" min="3" max="60" step="1" />
+              </div>
+              <div class="field">
+                <label>Qtd avisos (por tela)</label>
+                <select id="fRotQtd">
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </div>
             </div>
-            <div class="mini">Se ligado, o painel do síndico usa essa URL para o cabeçalho (quando você implementar/ativar no painel).</div>
+
+            <div class="hr"></div>
+
+            <div class="btnRow">
+              <button class="btn ok" id="btnAddAviso">➕ Novo aviso</button>
+              <button class="btn ghost" id="btnSortAvisos">↕️ Ordenar (mais novos primeiro)</button>
+            </div>
+
+            <div class="mini">
+              Os avisos ficam em <b>avisos[]</b>. Você pode editar, reordenar e excluir aqui (sem mexer no JSON à mão).
+            </div>
+
+            <div id="avisosList" class="list"></div>
           </div>
 
-          <div class="hr"></div>
+          <!-- PANEL: VIDEOS -->
+          <div class="panel" id="tVideos">
+            <div class="field">
+              <label>Vídeos (Publicidades)</label>
+              <div class="btnRow">
+                <button class="btn ghost" id="btnAddVideo">➕ Incluir vídeo</button>
+                <button class="btn ghost" id="btnShuffleToggle">🔀 Alternar Shuffle</button>
+              </div>
+              <div class="mini">Vídeos são objetos em <b>publicidade.videos[]</b> (arquivo + anunciante).</div>
+            </div>
 
-          <div class="field">
-            <label>ALERTA URGENTE</label>
+            <div id="videosList" class="list"></div>
+          </div>
+
+          <!-- PANEL: CIDADE -->
+          <div class="panel" id="tCidade">
+            <div class="field">
+              <label>Título</label>
+              <input id="fTitulo" placeholder="Comunica Síndico — Condôminos" />
+            </div>
+
+            <div class="field">
+              <label>Subtítulo</label>
+              <input id="fSubtitulo" placeholder="Painel Informativo" />
+            </div>
+
+            <div class="field">
+              <label>Referência (rodapé)</label>
+              <input id="fReferencia" placeholder="Atualizado automaticamente" />
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="field">
+              <label>Cidade (Clima)</label>
+              <input id="fCidade" placeholder="São Paulo" />
+              <div class="btnRow">
+                <button class="btn ghost" id="btnBuscarCidade">🔎 Buscar coordenadas</button>
+              </div>
+            </div>
+
             <div class="row">
-              <select id="fAlertAtivar">
-                <option value="false">Desligado (normal)</option>
-                <option value="true">Ligado (substitui Mensagens no Brasil)</option>
-              </select>
-              <select id="fAlertPiscar">
-                <option value="true">Piscar: Sim</option>
-                <option value="false">Piscar: Não</option>
-              </select>
-            </div>
-            <input id="fAlertTitulo" placeholder="ALERTA URGENTE" />
-            <textarea id="fAlertMsg" placeholder="Escreva a mensagem do alerta..."></textarea>
-
-            <div class="btnRow">
-              <button class="btn bad" id="btnAlertOn">🚨 Ligar alerta</button>
-              <button class="btn ok" id="btnAlertOff">✅ Desligar alerta</button>
+              <div class="field">
+                <label>Latitude</label>
+                <input id="fLat" type="number" step="0.0001" />
+              </div>
+              <div class="field">
+                <label>Longitude</label>
+                <input id="fLon" type="number" step="0.0001" />
+              </div>
             </div>
 
-            <div class="mini">Para “voltar tudo ao normal”: clique em <b>Desligar alerta</b> e publique.</div>
+            <div class="field">
+              <label>Timezone</label>
+              <input id="fTz" placeholder="America/Sao_Paulo" />
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="field">
+              <label>Cabeçalho — Imagem da cidade</label>
+              <div class="row">
+                <select id="fCabAtivar">
+                  <option value="false">Desligada</option>
+                  <option value="true">Ligada</option>
+                </select>
+                <input id="fCabUrl" placeholder="./assets/cidade-header.jpg" />
+              </div>
+
+              <div class="imgPrev" id="imgPrev">
+                <div class="mini" style="padding:10px">Prévia da imagem (após enviar)</div>
+              </div>
+
+              <div class="btnRow">
+                <input id="fileCab" type="file" accept="image/*" />
+                <button class="btn warn" id="btnUploadCab">⬆️ Enviar imagem</button>
+              </div>
+
+              <div class="mini">
+                ✅ Você não precisa colar URL: o botão <b>Enviar imagem</b> sobe a foto para o GitHub em
+                <b>assets/cidade-header.jpg</b> e preenche automaticamente o campo acima.
+              </div>
+            </div>
           </div>
 
-          <div class="hr"></div>
-
-          <div class="field">
-            <label>Vídeos (Publicidades)</label>
-            <div class="btnRow">
-              <button class="btn ghost" id="btnAddVideo">➕ Incluir vídeo</button>
-              <button class="btn ghost" id="btnShuffleToggle">🔀 Alternar Shuffle</button>
+          <!-- PANEL: CONFIG -->
+          <div class="panel" id="tConfig">
+            <div class="field">
+              <label>Token do GitHub (PAT com permissão repo)</label>
+              <input id="token" type="password" placeholder="ghp_..." />
+              <div class="mini">Cole aqui, clique em <b>Salvar token</b>, depois <b>Publicar</b>.</div>
+              <div class="btnRow">
+                <button class="btn ghost" id="btnSaveToken">💾 Salvar token</button>
+                <button class="btn ghost" id="btnClearToken">🧹 Limpar token</button>
+                <button class="btn ghost" id="btnOpenPanel">🖥️ Abrir Painel do Síndico</button>
+              </div>
             </div>
-            <div class="mini">Vídeos são objetos em <b>publicidade.videos[]</b> (arquivo + anunciante).</div>
-          </div>
 
-          <div id="videosList" class="list"></div>
+            <div class="hr"></div>
+
+            <div class="btnRow">
+              <button class="btn ok" id="btnLoad">⟳ Carregar data.json</button>
+              <button class="btn warn" id="btnDownload">⬇️ Baixar data.json</button>
+              <button class="btn bad" id="btnPublish">🚀 Publicar no GitHub</button>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="field">
+              <label>Senha do Admin</label>
+              <div class="mini">Troca local (fica neste navegador).</div>
+              <div class="row">
+                <input id="oldPass" type="password" placeholder="Senha atual" />
+                <input id="newPass" type="password" placeholder="Nova senha" />
+              </div>
+              <div class="btnRow">
+                <button class="btn ok" id="btnChangePass">🔁 Trocar senha</button>
+                <button class="btn bad" id="btnLogout">🚪 Sair</button>
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -332,7 +496,7 @@
         <div class="head">
           <div>
             <div class="title">Prévia & JSON</div>
-            <div class="sub">Veja como ficará o alerta e o data.json final</div>
+            <div class="sub">Veja como ficará o alerta e o <b>data.json</b> final</div>
           </div>
           <div class="pill" id="pillRepo">comunicasindico/comunica-sindico</div>
         </div>
@@ -351,7 +515,6 @@
           </div>
 
           <div class="code" id="jsonView">Carregue o data.json para começar…</div>
-
         </div>
       </div>
 
@@ -360,18 +523,22 @@
 
 <script>
 /* ============================
-   CONFIG DO REPO (AJUSTADO)
+   CONFIG DO REPO
    ============================ */
 const GITHUB_OWNER  = "comunicasindico";
 const GITHUB_REPO   = "comunica-sindico";
 const GITHUB_BRANCH = "main";
 const GITHUB_PATH   = "data.json";
 
+/* Upload da imagem do cabeçalho (caminho fixo) */
+const GITHUB_CAB_PATH = "assets/cidade-header.jpg";     // <- será criado/atualizado no repo
+const CAB_PUBLIC_URL  = "./assets/cidade-header.jpg";   // <- como o GitHub Pages servirá no site
+
 /* ============================
    ESTADO
    ============================ */
-let DATA = null;         // objeto data.json
-let DATA_ORIGINAL = null; // cópia de referência
+let DATA = null;
+let DATA_ORIGINAL = null;
 
 const $ = (id)=>document.getElementById(id);
 const statusPill = $("statusPill");
@@ -389,20 +556,120 @@ function setStatus(text, type){
   statusPill.style.color = type==="ok" ? "rgba(234,242,255,.96)" : "rgba(234,242,255,.85)";
 }
 
-function safeClone(obj){
-  return JSON.parse(JSON.stringify(obj ?? null));
+function safeClone(obj){ return JSON.parse(JSON.stringify(obj ?? null)); }
+function prettyJson(obj){ return JSON.stringify(obj, null, 2); }
+
+/* ============================
+   LOGIN (senha local)
+   ============================ */
+const PASS_KEY = "CS_ADMIN_PASS_HASH";
+const AUTH_KEY = "CS_ADMIN_AUTH_OK";
+
+async function sha256Hex(str){
+  const data = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  const bytes = Array.from(new Uint8Array(hash));
+  return bytes.map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+function getPassHash(){
+  try{ return (localStorage.getItem(PASS_KEY)||"").trim(); }catch(e){ return ""; }
+}
+function setPassHash(v){
+  try{ localStorage.setItem(PASS_KEY, v); }catch(e){}
+}
+function setAuth(ok){
+  try{
+    if(ok) sessionStorage.setItem(AUTH_KEY,"1");
+    else sessionStorage.removeItem(AUTH_KEY);
+  }catch(e){}
+}
+function isAuthed(){
+  try{ return sessionStorage.getItem(AUTH_KEY)==="1"; }catch(e){ return false; }
+}
+function showLogin(){
+  const ov = $("loginOverlay");
+  ov.classList.add("show");
+
+  const hasPass = !!getPassHash();
+  $("panelCreatePass").style.display = hasPass ? "none" : "block";
+  $("panelEnterPass").style.display  = hasPass ? "block" : "none";
+  $("loginError").style.display = "none";
+
+  $("loginPill").textContent = hasPass ? "Protegido" : "Criar senha";
+}
+function hideLogin(){
+  $("loginOverlay").classList.remove("show");
 }
 
-function prettyJson(obj){
-  return JSON.stringify(obj, null, 2);
+async function handleCreatePass(){
+  const p1 = ($("newPass1").value||"").trim();
+  const p2 = ($("newPass2").value||"").trim();
+  if(p1.length < 4){ alert("Use uma senha com pelo menos 4 caracteres."); return; }
+  if(p1 !== p2){ alert("As senhas não conferem."); return; }
+
+  const h = await sha256Hex(p1);
+  setPassHash(h);
+  setAuth(true);
+
+  $("newPass1").value = "";
+  $("newPass2").value = "";
+
+  hideLogin();
+  alert("✅ Senha criada. Você já está logado.");
 }
 
+async function handleEnterPass(){
+  const p = ($("enterPass").value||"").trim();
+  const h = await sha256Hex(p);
+  const ok = (h === getPassHash());
+  if(!ok){
+    $("loginError").style.display = "block";
+    $("enterPass").value = "";
+    return;
+  }
+  setAuth(true);
+  $("enterPass").value = "";
+  hideLogin();
+}
+
+function handleResetPass(){
+  if(!confirm("Resetar a senha local deste navegador?")) return;
+  try{ localStorage.removeItem(PASS_KEY); }catch(e){}
+  setAuth(false);
+  $("enterPass").value = "";
+  showLogin();
+}
+
+async function handleChangePass(){
+  const oldP = ($("oldPass").value||"").trim();
+  const newP = ($("newPass").value||"").trim();
+  if(newP.length < 4){ alert("Nova senha precisa ter pelo menos 4 caracteres."); return; }
+
+  const curHash = getPassHash();
+  if(curHash){
+    const oldH = await sha256Hex(oldP);
+    if(oldH !== curHash){ alert("Senha atual incorreta."); return; }
+  }
+  const newH = await sha256Hex(newP);
+  setPassHash(newH);
+  $("oldPass").value = "";
+  $("newPass").value = "";
+  alert("✅ Senha alterada neste navegador.");
+}
+
+function logout(){
+  setAuth(false);
+  showLogin();
+}
+
+/* ============================
+   TOKEN
+   ============================ */
 function getToken(){
   const v = ($("token").value || "").trim();
   if(v) return v;
   try{ return (sessionStorage.getItem("CS_GH_TOKEN")||"").trim(); }catch(e){ return ""; }
 }
-
 function saveToken(){
   const v = ($("token").value || "").trim();
   if(!v){ alert("Cole seu token primeiro."); return; }
@@ -410,7 +677,6 @@ function saveToken(){
   $("token").value = "";
   alert("Token salvo neste navegador (sessão atual).");
 }
-
 function clearToken(){
   try{ sessionStorage.removeItem("CS_GH_TOKEN"); }catch(e){}
   $("token").value = "";
@@ -418,37 +684,11 @@ function clearToken(){
 }
 
 /* ============================
-   LOAD data.json (mesma pasta)
-   ============================ */
-async function loadData(){
-  setStatus("Carregando…","");
-
-  try{
-    const res = await fetch("./data.json?ts=" + Date.now(), { cache:"no-store" });
-    if(!res.ok) throw new Error("HTTP " + res.status);
-    const ct = (res.headers.get("content-type")||"").toLowerCase();
-    if(!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
-
-    const j = await res.json();
-    DATA = j;
-    DATA_ORIGINAL = safeClone(j);
-
-    fillFormFromData();
-    rebuildJsonView();
-
-    setStatus("Atualizado","ok");
-  }catch(e){
-    console.error(e);
-    setStatus("Offline","bad");
-    alert("Não consegui carregar ./data.json. Confirme se admin.html está na mesma pasta do data.json.");
-  }
-}
-
-/* ============================
-   FORM <-> DATA
+   BASE SHAPE (data.json)
    ============================ */
 function ensureBaseShape(){
   if(!DATA) DATA = {};
+
   DATA.condominio = DATA.condominio ?? "Comunica Síndico";
   DATA.titulo = DATA.titulo ?? "Comunica Síndico — Condôminos";
   DATA.subtitulo = DATA.subtitulo ?? "Painel Informativo";
@@ -483,8 +723,52 @@ function ensureBaseShape(){
   DATA.alertaUrgente.titulo = String(DATA.alertaUrgente.titulo ?? "ALERTA URGENTE");
   DATA.alertaUrgente.mensagem = String(DATA.alertaUrgente.mensagem ?? "");
   DATA.alertaUrgente.piscar = (DATA.alertaUrgente.piscar ?? true);
+
+  // ✅ AVISOS
+  DATA.avisos = Array.isArray(DATA.avisos) ? DATA.avisos : [];
+  // Normaliza itens
+  DATA.avisos.forEach(a=>{
+    a.id = a.id ?? ("a_" + Math.random().toString(16).slice(2) + "_" + Date.now());
+    a.titulo = String(a.titulo ?? "");
+    a.descricao = String(a.descricao ?? a.msg ?? "");
+    delete a.msg;
+    a.nivel = String(a.nivel ?? "MEDIA").toUpperCase();
+    if(!["BAIXA","MEDIA","ALTA"].includes(a.nivel)) a.nivel = "MEDIA";
+    a.ativo = (a.ativo ?? true);
+    a.criadoEm = a.criadoEm ?? new Date().toISOString();
+  });
 }
 
+/* ============================
+   LOAD data.json (mesma pasta)
+   ============================ */
+async function loadData(){
+  setStatus("Carregando…","");
+
+  try{
+    const res = await fetch("./data.json?ts=" + Date.now(), { cache:"no-store" });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const ct = (res.headers.get("content-type")||"").toLowerCase();
+    if(!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
+
+    const j = await res.json();
+    DATA = j;
+    DATA_ORIGINAL = safeClone(j);
+
+    fillFormFromData();
+    rebuildJsonView();
+
+    setStatus("Atualizado","ok");
+  }catch(e){
+    console.error(e);
+    setStatus("Offline","bad");
+    alert("Não consegui carregar ./data.json. Confirme se admin.html está na mesma pasta do data.json.");
+  }
+}
+
+/* ============================
+   FORM <-> DATA
+   ============================ */
 function fillFormFromData(){
   ensureBaseShape();
 
@@ -503,11 +787,15 @@ function fillFormFromData(){
   $("fCabAtivar").value = String(!!DATA.publicidade.cabecalhoImagem.ativar);
   $("fCabUrl").value = DATA.publicidade.cabecalhoImagem.url || "";
 
+  // preview imagem
+  renderCabPreview();
+
   $("fAlertAtivar").value = String(!!DATA.alertaUrgente.ativar);
   $("fAlertPiscar").value = String(!!DATA.alertaUrgente.piscar);
   $("fAlertTitulo").value = DATA.alertaUrgente.titulo || "ALERTA URGENTE";
   $("fAlertMsg").value = DATA.alertaUrgente.mensagem || "";
 
+  renderAvisos();
   renderVideos();
   renderAlertPreview();
 }
@@ -545,6 +833,18 @@ function rebuildJsonView(){
 }
 
 /* ============================
+   TABS
+   ============================ */
+function setTab(tabId){
+  document.querySelectorAll(".tab").forEach(b=>{
+    b.classList.toggle("active", b.dataset.tab === tabId);
+  });
+  document.querySelectorAll(".panel").forEach(p=>{
+    p.classList.toggle("active", p.id === tabId);
+  });
+}
+
+/* ============================
    ALERTA PREVIEW
    ============================ */
 function renderAlertPreview(){
@@ -554,11 +854,9 @@ function renderAlertPreview(){
   $("pAlertTitle").textContent = DATA.alertaUrgente?.titulo || "ALERTA URGENTE";
   $("pAlertMsg").textContent = DATA.alertaUrgente?.mensagem || "—";
 
-  // piscar (opcional) no preview
   const blink = !!DATA.alertaUrgente?.piscar;
   $("alertPreview").style.animation = (on && blink) ? "blink 0.9s ease-in-out infinite" : "none";
 }
-
 (function injectBlink(){
   const st = document.createElement("style");
   st.textContent = `
@@ -569,6 +867,157 @@ function renderAlertPreview(){
   `;
   document.head.appendChild(st);
 })();
+
+/* ============================
+   AVISOS CRUD
+   ============================ */
+function renderAvisos(){
+  ensureBaseShape();
+  const list = $("avisosList");
+  if(!list) return;
+  list.innerHTML = "";
+
+  if(!DATA.avisos.length){
+    const d = document.createElement("div");
+    d.className = "hint";
+    d.innerHTML = "Nenhum aviso cadastrado em <b>avisos[]</b>.";
+    list.appendChild(d);
+    return;
+  }
+
+  DATA.avisos.forEach((a, idx)=>{
+    const wrap = document.createElement("div");
+    wrap.className = "item";
+
+    const col = document.createElement("div");
+    col.className = "col";
+
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.textContent = `#${idx+1}  ${a.nivel}  •  ${a.ativo ? "ATIVO" : "INATIVO"}  •  id: ${a.id}`;
+    col.appendChild(chip);
+
+    const row1 = document.createElement("div");
+    row1.className = "row";
+
+    const inpTit = document.createElement("input");
+    inpTit.placeholder = "Título do aviso";
+    inpTit.value = String(a.titulo || "");
+    inpTit.oninput = ()=>{ a.titulo = inpTit.value; rebuildJsonView(); };
+
+    const selNivel = document.createElement("select");
+    ["BAIXA","MEDIA","ALTA"].forEach(n=>{
+      const opt = document.createElement("option");
+      opt.value = n; opt.textContent = n;
+      if(String(a.nivel||"MEDIA").toUpperCase()===n) opt.selected = true;
+      selNivel.appendChild(opt);
+    });
+    selNivel.onchange = ()=>{ a.nivel = selNivel.value; rebuildJsonView(); };
+
+    row1.appendChild(inpTit);
+    row1.appendChild(selNivel);
+
+    const txtDesc = document.createElement("textarea");
+    txtDesc.placeholder = "Descrição do aviso (texto completo)";
+    txtDesc.value = String(a.descricao || "");
+    txtDesc.oninput = ()=>{ a.descricao = txtDesc.value; rebuildJsonView(); };
+
+    const row2 = document.createElement("div");
+    row2.className = "row";
+
+    const selAtivo = document.createElement("select");
+    selAtivo.innerHTML = `
+      <option value="true">Ativo</option>
+      <option value="false">Inativo</option>
+    `;
+    selAtivo.value = String(!!a.ativo);
+    selAtivo.onchange = ()=>{ a.ativo = (selAtivo.value==="true"); rebuildJsonView(); };
+
+    const inpCriado = document.createElement("input");
+    inpCriado.placeholder = "criadoEm (ISO)";
+    inpCriado.value = String(a.criadoEm || "");
+    inpCriado.oninput = ()=>{ a.criadoEm = inpCriado.value.trim(); rebuildJsonView(); };
+
+    row2.appendChild(selAtivo);
+    row2.appendChild(inpCriado);
+
+    col.appendChild(row1);
+    col.appendChild(txtDesc);
+    col.appendChild(row2);
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const up = document.createElement("button");
+    up.className = "btn ghost";
+    up.textContent = "⬆️";
+    up.title = "Subir";
+    up.onclick = ()=>{
+      if(idx<=0) return;
+      const arr = DATA.avisos;
+      [arr[idx-1], arr[idx]] = [arr[idx], arr[idx-1]];
+      renderAvisos();
+      rebuildJsonView();
+    };
+
+    const down = document.createElement("button");
+    down.className = "btn ghost";
+    down.textContent = "⬇️";
+    down.title = "Descer";
+    down.onclick = ()=>{
+      const arr = DATA.avisos;
+      if(idx>=arr.length-1) return;
+      [arr[idx+1], arr[idx]] = [arr[idx], arr[idx+1]];
+      renderAvisos();
+      rebuildJsonView();
+    };
+
+    const del = document.createElement("button");
+    del.className = "btn bad";
+    del.textContent = "🗑️";
+    del.title = "Excluir";
+    del.onclick = ()=>{
+      if(!confirm("Excluir este aviso?")) return;
+      DATA.avisos.splice(idx,1);
+      renderAvisos();
+      rebuildJsonView();
+    };
+
+    actions.appendChild(up);
+    actions.appendChild(down);
+    actions.appendChild(del);
+
+    wrap.appendChild(col);
+    wrap.appendChild(actions);
+    list.appendChild(wrap);
+  });
+}
+
+function addAviso(){
+  ensureBaseShape();
+  const now = new Date().toISOString();
+  DATA.avisos.unshift({
+    id: "a_" + Math.random().toString(16).slice(2) + "_" + Date.now(),
+    titulo: "Novo aviso",
+    descricao: "Digite a descrição aqui…",
+    nivel: "MEDIA",
+    ativo: true,
+    criadoEm: now
+  });
+  renderAvisos();
+  rebuildJsonView();
+}
+
+function sortAvisos(){
+  ensureBaseShape();
+  DATA.avisos.sort((a,b)=>{
+    const ta = Date.parse(a.criadoEm||"") || 0;
+    const tb = Date.parse(b.criadoEm||"") || 0;
+    return tb - ta;
+  });
+  renderAvisos();
+  rebuildJsonView();
+}
 
 /* ============================
    VÍDEOS CRUD
@@ -674,7 +1123,7 @@ function toggleShuffle(){
 }
 
 /* ============================
-   BUSCA CIDADE (OPEN-METEO GEO)
+   CIDADE (OPEN-METEO GEO)
    ============================ */
 async function buscarCidade(){
   const name = ($("fCidade").value||"").trim();
@@ -688,15 +1137,11 @@ async function buscarCidade(){
     const arr = Array.isArray(j?.results) ? j.results : [];
     if(!arr.length) throw new Error("Sem resultados");
 
-    // escolhe o primeiro
     const r = arr[0];
     $("fLat").value = Number(r.latitude || 0);
     $("fLon").value = Number(r.longitude || 0);
-
-    // tenta timezone se vier
     if(r.timezone) $("fTz").value = r.timezone;
 
-    // cidade “bonita”
     const nice = [r.name, r.admin1, r.country].filter(Boolean).join(" - ");
     $("fCidade").value = nice || name;
 
@@ -711,7 +1156,7 @@ async function buscarCidade(){
 }
 
 /* ============================
-   DOWNLOAD LOCAL
+   DOWNLOAD / COPY
    ============================ */
 function downloadJson(){
   if(!DATA){ alert("Carregue o data.json primeiro."); return; }
@@ -726,9 +1171,6 @@ function downloadJson(){
   setTimeout(()=>URL.revokeObjectURL(a.href), 1200);
 }
 
-/* ============================
-   COPY JSON
-   ============================ */
 async function copyJson(){
   if(!DATA){ alert("Carregue o data.json primeiro."); return; }
   rebuildJsonView();
@@ -741,21 +1183,21 @@ async function copyJson(){
 }
 
 /* ============================
-   PUBLISH PARA GITHUB (Contents API)
+   GitHub API (Contents)
    ============================ */
 function b64EncodeUnicode(str){
-  // base64 seguro para UTF-8
   return btoa(unescape(encodeURIComponent(str)));
 }
 
-async function ghGetSha(token){
-  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(GITHUB_PATH)}?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
+async function ghGetShaForPath(token, path){
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
   const res = await fetch(url, {
     headers:{
       "Authorization":"Bearer " + token,
       "Accept":"application/vnd.github+json"
     }
   });
+  if(res.status === 404) return null;
   if(!res.ok){
     const txt = await res.text().catch(()=> "");
     throw new Error("GitHub GET sha falhou: " + res.status + " " + txt);
@@ -764,11 +1206,11 @@ async function ghGetSha(token){
   return j?.sha || null;
 }
 
-async function ghPutFile(token, contentStr, sha){
-  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(GITHUB_PATH)}`;
+async function ghPutFileRaw(token, path, contentBase64, sha, message){
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(path)}`;
   const body = {
-    message: "Atualizar data.json via Admin",
-    content: b64EncodeUnicode(contentStr),
+    message: message || ("Atualizar " + path + " via Admin"),
+    content: contentBase64,
     branch: GITHUB_BRANCH
   };
   if(sha) body.sha = sha;
@@ -804,15 +1246,89 @@ async function publishToGitHub(){
 
   try{
     setStatus("Publicando…","");
-    const sha = await ghGetSha(token);
-    await ghPutFile(token, contentStr, sha);
-
+    const sha = await ghGetShaForPath(token, GITHUB_PATH);
+    await ghPutFileRaw(token, GITHUB_PATH, b64EncodeUnicode(contentStr), sha, "Atualizar data.json via Admin");
     setStatus("Publicado!","ok");
     alert("✅ Publicado no GitHub!\nAguarde alguns segundos e atualize o painel do síndico.");
   }catch(e){
     console.error(e);
     setStatus("Erro","bad");
     alert("❌ Falha ao publicar.\n\n" + String(e.message || e));
+  }
+}
+
+/* ============================
+   UPLOAD IMAGEM (cabeçalho cidade)
+   ============================ */
+function renderCabPreview(){
+  const prev = $("imgPrev");
+  if(!prev) return;
+  prev.innerHTML = "";
+  const url = ($("fCabUrl").value||"").trim();
+  if(!url){
+    const d = document.createElement("div");
+    d.className = "mini";
+    d.style.padding = "10px";
+    d.textContent = "Sem imagem definida.";
+    prev.appendChild(d);
+    return;
+  }
+  const img = document.createElement("img");
+  img.alt = "Prévia";
+  img.src = url + (url.includes("?") ? "&" : "?") + "ts=" + Date.now(); // cache-buster local no preview
+  prev.appendChild(img);
+}
+
+function fileToBase64Plain(file){
+  return new Promise((resolve, reject)=>{
+    const fr = new FileReader();
+    fr.onload = ()=>{
+      const dataUrl = String(fr.result || "");
+      const comma = dataUrl.indexOf(",");
+      if(comma<0) return reject(new Error("Falha ao ler arquivo"));
+      resolve(dataUrl.slice(comma+1)); // base64 puro
+    };
+    fr.onerror = ()=>reject(fr.error || new Error("Erro no FileReader"));
+    fr.readAsDataURL(file);
+  });
+}
+
+async function uploadCabImage(){
+  const token = getToken();
+  if(!token){ alert("Cole seu token e clique em 'Salvar token'."); return; }
+
+  const fi = $("fileCab");
+  const file = fi?.files?.[0];
+  if(!file){ alert("Selecione uma imagem primeiro."); return; }
+
+  try{
+    setStatus("Enviando imagem…","");
+    const b64 = await fileToBase64Plain(file);
+
+    // pega sha se existir
+    const sha = await ghGetShaForPath(token, GITHUB_CAB_PATH);
+
+    await ghPutFileRaw(
+      token,
+      GITHUB_CAB_PATH,
+      b64,
+      sha,
+      "Atualizar imagem do cabeçalho (cidade)"
+    );
+
+    // preenche o campo e liga automaticamente
+    $("fCabAtivar").value = "true";
+    $("fCabUrl").value = CAB_PUBLIC_URL;
+
+    rebuildJsonView();
+    renderCabPreview();
+    setStatus("Imagem enviada","ok");
+
+    alert("✅ Imagem enviada!\nAgora clique em PUBLICAR para atualizar o data.json (se necessário).");
+  }catch(e){
+    console.error(e);
+    setStatus("Erro","bad");
+    alert("❌ Falha ao enviar imagem.\n\n" + String(e.message || e));
   }
 }
 
@@ -831,30 +1347,52 @@ function alertOff(){
 }
 
 /* ============================
-   UI BIND
+   BIND UI
    ============================ */
 function bind(){
+  // Tabs
+  document.querySelectorAll(".tab").forEach(b=>{
+    b.onclick = ()=> setTab(b.dataset.tab);
+  });
+
+  // Login
+  $("btnCreatePass").onclick = handleCreatePass;
+  $("btnEnterPass").onclick = handleEnterPass;
+  $("btnResetPass").onclick = handleResetPass;
+
+  // Config
   $("btnSaveToken").onclick = saveToken;
   $("btnClearToken").onclick = clearToken;
-
   $("btnOpenPanel").onclick = ()=>{ window.open("./index.html", "_blank"); };
-
   $("btnLoad").onclick = loadData;
   $("btnDownload").onclick = downloadJson;
   $("btnPublish").onclick = publishToGitHub;
 
+  $("btnChangePass").onclick = handleChangePass;
+  $("btnLogout").onclick = logout;
+
+  // Preview/JSON
   $("btnRebuild").onclick = rebuildJsonView;
   $("btnCopyJson").onclick = copyJson;
 
+  // Cidade
   $("btnBuscarCidade").onclick = buscarCidade;
+  $("btnUploadCab").onclick = uploadCabImage;
+  $("fCabUrl").addEventListener("input", renderCabPreview);
 
+  // Avisos
+  $("btnAddAviso").onclick = addAviso;
+  $("btnSortAvisos").onclick = sortAvisos;
+
+  // Vídeos
   $("btnAddVideo").onclick = addVideo;
   $("btnShuffleToggle").onclick = toggleShuffle;
 
+  // Alerta
   $("btnAlertOn").onclick = alertOn;
   $("btnAlertOff").onclick = alertOff;
 
-  // Atualiza JSON ao editar qualquer campo
+  // Live update
   const liveIds = [
     "fTitulo","fSubtitulo","fReferencia",
     "fRotInterval","fRotQtd",
@@ -870,8 +1408,19 @@ function bind(){
   });
 }
 
+/* ============================
+   INIT
+   ============================ */
 bind();
 setStatus("Offline","bad");
+
+// Protege o admin
+if(!isAuthed()){
+  showLogin();
+}
+
+// Se quiser: ao abrir, já mostra a aba Alerta
+setTab("tAlerta");
 </script>
 </body>
 </html>
