@@ -40,18 +40,22 @@
       --sar: env(safe-area-inset-right);
       --sab: env(safe-area-inset-bottom);
       --sal: env(safe-area-inset-left);
+
       --ui:  clamp(1, calc(100dvh / 980), 1.70);
       --ui2: clamp(1, calc(100dvh / 920), 2.05);
+
       --tv-safe-bottom: 18px;
+
       --topbar-bg: none;
       --topbar-img-opacity: .92;
+
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
-      --news-bg: rgba(255,255,255,.92);
-      --news-border: rgba(0,0,0,.12);
-      --news-shadow: 0 18px 40px rgba(0,0,0,.22);
-      --news-title: #000;
-      --news-muted: rgba(0,0,0,.60);
+
+      --news-bg: rgba(34, 12, 48, .62);
+      --news-border: rgba(255, 160, 255, .22);
+      --news-shadow: 0 18px 40px rgba(0,0,0,.42);
+      --news-title: rgba(255, 210, 255, .98);
     }
 
     *{box-sizing:border-box}
@@ -79,10 +83,10 @@
       min-height:100dvh;
       width:100%;
       padding:
-        calc(12px + var(--sat))
-        calc(12px + var(--sar))
-        calc(max(12px, var(--tv-safe-bottom)) + var(--sab))
-        calc(12px + var(--sal));
+        calc(10px + var(--sat))
+        calc(10px + var(--sar))
+        calc(max(10px, var(--tv-safe-bottom)) + var(--sab))
+        calc(10px + var(--sal));
       display:block;
     }
 
@@ -92,15 +96,16 @@
       min-height:0;
       display:flex;
       flex-direction:column;
-      gap:10px;
+      gap:8px;
       max-width:none;
     }
 
+    /* ================= TOPBAR ================= */
     .topbar{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:14px;
+      gap:10px;
       padding:14px 16px;
       background:rgba(8,28,46,.60);
       border:1px solid var(--line);
@@ -121,9 +126,9 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      transform: none !important;
-      image-rendering: auto;
-      will-change: transform;
+      transform:none !important;
+      image-rendering:auto;
+      will-change:transform;
       opacity: var(--topbar-img-opacity);
       pointer-events:none;
     }
@@ -140,7 +145,7 @@
 
     .topbar > *{ position:relative; z-index:1; }
 
-    .brand{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1 1 auto;}
+    .brand{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1 1 auto;}
 
     #titulo{
       margin:0;
@@ -152,14 +157,14 @@
       text-overflow: unset;
       overflow-wrap:anywhere;
       word-break:break-word;
-      line-height: 1.08;
+      line-height: 1.06;
     }
 
     #subtitulo{
       margin:0;
       font-size: calc(12.5px * var(--ui));
       color:var(--muted);
-      font-weight:700;
+      font-weight:800;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -179,24 +184,11 @@
     }
     .subMobileLine .sep{ opacity:.55; font-weight:900; }
 
-    .condoCenter{
-      flex:1 1 auto;
-      min-width:0;
-      text-align:center;
-      font-weight:950;
-      letter-spacing:.2px;
-      color:rgba(234,242,255,.92);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      padding:0 8px;
-    }
-
     .rightInfo{
       display:flex;
       gap:10px;
       align-items:center;
-      flex-wrap:wrap;
+      flex-wrap:nowrap;
       justify-content:flex-end;
       flex:0 0 auto;
     }
@@ -231,7 +223,6 @@
       display:inline-flex;
       width: 46px;
       height: 46px;
-      line-height: 1;
       align-items:center;
       justify-content:center;
       transform: translateY(1px);
@@ -254,14 +245,14 @@
       width:100%;
     }
 
+    /* ================= MAIN (GRID: 2x2 + NEWS ABAIXO) ================= */
     .main{
       flex:1 1 auto;
       min-height:0;
-      display:grid;
-      grid-template-columns: 1.20fr .80fr;
-      gap:10px;
       width:100%;
-      height:100%;
+      display:grid;
+      grid-template-rows: 1fr auto; /* 1ª linha: 2x2 / 2ª: news */
+      gap:8px;
     }
 
     .panel{
@@ -294,6 +285,10 @@
       color:rgba(234,242,255,.95);
       text-transform:uppercase;
       font-size: calc(18px * var(--ui2));
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .pill{
@@ -308,9 +303,6 @@
       align-items:center;
       gap:8px;
       white-space:nowrap;
-      max-width:100%;
-      overflow:hidden;
-      text-overflow:ellipsis;
       user-select:none;
       cursor:pointer;
     }
@@ -318,28 +310,15 @@
     .pill:active{ transform:scale(.98); }
 
     @keyframes avisoIn{
-      from{ opacity:0; transform: translateY(10px) scale(.99); }
+      from{ opacity:0; transform: translateY(8px) scale(.995); }
       to  { opacity:1; transform: translateY(0) scale(1); }
-    }
-    @keyframes glowPulseRed{
-      0%,100%{ box-shadow: 0 0 14px rgba(255,80,80,.35), inset 0 1px 0 rgba(255,255,255,.15); }
-      50%    { box-shadow: 0 0 20px rgba(255,80,80,.55), inset 0 1px 0 rgba(255,255,255,.18); }
-    }
-    #avisos.fade-out{ opacity:0; transition: opacity .22s ease; }
-    #avisos.fade-in { opacity:1; transition: opacity .22s ease; }
-
-    .avisos{
-      padding:12px;
-      min-height:0;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      overflow:hidden;
     }
 
     .aviso{
-      padding:16px;
-      border-radius:18px;
+      height:100%;
+      width:100%;
+      padding:14px 14px 12px 16px;
+      border-radius:16px;
       background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
       display:flex;
       flex-direction:column;
@@ -348,23 +327,10 @@
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,.14),
         inset 0 -14px 22px rgba(0,0,0,.28),
-        0 14px 34px rgba(0,0,0,.55);
-      transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
-      animation: avisoIn .28s ease both;
-      will-change: transform, opacity;
-      position:relative;
-      padding-left:18px;
-      height:auto;
-      min-height:auto;
+        0 14px 34px rgba(0,0,0,.45);
+      animation: avisoIn .22s ease both;
       overflow:hidden;
-    }
-
-    .aviso:hover{
-      transform: translateY(-2px);
-      filter: saturate(1.05);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.16),
-        0 10px 28px rgba(0,0,0,.62);
+      position:relative;
     }
 
     .aviso::before{
@@ -379,7 +345,6 @@
     .aviso.alta{
       border:1px solid rgba(255,90,90,.9);
       background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.92));
-      animation: avisoIn .28s ease both, glowPulseRed 2.2s ease-in-out infinite;
     }
     .aviso.alta::before{ background:linear-gradient(180deg,#ff5a5a,#c0392b); }
 
@@ -398,55 +363,42 @@
     .aviso .t{
       margin:0;
       font-weight:950;
-      font-size: calc(24px * var(--ui2));
-      letter-spacing:.3px;
+      font-size: clamp(16px, 1.35vw, 22px);
+      letter-spacing:.2px;
       color:#fff;
       text-shadow:0 1px 2px rgba(0,0,0,.6);
-      line-height:1.15;
-      display:block;
+      line-height:1.12;
       white-space:normal;
-      overflow:visible;
       overflow-wrap:anywhere;
       word-break:break-word;
     }
 
-    .aviso.alta  .t::before{ content:"⚠️"; }
-    .aviso.media .t::before{ content:"🔶"; }
-    .aviso.baixa .t::before{ content:"ℹ️"; }
-
     .aviso .d{
       margin:0;
       color:#e0ecff;
-      line-height:1.30;
-      font-size:clamp(18px, 2.1vw, 26px);
-      display:block;
-      white-space:normal;
+      line-height:1.26;
+      font-size: clamp(13px, 1.15vw, 18px);
       overflow:hidden;
+      white-space:normal;
       overflow-wrap:anywhere;
       word-break:break-word;
+      flex:1 1 auto;
+      min-height:0;
     }
 
     .metaLine{
       margin-top:auto;
       display:flex;
       flex-wrap:wrap;
-      gap:10px;
+      gap:8px;
       align-items:center;
       color:rgba(234,242,255,.92);
-      font-size: 0.42em;
+      font-size: 11px;
       font-weight:900;
       line-height: 1.15;
     }
 
-    #btnBack10,
-    #btnFwd10{
-      display:none !important;
-    }
-
-    @media (max-width: 520px){ .metaLine{ font-size: 0.45em; } }
-    @media (min-width: 1200px){ .metaLine{ font-size: 0.45em; } }
-
-    .metaItem{ display:inline-flex; align-items:center; gap:8px; opacity:.95; }
+    .metaItem{ display:inline-flex; align-items:center; gap:6px; opacity:.95; }
     .metaItem b{ font-weight:950; color:#fff; }
     .metaSep{ opacity:.35; font-weight:900; }
 
@@ -459,7 +411,7 @@
       font-weight:950;
       letter-spacing:.4px;
       text-transform:uppercase;
-      font-size: calc(10px * var(--ui));
+      font-size: 10px;
       line-height:1;
       border:1px solid rgba(255,255,255,.22);
       background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
@@ -471,141 +423,99 @@
     .prioBadge.alta{
       border-color: rgba(255,90,90,.80);
       background: linear-gradient(180deg, rgba(255,120,120,.50), rgba(160,0,0,.35));
-      text-shadow: 0 1px 0 rgba(0,0,0,.55);
     }
     .prioBadge.media{
       border-color: rgba(255,179,71,.75);
       background: linear-gradient(180deg, rgba(255,210,120,.55), rgba(160,90,0,.35));
-      text-shadow: 0 1px 0 rgba(0,0,0,.50);
     }
     .prioBadge.baixa{
       border-color: rgba(120,190,255,.70);
       background: linear-gradient(180deg, rgba(160,210,255,.55), rgba(0,80,160,.32));
-      text-shadow: 0 1px 0 rgba(0,0,0,.45);
     }
 
-    .adBody{
-      padding:12px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
+    /* ====== QUADRO 2x2 ====== */
+    .quadTop{
+      min-height:0;
+      height:100%;
+      width:100%;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap:8px;
+      align-content:stretch;
+    }
+
+    .tile{
       min-height:0;
       overflow:hidden;
-    }
-    .adCard{
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(7,20,34,.18);
-      border-radius:14px;
-      overflow:hidden;
       display:flex;
       flex-direction:column;
+    }
+
+    .tileBody{
+      padding:10px;
       min-height:0;
-      flex:0 0 auto;
+      flex:1 1 auto;
+      overflow:hidden;
+      display:flex;
+      height:100%;
     }
-    .adLabel{
-      padding:10px 12px;
-      font-weight:950;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      color:rgba(234,242,255,.92);
-      background:rgba(12,35,56,.35);
-    }
+
+    .fade-out{ opacity:0; transition: opacity .14s ease; }
+    .fade-in { opacity:1; transition: opacity .14s ease; }
 
     .videoWrap{
       width:100%;
-      aspect-ratio:16/9;
+      height:100%;
       background:#000;
       display:flex;
       align-items:center;
       justify-content:center;
-      flex:0 0 auto;
-      max-height: 38vh;
       overflow:hidden;
-      border-radius: 12px;
+      border-radius:14px;
       position:relative;
+      flex:1 1 auto;
+      min-height:0;
     }
 
-    video{
+    .videoBg{
+      position:absolute;
+      inset:0;
       width:100%;
       height:100%;
-      display:block;
       object-fit:cover;
-      object-position:center;
+      filter: blur(18px) saturate(1.08);
+      transform: scale(1.12);
+      opacity:.55;
       background:#000;
     }
-    video.fit-contain{ object-fit:contain; }
+
+    .videoMain{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      background:transparent;
+    }
 
     video::-webkit-media-controls{ display:none !important; }
-    video::-webkit-media-controls-enclosure{ display:none !important; }
     video::-webkit-media-controls-panel{ display:none !important; }
-    video::-webkit-media-controls-fullscreen-button{ display:none !important; }
+    video::-webkit-media-controls-enclosure{ display:none !important; }
 
-    .tvVideoControls{
-      position:absolute;
-      left: 0;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      display:flex;
-      justify-content: space-between;
-      align-items:center;
-      z-index:50;
-      user-select:none;
-      pointer-events:none;
-      background: transparent;
-      border: none;
-      box-shadow: none;
-      padding: 0 10px;
-      border-radius: 0;
-    }
-
-    .tvBtn{
-      pointer-events: auto;
-      min-width: 30px;
-      width: 30px;
-      height: 30px;
-      padding: 0;
-      border-radius: 999px;
-      font-size: 14px;
-      line-height: 1;
-      cursor: pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(0,0,0,.28);
-      border: 1px solid rgba(255,255,255,.22);
-      box-shadow: 0 6px 14px rgba(0,0,0,.35);
-      transition: transform .12s ease, filter .12s ease, border-color .12s ease;
-    }
-    .tvBtn:hover{ filter: brightness(1.08); border-color: rgba(255,255,255,.28); }
-    .tvBtn:active{ transform: translateY(1px) scale(.98); }
-
-    @media (max-width: 980px){
-      #btnBack10, #btnFwd10{ display:none !important; }
-      #btnPrevAd, #btnNextAd{ display:flex !important; }
-      .tvBtn{
-        min-width: 34px;
-        width: 34px;
-        height: 34px;
-        font-size: 16px;
-        background: rgba(0,0,0,.28);
-        border: 1px solid rgba(255,255,255,.22);
-        box-shadow: 0 8px 18px rgba(0,0,0,.35);
-      }
-      #btnPrevAd, #btnNextAd{ width: 34px; min-width: 34px; }
-    }
-
-    #newsBox{
+    /* ================= NEWS ================= */
+    .newsBox{
+      flex:0 0 auto;
       background: var(--news-bg);
       border: 1px solid var(--news-border);
       box-shadow: var(--news-shadow);
       border-radius: 18px;
       overflow: hidden;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       display:flex;
       flex-direction:column;
       min-height:0;
-      flex: 1 1 auto;
     }
 
     .newsHead{
@@ -614,80 +524,62 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      border-bottom:1px solid rgba(0,0,0,.08);
-      background: rgba(255,255,255,.85);
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background:rgba(12,35,56,.35);
       flex:0 0 auto;
     }
 
-    .newsTitle{
-      font-weight:950;
-      color:#000;
-    }
+    .newsTitle{ font-weight:950; color:rgba(255, 210, 255, .95); }
     #newsPill{ display:none !important; }
 
     #newsBody{
-      padding: 12px 14px 14px;
+      padding: 10px 12px 12px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       min-height:0;
       flex:1 1 auto;
       overflow:hidden;
-      background: rgba(255,255,255,.92);
-    }
-
-    @media (min-width: 981px){
-      #newsBody{
-        display:grid;
-        grid-template-rows: repeat(4, minmax(0, 1fr));
-        gap:10px;
-      }
-      .newsItem{ min-height:0; overflow:hidden; }
     }
 
     .newsItem{
       border-radius: 14px;
-      border: 1px solid rgba(0,0,0,.08);
-      background: rgba(255,255,255,.96);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.50);
-      padding: 12px 12px 10px;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
-    }
-    .newsItem:hover{
-      transform: translateY(-1px);
-      border-color: rgba(0,0,0,.12);
-      background: rgba(255,255,255,1);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      padding: 10px 10px 9px;
+      overflow:hidden;
     }
 
     .newsItem .h{
       font-family: var(--font-soft);
-      font-weight: 800;
-      font-size: clamp(12px, 1.55dvh, 18px);
+      font-weight: 820;
+      font-size: clamp(11px, 1.25dvh, 15px);
       line-height: 1.18;
-      letter-spacing: .15px;
-      color: #000;
+      letter-spacing: .12px;
+      color: var(--news-title);
       margin: 0;
       display:block;
-      overflow:visible;
       white-space:normal;
       overflow-wrap:anywhere;
       word-break:break-word;
     }
 
     .newsFooter{
-      margin-top: 8px;
+      margin-top: 4px;
       font-size: 11px;
-      color: var(--news-muted);
+      color: rgba(255, 210, 255, .70);
       font-weight: 900;
       text-align:left;
     }
     .newsFooterItem{
       font-size: 11px;
-      color: rgba(0,0,0,.55);
+      color: rgba(255, 210, 255, .60);
       margin-left: 6px;
       text-align:left;
     }
 
+    /* ================= TICKER ================= */
     .ticker{
       flex:0 0 auto;
       width:100%;
@@ -699,7 +591,6 @@
       backdrop-filter: blur(8px);
       display:flex;
       flex-direction:column;
-      align-items:stretch;
       gap:6px;
       margin:0;
     }
@@ -708,18 +599,17 @@
       width:100%;
       display:flex;
       align-items:center;
+      justify-content:space-between;
       gap:10px;
       min-width:0;
-      overflow:hidden;
-      flex-wrap: wrap;
-      justify-content:center;
-      text-align:center;
+      flex-wrap:nowrap;
     }
 
     .tickerIcon{
       font-size:clamp(22px, 3.1vw, 28px);
       opacity:.95;
       flex:0 0 auto;
+      white-space:nowrap;
     }
 
     #dataBiblica{
@@ -733,50 +623,55 @@
     #ref{
       color:rgba(234,242,255,.88);
       font-weight:850;
-      font-size: calc(16px * var(--ui2));
+      font-size: clamp(12px, 1.05vw, 16px);
       flex: 1 1 auto;
       min-width: 0;
       white-space: normal;
       overflow: visible;
       text-overflow: unset;
-      line-height: 1.25;
+      line-height: 1.22;
       text-align:center;
+      margin:0 10px;
     }
 
-    @media (max-width: 980px){
-      .wxInline{
-        width:100%;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        gap:2px;
-        margin-top: 6px;
-        white-space: normal !important;
-      }
+    .wxInline{
+      flex:0 0 auto;
+      width:auto;
+      margin-left:auto;
+      display:flex;
+      flex-direction:row;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+      font-size: clamp(11px, 0.95vw, 14px);
+    }
 
-      .wxInline .wxL1{
-        display:flex;
-        align-items:center;
-        gap:8px;
-        font-weight: 950;
-        color: rgba(234,242,255,.92);
-        font-size: clamp(13px, 1.9vw, 18px);
-        line-height: 1.15;
-      }
+    .wxInline .wxL1{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight: 950;
+      color: rgba(234,242,255,.92);
+      line-height: 1.15;
+    }
 
-      .wxInline .wxL2{
-        font-weight: 900;
-        color: rgba(234,242,255,.78);
-        font-size: clamp(12px, 1.7vw, 16px);
-        line-height: 1.15;
-      }
+    .wxInline .wxL2{
+      font-weight: 900;
+      color: rgba(234,242,255,.78);
+      line-height: 1.15;
+    }
+
+    .wxInline .wxL2::before{
+      content:" • ";
+      opacity:.65;
+      font-weight:900;
+      margin-right:2px;
     }
 
     .wxMiniSvg{
       display:inline-flex;
       width: 18px;
       height: 18px;
-      line-height: 1;
       align-items:center;
       justify-content:center;
       transform: translateY(1px);
@@ -788,65 +683,7 @@
       filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
     }
 
-    @media (min-width: 981px){
-      .tickerLine1{
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:12px;
-        flex-wrap:nowrap;
-        text-align:left;
-      }
-
-      .tickerIcon,
-      #dataBiblica{
-        flex:0 0 auto;
-        white-space:nowrap;
-      }
-
-      #ref{
-        flex:1 1 auto;
-        min-width:0;
-        margin:0 10px;
-        white-space:normal;
-        overflow:visible;
-        text-overflow:unset;
-        line-height:1.22;
-        text-align:center;
-        font-size: clamp(12px, 1.05vw, 16px);
-      }
-
-      .wxInline{
-        flex:0 0 auto;
-        width:auto;
-        margin-left:auto;
-        display:flex;
-        flex-direction:row;
-        align-items:center;
-        gap:8px;
-        white-space:nowrap;
-        font-size: clamp(11px, 0.95vw, 14px);
-      }
-
-      .wxInline .wxL2::before{
-        content:" • ";
-        opacity:.65;
-        font-weight:900;
-        margin-right:2px;
-      }
-    }
-
-    @media (min-width: 981px) and (max-width: 1100px){
-      .tickerLine1{ flex-wrap:wrap; justify-content:center; }
-      #ref{ flex:1 1 100%; margin:0; }
-      .wxInline{
-        width:100%;
-        justify-content:center;
-        margin-left:0;
-      }
-      .wxInline .wxL2::before{ content:""; }
-    }
-
+    /* ================= MOBILE ================= */
     @media (max-width: 980px){
       :root{
         --ui: clamp(1, calc(100vmin / 900), 2.10);
@@ -856,18 +693,26 @@
 
       body{ overflow:auto; -webkit-overflow-scrolling: touch; padding:0; height:auto; min-height:100svh; }
       .wrap{ min-height:100svh; height:auto; padding: calc(14px + var(--sat)) calc(14px + var(--sar)) calc(14px + var(--sab)) calc(14px + var(--sal)); }
-      .container{ min-height:auto; height:auto; }
+      .container{ min-height:auto; height:auto; gap:10px; }
 
       .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
-      .condoCenter{ display:none !important; }
       .brand{ width:100%; align-items:center; text-align:center; }
       .rightInfo{ display:none !important; }
       .subMobileLine{ display:flex; width:100%; }
 
-      .main{ display:flex; flex-direction:column; }
-      section.panel{ order:1; }
-      #adBox{ order:2; min-height:0; }
-      .panel{ min-height:auto; }
+      .main{
+        display:flex;
+        flex-direction:column;
+      }
+
+      .quadTop{
+        display:flex;
+        flex-direction:column;
+        height:auto;
+        gap:10px;
+      }
+
+      .tileBody{ padding:12px; height:auto; }
 
       .ticker{
         position:sticky;
@@ -901,6 +746,40 @@
       #wxIconTop svg{ width:56px; height:56px; }
     }
 
+    @media (min-width: 981px) and (max-width: 1100px){
+      .tickerLine1{ flex-wrap:wrap; justify-content:center; }
+      #ref{ flex:1 1 100%; margin:0; }
+      .wxInline{ width:100%; justify-content:center; margin-left:0; }
+      .wxInline .wxL2::before{ content:""; }
+    }
+
+    @media (min-width: 981px) and (max-height: 720px){
+      :root{ --tv-safe-bottom: 44px; }
+    }
+
+    html.isTV body{
+      overflow:hidden !important;
+      height:100dvh !important;
+      min-height:100dvh !important;
+    }
+
+    html.isTV :root{
+      --ui:  clamp(1, calc(100dvh / 980), 1.70);
+      --ui2: clamp(1, calc(100dvh / 920), 2.05);
+      --tv-safe-bottom: 44px;
+    }
+
+    html.isTV .wrap{
+      height:100dvh !important;
+      min-height:100dvh !important;
+      padding:
+        calc(10px + var(--sat))
+        calc(10px + var(--sar))
+        calc(max(12px, var(--tv-safe-bottom)) + var(--sab))
+        calc(10px + var(--sal)) !important;
+    }
+
+    /* ========== WX ANIMS ========== */
     .wxsvg .sun-rays{ transform-origin: 32px 32px; animation: wx-rotate 6s linear infinite; }
     @keyframes wx-rotate{ from{ transform: rotate(0deg);} to{ transform: rotate(360deg);} }
     .wxsvg .sun-core{ animation: wx-pulse 2.4s ease-in-out infinite; transform-origin: 32px 32px; }
@@ -913,103 +792,6 @@
     @keyframes wx-rain{ 0%{ transform: translateY(0); opacity:.15;} 15%{opacity:1;} 100%{ transform: translateY(8px); opacity:.05;} }
     .wxsvg .bolt{ animation: wx-bolt 1.4s ease-in-out infinite; }
     @keyframes wx-bolt{ 0%,100%{ opacity:.35; transform: translateY(0);} 50%{ opacity:1; transform: translateY(1px);} }
-
-    @media (max-width: 980px) and (orientation: landscape) and (min-height: 480px){
-      :root{
-        --ui:  clamp(1, calc(100dvh / 980), 1.70);
-        --ui2: clamp(1, calc(100dvh / 920), 2.05);
-        --tv-safe-bottom: 32px;
-      }
-
-      body{
-        overflow:hidden;
-        height:100dvh;
-        min-height:100dvh;
-      }
-
-      .wrap{
-        height:100dvh;
-        min-height:100dvh;
-        padding:
-          calc(12px + var(--sat))
-          calc(12px + var(--sar))
-          calc(max(16px, var(--tv-safe-bottom)) + var(--sab))
-          calc(12px + var(--sal));
-      }
-
-      .container{ height:100%; min-height:0; }
-      .subMobileLine{ display:none !important; }
-      .condoCenter{ display:block !important; }
-      .rightInfo{ display:flex !important; position:relative !important; }
-
-      .main{
-        display:grid !important;
-        grid-template-columns: 1.20fr .80fr !important;
-        gap:10px !important;
-      }
-
-      section.panel{ order:0 !important; }
-      #adBox{ order:0 !important; }
-
-      .ticker{
-        position:relative !important;
-        bottom:auto !important;
-        padding-bottom: 10px !important;
-      }
-    }
-
-    @media (min-width: 981px) and (max-height: 720px){
-      :root{ --tv-safe-bottom: 44px; }
-      .avisos{
-        overflow:auto !important;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-      .avisos::-webkit-scrollbar{ width:0; height:0; }
-    }
-
-    html.isTV body{
-      overflow:hidden !important;
-      height:100dvh !important;
-      min-height:100dvh !important;
-    }
-    html.isTV :root{
-      --ui:  clamp(1, calc(100dvh / 980), 1.70);
-      --ui2: clamp(1, calc(100dvh / 920), 2.05);
-      --tv-safe-bottom: 44px;
-    }
-    html.isTV .wrap{
-      height:100dvh !important;
-      min-height:100dvh !important;
-      padding:
-        calc(12px + var(--sat))
-        calc(12px + var(--sar))
-        calc(max(16px, var(--tv-safe-bottom)) + var(--sab))
-        calc(12px + var(--sal)) !important;
-    }
-    html.isTV .container{ height:100% !important; min-height:0 !important; }
-    html.isTV .subMobileLine{ display:none !important; }
-    html.isTV .condoCenter{ display:block !important; }
-    html.isTV .rightInfo{ display:flex !important; position:relative !important; }
-    html.isTV .main{
-      display:grid !important;
-      grid-template-columns: 1.20fr .80fr !important;
-      gap:10px !important;
-    }
-    html.isTV #adBox{ order:0 !important; }
-    html.isTV section.panel{ order:0 !important; }
-    html.isTV .ticker{
-      position:relative !important;
-      bottom:auto !important;
-      margin:0 !important;
-      padding-bottom: 10px !important;
-    }
-    html.isTV .avisos{
-      overflow:auto !important;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    html.isTV .avisos::-webkit-scrollbar{ width:0; height:0; }
   </style>
 </head>
 
@@ -1029,8 +811,6 @@
           </div>
         </div>
 
-        <div class="condoCenter" id="condoCenter"></div>
-
         <div class="rightInfo">
           <div class="badge" title="Status do painel">
             <span class="dot" id="dotOnline"></span>
@@ -1049,46 +829,52 @@
       <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
       <div class="main">
-        <section class="panel">
-          <div class="panelHead">
-            <div class="panelTitle">🔔 Avisos Importantes</div>
-            <div class="pill" id="refPill" title="Clique para atualizar">Atualizar</div>
-          </div>
-          <div class="avisos" id="avisos"></div>
-        </section>
-
-        <aside class="panel" id="adBox" style="display:none">
-          <div class="panelHead">
-            <div class="panelTitle">📣 Publicidade</div>
-            <div class="pill" id="adPill">—</div>
+        <div class="quadTop fade-in" id="avisosPane">
+          <div class="panel tile">
+            <div class="panelHead">
+              <div class="panelTitle">🔔 Avisos Importantes</div>
+              <div class="pill" id="refPill" title="Clique para atualizar">Atualizar</div>
+            </div>
+            <div class="tileBody" id="slot1"></div>
           </div>
 
-          <div class="adBody">
-            <div class="adCard" id="adCard">
-              <div class="adLabel" id="adLabel">Anúncio</div>
+          <div class="panel tile">
+            <div class="panelHead">
+              <div class="panelTitle">🔔 Avisos Importantes</div>
+              <div class="pill" style="visibility:hidden">—</div>
+            </div>
+            <div class="tileBody" id="slot2"></div>
+          </div>
 
+          <div class="panel tile">
+            <div class="panelHead">
+              <div class="panelTitle">🔔 Avisos Importantes</div>
+              <div class="pill" style="visibility:hidden">—</div>
+            </div>
+            <div class="tileBody" id="slot3"></div>
+          </div>
+
+          <div class="panel tile">
+            <div class="panelHead">
+              <div class="panelTitle">📣 Publicidade</div>
+              <div class="pill" id="adPill">—</div>
+            </div>
+            <div class="tileBody" id="slot4">
               <div class="videoWrap">
-                <video id="adVideo" autoplay muted playsinline disablepictureinpicture></video>
-
-                <div class="tvVideoControls" id="tvVideoControls" aria-hidden="true">
-                  <button class="tvBtn" id="btnPrevAd" title="Vídeo anterior" aria-label="Vídeo anterior">⟨</button>
-                  <button class="tvBtn" id="btnBack10" title="Voltar 10s" aria-label="Voltar 10 segundos">↶10</button>
-                  <button class="tvBtn" id="btnFwd10" title="Avançar 10s" aria-label="Avançar 10 segundos">10↷</button>
-                  <button class="tvBtn" id="btnNextAd" title="Próximo vídeo" aria-label="Próximo vídeo">⟩</button>
-                </div>
+                <video id="adVideoBg" class="videoBg" autoplay muted playsinline webkit-playsinline loop disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
+                <video id="adVideo" class="videoMain" autoplay muted playsinline webkit-playsinline disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
               </div>
             </div>
-
-            <div class="newsBox" id="newsBox" style="display:none">
-              <div class="newsHead">
-                <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
-                <div class="pill" id="newsPill">—</div>
-              </div>
-              <div id="newsBody"></div>
-            </div>
-
           </div>
-        </aside>
+        </div>
+
+        <div class="newsBox" id="newsBox" style="display:none">
+          <div class="newsHead">
+            <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
+            <div class="pill" id="newsPill">—</div>
+          </div>
+          <div id="newsBody"></div>
+        </div>
       </div>
 
       <div class="ticker">
@@ -1165,9 +951,6 @@
     if(refPill) refPill.onclick = refreshPage;
   })();
 
-  let ROT_TIMER = null;
-  let ROT_STATE = { page: 0, totalPages: 1, paused: false };
-
   function parseBRDateTime(v){
     const s = String(v ?? "").trim();
     if(!s) return null;
@@ -1193,7 +976,6 @@
     if(!v) return "";
     const d = parseBRDateTime(v);
     if(!d) return String(v);
-
     const dd = pad2(d.getDate());
     const mm = pad2(d.getMonth()+1);
     const aa = String(d.getFullYear()).slice(-2);
@@ -1204,7 +986,7 @@
 
   function fitTextToBox(el, opts = {}){
     if(!el) return;
-    const { maxPx = 44, minPx = 12, step = 1 } = opts;
+    const { maxPx = 36, minPx = 12, step = 1 } = opts;
     el.style.fontSize = maxPx + "px";
     el.style.overflow = "hidden";
     el.offsetHeight;
@@ -1216,151 +998,112 @@
   }
 
   function autoFitAvisos(){
-    const cards = Array.from(document.querySelectorAll(".aviso"));
-    if(!cards.length) return;
-
-    const isDesk = (window.innerWidth >= 981);
-
-    const T_MAX = isDesk ? 38 : 26;
-    const T_MIN = isDesk ? 16 : 14;
-
-    const D_MAX = isDesk ? 30 : 22;
-    const D_MIN = isDesk ? 14 : 12;
-
-    cards.forEach(card => {
+    document.querySelectorAll(".aviso").forEach(card => {
       const t = card.querySelector(".t");
       const d = card.querySelector(".d");
-      if(t) fitTextToBox(t, { maxPx: T_MAX, minPx: T_MIN, step: 1 });
-      if(d) fitTextToBox(d, { maxPx: D_MAX, minPx: D_MIN, step: 1 });
+      if(t) fitTextToBox(t, { maxPx: 26, minPx: 14, step: 1 });
+      if(d) fitTextToBox(d, { maxPx: 22, minPx: 12, step: 1 });
     });
-
-    let maxTitle = 0;
-    let maxDesc  = 0;
-
-    cards.forEach(card => {
-      const t = card.querySelector(".t");
-      const d = card.querySelector(".d");
-      if(t){
-        const fs = parseFloat(getComputedStyle(t).fontSize) || 0;
-        if(fs > maxTitle) maxTitle = fs;
-      }
-      if(d){
-        const fs = parseFloat(getComputedStyle(d).fontSize) || 0;
-        if(fs > maxDesc) maxDesc = fs;
-      }
-    });
-
-    if(maxTitle > 0 && maxDesc > 0){
-      cards.forEach(card => {
-        const t = card.querySelector(".t");
-        const d = card.querySelector(".d");
-        if(t) t.style.fontSize = maxTitle + "px";
-        if(d) d.style.fontSize = maxDesc  + "px";
-      });
-    }
   }
 
-  function autoFitNews(){
-    document.querySelectorAll("#newsBody .newsItem .h").forEach(h => {
-      h.style.display = "block";
-      h.style.whiteSpace = "normal";
-      h.style.overflow = "hidden";
-      h.style.textOverflow = "unset";
-      h.style.webkitLineClamp = "unset";
-      h.style.webkitBoxOrient = "unset";
-      fitTextToBox(h, { maxPx: 20, minPx: 11, step: 1 });
-    });
+  function buildAvisoEl(a){
+    const el = document.createElement("div");
+    el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+
+    const titulo = safeText(a.titulo || "Aviso");
+    const desc = safeText(a.descricao || "");
+    const tipo = safeText(a.tipo || "");
+    const local = safeText(a.local || "");
+    const ini = formatDT_BR(a.inicio || "");
+    const fim = formatDT_BR(a.fim || "");
+
+    const itens = [];
+    if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
+    if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
+    const pr = safeText(a.prioridade || "Baixa");
+    itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
+    if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
+
+    el.innerHTML = `
+      <p class="t">${escapeHtml(titulo)}</p>
+      ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : `<p class="d">—</p>`}
+      <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
+    `;
+    return el;
+  }
+
+  function buildMiniAdEl(offset){
+    const wrap = document.createElement("div");
+    wrap.className = "videoWrap";
+    wrap.dataset.miniad = "1";
+    wrap.dataset.offset = String(offset || 0);
+
+    const vbg = document.createElement("video");
+    vbg.className = "videoBg";
+    vbg.autoplay = true;
+    vbg.muted = true;
+    vbg.playsInline = true;
+    vbg.loop = true;
+    vbg.setAttribute("webkit-playsinline", "");
+    vbg.setAttribute("disablepictureinpicture", "");
+    vbg.setAttribute("controlslist", "nofullscreen noremoteplayback nodownload");
+
+    const v = document.createElement("video");
+    v.className = "videoMain";
+    v.autoplay = true;
+    v.muted = true;
+    v.playsInline = true;
+    v.setAttribute("webkit-playsinline", "");
+    v.setAttribute("disablepictureinpicture", "");
+    v.setAttribute("controlslist", "nofullscreen noremoteplayback nodownload");
+
+    wrap.appendChild(vbg);
+    wrap.appendChild(v);
+    return wrap;
   }
 
   function renderAvisos(data){
-    const root = document.getElementById("avisos");
-    if (!root) return;
-    root.innerHTML = "";
+    const pane = document.getElementById("avisosPane");
+    const s1 = document.getElementById("slot1");
+    const s2 = document.getElementById("slot2");
+    const s3 = document.getElementById("slot3");
+    const s4 = document.getElementById("slot4");
+    if(!pane || !s1 || !s2 || !s3 || !s4) return;
 
-    if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
+    s1.innerHTML = "";
+    s2.innerHTML = "";
+    s3.innerHTML = "";
+
+    pane.classList.remove("fade-in");
+    pane.classList.add("fade-out");
 
     const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
-    const rot = data?.rotacao || {};
-    const ativar = !!rot.ativar;
+    avisosAll.sort((a,b)=>{
+      const pa = prioridadeClass(a?.prioridade);
+      const pb = prioridadeClass(b?.prioridade);
+      const rank = { alta:3, media:2, baixa:1 };
+      return (rank[pb]||0) - (rank[pa]||0);
+    });
 
-    const qtd = 3;
-    const intervaloMs = Math.max(3, Number(rot.intervaloSeg || 8)) * 1000;
+    const picks = avisosAll.slice(0,3);
 
-    if(!avisosAll.length){
-      const div = document.createElement("div");
-      div.className = "aviso baixa";
-      div.innerHTML = `<p class="t">Sem avisos no momento</p><p class="d">${escapeHtml(safeText(data.fallback || "—"))}</p><div class="metaLine"></div>`;
-      root.appendChild(div);
-      ROT_STATE = { page: 0, totalPages: 1, paused: false };
-      if (window.innerWidth >= 981) requestAnimationFrame(autoFitAvisos);
-      return;
-    }
+    setTimeout(()=>{
+      if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
+      else s1.appendChild(buildMiniAdEl(1));
 
-    function buildAvisoEl(a){
-      const el = document.createElement("div");
-      el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+      if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
+      else s2.appendChild(buildMiniAdEl(2));
 
-      const titulo = safeText(a.titulo || "Aviso");
-      const desc = safeText(a.descricao || "");
-      const tipo = safeText(a.tipo || "");
-      const local = safeText(a.local || "");
-      const ini = formatDT_BR(a.inicio || "");
-      const fim = formatDT_BR(a.fim || "");
+      if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
+      else s3.appendChild(buildMiniAdEl(3));
 
-      const itens = [];
-      if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
-      if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
-      const pr = safeText(a.prioridade || "Baixa");
-      itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
-      if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
+      requestAnimationFrame(()=>{
+        if (window.innerWidth >= 981) autoFitAvisos();
+      });
 
-      el.innerHTML = `
-        <p class="t">${escapeHtml(titulo)}</p>
-        ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : `<p class="d">—</p>`}
-        <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
-      `;
-      return el;
-    }
-
-    const totalPages = Math.max(1, Math.ceil(avisosAll.length / qtd));
-    ROT_STATE = { page: 0, totalPages, paused: false };
-
-    function renderPage(pageIdx){
-      root.classList.remove("fade-in");
-      root.classList.add("fade-out");
-
-      const doRender = () => {
-        root.innerHTML = "";
-        const start = pageIdx * qtd;
-        const slice = avisosAll.slice(start, start + qtd);
-        slice.forEach(a => root.appendChild(buildAvisoEl(a)));
-
-        requestAnimationFrame(()=> {
-          if (window.innerWidth >= 981) autoFitAvisos();
-        });
-
-        void root.offsetWidth;
-        root.classList.remove("fade-out");
-        root.classList.add("fade-in");
-      };
-      setTimeout(doRender, 220);
-    }
-
-    renderPage(0);
-    root.classList.add("fade-in");
-
-    if (ativar && totalPages > 1){
-      if (rot.pausarNoMouse){
-        root.addEventListener("mouseenter", ()=> ROT_STATE.paused = true, {passive:true});
-        root.addEventListener("mouseleave", ()=> ROT_STATE.paused = false, {passive:true});
-        root.addEventListener("touchstart", ()=>{ ROT_STATE.paused = !ROT_STATE.paused; }, {passive:true});
-      }
-      ROT_TIMER = setInterval(()=>{
-        if (ROT_STATE.paused) return;
-        ROT_STATE.page = (ROT_STATE.page + 1) % totalPages;
-        renderPage(ROT_STATE.page);
-      }, intervaloMs);
-    }
+      pane.classList.remove("fade-out");
+      pane.classList.add("fade-in");
+    }, 140);
   }
 
   function hojeKeyMMDD() {
@@ -1490,7 +1233,7 @@
       wxSetIcon("wxIconTop", code);
       wxSetIcon("wxIconInline", code);
 
-      setText("wxCityTemp", `${c.cidade || "Tubarão/SC"} ${t}°C`);
+      setText("wxCityTemp", `${c.cidade || "—"} ${t}°C`);
       setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
 
     } catch (e) {
@@ -1504,8 +1247,8 @@
     }
   }
 
-  const AD_STATE_KEY = "CS_AD_STATE_V1";
-  const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V1";
+  const AD_STATE_KEY = "CS_AD_STATE_V2";
+  const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V2";
 
   function adLoadState(){
     try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); }
@@ -1521,82 +1264,6 @@
       const src = String(x?.arquivo || "").trim();
       return /\.mp4(\?.*)?$/i.test(src);
     });
-  }
-
-  function adSeek(delta){
-    const v = document.getElementById("adVideo");
-    if(!v) return;
-    try{
-      v.currentTime = Math.max(0, (v.currentTime || 0) + delta);
-      const st = adLoadState();
-      st.t = v.currentTime || 0;
-      st.paused = v.paused;
-      adSaveState(st);
-    }catch(e){}
-  }
-
-  function setCityTitleFromConfig(cfg){
-    const el = document.getElementById("cityTitle");
-    if(!el) return;
-    const t = cfg?.publicidade?.cidadeTitulo || cfg?.cidadeTitulo || "📰 Mensagens no Brasil";
-    el.textContent = String(t);
-  }
-
-  function bindTvVideoControls(videos){
-    const controls = document.getElementById("tvVideoControls");
-    if(!controls) return;
-    controls.style.display = "flex";
-
-    const bPrev = document.getElementById("btnPrevAd");
-    const bNext = document.getElementById("btnNextAd");
-    const bBack = document.getElementById("btnBack10");
-    const bFwd  = document.getElementById("btnFwd10");
-
-    function setIdx(nextIdx){
-      const list = videos;
-      if(!list.length) return;
-
-      let i = nextIdx;
-      if(i < 0) i = list.length - 1;
-      if(i >= list.length) i = 0;
-
-      const st = adLoadState();
-      st.idx = i;
-      st.t = 0;
-      st.paused = false;
-      adSaveState(st);
-
-      adPlayByState(list, true);
-    }
-
-    if(bPrev) bPrev.onclick = () => setIdx((adLoadState().idx ?? 0) - 1);
-    if(bNext) bNext.onclick = () => setIdx((adLoadState().idx ?? 0) + 1);
-    if(bBack) bBack.onclick = () => adSeek(-10);
-    if(bFwd)  bFwd.onclick  = () => adSeek(+10);
-
-    window.addEventListener("keydown", (e)=>{
-      if(isMobile()) return;
-      const k = String(e.key || "").toLowerCase();
-      if(k === "arrowleft") setIdx((adLoadState().idx ?? 0) - 1);
-      if(k === "arrowright") setIdx((adLoadState().idx ?? 0) + 1);
-    });
-  }
-
-  function adApplyFitContain(v){
-    try{
-      const isVertical = v.videoHeight > v.videoWidth;
-      if (isVertical) v.classList.add("fit-contain");
-      else v.classList.remove("fit-contain");
-    }catch(e){}
-  }
-
-  function adSavePlayback(){
-    const v = document.getElementById("adVideo");
-    if(!v) return;
-    const st = adLoadState();
-    st.t = Number.isFinite(v.currentTime) ? v.currentTime : (st.t || 0);
-    st.paused = v.paused;
-    adSaveState(st);
   }
 
   function adShuffleCopy(arr){
@@ -1624,7 +1291,6 @@
         }
       }
     }catch(e){}
-
     const shuffled = adShuffleCopy(originalList);
     try{
       const order = shuffled.map(x => String(x?.arquivo||""));
@@ -1634,17 +1300,60 @@
     return shuffled;
   }
 
-  function adPlayByState(videos, forceFromStart){
+  function setVideoSrcPair(vMain, vBg, src){
+    if(!vMain || !vBg) return;
+    const curMain = (vMain.currentSrc || vMain.src || "").split("?")[0];
+    const next = (src || "").split("?")[0];
+    if(curMain !== next){
+      try{ vMain.pause(); }catch(e){}
+      try{ vBg.pause(); }catch(e){}
+      vMain.removeAttribute("src");
+      vBg.removeAttribute("src");
+      try{ vMain.load(); vBg.load(); }catch(e){}
+      vBg.src = src;
+      vMain.src = src;
+      try{ vBg.load(); vMain.load(); }catch(e){}
+    }
+    const playSafe = (v)=>{
+      try{
+        const p = v.play();
+        if(p && p.catch) p.catch(()=>{});
+      }catch(e){}
+    };
+    vBg.onloadedmetadata = () => playSafe(vBg);
+    vMain.onloadedmetadata = () => playSafe(vMain);
+    playSafe(vBg);
+    playSafe(vMain);
+  }
+
+  function playMiniAds(list, baseIdx){
+    const minis = Array.from(document.querySelectorAll('[data-miniad="1"]'));
+    if(!minis.length || !list.length) return;
+
+    minis.forEach(w=>{
+      const off = Number(w.dataset.offset || 0) || 0;
+      const i = (baseIdx + off) % list.length;
+      const item = list[i];
+      const src = String(item?.arquivo || "");
+      const sep = src.includes("?") ? "&" : "?";
+      const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+      const vBg = w.querySelector("video.videoBg");
+      const vMain = w.querySelector("video.videoMain");
+      setVideoSrcPair(vMain, vBg, finalSrc);
+    });
+  }
+
+  function adPlayByState(videos){
     const adVideo = document.getElementById("adVideo");
-    const adLabel = document.getElementById("adLabel");
+    const adVideoBg = document.getElementById("adVideoBg");
     const adPill  = document.getElementById("adPill");
-    if(!adVideo || !adLabel) return;
+    if(!adVideo || !adVideoBg) return;
 
     let list = Array.isArray(videos) ? videos : [];
     if(!list.length) return;
 
     try{
-      const cfg = (window.__lastDataForTopbar || window.__cfg || {});
+      const cfg = (window.__lastDataForTopbar || {});
       const pub = cfg?.publicidade || {};
       if (pub.shuffle) list = adGetShuffledList(list);
     }catch(e){}
@@ -1659,43 +1368,16 @@
     const sep = src.includes("?") ? "&" : "?";
     const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
 
-    adLabel.textContent = String(item?.anunciante || "Anúncio");
     if (adPill) adPill.textContent = "No ar";
 
-    const cur = adVideo.currentSrc || adVideo.src || "";
-    const baseCur = cur.split("?")[0];
-    const baseNext = finalSrc.split("?")[0];
-
-    if (baseCur !== baseNext){
-      adVideo.pause();
-      adVideo.classList.remove("fit-contain");
-      adVideo.removeAttribute("src");
-      adVideo.load();
-      adVideo.src = finalSrc;
-      adVideo.load();
-    }
-
-    const desiredTime = (forceFromStart ? 0 : Number(st.t || 0));
-    const playNow = () => {
-      try{
-        if(!forceFromStart && desiredTime > 0 && Number.isFinite(desiredTime)){
-          try { adVideo.currentTime = desiredTime; } catch(e){}
-        }
-        const p = adVideo.play();
-        if(p && p.catch) p.catch(()=>{});
-      }catch(e){}
-    };
-
-    if (adVideo.readyState >= 1) {
-      adApplyFitContain(adVideo);
-      playNow();
-    } else {
-      adVideo.onloadedmetadata = () => { adApplyFitContain(adVideo); playNow(); };
-    }
+    setVideoSrcPair(adVideo, adVideoBg, finalSrc);
 
     st.idx = idx;
     st.paused = false;
+    st.t = 0;
     adSaveState(st);
+
+    playMiniAds(list, idx);
   }
 
   function adNext(videos){
@@ -1712,54 +1394,23 @@
     st.paused = false;
     adSaveState(st);
 
-    adPlayByState(list, true);
+    adPlayByState(list);
   }
 
   function iniciarPublicidade(data){
     const pub = data?.publicidade;
-    const adBox = document.getElementById("adBox");
-    const adVideo = document.getElementById("adVideo");
-    const adCard = document.getElementById("adCard");
-    if (!adBox) return;
-
-    if (!pub?.ativar){
-      adBox.style.display = "none";
-      return;
-    }
-
-    adBox.style.display = "flex";
-    carregarMensagensCidade();
+    if (!pub?.ativar) return;
 
     const videosMp4 = adFilterMp4(pub?.videos);
-    if (!videosMp4.length){
-      if (adCard) adCard.style.display = "none";
-      return;
-    }
+    if (!videosMp4.length) return;
 
-    if (adCard) adCard.style.display = "flex";
-    bindTvVideoControls(videosMp4);
+    const v = document.getElementById("adVideo");
+    if(!v) return;
 
-    if (!adVideo) return;
+    v.onended = () => adNext(videosMp4);
+    v.onerror = () => setTimeout(()=>adNext(videosMp4), 1200);
 
-    adVideo.addEventListener("contextmenu", (e)=>{ e.preventDefault(); }, {passive:false});
-
-    adVideo.addEventListener("click", () => {
-      try{
-        const st = adLoadState();
-        st.paused = false;
-        adSaveState(st);
-      }catch(e){}
-      adVideo.play().catch(()=>{});
-    }, { passive:true });
-
-    adVideo.addEventListener("timeupdate", ()=>{ if(!isMobile()) adSavePlayback(); }, {passive:true});
-    adVideo.addEventListener("pause", adSavePlayback, {passive:true});
-    adVideo.addEventListener("play", adSavePlayback, {passive:true});
-    document.addEventListener("visibilitychange", ()=>{ if(document.hidden) adSavePlayback(); });
-
-    adPlayByState(videosMp4, false);
-    adVideo.onended = () => adNext(videosMp4);
-    adVideo.onerror = () => setTimeout(()=>adNext(videosMp4), 1200);
+    adPlayByState(videosMp4);
   }
 
   function decodeHtmlEntities_(s){
@@ -1776,7 +1427,7 @@
     if (isMobile()) return 8;
     if (h < 720) return 3;
     if (h < 880) return 4;
-    return 5;
+    return 6;
   }
 
   async function carregarMensagensCidade(){
@@ -1798,7 +1449,6 @@
           <div class="newsFooter">Fonte: indisponível</div>
         `;
         newsBox.style.display = "flex";
-        if (window.innerWidth >= 981) requestAnimationFrame(autoFitNews);
         return;
       }
 
@@ -1810,7 +1460,6 @@
         titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
         titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
         if(!titulo) titulo = "Mensagem";
-
         if(x.fonte) fontes.add(normalizeText_(x.fonte));
         html += `<div class="newsItem"><p class="h">${escapeHtml(titulo)}</p></div>`;
       });
@@ -1823,15 +1472,12 @@
 
       newsBody.innerHTML = html + fontesHtml;
       newsBox.style.display = "flex";
-      if (window.innerWidth >= 981) requestAnimationFrame(autoFitNews);
-
     }catch(e){
       newsBody.innerHTML = `
         <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
         <div class="newsFooter">Fonte: news.google.com (offline)</div>
       `;
       newsBox.style.display = "flex";
-      if (window.innerWidth >= 981) requestAnimationFrame(autoFitNews);
     }
   }
 
@@ -1843,7 +1489,6 @@
     const estaNoite = (h >= 18 || h <= 4);
 
     const isMob = window.matchMedia("(max-width: 980px)").matches;
-
     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
     const longest = Math.max(vw, vh);
@@ -1878,6 +1523,13 @@
     test.src = img + "?v=1";
   }
 
+  function setCityTitleFromConfig(cfg){
+    const el = document.getElementById("cityTitle");
+    if(!el) return;
+    const t = cfg?.publicidade?.cidadeTitulo || cfg?.cidadeTitulo || "📰 Mensagens no Brasil";
+    el.textContent = String(t);
+  }
+
   async function loadAll(){
     const status = document.getElementById("statusJson");
     const statusMini = document.getElementById("statusJsonMini");
@@ -1891,8 +1543,6 @@
 
       const data = await res.json();
       window.__lastDataForTopbar = data;
-
-      setText("condoCenter", safeText(data.condominio || "—"));
 
       if (status) status.textContent = "Atualizado";
       if (statusMini) statusMini.textContent = "Atualizado";
@@ -1940,11 +1590,10 @@
     __rzT = setTimeout(()=>{
       if (window.innerWidth >= 981){
         try{ autoFitAvisos(); }catch(e){}
-        try{ autoFitNews(); }catch(e){}
       }
-      try{ if(!isMobile()) carregarMensagensCidade(); }catch(e){}
+      try{ carregarMensagensCidade(); }catch(e){}
       try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
-    }, 180);
+    }, 160);
   }, {passive:true});
 </script>
 
@@ -1997,7 +1646,6 @@
   (function detectAndMarkTV(){
     try{
       const ua = (navigator.userAgent || "").toLowerCase();
-
       const isTV =
         ua.includes("smart-tv") ||
         ua.includes("smarttv") ||
