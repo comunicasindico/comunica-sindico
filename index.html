@@ -709,64 +709,123 @@
     }
 
     @media (max-width: 980px){
-      :root{
-        --ui: clamp(1, calc(100vmin / 900), 2.10);
-        --ui2: clamp(1, calc(100vmin / 850), 2.70);
-        --tv-safe-bottom: 0px;
-      }
+  :root{
+    --ui: clamp(1, calc(100vmin / 900), 2.10);
+    --ui2: clamp(1, calc(100vmin / 850), 2.70);
+    --tv-safe-bottom: 0px;
+  }
 
-      body{ overflow:auto; -webkit-overflow-scrolling: touch; padding:0; height:auto; min-height:100svh; }
-      .wrap{ min-height:100svh; height:auto; padding: calc(14px + var(--sat)) calc(14px + var(--sar)) calc(14px + var(--sab)) calc(14px + var(--sal)); }
-      .container{ min-height:auto; height:auto; gap:10px; }
+  /* ✅ garante rolagem real no celular (sem travar) */
+  html, body{
+    height:auto !important;
+    min-height:100svh !important;
+    overflow:auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
 
-      .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
-      .brand{ width:100%; align-items:center; text-align:center; }
-      .rightInfo{ display:none !important; }
-      .subMobileLine{ display:flex; width:100%; }
+  body{
+    padding:0 !important;
+  }
 
-      .sectionBar{ justify-content:space-between; }
+  .wrap{
+    min-height:100svh !important;
+    height:auto !important;
+    overflow:visible !important;
+    padding:
+      calc(14px + var(--sat))
+      calc(14px + var(--sar))
+      calc(14px + var(--sab))
+      calc(14px + var(--sal));
+  }
 
-      .quadTop{
-        display:flex;
-        flex-direction:column;
-        height:auto;
-        gap:10px;
-      }
+  .container{
+    min-height:auto !important;
+    height:auto !important;
+    overflow:visible !important;
+    gap:10px;
+  }
 
-      .tileBody{ padding:12px; }
+  .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
+  .brand{ width:100%; align-items:center; text-align:center; }
+  .subMobileLine{ display:flex; width:100%; }
 
-      .ticker{
-        position:sticky;
-        bottom:0;
-        z-index:50;
-        margin:0;
-        padding-bottom: max(12px, env(safe-area-inset-bottom));
-      }
+  .sectionBar{ justify-content:space-between; }
 
-      /* mantém clima/ícone do topo no celular como estava */
-      .rightInfo{
-        display:flex !important;
-        position:absolute;
-        top: 12px;
-        right: 12px;
-        gap: 0;
-        align-items:center;
-        justify-content:flex-end;
-        z-index: 5;
-      }
-      .rightInfo .badge[title="Status do painel"]{ display:none !important; }
-      #clock{ display:none !important; }
-      #btnInstalarApp{ display:none !important; }
-      .rightInfo .badge[title="Hora e Clima"]{
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        gap: 0 !important;
-      }
-      #wxIconTop{ width:56px; height:56px; transform:none !important; }
-      #wxIconTop svg{ width:56px; height:56px; }
-    }
+  .quadTop{
+    display:flex;
+    flex-direction:column;
+    height:auto;
+    gap:10px;
+  }
+
+  .tileBody{ padding:12px; }
+
+  /* ✅ no celular NÃO usar sticky no ticker (isso travava a rolagem e escondia vídeos) */
+  .ticker{
+    position:relative !important;
+    bottom:auto !important;
+    z-index:10;
+    margin:0;
+    padding-bottom:max(12px, env(safe-area-inset-bottom));
+  }
+
+  /* ✅ Rodapé em 2 linhas:
+     Linha 1: Bíblia + dataBiblica + versículo (ref)
+     Linha 2: clima/vento/chuva à direita
+  */
+  .tickerLine1{
+    flex-wrap:wrap !important;
+    justify-content:space-between;
+    row-gap:6px;
+  }
+
+  .tickerIcon{ order:1; }
+  #dataBiblica{ order:2; }
+
+  #ref{
+    order:3;
+    flex: 1 1 100% !important;
+    min-width: 0 !important;
+    margin:0 !important;
+    text-align:left !important;
+    white-space:normal !important;
+    overflow:visible !important;
+    text-overflow:unset !important;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+  }
+
+  #wxInline{
+    order:4;
+    width:100% !important;
+    justify-content:flex-end !important;
+    margin-left:0 !important;
+  }
+
+  /* ✅ mantém clima/ícone do topo no celular como estava */
+  .rightInfo{
+    display:flex !important;
+    position:absolute;
+    top: 12px;
+    right: 12px;
+    gap: 0;
+    align-items:center;
+    justify-content:flex-end;
+    z-index: 5;
+  }
+  .rightInfo .badge[title="Status do painel"]{ display:none !important; }
+  #clock{ display:none !important; }
+  #btnInstalarApp{ display:none !important; }
+  .rightInfo .badge[title="Hora e Clima"]{
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+  #wxIconTop{ width:56px; height:56px; transform:none !important; }
+  #wxIconTop svg{ width:56px; height:56px; }
+}
 
     @media (min-width: 981px) and (max-width: 1100px){
       .tickerLine1{ flex-wrap:wrap; justify-content:center; }
