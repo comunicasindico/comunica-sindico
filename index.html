@@ -51,6 +51,17 @@
 
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
+
+      /* NEWS: volta ao “padrão do quadro” */
+      --news-bg: rgba(15,43,69,.92);
+      --news-border: rgba(255,255,255,.10);
+      --news-shadow: 0 14px 50px rgba(0,0,0,.35);
+
+      /* cards internos claros para fonte preta */
+      --news-item-bg: rgba(255,255,255,.88);
+      --news-item-border: rgba(0,0,0,.10);
+      --news-text: rgba(0,0,0,.92);
+      --news-meta: rgba(0,0,0,.58);
     }
 
     *{box-sizing:border-box}
@@ -239,14 +250,47 @@
       width:100%;
     }
 
-    /* ===== MAIN: quad 2x2 + news abaixo (TV/DESKTOP) ===== */
     .main{
       flex:1 1 auto;
       min-height:0;
       width:100%;
-      display:grid;
-      grid-template-rows: 1fr auto;
+      display:flex;
+      flex-direction:column;
       gap:8px;
+    }
+
+    /* ===== TÍTULOS GERAIS ACIMA DOS QUADROS ===== */
+    .quadHeader{
+      flex:0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:rgba(8,28,46,.60);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    .quadHeader .leftTitle{
+      font-weight: 950;
+      letter-spacing:.4px;
+      font-size: calc(18px * var(--ui2));
+      color: rgba(234,242,255,.96);
+      white-space:nowrap;
+    }
+    .quadHeader .rightTitle{
+      font-weight: 950;
+      font-size: calc(14px * var(--ui2));
+      color: rgba(234,242,255,.92);
+      white-space:nowrap;
+      text-align:right;
+    }
+    .quadHeader .rightTitle span{
+      font-weight: 850;
+      opacity:.90;
+      margin-left:10px;
     }
 
     .panel{
@@ -270,19 +314,18 @@
       flex:0 0 auto;
     }
 
+    /* cabeçalhos mais “leves” nos quadros para liberar espaço */
     .panelTitle{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:950;
-      letter-spacing:.6px;
-      color:rgba(234,242,255,.95);
-      text-transform:uppercase;
-      font-size: calc(18px * var(--ui2));
+      font-weight: 950;
+      letter-spacing:.5px;
+      color:rgba(234,242,255,.93);
+      text-transform:none;
+      font-size: calc(15px * var(--ui));
       min-width:0;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      opacity:.92;
     }
 
     .pill{
@@ -354,10 +397,11 @@
     }
     .aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
 
+    /* fonte padrão (desktop) */
     .aviso .t{
       margin:0;
       font-weight:950;
-      font-size: clamp(16px, 1.35vw, 22px);
+      font-size: clamp(18px, 1.45vw, 24px);
       letter-spacing:.2px;
       color:#fff;
       text-shadow:0 1px 2px rgba(0,0,0,.6);
@@ -371,7 +415,7 @@
       margin:0;
       color:#e0ecff;
       line-height:1.26;
-      font-size: clamp(13px, 1.15vw, 18px);
+      font-size: clamp(14px, 1.20vw, 19px);
       overflow:hidden;
       white-space:normal;
       overflow-wrap:anywhere;
@@ -428,32 +472,18 @@
     }
 
     .quadTop{
+      flex:1 1 auto;
       min-height:0;
-      height:100%;
-      width:100%;
       display:grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       gap:8px;
-      align-content:stretch;
-    }
-
-    .tile{
-      min-height:0;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
-
-    .tileBody{
-      padding:10px;
-      min-height:0;
-      flex:1 1 auto;
-      overflow:hidden;
-      display:flex;
+      width:100%;
       height:100%;
     }
 
+    .tile{ min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+    .tileBody{ padding:10px; min-height:0; flex:1 1 auto; overflow:hidden; display:flex; }
     .fade-out{ opacity:0; transition: opacity .14s ease; }
     .fade-in { opacity:1; transition: opacity .14s ease; }
 
@@ -496,12 +526,12 @@
     video::-webkit-media-controls-panel{ display:none !important; }
     video::-webkit-media-controls-enclosure{ display:none !important; }
 
-    /* ===== NEWS (PRETO) ===== */
+    /* ===== NEWS (padrão quadro + texto preto nos cards internos) ===== */
     .newsBox{
       flex:0 0 auto;
-      background:linear-gradient(180deg, rgba(0,0,0,.88), rgba(0,0,0,.68));
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow:var(--shadow);
+      background: var(--news-bg);
+      border: 1px solid var(--news-border);
+      box-shadow: var(--news-shadow);
       border-radius: 18px;
       overflow: hidden;
       backdrop-filter: blur(10px);
@@ -518,15 +548,11 @@
       justify-content:space-between;
       gap:10px;
       border-bottom:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.35);
+      background:rgba(7,20,34,.20);
       flex:0 0 auto;
     }
 
-    .newsTitle{
-      font-weight:950;
-      color:rgba(255,255,255,.94);
-      letter-spacing:.3px;
-    }
+    .newsTitle{ font-weight:950; color:rgba(234,242,255,.95); }
     #newsPill{ display:none !important; }
 
     #newsBody{
@@ -541,20 +567,20 @@
 
     .newsItem{
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      border: 1px solid var(--news-item-border);
+      background: var(--news-item-bg);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
       padding: 10px 10px 9px;
       overflow:hidden;
     }
 
     .newsItem .h{
       font-family: var(--font-soft);
-      font-weight: 820;
+      font-weight: 850;
       font-size: clamp(11px, 1.25dvh, 15px);
       line-height: 1.18;
       letter-spacing: .12px;
-      color: rgba(255,255,255,.92);
+      color: var(--news-text);
       margin: 0;
       display:block;
       white-space:normal;
@@ -565,18 +591,18 @@
     .newsFooter{
       margin-top: 4px;
       font-size: 11px;
-      color: rgba(255,255,255,.70);
+      color: rgba(234,242,255,.70);
       font-weight: 900;
       text-align:left;
     }
     .newsFooterItem{
       font-size: 11px;
-      color: rgba(255,255,255,.55);
+      color: rgba(234,242,255,.60);
       margin-left: 6px;
       text-align:left;
     }
 
-    /* ===== TICKER: 1 linha (verso à esquerda / resto à direita) ===== */
+    /* ===== RODAPÉ ===== */
     .ticker{
       flex:0 0 auto;
       width:100%;
@@ -635,7 +661,7 @@
       display:flex;
       align-items:center;
       justify-content:flex-end;
-      gap:12px;
+      gap:10px;
       flex: 0 0 auto;
       white-space:nowrap;
     }
@@ -651,6 +677,7 @@
     .wxInline{
       flex:0 0 auto;
       width:auto;
+      margin-left:auto;
       display:flex;
       flex-direction:row;
       align-items:center;
@@ -696,24 +723,21 @@
       filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
     }
 
-    /* ===== se não couber: vira 2 linhas no rodapé ===== */
     @media (max-width: 1100px){
       .tickerLine1{ flex-wrap:wrap; justify-content:center; }
-      .verseLeft{ flex:1 1 100%; }
+      .verseLeft{ flex: 1 1 100%; justify-content:center; }
       #ref{ white-space:normal; overflow:visible; text-overflow:unset; text-align:center; }
       .footRight{ flex: 1 1 100%; justify-content:center; }
+      .wxInline{ margin-left:0; }
       .wxInline .wxL2::before{ content:""; }
     }
 
-    /* ================= MOBILE (preservado; publicidade PERMITIDA) ================= */
+    /* ===== MOBILE (mantém publicidade e tudo) ===== */
     @media (max-width: 980px){
       :root{
         --ui: clamp(1, calc(100vmin / 900), 2.10);
         --ui2: clamp(1, calc(100vmin / 850), 2.70);
         --tv-safe-bottom: 0px;
-          /* MOBILE: garantir que a Publicidade apareça e tenha altura */
-      #slot4 .videoWrap{ min-height: 240px; }
-      #slot4{ min-height: 240px; }
       }
 
       body{ overflow:auto; -webkit-overflow-scrolling: touch; padding:0; height:auto; min-height:100svh; }
@@ -725,11 +749,6 @@
       .rightInfo{ display:none !important; }
       .subMobileLine{ display:flex; width:100%; }
 
-      .main{
-        display:flex;
-        flex-direction:column;
-      }
-
       .quadTop{
         display:flex;
         flex-direction:column;
@@ -737,7 +756,10 @@
         gap:10px;
       }
 
-      .tileBody{ padding:12px; height:auto; }
+      .tileBody{ padding:12px; }
+
+      #slot4 .videoWrap{ min-height: 240px; }
+      #slot4{ min-height: 240px; }
 
       .ticker{
         position:sticky;
@@ -769,6 +791,19 @@
       }
       #wxIconTop{ width:56px; height:56px; transform:none !important; }
       #wxIconTop svg{ width:56px; height:56px; }
+    }
+
+    /* ===== TV / Tela cheia: aumentar e padronizar fonte ===== */
+    html.isTV .aviso .t{
+      font-size: clamp(26px, 2.10vw, 40px);
+      line-height: 1.10;
+    }
+    html.isTV .aviso .d{
+      font-size: clamp(18px, 1.65vw, 28px);
+      line-height: 1.24;
+    }
+    html.isTV .metaLine{
+      font-size: 12px;
     }
 
     @media (min-width: 981px) and (max-height: 720px){
@@ -846,38 +881,43 @@
       <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
 
       <div class="main">
+
+        <!-- TÍTULOS gerais acima do 2x2 -->
+        <div class="quadHeader">
+          <div class="leftTitle">Avisos</div>
+          <div class="rightTitle">
+            Publicidade <span>Acabe de vez com os problemas de comunicação</span>
+          </div>
+        </div>
+
         <div class="quadTop fade-in" id="avisosPane">
-          <!-- 1º quadro: único com "Avisos Importantes" -->
           <div class="panel tile">
             <div class="panelHead">
-              <div class="panelTitle">🔔 Avisos Importantes</div>
+              <div class="panelTitle" style="visibility:hidden">—</div>
               <div class="pill" id="refPill" title="Clique para atualizar">Atualizar</div>
             </div>
             <div class="tileBody" id="slot1"></div>
           </div>
 
-          <!-- 2º quadro: sem "Avisos Importantes" -->
           <div class="panel tile">
             <div class="panelHead">
-              <div class="panelTitle" style="opacity:.85">🧩</div>
+              <div class="panelTitle" style="visibility:hidden">—</div>
               <div class="pill" style="visibility:hidden">—</div>
             </div>
             <div class="tileBody" id="slot2"></div>
           </div>
 
-          <!-- 3º quadro: sem "Avisos Importantes" -->
           <div class="panel tile">
             <div class="panelHead">
-              <div class="panelTitle" style="opacity:.85">🧩</div>
+              <div class="panelTitle" style="visibility:hidden">—</div>
               <div class="pill" style="visibility:hidden">—</div>
             </div>
             <div class="tileBody" id="slot3"></div>
           </div>
 
-          <!-- 4º quadro: Publicidade (também no celular) -->
           <div class="panel tile">
             <div class="panelHead">
-              <div class="panelTitle">📣 Publicidade</div>
+              <div class="panelTitle" id="adLabelTop">Publicidade —</div>
               <div class="pill" id="adPill">—</div>
             </div>
             <div class="tileBody" id="slot4">
@@ -891,7 +931,7 @@
 
         <div class="newsBox" id="newsBox" style="display:none">
           <div class="newsHead">
-            <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
+            <div class="newsTitle" id="cityTitle">Mensagens no Brasil</div>
             <div class="pill" id="newsPill">—</div>
           </div>
           <div id="newsBody"></div>
@@ -1009,28 +1049,6 @@
     return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
   }
 
-  function fitTextToBox(el, opts = {}){
-    if(!el) return;
-    const { maxPx = 36, minPx = 12, step = 1 } = opts;
-    el.style.fontSize = maxPx + "px";
-    el.style.overflow = "hidden";
-    el.offsetHeight;
-    let cur = maxPx;
-    while(cur > minPx && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1)){
-      cur -= step;
-      el.style.fontSize = cur + "px";
-    }
-  }
-
-  function autoFitAvisos(){
-    document.querySelectorAll(".aviso").forEach(card => {
-      const t = card.querySelector(".t");
-      const d = card.querySelector(".d");
-      if(t) fitTextToBox(t, { maxPx: 26, minPx: 14, step: 1 });
-      if(d) fitTextToBox(d, { maxPx: 22, minPx: 12, step: 1 });
-    });
-  }
-
   function buildAvisoEl(a){
     const el = document.createElement("div");
     el.className = `aviso ${prioridadeClass(a.prioridade)}`;
@@ -1087,81 +1105,67 @@
     return wrap;
   }
 
-  /* ===== Rotação de avisos: 3 por tela, troca a cada 8s ===== */
+  /* ===== ROTACAO (garantida): alterna mesmo com 5 avisos ===== */
   let ROT_TIMER = null;
- let ROT_TIMER = null;
-
-function startRotation(){
-  try{ if(ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; } }catch(e){}
-  // sempre 8 segundos (independente do data.json)
-  ROT_TIMER = setInterval(()=>{
-    try{
-      // avança 3 por “página” (slot1/slot2/slot3)
-      window.__rotStart = (Number(window.__rotStart || 0) || 0) + 3;
-      renderAvisos(window.__lastDataForTopbar || {});
-    }catch(e){}
-  }, 8000);
-}
-
-function renderAvisos(data){
-  const pane = document.getElementById("avisosPane");
-  const s1 = document.getElementById("slot1");
-  const s2 = document.getElementById("slot2");
-  const s3 = document.getElementById("slot3");
-  if(!pane || !s1 || !s2 || !s3) return;
-
-  s1.innerHTML = "";
-  s2.innerHTML = "";
-  s3.innerHTML = "";
-
-  pane.classList.remove("fade-in");
-  pane.classList.add("fade-out");
-
-  const avisosAll = Array.isArray(data.avisos) ? data.avisos.slice() : [];
-
-  // ordena por prioridade (alta > media > baixa)
-  avisosAll.sort((a,b)=>{
-    const pa = prioridadeClass(a?.prioridade);
-    const pb = prioridadeClass(b?.prioridade);
-    const rank = { alta:3, media:2, baixa:1 };
-    return (rank[pb]||0) - (rank[pa]||0);
-  });
-
-  const total = avisosAll.length;
-  let start = Number(window.__rotStart || 0) || 0;
-
-  // se passou do fim, volta pro começo
-  if(total > 0) start = start % total;
-  else start = 0;
-
-  // pega 3 avisos “em volta”, circulando pelo array
-  const picks = [];
-  for(let k=0; k<3; k++){
-    if(total === 0) break;
-    picks.push(avisosAll[(start + k) % total]);
+  function startRotation(){
+    try{ if(ROT_TIMER){ clearInterval(ROT_TIMER); ROT_TIMER = null; } }catch(e){}
+    ROT_TIMER = setInterval(()=>{
+      try{
+        const total = Array.isArray((window.__lastDataForTopbar||{}).avisos) ? (window.__lastDataForTopbar.avisos.length) : 0;
+        const step = (total >= 3) ? 3 : 1;
+        window.__rotStart = (Number(window.__rotStart || 0) || 0) + step;
+        renderAvisos(window.__lastDataForTopbar || {});
+      }catch(e){}
+    }, 8000);
   }
 
-  // atualiza o ponteiro para não travar quando total < 3
-  window.__rotStart = start;
+  function renderAvisos(data){
+    const pane = document.getElementById("avisosPane");
+    const s1 = document.getElementById("slot1");
+    const s2 = document.getElementById("slot2");
+    const s3 = document.getElementById("slot3");
+    const s4 = document.getElementById("slot4");
+    if(!pane || !s1 || !s2 || !s3 || !s4) return;
 
-  setTimeout(()=>{
-    if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
-    else s1.appendChild(buildMiniAdEl(1));
+    s1.innerHTML = "";
+    s2.innerHTML = "";
+    s3.innerHTML = "";
 
-    if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
-    else s2.appendChild(buildMiniAdEl(2));
+    pane.classList.remove("fade-in");
+    pane.classList.add("fade-out");
 
-    if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
-    else s3.appendChild(buildMiniAdEl(3));
-
-    requestAnimationFrame(()=>{
-      if (window.innerWidth >= 981) autoFitAvisos();
+    const avisosAll = Array.isArray(data.avisos) ? data.avisos.slice() : [];
+    avisosAll.sort((a,b)=>{
+      const pa = prioridadeClass(a?.prioridade);
+      const pb = prioridadeClass(b?.prioridade);
+      const rank = { alta:3, media:2, baixa:1 };
+      return (rank[pb]||0) - (rank[pa]||0);
     });
 
-    pane.classList.remove("fade-out");
-    pane.classList.add("fade-in");
-  }, 140);
-}
+    const total = avisosAll.length;
+    let start = Number(window.__rotStart || 0) || 0;
+    if(total > 0) start = start % total; else start = 0;
+
+    const picks = [];
+    for(let k=0;k<3;k++){
+      if(total === 0) break;
+      picks.push(avisosAll[(start + k) % total]);
+    }
+
+    setTimeout(()=>{
+      if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
+      else s1.appendChild(buildMiniAdEl(1));
+
+      if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
+      else s2.appendChild(buildMiniAdEl(2));
+
+      if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
+      else s3.appendChild(buildMiniAdEl(3));
+
+      pane.classList.remove("fade-out");
+      pane.classList.add("fade-in");
+    }, 140);
+  }
 
   function hojeKeyMMDD() {
     const d = new Date();
@@ -1315,11 +1319,11 @@ function renderAvisos(data){
     try { sessionStorage.setItem(AD_STATE_KEY, JSON.stringify(st || {})); } catch(e){}
   }
 
-  function adFilterMp4(list){
+  function adFilterVideos(list){
     const arr = Array.isArray(list) ? list : [];
     return arr.filter(x=>{
       const src = String(x?.arquivo || "").trim();
-      return /\.mp4(\?.*)?$/i.test(src);
+      return /\.(mp4|m4v|webm|ogg)(\?.*)?$/i.test(src);
     });
   }
 
@@ -1359,8 +1363,17 @@ function renderAvisos(data){
 
   function setVideoSrcPair(vMain, vBg, src){
     if(!vMain || !vBg) return;
-    const curMain = (vMain.currentSrc || vMain.src || "").split("?")[0];
+
     const next = (src || "").split("?")[0];
+    if(!next){
+      try{ vMain.pause(); vBg.pause(); }catch(e){}
+      vMain.removeAttribute("src");
+      vBg.removeAttribute("src");
+      try{ vMain.load(); vBg.load(); }catch(e){}
+      return;
+    }
+
+    const curMain = (vMain.currentSrc || vMain.src || "").split("?")[0];
     if(curMain !== next){
       try{ vMain.pause(); }catch(e){}
       try{ vBg.pause(); }catch(e){}
@@ -1371,6 +1384,7 @@ function renderAvisos(data){
       vMain.src = src;
       try{ vBg.load(); vMain.load(); }catch(e){}
     }
+
     const playSafe = (v)=>{
       try{
         const p = v.play();
@@ -1404,10 +1418,16 @@ function renderAvisos(data){
     const adVideo = document.getElementById("adVideo");
     const adVideoBg = document.getElementById("adVideoBg");
     const adPill  = document.getElementById("adPill");
+    const adTop   = document.getElementById("adLabelTop");
     if(!adVideo || !adVideoBg) return;
 
     let list = Array.isArray(videos) ? videos : [];
-    if(!list.length) return;
+    if(!list.length){
+      if(adPill) adPill.textContent = "Sem vídeo";
+      if(adTop) adTop.textContent = "Publicidade —";
+      setVideoSrcPair(adVideo, adVideoBg, "");
+      return;
+    }
 
     try{
       const cfg = (window.__lastDataForTopbar || {});
@@ -1426,6 +1446,7 @@ function renderAvisos(data){
     const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
 
     if (adPill) adPill.textContent = "No ar";
+    if (adTop) adTop.textContent = `Publicidade — ${String(item?.anunciante || "").trim() || "Anúncio"}`;
 
     setVideoSrcPair(adVideo, adVideoBg, finalSrc);
 
@@ -1458,16 +1479,22 @@ function renderAvisos(data){
     const pub = data?.publicidade;
     if (!pub?.ativar) return;
 
-    const videosMp4 = adFilterMp4(pub?.videos);
-    if (!videosMp4.length) return;
-
+    const videosOk = adFilterVideos(pub?.videos);
     const v = document.getElementById("adVideo");
     if(!v) return;
 
-    v.onended = () => adNext(videosMp4);
-    v.onerror = () => setTimeout(()=>adNext(videosMp4), 1200);
+    if(!videosOk.length){
+      const adPill  = document.getElementById("adPill");
+      const adTop   = document.getElementById("adLabelTop");
+      if(adPill) adPill.textContent = "Sem vídeo";
+      if(adTop) adTop.textContent = "Publicidade —";
+      return;
+    }
 
-    adPlayByState(videosMp4);
+    v.onended = () => adNext(videosOk);
+    v.onerror = () => setTimeout(()=>adNext(videosOk), 1200);
+
+    adPlayByState(videosOk);
   }
 
   function decodeHtmlEntities_(s){
@@ -1583,7 +1610,7 @@ function renderAvisos(data){
   function setCityTitleFromConfig(cfg){
     const el = document.getElementById("cityTitle");
     if(!el) return;
-    const t = cfg?.publicidade?.cidadeTitulo || cfg?.cidadeTitulo || "📰 Mensagens no Brasil";
+    const t = cfg?.publicidade?.cidadeTitulo || cfg?.cidadeTitulo || "Mensagens no Brasil";
     el.textContent = String(t);
   }
 
@@ -1621,10 +1648,8 @@ function renderAvisos(data){
 
       await carregarVersiculo(data);
       await carregarClima(data);
-
       await carregarMensagensCidade();
       aplicarImagemTopbar(data);
-
       iniciarPublicidade(data);
 
       return data;
@@ -1647,58 +1672,10 @@ function renderAvisos(data){
   window.addEventListener("resize", ()=>{
     clearTimeout(__rzT);
     __rzT = setTimeout(()=>{
-      if (window.innerWidth >= 981){
-        try{ autoFitAvisos(); }catch(e){}
-      }
       try{ carregarMensagensCidade(); }catch(e){}
       try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
     }, 160);
   }, {passive:true});
-</script>
-
-<script>
-  const fundos = {
-    azul:    ["#061726", "#0b1f33"],
-    verde:   ["#0b2e1a", "#134d2c"],
-    amarelo: ["#3a3300", "#665c00"],
-    laranja: ["#3a1f00", "#663300"],
-    branco:  ["#f2f2f2", "#dcdcdc"],
-    preto:   ["#000000", "#111111"]
-  };
-
-  function setFundo(cor){
-    if(!fundos[cor]) return;
-    document.documentElement.style.setProperty("--bg1", fundos[cor][0]);
-    document.documentElement.style.setProperty("--bg2", fundos[cor][1]);
-    try { localStorage.setItem("fundoEscolhido", cor); } catch(e){}
-  }
-
-  function fundoAleatorio(){
-    const cores = Object.keys(fundos);
-    const cor = cores[Math.floor(Math.random() * cores.length)];
-    setFundo(cor);
-    return cor;
-  }
-
-  (function carregarFundoSalvo(){
-    try{
-      const salvo = localStorage.getItem("fundoEscolhido");
-      if(salvo && fundos[salvo]) setFundo(salvo);
-    }catch(e){}
-  })();
-
-  window.addEventListener("keydown", (e)=>{
-    const k = String(e.key || "").toLowerCase();
-    if (k === "1") setFundo("azul");
-    else if (k === "2") setFundo("verde");
-    else if (k === "3") setFundo("amarelo");
-    else if (k === "4") setFundo("laranja");
-    else if (k === "5") setFundo("branco");
-    else if (k === "6") setFundo("preto");
-    else if (k === "r") fundoAleatorio();
-  });
-
-  setInterval(fundoAleatorio, 300000);
 </script>
 
 <script>
