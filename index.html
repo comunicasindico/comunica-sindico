@@ -876,6 +876,48 @@
       overflow-wrap:anywhere;
       word-break:break-word;
     }
+
+
+/* ✅ PATCH — SEMP “Browse Here”: impedir auto text-size/zoom que quebra 2x2 */
+html, body{
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
+*{
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
+/* evita “scroll fantasma” por rounding/overscroll */
+body{
+  overscroll-behavior: none;
+}
+    /* ✅ PATCH — altura robusta para browsers de TV */
+html, body{
+  width:100% !important;
+  height:100% !important;
+  min-height:100% !important;
+  overflow:hidden !important;
+}
+
+.wrap{
+  height:100% !important;
+  min-height:100% !important;
+}
+
+/* container ocupa tudo e evita estourar por padding */
+.container{
+  height:100% !important;
+  min-height:0 !important;
+}
+
+/* garante que a área 2x2 realmente tenha altura */
+.main{ min-height:0 !important; }
+.quadTop{ min-height:0 !important; }
+.panel, .tile, .tileBody{ min-height:0 !important; }
+
+    
   </style>
 </head>
 
