@@ -917,7 +917,35 @@
   .adNav{ width:28px; height:28px; font-size:13px; opacity:.28; }
 }
   
-  
+
+ .adCaptionIn{
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:10px;
+  z-index:20;                 /* ✅ acima dos vídeos */
+  padding:10px 12px;
+  border-radius:14px;
+  background: rgba(0,0,0,.72); /* ✅ mais nítido */
+  border: 1px solid rgba(255,255,255,.20);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 14px 30px rgba(0,0,0,.55);
+  pointer-events:none;         /* não atrapalha clique */
+}
+
+.adCaptionIn .adText{
+  font-weight:950;
+  color:#fff;
+  font-size: clamp(14px, 1.35vw, 20px);
+  line-height:1.15;
+  white-space:normal !important;   /* ✅ sem reticências */
+  overflow:visible !important;
+  text-overflow:unset !important;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  text-shadow: 0 2px 10px rgba(0,0,0,.55);
+}
   
   </style>
 </head>
@@ -1270,48 +1298,72 @@
     return wrap;
   }
 
-  function renderAvisos(data){
-    const pane = document.getElementById("avisosPane");
-    const s1 = document.getElementById("slot1");
-    const s2 = document.getElementById("slot2");
-    const s3 = document.getElementById("slot3");
-    if(!pane || !s1 || !s2 || !s3) return;
+   let ROT_TIMER = null;
+
+function renderAvisos(data){
+  const pane = document.getElementById("avisosPane");
+  const s1 = document.getElementById("slot1");
+  const s2 = document.getElementById("slot2");
+  const s3 = document.getElementById("slot3");
+  if(!pane || !s1 || !s2 || !s3) return;
+
+  // limpa timer antigo (se recarregar data.json)
+  if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
+
+  const avisosAll = Array.isArray(data.avisos) ? data.avisos.slice() : [];
+
+  // ordena por prioridade (alta > média > baixa)
+  const rank = { alta:3, media:2, baixa:1 };
+  avisosAll.sort((a,b)=>{
+    const pa = prioridadeClass(a?.prioridade);
+    const pb = prioridadeClass(b?.prioridade);
+    return (rank[pb]||0) - (rank[pa]||0);
+  });
+
+  // se não tem avisos, mostra “mini ads” (ou vazio)
+  if(!avisosAll.length){
+    s1.innerHTML = ""; s2.innerHTML = ""; s3.innerHTML = "";
+    s1.appendChild(buildMiniAdEl(1));
+    s2.appendChild(buildMiniAdEl(2));
+    s3.appendChild(buildMiniAdEl(3));
+    return;
+  }
+
+  // ponteiro global (não trava)
+  if (!Number.isFinite(window.__rotStart)) window.__rotStart = 0;
+
+  function paint(){
+    const total = avisosAll.length;
+    const start = window.__rotStart % total;
 
     s1.innerHTML = "";
     s2.innerHTML = "";
     s3.innerHTML = "";
 
-    pane.classList.remove("fade-in");
-    pane.classList.add("fade-out");
+    // pega 3 avisos “em roda”
+    const a0 = avisosAll[start];
+    const a1 = avisosAll[(start + 1) % total];
+    const a2 = avisosAll[(start + 2) % total];
 
-    const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
-    avisosAll.sort((a,b)=>{
-      const pa = prioridadeClass(a?.prioridade);
-      const pb = prioridadeClass(b?.prioridade);
-      const rank = { alta:3, media:2, baixa:1 };
-      return (rank[pb]||0) - (rank[pa]||0);
+    if(a0) s1.appendChild(buildAvisoEl(a0));
+    if(a1) s2.appendChild(buildAvisoEl(a1));
+    if(a2) s3.appendChild(buildAvisoEl(a2));
+
+    // ajusta fonte para ocupar o quadro
+    requestAnimationFrame(()=>{
+      try{ autoFitAvisos(); }catch(e){}
     });
-
-    const picks = avisosAll.slice(0,3);
-
-    setTimeout(()=>{
-      if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
-      else s1.appendChild(buildMiniAdEl(1));
-
-      if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
-      else s2.appendChild(buildMiniAdEl(2));
-
-      if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
-      else s3.appendChild(buildMiniAdEl(3));
-
-      requestAnimationFrame(()=>{
-        if (!isMobile()) autoFitAvisosUniform();
-      });
-
-      pane.classList.remove("fade-out");
-      pane.classList.add("fade-in");
-    }, 140);
   }
+
+  // pinta agora
+  paint();
+
+  // ✅ gira a cada 8s
+  ROT_TIMER = setInterval(()=>{
+    window.__rotStart = (window.__rotStart + 1) % avisosAll.length;
+    paint();
+  }, 8000);
+}
 
   function hojeKeyMMDD() {
     const d = new Date();
@@ -1555,41 +1607,44 @@
   }
 
   function adPlayByState(videos){
-    const adVideo = document.getElementById("adVideo");
-    const adVideoBg = document.getElementById("adVideoBg");
-    const adLabel = document.getElementById("adLabel");
-    if(!adVideo || !adVideoBg) return;
+  const adVideo = document.getElementById("adVideo");
+  const adVideoBg = document.getElementById("adVideoBg");
+  const adLabel = document.getElementById("adLabel");
+  const adBelow = document.getElementById("adLabelBelow");
+  if(!adVideo || !adVideoBg) return;
 
-    let list = Array.isArray(videos) ? videos : [];
-    if(!list.length) return;
+  let list = Array.isArray(videos) ? videos : [];
+  if(!list.length) return;
 
-    try{
-      const cfg = (window.__lastDataForTopbar || {});
-      const pub = cfg?.publicidade || {};
-      if (pub.shuffle) list = adGetShuffledList(list);
-    }catch(e){}
+  try{
+    const cfg = (window.__lastDataForTopbar || {});
+    const pub = cfg?.publicidade || {};
+    if (pub.shuffle) list = adGetShuffledList(list);
+  }catch(e){}
 
-    const st = adLoadState();
-    let idx = Number.isFinite(st.idx) ? st.idx : 0;
-    if(idx < 0) idx = 0;
-    if(idx >= list.length) idx = 0;
+  const st = adLoadState();
+  let idx = Number.isFinite(st.idx) ? st.idx : 0;
+  if(idx < 0) idx = 0;
+  if(idx >= list.length) idx = 0;
 
-    const item = list[idx];
-    const src = String(item?.arquivo || "");
-    const sep = src.includes("?") ? "&" : "?";
-    const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+  const item = list[idx];
+  const src = String(item?.arquivo || "");
+  const sep = src.includes("?") ? "&" : "?";
+  const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
 
-    if(adLabel) adLabel.textContent = String(item?.anunciante || "—");
+  const txt = String(item?.anunciante || "—");
+  if(adLabel) adLabel.textContent = txt;
+  if(adBelow) adBelow.textContent = txt;
 
-    setVideoSrcPair(adVideo, adVideoBg, finalSrc);
+  setVideoSrcPair(adVideo, adVideoBg, finalSrc);
 
-    st.idx = idx;
-    st.paused = false;
-    st.t = 0;
-    adSaveState(st);
+  st.idx = idx;
+  st.paused = false;
+  st.t = 0;
+  adSaveState(st);
 
-    playMiniAds(list, idx);
-  }
+  playMiniAds(list, idx);
+}
 
   function adNext(videos){
     const list = videos;
