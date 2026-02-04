@@ -3,58 +3,48 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#061726" />
-  <link rel="canonical" href="./" />
-
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Comunica Síndico — Condôminos</title>
 
-  <!-- ✅ 0) Marcação de classes ANTES do CSS (não depende de zoom) -->
+  <!-- ✅ MARCA isTV / isMobileUA ANTES DO CSS (à prova de zoom) -->
   <script>
-  (function markMobileUA(){
+  (function preClassifyDevice(){
     try{
       const ua = (navigator.userAgent || "").toLowerCase();
-      const isMobileUA = /mobi|iphone|ipad|ipod|android.*mobile/.test(ua);
+
+      // mobile UA (NÃO pega Android TV)
+      const isMobileUA = /mobi|iphone|ipod|ipad|android.*mobile/.test(ua);
+
+      // UAs típicas de TV
+      const isTVua =
+        ua.includes("smart-tv") || ua.includes("smarttv") ||
+        ua.includes("hbbtv") || ua.includes("appletv") ||
+        ua.includes("googletv") || ua.includes("android tv") ||
+        ua.includes("bravia") || ua.includes("sonydtv") ||
+        ua.includes("netcast") || ua.includes("tizen") ||
+        ua.includes("web0s") || ua.includes("webos") ||
+        ua.includes("viera") || ua.includes("roku") ||
+        ua.includes("aft") || ua.includes("tv");
+
+      // 🔒 “tamanho físico” (screen.* não muda com zoom)
+      const sw = Number(screen.width || 0);
+      const sh = Number(screen.height || 0);
+      const maxS = Math.max(sw, sh);
+      const minS = Math.min(sw, sh);
+
+      // Heurística forte: telas grandes
+      const isPhysBig = (maxS >= 960 && minS >= 540) || (maxS >= 1280 && minS >= 720);
+
+      // viewport grande (fallback)
+      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+      const isViewportBig = (Math.max(vw, vh) >= 1100 && Math.min(vw, vh) >= 650);
+
+      const shouldTV = !isMobileUA && (isTVua || isPhysBig || isViewportBig);
+
       document.documentElement.classList.toggle("isMobileUA", !!isMobileUA);
+      document.documentElement.classList.toggle("isTV", !!shouldTV);
     }catch(e){}
-  })();
-
-  (function detectAndMarkTV(){
-    function apply(){
-      try{
-        const ua = (navigator.userAgent || "").toLowerCase();
-        const dpr = Number(window.devicePixelRatio || 1);
-
-        const isMobileUA = document.documentElement.classList.contains("isMobileUA");
-
-        const isTVua =
-          ua.includes("smart-tv") || ua.includes("smarttv") ||
-          ua.includes("hbbtv") || ua.includes("appletv") ||
-          ua.includes("googletv") || ua.includes("android tv") ||
-          ua.includes("aft") || ua.includes("bravia") ||
-          ua.includes("sonydtv") || ua.includes("netcast") ||
-          ua.includes("tizen") ||
-          ua.includes("web0s") || ua.includes("webos") ||
-          ua.includes("viera") || ua.includes("roku");
-
-        // “tamanho físico” real (não muda com zoom)
-        const sw = Number(screen.width || 0);
-        const sh = Number(screen.height || 0);
-        const maxPhys = Math.max(sw, sh) * dpr;
-        const minPhys = Math.min(sw, sh) * dpr;
-        const isPhysBig = (maxPhys >= 1280 && minPhys >= 720);
-
-        // fallback por viewport (se screen vier bugado)
-        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-        const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-        const isViewportBig = (Math.max(vw, vh) >= 1100 && Math.min(vw, vh) >= 650);
-
-        const shouldTV = !isMobileUA && (isTVua || isPhysBig || isViewportBig);
-        document.documentElement.classList.toggle("isTV", !!shouldTV);
-      }catch(e){}
-    }
-    apply();
-    window.addEventListener("resize", apply, { passive:true });
-    window.addEventListener("orientationchange", apply, { passive:true });
   })();
   </script>
 
@@ -62,47 +52,46 @@
     :root{
       --bg1:#061726;
       --bg2:#0b1f33;
-
-      --line: rgba(255,255,255,.12);
-      --muted: rgba(234,242,255,.78);
-      --shadow: 0 18px 40px rgba(0,0,0,.45);
+      --line: rgba(255,255,255,.14);
+      --muted: rgba(234,242,255,.74);
       --radius: 18px;
+      --shadow: 0 18px 44px rgba(0,0,0,.35);
+      --news-bg: rgba(10,30,50,.55);
+      --news-border: rgba(255,255,255,.12);
+      --news-shadow: 0 18px 44px rgba(0,0,0,.30);
+      --font-soft: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
 
-      --font-soft: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-
-      --sat: env(safe-area-inset-top);
-      --sar: env(safe-area-inset-right);
-      --sab: env(safe-area-inset-bottom);
-      --sal: env(safe-area-inset-left);
-
-      --tv-safe-bottom: 0px;
-
-      /* escalas (serão ajustadas por TV/mobile) */
+      /* escalas padrão */
       --ui: 1;
       --ui2: 1;
+      --tv-safe-bottom: 0px;
 
-      --topbar-bg: url('./img/tubarao01.jpg');
+      /* safe-area */
+      --sat: env(safe-area-inset-top, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
 
-      --news-bg: rgba(8,28,46,.55);
-      --news-border: rgba(255,255,255,.12);
-      --news-shadow: 0 18px 40px rgba(0,0,0,.40);
+      --topbar-bg: none;
     }
+
+    /* ✅ mata rolagem por padding/altura */
+    *, *::before, *::after{ box-sizing:border-box; }
 
     html, body{
-      margin:0;
-      padding:0;
       height:100%;
-      background: linear-gradient(180deg,var(--bg1),var(--bg2));
-      color:#eaf2ff;
+      width:100%;
+      margin:0;
+      overflow:hidden; /* mobile libera em media query */
+      background: radial-gradient(1200px 800px at 30% 10%, rgba(70,120,180,.20), transparent 60%),
+                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      color:#fff;
       font-family: var(--font-soft);
-      overflow:hidden;
     }
 
-    *{ box-sizing:border-box; }
-
     .wrap{
-      min-height:100dvh;
       height:100dvh;
+      min-height:100dvh;
       padding:
         calc(10px + var(--sat))
         calc(10px + var(--sar))
@@ -120,65 +109,33 @@
 
     .topbar{
       flex:0 0 auto;
-      border-radius: 22px;
+      border-radius: var(--radius);
       border: 1px solid var(--line);
       box-shadow: var(--shadow);
       overflow:hidden;
+      position:relative;
       background:
-        linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.35)),
+        linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.45)),
         var(--topbar-bg);
       background-size: cover;
-      background-position: center;
-      padding: 16px 16px;
+      background-position:center;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
-      position:relative;
-    }
-
-    .brand{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      min-width:0;
-    }
-    .title{
-      font-size: clamp(22px, 2.5vw, 42px);
-      font-weight: 950;
-      line-height:1.1;
-      text-shadow: 0 10px 26px rgba(0,0,0,.55);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .sub{
-      font-size: clamp(12px, 1.25vw, 18px);
-      font-weight: 850;
-      opacity:.95;
-      text-shadow: 0 6px 16px rgba(0,0,0,.55);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .subMobileLine{
-      display:none;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      font-weight:900;
-      font-size: 12px;
-      opacity:.95;
-    }
-    .subMobileLine .sep{ opacity:.6; }
-
-    .rightInfo{
-      display:flex;
-      align-items:center;
+      padding: 10px 12px;
       gap:10px;
-      flex:0 0 auto;
     }
+
+    .brand{ display:flex; flex-direction:column; gap:4px; min-width:0; }
+    .title{ font-weight:950; letter-spacing:.3px; font-size: calc(18px * var(--ui2)); line-height:1.1; }
+    .sub{ color:rgba(234,242,255,.84); font-weight:850; font-size: calc(12px * var(--ui)); }
+    .subMobileLine{ display:none; align-items:center; justify-content:center; gap:10px; color:rgba(234,242,255,.8); font-weight:900; }
+    .sep{ opacity:.35; font-weight:900; }
+
+    .rightInfo{ display:flex; align-items:center; gap:10px; }
 
     .badge{
       display:flex;align-items:center;gap:10px;
@@ -192,37 +149,38 @@
     }
     .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
     #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
-    #clock{font-weight:950;color:rgba(234,242,255,.92);font-size: clamp(22px, 2.3vw, 46px);}
+    #clock{ font-weight:950; color:rgba(234,242,255,.92); font-size: calc(16px * var(--ui2)); }
 
     .btnInstall{
-      border:1px solid rgba(255,255,255,.20);
-      background: rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.25);
       color:#fff;
-      border-radius: 999px;
-      padding: 10px 12px;
-      font-weight: 950;
+      padding:10px 12px;
+      border-radius: 14px;
+      font-weight:950;
       cursor:pointer;
     }
 
     .updateBanner{
       flex:0 0 auto;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.45);
-      padding: 10px 12px;
-      font-weight: 950;
-      text-align:center;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.10);
+      color:#fff;
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:950;
     }
 
     .main{
-      flex: 1 1 auto;
+      flex:1 1 auto;
       min-height:0;
       display:flex;
       flex-direction:column;
       gap:10px;
+      overflow:hidden;
     }
 
-    /* ✅ Cabeçalho único dos Avisos + botão Atualizar na mesma linha */
+    /* Cabeçalho único dos Avisos + botão Atualizar na mesma linha */
     .sectionBar{
       flex:0 0 auto;
       width:100%;
@@ -276,7 +234,6 @@
       overflow:hidden;
     }
 
-    /* ✅ Sempre 2x2 (TV e WEB) — NÃO depende de zoom */
     .quadTop{
       flex:1 1 auto;
       min-height:0;
@@ -288,13 +245,7 @@
       height:100%;
     }
 
-    .tile{
-      min-height:0;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
-
+    .tile{ min-height:0; overflow:hidden; display:flex; flex-direction:column; }
     .tileBody{
       padding:12px;
       min-height:0;
@@ -642,127 +593,163 @@
       filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
     }
 
-    /* ✅ MOBILE (UA real): NÃO depende de width/zoom */
-    html.isMobileUA:not(.isTV) .main{
-      display:flex !important;
-      flex-direction:column !important;
+    /* ============================================================
+       ✅ REGRAS MOBILE: SOMENTE se (isMobileUA E NÃO TV)
+       ============================================================ */
+
+    /* MOBILE continua igual: volta a ser coluna/rolagem (somente quando não é TV) */
+    @media (max-width: 980px){
+      html.isMobileUA:not(.isTV) .main{
+        display:flex !important;
+        flex-direction:column !important;
+      }
     }
 
-    html.isMobileUA:not(.isTV){
-      --ui: clamp(1, calc(100vmin / 900), 2.10);
-      --ui2: clamp(1, calc(100vmin / 850), 2.70);
-      --tv-safe-bottom: 0px;
+    /* ✅ MOBILE: só aplica se NÃO for TV */
+    @media (max-width: 980px){
+      html.isMobileUA:not(.isTV){
+        --ui: clamp(1, calc(100vmin / 900), 2.10);
+        --ui2: clamp(1, calc(100vmin / 850), 2.70);
+        --tv-safe-bottom: 0px;
+      }
+
+      html.isMobileUA:not(.isTV), html.isMobileUA:not(.isTV) body{
+        height:auto !important;
+        min-height:100svh !important;
+        overflow:auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      html.isMobileUA:not(.isTV) body{ padding:0 !important; }
+
+      html.isMobileUA:not(.isTV) .wrap{
+        min-height:100svh !important;
+        height:auto !important;
+        overflow:visible !important;
+        padding:
+          calc(14px + var(--sat))
+          calc(14px + var(--sar))
+          calc(14px + var(--sab))
+          calc(14px + var(--sal));
+      }
+
+      html.isMobileUA:not(.isTV) .container{
+        min-height:auto !important;
+        height:auto !important;
+        overflow:visible !important;
+        gap:10px;
+      }
+
+      html.isMobileUA:not(.isTV) .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
+      html.isMobileUA:not(.isTV) .brand{ width:100%; align-items:center; text-align:center; }
+      html.isMobileUA:not(.isTV) .subMobileLine{ display:flex; width:100%; }
+
+      html.isMobileUA:not(.isTV) .sectionBar{ justify-content:space-between; }
+
+      html.isMobileUA:not(.isTV) .quadTop{
+        display:flex;
+        flex-direction:column;
+        height:auto;
+        gap:10px;
+      }
+
+      html.isMobileUA:not(.isTV) .tileBody{ padding:12px; }
+
+      /* ticker no mobile sem sticky */
+      html.isMobileUA:not(.isTV) .ticker{
+        position:relative !important;
+        bottom:auto !important;
+        z-index:10;
+        margin:0;
+        padding-bottom:max(12px, env(safe-area-inset-bottom));
+      }
+
+      /* ticker 2 linhas */
+      html.isMobileUA:not(.isTV) .tickerLine1{
+        flex-wrap:wrap !important;
+        justify-content:space-between;
+        row-gap:6px;
+      }
+      html.isMobileUA:not(.isTV) .tickerIcon{ order:1; }
+      html.isMobileUA:not(.isTV) #dataBiblica{ order:2; }
+
+      html.isMobileUA:not(.isTV) #ref{
+        order:3;
+        flex: 1 1 100% !important;
+        min-width: 0 !important;
+        margin:0 !important;
+        text-align:left !important;
+        white-space:normal !important;
+        overflow:visible !important;
+        text-overflow:unset !important;
+        overflow-wrap:anywhere;
+        word-break:break-word;
+      }
+
+      html.isMobileUA:not(.isTV) #wxInline{
+        order:4;
+        width:100% !important;
+        justify-content:flex-end !important;
+        margin-left:0 !important;
+      }
+
+      /* mantém clima/ícone do topo no celular */
+      html.isMobileUA:not(.isTV) .rightInfo{
+        display:flex !important;
+        position:absolute;
+        top: 12px;
+        right: 12px;
+        gap: 0;
+        align-items:center;
+        justify-content:flex-end;
+        z-index: 5;
+      }
+      html.isMobileUA:not(.isTV) .rightInfo .badge[title="Status do painel"]{ display:none !important; }
+      html.isMobileUA:not(.isTV) #clock{ display:none !important; }
+      html.isMobileUA:not(.isTV) #btnInstalarApp{ display:none !important; }
+      html.isMobileUA:not(.isTV) .rightInfo .badge[title="Hora e Clima"]{
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        gap: 0 !important;
+      }
+      html.isMobileUA:not(.isTV) #wxIconTop{ width:56px; height:56px; transform:none !important; }
+      html.isMobileUA:not(.isTV) #wxIconTop svg{ width:56px; height:56px; }
+
+      /* ✅ MOBILE: garantir altura do vídeo (publicidade) */
+      html.isMobileUA:not(.isTV) #slot4{
+        display:block !important;
+        padding:12px !important;
+        min-height: 220px;
+      }
+
+      html.isMobileUA:not(.isTV) #slot4 .videoWrap{
+        width:100% !important;
+        aspect-ratio: 16 / 9;
+        height:auto !important;
+        min-height: 220px;
+        position:relative;
+      }
+
+      @media (max-width: 420px){
+        html.isMobileUA:not(.isTV) #slot4{ min-height: 200px; }
+        html.isMobileUA:not(.isTV) #slot4 .videoWrap{ min-height: 200px; }
+      }
     }
 
-    html.isMobileUA:not(.isTV),
-    html.isMobileUA:not(.isTV) body{
-      height:auto !important;
-      min-height:100svh !important;
-      overflow:auto !important;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    html.isMobileUA:not(.isTV) body{ padding:0 !important; }
-
-    html.isMobileUA:not(.isTV) .wrap{
-      min-height:100svh !important;
-      height:auto !important;
-      overflow:visible !important;
-      padding:
-        calc(14px + var(--sat))
-        calc(14px + var(--sar))
-        calc(14px + var(--sab))
-        calc(14px + var(--sal));
-    }
-
-    html.isMobileUA:not(.isTV) .container{
-      min-height:auto !important;
-      height:auto !important;
-      overflow:visible !important;
-      gap:10px;
-    }
-
-    html.isMobileUA:not(.isTV) .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
-    html.isMobileUA:not(.isTV) .brand{ width:100%; align-items:center; text-align:center; }
-    html.isMobileUA:not(.isTV) .subMobileLine{ display:flex; width:100%; }
-
-    html.isMobileUA:not(.isTV) .sectionBar{ justify-content:space-between; }
-
-    html.isMobileUA:not(.isTV) .quadTop{
-      display:flex;
-      flex-direction:column;
-      height:auto;
-      gap:10px;
-    }
-
-    /* ticker no mobile sem sticky */
-    html.isMobileUA:not(.isTV) .ticker{
-      position:relative !important;
-      bottom:auto !important;
-      z-index:10;
-      margin:0;
-      padding-bottom:max(12px, env(safe-area-inset-bottom));
-    }
-
-    html.isMobileUA:not(.isTV) .tickerLine1{
-      flex-wrap:wrap !important;
-      justify-content:space-between;
-      row-gap:6px;
-    }
-    html.isMobileUA:not(.isTV) .tickerIcon{ order:1; }
-    html.isMobileUA:not(.isTV) #dataBiblica{ order:2; }
-
-    html.isMobileUA:not(.isTV) #ref{
-      order:3;
-      flex: 1 1 100% !important;
-      min-width: 0 !important;
-      margin:0 !important;
-      text-align:left !important;
-    }
-
-    html.isMobileUA:not(.isTV) #wxInline{
-      order:4;
-      width:100% !important;
-      justify-content:flex-end !important;
-      margin-left:0 !important;
-    }
-
-    html.isMobileUA:not(.isTV) .rightInfo{
-      display:flex !important;
-      position:absolute;
-      top: 12px;
-      right: 12px;
-      gap: 0;
-      align-items:center;
-      justify-content:flex-end;
-      z-index: 5;
-    }
-    html.isMobileUA:not(.isTV) .rightInfo .badge[title="Status do painel"]{ display:none !important; }
-    html.isMobileUA:not(.isTV) #clock{ display:none !important; }
-    html.isMobileUA:not(.isTV) #btnInstalarApp{ display:none !important; }
-    html.isMobileUA:not(.isTV) .rightInfo .badge[title="Hora e Clima"]{
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-      gap: 0 !important;
-    }
-    html.isMobileUA:not(.isTV) #wxIconTop{ width:56px; height:56px; transform:none !important; }
-    html.isMobileUA:not(.isTV) #wxIconTop svg{ width:56px; height:56px; }
-
-    /* ✅ MOBILE: garantir altura do vídeo */
-    html.isMobileUA:not(.isTV) #slot4{
-      display:block !important;
-      padding:12px !important;
-      min-height: clamp(200px, 34vmin, 220px);
-    }
-
-    html.isMobileUA:not(.isTV) #slot4 .videoWrap{
-      width:100% !important;
-      aspect-ratio: 16 / 9;
-      height:auto !important;
-      min-height: clamp(200px, 34vmin, 220px);
-      position:relative;
+    /* ✅ FORÇA 2x2 EM TV MESMO SE @media disparar por zoom */
+    @media (max-width: 980px){
+      html.isTV .quadTop{
+        display:grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-rows: 1fr 1fr !important;
+        height:100% !important;
+      }
+      html.isTV, html.isTV body{ overflow:hidden !important; height:100dvh !important; min-height:100dvh !important; }
+      html.isTV .wrap{ height:100dvh !important; min-height:100dvh !important; overflow:hidden !important; }
+      html.isTV .container{ height:100% !important; overflow:hidden !important; }
+      html.isTV .main{ overflow:hidden !important; }
     }
 
     @media (min-width: 981px) and (max-width: 1100px){
@@ -776,12 +763,7 @@
       :root{ --tv-safe-bottom: 44px; }
     }
 
-    html.isTV body{
-      overflow:hidden !important;
-      height:100dvh !important;
-      min-height:100dvh !important;
-    }
-
+    /* TV: escala e padding safe */
     html.isTV{
       --ui:  clamp(1, calc(100dvh / 980), 1.70);
       --ui2: clamp(1, calc(100dvh / 920), 2.05);
@@ -798,19 +780,7 @@
         calc(10px + var(--sal)) !important;
     }
 
-    .wxsvg .sun-rays{ transform-origin: 32px 32px; animation: wx-rotate 6s linear infinite; }
-    @keyframes wx-rotate{ from{ transform: rotate(0deg);} to{ transform: rotate(360deg);} }
-    .wxsvg .sun-core{ animation: wx-pulse 2.4s ease-in-out infinite; transform-origin: 32px 32px; }
-    @keyframes wx-pulse{ 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.08);} }
-    .wxsvg .cloud{ animation: wx-float 3.2s ease-in-out infinite; }
-    @keyframes wx-float{ 0%,100%{ transform: translateX(0);} 50%{ transform: translateX(2.5px);} }
-    .wxsvg .drops line{ animation: wx-rain 1.1s linear infinite; }
-    .wxsvg .drops line:nth-child(2){ animation-delay:.15s; }
-    .wxsvg .drops line:nth-child(3){ animation-delay:.30s; }
-    @keyframes wx-rain{ 0%{ transform: translateY(0); opacity:.15;} 15%{opacity:1;} 100%{ transform: translateY(8px); opacity:.05;} }
-    .wxsvg .bolt{ animation: wx-bolt 1.4s ease-in-out infinite; }
-    @keyframes wx-bolt{ 0%,100%{ opacity:.35; transform: translateY(0);} 50%{ opacity:1; transform: translateY(1px);} }
-
+    /* navegação anúncios */
     .adNav{
       position:absolute;
       top:50%;
@@ -833,18 +803,14 @@
     }
     .adNav:hover{ opacity:.85; filter:brightness(1.06); }
     .adNav:active{ transform: translateY(-50%) scale(.96); }
-
     .adPrev{ left:8px; }
     .adNext{ right:8px; }
-
-    /* ✅ no MOBILE real (UA): discreto */
-    html.isMobileUA:not(.isTV) .adNav{
-      width:28px; height:28px; font-size:13px; opacity:.28;
+    @media (max-width: 980px){
+      .adNav{ width:28px; height:28px; font-size:13px; opacity:.28; }
     }
 
     /* garante que o vídeo apareça com altura e o texto fique embaixo */
     #slot4{ display:flex; flex-direction:column; gap:10px; }
-
     #slot4 .videoWrap{
       width:100%;
       aspect-ratio: 16 / 9;
@@ -854,7 +820,6 @@
       position:relative;
       background:#000;
     }
-
     .adBelow{
       width:100%;
       padding:10px 12px;
@@ -863,7 +828,6 @@
       background:rgba(8,28,46,.55);
       box-shadow: 0 14px 34px rgba(0,0,0,.35);
     }
-
     .adBelowText{
       font-weight:950;
       text-align:center;
@@ -876,48 +840,6 @@
       overflow-wrap:anywhere;
       word-break:break-word;
     }
-
-
-/* ✅ PATCH — SEMP “Browse Here”: impedir auto text-size/zoom que quebra 2x2 */
-html, body{
-  -webkit-text-size-adjust: 100% !important;
-  text-size-adjust: 100% !important;
-}
-
-*{
-  -webkit-text-size-adjust: 100% !important;
-  text-size-adjust: 100% !important;
-}
-
-/* evita “scroll fantasma” por rounding/overscroll */
-body{
-  overscroll-behavior: none;
-}
-    /* ✅ PATCH — altura robusta para browsers de TV */
-html, body{
-  width:100% !important;
-  height:100% !important;
-  min-height:100% !important;
-  overflow:hidden !important;
-}
-
-.wrap{
-  height:100% !important;
-  min-height:100% !important;
-}
-
-/* container ocupa tudo e evita estourar por padding */
-.container{
-  height:100% !important;
-  min-height:0 !important;
-}
-
-/* garante que a área 2x2 realmente tenha altura */
-.main{ min-height:0 !important; }
-.quadTop{ min-height:0 !important; }
-.panel, .tile, .tileBody{ min-height:0 !important; }
-
-    
   </style>
 </head>
 
@@ -1015,9 +937,10 @@ html, body{
     </div>
   </div>
 
-  <!-- ✅ SCRIPT PRINCIPAL -->
+  <!-- ✅ APP SCRIPT -->
   <script>
     let deferredPrompt = null;
+
     function mostrarBotaoInstalar(show){
       const b = document.getElementById("btnInstalarApp");
       if (b) b.style.display = show ? "inline-flex" : "none";
@@ -1053,10 +976,11 @@ html, body{
       }[c]));
     }
 
-    /* ✅ IMPORTANTE: “mobile” só por classe UA (NÃO por largura/zoom) */
+    // ✅ "mobile" só se NÃO for TV (não cai no layout mobile por zoom)
     function isMobile(){
-      const html = document.documentElement;
-      return html.classList.contains("isMobileUA") && !html.classList.contains("isTV");
+      return window.matchMedia("(max-width: 980px)").matches &&
+             document.documentElement.classList.contains("isMobileUA") &&
+             !document.documentElement.classList.contains("isTV");
     }
 
     function refreshPage(){ location.reload(); }
@@ -1080,7 +1004,6 @@ html, body{
     function parseBRDateTime(v){
       const s = String(v ?? "").trim();
       if(!s) return null;
-
       const m = s.match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})\s*(?:-\s*)?(\d{2}):(\d{2})$/);
       if(m){
         const dd = Number(m[1]);
@@ -1092,7 +1015,6 @@ html, body{
         const d = new Date(yyyy, mm-1, dd, HH, MM, 0, 0);
         if(!isNaN(d.getTime())) return d;
       }
-
       const d2 = new Date(s);
       if(!isNaN(d2.getTime())) return d2;
       return null;
@@ -1340,24 +1262,6 @@ html, body{
       } catch (e) {}
     }
 
-    function wxSvgSun(){
-      return `
-      <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g class="sun-rays" fill="none" stroke="rgba(255,220,120,.95)" stroke-width="3" stroke-linecap="round">
-          <line x1="32" y1="6"  x2="32" y2="14"/>
-          <line x1="32" y1="50" x2="32" y2="58"/>
-          <line x1="6"  y1="32" x2="14" y2="32"/>
-          <line x1="50" y1="32" x2="58" y2="32"/>
-          <line x1="12" y1="12" x2="18" y2="18"/>
-          <line x1="46" y1="46" x2="52" y2="52"/>
-          <line x1="46" y1="18" x2="52" y2="12"/>
-          <line x1="12" y1="52" x2="18" y2="46"/>
-        </g>
-        <circle class="sun-core" cx="32" cy="32" r="12" fill="rgba(255,200,60,.98)"/>
-        <circle cx="32" cy="32" r="12" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
-      </svg>`;
-    }
-
     function wxSvgCloud(){
       return `
       <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1370,64 +1274,18 @@ html, body{
       </svg>`;
     }
 
-    function wxSvgRain(){
-      return `
-      <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g class="cloud">
-          <path d="M20 40h24a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 20 40z"
-            fill="rgba(235,245,255,.92)"/>
-          <path d="M20 40h24a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 20 40z"
-            fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
-        </g>
-        <g class="drops" stroke="rgba(120,200,255,.95)" stroke-width="3" stroke-linecap="round">
-          <line x1="26" y1="44" x2="24" y2="52"/>
-          <line x1="34" y1="44" x2="32" y2="52"/>
-          <line x1="42" y1="44" x2="40" y2="52"/>
-        </g>
-      </svg>`;
-    }
-
-    function wxSvgStorm(){
-      return `
-      <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g class="cloud">
-          <path d="M18 40h26a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 18 40z"
-            fill="rgba(235,245,255,.92)"/>
-          <path d="M18 40h26a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 18 40z"
-            fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
-        </g>
-        <path class="bolt" d="M30 42l-4 10h6l-3 10 12-16h-6l3-4z"
-          fill="rgba(255,210,80,.98)"/>
-      </svg>`;
-    }
-
-    function wxSvgByCode(code){
-      const c = Number(code);
-      const isSun   = (c === 0);
-      const isCloud = ([1,2,3,45,48].includes(c));
-      const isRain  = ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(c));
-      const isStorm = ([95,96,99].includes(c));
-      if (isSun)   return { label:"Ensolarado", svg: wxSvgSun() };
-      if (isStorm) return { label:"Tempestade", svg: wxSvgStorm() };
-      if (isRain)  return { label:"Chuva", svg: wxSvgRain() };
-      if (isCloud) return { label:"Nublado", svg: wxSvgCloud() };
-      return { label:"Clima", svg: wxSvgCloud() };
-    }
-
     function wxSetIcon(elId, code){
       const el = document.getElementById(elId);
       if(!el) return;
-      const o = wxSvgByCode(code);
-      el.innerHTML = o.svg;
+      el.innerHTML = wxSvgCloud();
       el.setAttribute("role","img");
-      el.setAttribute("aria-label", o.label || "Clima");
+      el.setAttribute("aria-label","Clima");
     }
 
     async function carregarClima(data){
       const c = data?.clima;
       try {
         if (!c?.latitude || !c?.longitude) throw new Error("Sem coordenadas");
-
         const url =
           "https://api.open-meteo.com/v1/forecast" +
           `?latitude=${encodeURIComponent(c.latitude)}` +
@@ -1443,14 +1301,12 @@ html, body{
         const t = Math.round(cur.temperature_2m);
         const w = Math.round(cur.wind_speed_10m);
         const p = cur.precipitation;
-        const code = Number(cur.weather_code);
 
-        wxSetIcon("wxIconTop", code);
-        wxSetIcon("wxIconInline", code);
+        wxSetIcon("wxIconTop", cur.weather_code);
+        wxSetIcon("wxIconInline", cur.weather_code);
 
         setText("wxCityTemp", `${c.cidade || "—"} ${t}°C`);
         setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
-
       } catch (e) {
         const cloud = wxSvgCloud();
         const top = document.getElementById("wxIconTop");
@@ -1465,13 +1321,8 @@ html, body{
     const AD_STATE_KEY = "CS_AD_STATE_V2";
     const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V2";
 
-    function adLoadState(){
-      try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); }
-      catch(e){ return {}; }
-    }
-    function adSaveState(st){
-      try { sessionStorage.setItem(AD_STATE_KEY, JSON.stringify(st || {})); } catch(e){}
-    }
+    function adLoadState(){ try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); } catch(e){ return {}; } }
+    function adSaveState(st){ try { sessionStorage.setItem(AD_STATE_KEY, JSON.stringify(st || {})); } catch(e){} }
 
     function adFilterMp4(list){
       const arr = Array.isArray(list) ? list : [];
@@ -1530,15 +1381,32 @@ html, body{
         try{ vBg.load(); vMain.load(); }catch(e){}
       }
       const playSafe = (v)=>{
-        try{
-          const p = v.play();
-          if(p && p.catch) p.catch(()=>{});
-        }catch(e){}
+        try{ const p = v.play(); if(p && p.catch) p.catch(()=>{}); }catch(e){}
       };
       vBg.onloadedmetadata = () => playSafe(vBg);
       vMain.onloadedmetadata = () => playSafe(vMain);
       playSafe(vBg);
       playSafe(vMain);
+    }
+
+    function playMiniAds(list, baseIdx){
+      const minis = Array.from(document.querySelectorAll('[data-miniad="1"]'));
+      if(!minis.length || !list.length) return;
+
+      minis.forEach(w=>{
+        const off = Number(w.dataset.offset || 0) || 0;
+        const i = (baseIdx + off) % list.length;
+        const item = list[i];
+        const src = String(item?.arquivo || "");
+        const sep = src.includes("?") ? "&" : "?";
+        const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+        const vBg = w.querySelector("video.videoBg");
+        const vMain = w.querySelector("video.videoMain");
+        setVideoSrcPair(vMain, vBg, finalSrc);
+
+        const label = w.querySelector(".adOverlay .adText");
+        if(label) label.textContent = String(item?.anunciante || "—");
+      });
     }
 
     function adPlayByState(videos){
@@ -1575,6 +1443,8 @@ html, body{
       st.paused = false;
       st.t = 0;
       adSaveState(st);
+
+      playMiniAds(list, idx);
     }
 
     function adNext(videos){
@@ -1716,10 +1586,7 @@ html, body{
       const h = new Date().getHours();
       const estaNoite = (h >= 18 || h <= 4);
 
-      /* ✅ NÃO depende de width/zoom */
-      const html = document.documentElement;
-      const isMob = html.classList.contains("isMobileUA") && !html.classList.contains("isTV");
-
+      const isMob = isMobile();
       const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
       const longest = Math.max(vw, vh);
@@ -1838,7 +1705,7 @@ html, body{
     });
   </script>
 
-  <!-- ✅ FUNDO ALEATÓRIO -->
+  <!-- ✅ FUNDO (atalhos teclado) -->
   <script>
     const fundos = {
       azul:    ["#061726", "#0b1f33"],
@@ -1884,7 +1751,7 @@ html, body{
     setInterval(fundoAleatorio, 300000);
   </script>
 
-  <!-- ✅ SERVICE WORKER (sem “script solto”) -->
+  <!-- ✅ SERVICE WORKER -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
