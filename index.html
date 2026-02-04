@@ -913,7 +913,9 @@ html.isTV .wrap{
 }
 
 
-
+/* Quando alerta urgente estiver ativo, some com as mensagens no Brasil */
+html.urgentOn #newsBox{ display:none !important; }
+html.urgentOn .newsBox{ display:none !important; }
 
 
 
@@ -1718,20 +1720,25 @@ html.isTV .wrap{
 function applyUrgentAlert(data){
   const urgent = data?.alertaUrgente || {};
   const box = document.getElementById("urgentBox");
-  const newsBox = document.getElementById("newsBox");
-  if(!box || !newsBox) return;
+  if(!box) return;
 
-  const on = !!urgent.ativar && String(urgent.mensagem || "").trim().length > 0;
+  const msg = String(urgent.mensagem || "").trim();
+  const on = !!urgent.ativar && msg.length > 0;
 
- if(on){
-    document.getElementById("urgentTitle").textContent = urgent.titulo || "ALERTA URGENTE";
-    document.getElementById("urgentMsg").textContent = urgent.mensagem || "";
+  // ✅ classe global que derruba a news via CSS
+  document.documentElement.classList.toggle("urgentOn", on);
+
+  if(on){
+    const tEl = document.getElementById("urgentTitle");
+    const mEl = document.getElementById("urgentMsg");
+    if(tEl) tEl.textContent = urgent.titulo || "ALERTA URGENTE";
+    if(mEl) mEl.textContent = msg;
+
     box.style.display = "block";
-    newsBox.style.display = "none";
     box.classList.toggle("urgentBlink", !!urgent.piscar);
   }else{
     box.style.display = "none";
-    newsBox.style.display = "";
+    box.classList.remove("urgentBlink");
   }
 }
 
