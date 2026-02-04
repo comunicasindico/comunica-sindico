@@ -3,569 +3,875 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Comunica Síndico — Admin (Avisos)</title>
-  <meta name="robots" content="noindex,nofollow" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Admin — Comunica Síndico</title>
+
   <style>
     :root{
-      --bg1:#071725; --bg2:#0b1f33;
-      --panel: rgba(10,30,50,.72);
-      --line: rgba(140,200,255,.18);
-      --txt: rgba(234,242,255,.94);
-      --muted: rgba(234,242,255,.72);
-      --shadow: 0 18px 44px rgba(0,0,0,.45);
-      --radius: 18px;
-      --danger: #ff3b3b;
-      --ok: #44d07a;
+      --bg:#0b1220;
+      --panel:#0f1a2e;
+      --panel2:#0c1526;
+      --line:rgba(255,255,255,.10);
+      --muted:rgba(234,242,255,.72);
+      --text:rgba(234,242,255,.96);
+      --ok:#44d07a;
+      --warn:#ffb347;
+      --bad:#ff5a5a;
+      --shadow: 0 18px 40px rgba(0,0,0,.45);
+      --radius:18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
     *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      min-height:100svh;
-      color:var(--txt);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: radial-gradient(1200px 700px at 20% 10%, #143c5f 0%, rgba(20,60,95,0) 55%),
-                  linear-gradient(180deg, var(--bg1), var(--bg2));
-      padding:16px;
+    html,body{ height:100%; margin:0; background: radial-gradient(1200px 700px at 20% 0%, #122b52 0%, var(--bg) 55%); color:var(--text); font-family:var(--sans); }
+    a{ color:inherit; }
+    .wrap{ min-height:100%; padding:16px; display:flex; justify-content:center; }
+    .app{ width:min(1200px, 100%); display:grid; grid-template-columns: 390px 1fr; gap:14px; align-items:start; }
+    @media (max-width: 980px){ .app{ grid-template-columns: 1fr; } }
+
+    .card{
+      background: linear-gradient(180deg, rgba(18,35,60,.92), rgba(12,22,40,.92));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
-    .wrap{ max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:12px; }
-    .top{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding:12px 14px; border-radius:var(--radius);
-      border:1px solid var(--line); background: rgba(8,28,46,.60);
-      box-shadow: var(--shadow);
+    .head{
+      padding:14px 14px 12px;
+      border-bottom:1px solid var(--line);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background: rgba(0,0,0,.14);
     }
-    .brand{ display:flex; flex-direction:column; gap:2px; min-width:0; }
-    .title{ font-weight:950; letter-spacing:.2px; font-size:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .sub{ font-weight:850; font-size:12px; color:var(--muted); }
-    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
+    .title{ font-weight:900; letter-spacing:.5px; }
+    .sub{ font-size:12px; color:var(--muted); font-weight:800; margin-top:2px; }
+    .body{ padding:14px; display:flex; flex-direction:column; gap:12px; }
+
+    .row{ display:flex; gap:10px; }
+    .row > *{ flex:1; }
+    .field{ display:flex; flex-direction:column; gap:6px; }
+    label{ font-size:12px; font-weight:900; letter-spacing:.25px; color:rgba(234,242,255,.88); }
+    input, textarea, select{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color:var(--text);
+      padding:10px 12px;
+      outline:none;
+      font-weight:750;
+    }
+    textarea{ min-height:88px; resize:vertical; font-weight:650; line-height:1.25; }
+    input::placeholder, textarea::placeholder{ color:rgba(234,242,255,.45); font-weight:650; }
+    .mini{ font-size:12px; color:var(--muted); font-weight:800; line-height:1.25; }
+
+    .btnRow{ display:flex; flex-wrap:wrap; gap:10px; }
     .btn{
-      appearance:none; border:1px solid var(--line);
-      background: rgba(12,35,56,.40);
-      color: var(--txt); font-weight:900;
-      padding:10px 12px; border-radius:999px;
-      cursor:pointer; user-select:none;
-      display:inline-flex; gap:8px; align-items:center;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:999px;
+      font-weight:900;
+      letter-spacing:.2px;
+      cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px;
+      user-select:none;
+      transition: transform .06s ease, filter .15s ease, opacity .15s ease;
     }
     .btn:hover{ filter:brightness(1.08); }
     .btn:active{ transform:scale(.98); }
-    .btn.ok{ border-color: rgba(68,208,122,.55); }
-    .btn.danger{ border-color: rgba(255,59,59,.55); }
-    .btn.small{ padding:8px 10px; font-size:12px; }
+    .btn.ok{ background: rgba(68,208,122,.16); border-color: rgba(68,208,122,.40); }
+    .btn.warn{ background: rgba(255,179,71,.14); border-color: rgba(255,179,71,.45); }
+    .btn.bad{ background: rgba(255,90,90,.14); border-color: rgba(255,90,90,.55); }
+    .btn.ghost{ background: transparent; }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+
     .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px; border-radius:999px;
-      border:1px solid var(--line);
-      background: rgba(0,0,0,.20);
+      padding:6px 10px; border-radius:999px;
       font-weight:900; font-size:12px;
-      color: var(--muted);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color:var(--muted);
+      white-space:nowrap;
     }
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:12px;
-    }
-    @media (max-width: 960px){ .grid{ grid-template-columns:1fr; } }
 
-    .panel{
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .panelHead{
-      padding:12px 14px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      background: rgba(12,35,56,.35);
-    }
-    .panelTitle{ font-weight:950; letter-spacing:.3px; }
-    .panelBody{ padding:12px 14px; display:flex; flex-direction:column; gap:10px; }
+    .hr{ height:1px; background: rgba(255,255,255,.10); margin:4px 0; }
 
+    /* Lista de vídeos */
     .list{ display:flex; flex-direction:column; gap:10px; }
     .item{
       border:1px solid rgba(255,255,255,.10);
-      border-radius: 16px;
       background: rgba(0,0,0,.18);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-      padding:12px 12px 10px;
-      display:flex; flex-direction:column; gap:8px;
+      border-radius:16px;
+      padding:10px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
     }
-    .itemTop{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
-    .h{
-      margin:0; font-weight:950; line-height:1.12;
-      overflow-wrap:anywhere;
+    .item .col{ flex:1; display:flex; flex-direction:column; gap:8px; }
+    .item .actions{ display:flex; flex-direction:column; gap:8px; }
+    .chip{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: rgba(234,242,255,.86);
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      padding:8px 10px;
+      border-radius:14px;
+      word-break:break-word;
     }
-    .d{
-      margin:0; color: var(--muted);
-      line-height:1.20; overflow-wrap:anywhere;
-    }
-    .meta{
-      display:flex; flex-wrap:wrap; gap:8px; align-items:center;
-      color: rgba(234,242,255,.82);
-      font-size:12px; font-weight:900;
-    }
-    .tag{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:5px 8px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.08);
-      font-size:11px; font-weight:950;
-    }
-    .tag.alta{ border-color: rgba(255,59,59,.65); }
-    .tag.media{ border-color: rgba(255,179,71,.65); }
-    .tag.baixa{ border-color: rgba(120,190,255,.65); }
 
-    .actions{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
-    .hint{ font-size:12px; color: rgba(234,242,255,.70); line-height:1.35; }
+    /* Preview / JSON */
+    .code{
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.35;
+      background: rgba(0,0,0,.32);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      padding:12px;
+      white-space:pre;
+      overflow:auto;
+      max-height: 55vh;
+    }
 
-    /* Modal */
-    .modalBack{
-      position:fixed; inset:0; background: rgba(0,0,0,.55);
-      display:none; align-items:center; justify-content:center;
-      padding:16px; z-index:9999;
+    /* Preview alerta */
+    .alertPreview{
+      border-radius:18px;
+      border:1px solid rgba(255,90,90,.60);
+      background: linear-gradient(180deg, rgba(255,90,90,.22), rgba(80,0,0,.30));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 18px 38px rgba(0,0,0,.45);
+      padding:14px;
     }
-    .modal{
-      width:min(720px, 100%);
-      border:1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(8,28,46,.95);
-      box-shadow: var(--shadow);
-      overflow:hidden;
+    .alertPreview .aTitle{
+      font-weight:1000;
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      font-size: clamp(18px, 2.1vw, 30px);
+      color:#fff;
+      margin:0 0 10px;
     }
-    .modalHead{
-      padding:12px 14px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      background: rgba(12,35,56,.35);
+    .alertPreview .aMsg{
+      margin:0;
+      font-weight:900;
+      color:#fff;
+      font-size: clamp(16px, 1.9vw, 28px);
+      line-height:1.18;
+      word-break:break-word;
     }
-    .modalTitle{ font-weight:950; }
-    .modalBody{ padding:12px 14px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    @media (max-width: 720px){ .modalBody{ grid-template-columns:1fr; } }
 
-    label{ font-size:12px; font-weight:900; color: rgba(234,242,255,.85); display:flex; flex-direction:column; gap:6px; }
-    input, select, textarea{
-      width:100%;
-      padding:10px 10px;
-      border-radius: 12px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color: var(--txt);
-      outline:none;
+    .hint{
+      font-size:12px;
+      color:rgba(234,242,255,.70);
       font-weight:800;
+      background: rgba(0,0,0,.20);
+      border: 1px dashed rgba(255,255,255,.14);
+      border-radius: 16px;
+      padding: 10px 12px;
+      line-height: 1.3;
     }
-    textarea{ min-height:120px; resize:vertical; }
-    .modalFoot{
-      padding:12px 14px;
-      border-top:1px solid rgba(255,255,255,.10);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
-    .right{ margin-left:auto; display:flex; gap:10px; flex-wrap:wrap; }
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <div class="top">
-      <div class="brand">
-        <div class="title">Admin — Avisos</div>
-        <div class="sub">CRUD completo (criar/editar/excluir/ordenar) • preserva o resto do data.json</div>
-      </div>
-      <div class="row">
-        <span class="pill" id="statusPill">Carregando data.json…</span>
-        <button class="btn small" id="btnReload">🔄 Recarregar</button>
-        <button class="btn small ok" id="btnNew">➕ Novo aviso</button>
-      </div>
-    </div>
+    <div class="app">
 
-    <div class="grid">
-      <!-- LISTA -->
-      <div class="panel">
-        <div class="panelHead">
-          <div class="panelTitle">Lista de Avisos</div>
+      <!-- ESQUERDA: Controles -->
+      <div class="card">
+        <div class="head">
+          <div>
+            <div class="title">Admin (Discreto)</div>
+            <div class="sub">Edita e publica <b>data.json</b> no GitHub</div>
+          </div>
+          <div class="pill" id="statusPill">Offline</div>
+        </div>
+
+        <div class="body">
+
+          <div class="hint">
+            ✅ Fluxo: <b>Carregar</b> → ajustar campos → <b>Publicar no GitHub</b>. <br/>
+            🔒 Token fica somente no seu navegador (sessionStorage).
+          </div>
+
+          <div class="field">
+            <label>Token do GitHub (PAT com permissão repo)</label>
+            <input id="token" type="password" placeholder="ghp_..." />
+            <div class="mini">Dica: cole aqui, clique em <b>Salvar token</b>, depois <b>Publicar</b>.</div>
+            <div class="btnRow">
+              <button class="btn ghost" id="btnSaveToken">💾 Salvar token</button>
+              <button class="btn ghost" id="btnClearToken">🧹 Limpar token</button>
+              <button class="btn ghost" id="btnOpenPanel">🖥️ Abrir Painel do Síndico</button>
+            </div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="btnRow">
+            <button class="btn ok" id="btnLoad">⟳ Carregar data.json</button>
+            <button class="btn warn" id="btnDownload">⬇️ Baixar data.json</button>
+            <button class="btn bad" id="btnPublish">🚀 Publicar no GitHub</button>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="field">
+            <label>Título</label>
+            <input id="fTitulo" placeholder="Comunica Síndico — Condôminos" />
+          </div>
+
+          <div class="field">
+            <label>Subtítulo</label>
+            <input id="fSubtitulo" placeholder="Painel Informativo" />
+          </div>
+
+          <div class="field">
+            <label>Referência (rodapé)</label>
+            <input id="fReferencia" placeholder="Atualizado automaticamente" />
+          </div>
+
+          <div class="hr"></div>
+
           <div class="row">
-            <button class="btn small" id="btnSort">↕️ Ordenar por prioridade</button>
-          </div>
-        </div>
-        <div class="panelBody">
-          <div class="hint">
-            • Use <b>⬆️⬇️</b> para ajustar ordem manual. <br/>
-            • <b>Salvar</b> gera um <b>novo data.json</b> para você substituir no GitHub.
-          </div>
-          <div class="list" id="list"></div>
-        </div>
-      </div>
-
-      <!-- AÇÕES / SALVAR -->
-      <div class="panel">
-        <div class="panelHead">
-          <div class="panelTitle">Salvar / Publicar</div>
-        </div>
-        <div class="panelBody">
-          <div class="hint">
-            ✅ Este admin <b>não muda nada sozinho</b>. <br/>
-            Ele cria um <b>data.json novo</b> com os avisos atualizados.
-          </div>
-
-          <button class="btn ok" id="btnDownload">💾 Baixar data.json novo</button>
-          <button class="btn" id="btnCopy">📋 Copiar JSON para área de transferência</button>
-
-          <div class="panel" style="box-shadow:none; background:rgba(0,0,0,.12);">
-            <div class="panelHead" style="background:rgba(0,0,0,.10);">
-              <div class="panelTitle">Colar data.json (opcional)</div>
+            <div class="field">
+              <label>Rotação: intervalo (seg)</label>
+              <input id="fRotInterval" type="number" min="3" max="60" step="1" />
             </div>
-            <div class="panelBody">
-              <div class="hint">
-                Se o fetch falhar, cole aqui o conteúdo do seu data.json e clique em “Carregar do campo”.
-              </div>
-              <textarea id="pasteJson" class="mono" placeholder="Cole aqui o JSON completo do data.json…"></textarea>
-              <button class="btn small" id="btnLoadFromPaste">⬆️ Carregar do campo</button>
+            <div class="field">
+              <label>Qtd avisos (por tela)</label>
+              <select id="fRotQtd">
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
             </div>
           </div>
 
-          <div class="hint">
-            Depois de baixar, substitua no GitHub: <b>data.json</b> (mesmo caminho).<br/>
-            Aí o painel da TV/PC atualiza normalmente.
+          <div class="hr"></div>
+
+          <div class="field">
+            <label>Cidade (Clima)</label>
+            <input id="fCidade" placeholder="São Paulo" />
+            <div class="btnRow">
+              <button class="btn ghost" id="btnBuscarCidade">🔎 Buscar coordenadas</button>
+            </div>
           </div>
+
+          <div class="row">
+            <div class="field">
+              <label>Latitude</label>
+              <input id="fLat" type="number" step="0.0001" />
+            </div>
+            <div class="field">
+              <label>Longitude</label>
+              <input id="fLon" type="number" step="0.0001" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Timezone</label>
+            <input id="fTz" placeholder="America/Sao_Paulo" />
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="field">
+            <label>Cabeçalho — Imagem da cidade</label>
+            <div class="row">
+              <select id="fCabAtivar">
+                <option value="false">Desligada</option>
+                <option value="true">Ligada</option>
+              </select>
+              <input id="fCabUrl" placeholder="https://..." />
+            </div>
+            <div class="mini">Se ligado, o painel do síndico usa essa URL para o cabeçalho (quando você implementar/ativar no painel).</div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="field">
+            <label>ALERTA URGENTE</label>
+            <div class="row">
+              <select id="fAlertAtivar">
+                <option value="false">Desligado (normal)</option>
+                <option value="true">Ligado (substitui Mensagens no Brasil)</option>
+              </select>
+              <select id="fAlertPiscar">
+                <option value="true">Piscar: Sim</option>
+                <option value="false">Piscar: Não</option>
+              </select>
+            </div>
+            <input id="fAlertTitulo" placeholder="ALERTA URGENTE" />
+            <textarea id="fAlertMsg" placeholder="Escreva a mensagem do alerta..."></textarea>
+
+            <div class="btnRow">
+              <button class="btn bad" id="btnAlertOn">🚨 Ligar alerta</button>
+              <button class="btn ok" id="btnAlertOff">✅ Desligar alerta</button>
+            </div>
+
+            <div class="mini">Para “voltar tudo ao normal”: clique em <b>Desligar alerta</b> e publique.</div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="field">
+            <label>Vídeos (Publicidades)</label>
+            <div class="btnRow">
+              <button class="btn ghost" id="btnAddVideo">➕ Incluir vídeo</button>
+              <button class="btn ghost" id="btnShuffleToggle">🔀 Alternar Shuffle</button>
+            </div>
+            <div class="mini">Vídeos são objetos em <b>publicidade.videos[]</b> (arquivo + anunciante).</div>
+          </div>
+
+          <div id="videosList" class="list"></div>
+
         </div>
       </div>
+
+      <!-- DIREITA: Preview / JSON -->
+      <div class="card">
+        <div class="head">
+          <div>
+            <div class="title">Prévia & JSON</div>
+            <div class="sub">Veja como ficará o alerta e o data.json final</div>
+          </div>
+          <div class="pill" id="pillRepo">comunicasindico/comunica-sindico</div>
+        </div>
+
+        <div class="body">
+          <div class="btnRow">
+            <button class="btn ghost" id="btnRebuild">🧩 Regerar JSON</button>
+            <button class="btn ghost" id="btnCopyJson">📋 Copiar JSON</button>
+          </div>
+
+          <div id="alertPreviewWrap" style="display:none">
+            <div class="alertPreview" id="alertPreview">
+              <p class="aTitle" id="pAlertTitle">ALERTA URGENTE</p>
+              <p class="aMsg" id="pAlertMsg">—</p>
+            </div>
+          </div>
+
+          <div class="code" id="jsonView">Carregue o data.json para começar…</div>
+
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- MODAL -->
-  <div class="modalBack" id="modalBack">
-    <div class="modal">
-      <div class="modalHead">
-        <div class="modalTitle" id="modalTitle">Editar aviso</div>
-        <button class="btn small danger" id="btnClose">✖ Fechar</button>
-      </div>
-
-      <div class="modalBody">
-        <label>Título
-          <input id="fTitulo" maxlength="120" />
-        </label>
-
-        <label>Prioridade
-          <select id="fPrioridade">
-            <option>Alta</option>
-            <option>Média</option>
-            <option>Baixa</option>
-          </select>
-        </label>
-
-        <label>Tipo
-          <input id="fTipo" maxlength="60" placeholder="Ex: Segurança, Serviços, Informativo..." />
-        </label>
-
-        <label>Local
-          <input id="fLocal" maxlength="60" placeholder="Ex: Hall, Piscina, Garagem..." />
-        </label>
-
-        <label>Início (texto)
-          <input id="fInicio" maxlength="40" placeholder="Ex: 29/01/26 - 12:57" />
-        </label>
-
-        <label>Fim (texto)
-          <input id="fFim" maxlength="40" placeholder="Ex: 10/02/26 - 12:57" />
-        </label>
-
-        <label style="grid-column:1 / -1;">Descrição
-          <textarea id="fDesc" maxlength="800"></textarea>
-        </label>
-      </div>
-
-      <div class="modalFoot">
-        <button class="btn danger" id="btnDelete">🗑 Excluir</button>
-        <div class="right">
-          <button class="btn" id="btnCancel">Cancelar</button>
-          <button class="btn ok" id="btnSave">Salvar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    
-  <script>
-
- <script>
-const GITHUB_TOKEN = "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";
-const GITHUB_OWNER = "comunicasindico";
-const GITHUB_REPO  = "comunica-sindico";
-const GITHUB_PATH = "data.json";
+<script>
+/* ============================
+   CONFIG DO REPO (AJUSTADO)
+   ============================ */
+const GITHUB_OWNER  = "comunicasindico";
+const GITHUB_REPO   = "comunica-sindico";
 const GITHUB_BRANCH = "main";
+const GITHUB_PATH   = "data.json";
+
+/* ============================
+   ESTADO
+   ============================ */
+let DATA = null;         // objeto data.json
+let DATA_ORIGINAL = null; // cópia de referência
+
+const $ = (id)=>document.getElementById(id);
+const statusPill = $("statusPill");
+
+function setStatus(text, type){
+  statusPill.textContent = text;
+  statusPill.style.borderColor =
+    type==="ok" ? "rgba(68,208,122,.55)" :
+    type==="bad" ? "rgba(255,90,90,.65)" :
+    "rgba(255,255,255,.12)";
+  statusPill.style.background =
+    type==="ok" ? "rgba(68,208,122,.16)" :
+    type==="bad" ? "rgba(255,90,90,.14)" :
+    "rgba(0,0,0,.18)";
+  statusPill.style.color = type==="ok" ? "rgba(234,242,255,.96)" : "rgba(234,242,255,.85)";
+}
+
+function safeClone(obj){
+  return JSON.parse(JSON.stringify(obj ?? null));
+}
+
+function prettyJson(obj){
+  return JSON.stringify(obj, null, 2);
+}
+
+function getToken(){
+  const v = ($("token").value || "").trim();
+  if(v) return v;
+  try{ return (sessionStorage.getItem("CS_GH_TOKEN")||"").trim(); }catch(e){ return ""; }
+}
+
+function saveToken(){
+  const v = ($("token").value || "").trim();
+  if(!v){ alert("Cole seu token primeiro."); return; }
+  try{ sessionStorage.setItem("CS_GH_TOKEN", v); }catch(e){}
+  $("token").value = "";
+  alert("Token salvo neste navegador (sessão atual).");
+}
+
+function clearToken(){
+  try{ sessionStorage.removeItem("CS_GH_TOKEN"); }catch(e){}
+  $("token").value = "";
+  alert("Token removido deste navegador.");
+}
+
+/* ============================
+   LOAD data.json (mesma pasta)
+   ============================ */
+async function loadData(){
+  setStatus("Carregando…","");
+
+  try{
+    const res = await fetch("./data.json?ts=" + Date.now(), { cache:"no-store" });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const ct = (res.headers.get("content-type")||"").toLowerCase();
+    if(!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
+
+    const j = await res.json();
+    DATA = j;
+    DATA_ORIGINAL = safeClone(j);
+
+    fillFormFromData();
+    rebuildJsonView();
+
+    setStatus("Atualizado","ok");
+  }catch(e){
+    console.error(e);
+    setStatus("Offline","bad");
+    alert("Não consegui carregar ./data.json. Confirme se admin.html está na mesma pasta do data.json.");
+  }
+}
+
+/* ============================
+   FORM <-> DATA
+   ============================ */
+function ensureBaseShape(){
+  if(!DATA) DATA = {};
+  DATA.condominio = DATA.condominio ?? "Comunica Síndico";
+  DATA.titulo = DATA.titulo ?? "Comunica Síndico — Condôminos";
+  DATA.subtitulo = DATA.subtitulo ?? "Painel Informativo";
+  DATA.referencia = DATA.referencia ?? "Atualizado automaticamente";
+
+  DATA.rotacao = DATA.rotacao ?? {};
+  DATA.rotacao.ativar = (DATA.rotacao.ativar ?? true);
+  DATA.rotacao.intervaloSeg = Number(DATA.rotacao.intervaloSeg ?? 8);
+  DATA.rotacao.quantidadePorTela = Number(DATA.rotacao.quantidadePorTela ?? 3);
+  DATA.rotacao.mostrarProgresso = (DATA.rotacao.mostrarProgresso ?? true);
+  DATA.rotacao.pausarNoMouse = (DATA.rotacao.pausarNoMouse ?? false);
+
+  DATA.clima = DATA.clima ?? {};
+  DATA.clima.cidade = DATA.clima.cidade ?? "São Paulo";
+  DATA.clima.latitude = Number(DATA.clima.latitude ?? -23.5505);
+  DATA.clima.longitude = Number(DATA.clima.longitude ?? -46.6333);
+  DATA.clima.timezone = DATA.clima.timezone ?? "America/Sao_Paulo";
+
+  DATA.publicidade = DATA.publicidade ?? {};
+  DATA.publicidade.ativar = (DATA.publicidade.ativar ?? true);
+  DATA.publicidade.shuffle = (DATA.publicidade.shuffle ?? true);
+  DATA.publicidade.cidadeTitulo = DATA.publicidade.cidadeTitulo ?? "Mensagens no Brasil";
+
+  DATA.publicidade.cabecalhoImagem = DATA.publicidade.cabecalhoImagem ?? { ativar:false, url:"" };
+  DATA.publicidade.cabecalhoImagem.ativar = !!DATA.publicidade.cabecalhoImagem.ativar;
+  DATA.publicidade.cabecalhoImagem.url = String(DATA.publicidade.cabecalhoImagem.url ?? "");
+
+  DATA.publicidade.videos = Array.isArray(DATA.publicidade.videos) ? DATA.publicidade.videos : [];
+
+  DATA.alertaUrgente = DATA.alertaUrgente ?? { ativar:false, titulo:"ALERTA URGENTE", mensagem:"", piscar:true };
+  DATA.alertaUrgente.ativar = !!DATA.alertaUrgente.ativar;
+  DATA.alertaUrgente.titulo = String(DATA.alertaUrgente.titulo ?? "ALERTA URGENTE");
+  DATA.alertaUrgente.mensagem = String(DATA.alertaUrgente.mensagem ?? "");
+  DATA.alertaUrgente.piscar = (DATA.alertaUrgente.piscar ?? true);
+}
+
+function fillFormFromData(){
+  ensureBaseShape();
+
+  $("fTitulo").value = DATA.titulo || "";
+  $("fSubtitulo").value = DATA.subtitulo || "";
+  $("fReferencia").value = DATA.referencia || "";
+
+  $("fRotInterval").value = Number(DATA.rotacao.intervaloSeg || 8);
+  $("fRotQtd").value = String(Number(DATA.rotacao.quantidadePorTela || 3));
+
+  $("fCidade").value = DATA.clima.cidade || "";
+  $("fLat").value = Number(DATA.clima.latitude || 0);
+  $("fLon").value = Number(DATA.clima.longitude || 0);
+  $("fTz").value = DATA.clima.timezone || "America/Sao_Paulo";
+
+  $("fCabAtivar").value = String(!!DATA.publicidade.cabecalhoImagem.ativar);
+  $("fCabUrl").value = DATA.publicidade.cabecalhoImagem.url || "";
+
+  $("fAlertAtivar").value = String(!!DATA.alertaUrgente.ativar);
+  $("fAlertPiscar").value = String(!!DATA.alertaUrgente.piscar);
+  $("fAlertTitulo").value = DATA.alertaUrgente.titulo || "ALERTA URGENTE";
+  $("fAlertMsg").value = DATA.alertaUrgente.mensagem || "";
+
+  renderVideos();
+  renderAlertPreview();
+}
+
+function applyFormToData(){
+  ensureBaseShape();
+
+  DATA.titulo = $("fTitulo").value.trim() || DATA.titulo;
+  DATA.subtitulo = $("fSubtitulo").value.trim() || DATA.subtitulo;
+  DATA.referencia = $("fReferencia").value.trim() || DATA.referencia;
+
+  DATA.rotacao.intervaloSeg = Math.max(3, Math.min(60, Number($("fRotInterval").value || 8)));
+  DATA.rotacao.quantidadePorTela = Number($("fRotQtd").value || 3);
+
+  DATA.clima.cidade = $("fCidade").value.trim() || DATA.clima.cidade;
+  DATA.clima.latitude = Number($("fLat").value || DATA.clima.latitude);
+  DATA.clima.longitude = Number($("fLon").value || DATA.clima.longitude);
+  DATA.clima.timezone = $("fTz").value.trim() || DATA.clima.timezone;
+
+  DATA.publicidade.cabecalhoImagem.ativar = ($("fCabAtivar").value === "true");
+  DATA.publicidade.cabecalhoImagem.url = $("fCabUrl").value.trim();
+
+  DATA.alertaUrgente.ativar = ($("fAlertAtivar").value === "true");
+  DATA.alertaUrgente.piscar = ($("fAlertPiscar").value === "true");
+  DATA.alertaUrgente.titulo = $("fAlertTitulo").value.trim() || "ALERTA URGENTE";
+  DATA.alertaUrgente.mensagem = $("fAlertMsg").value.trim();
+
+  renderAlertPreview();
+}
+
+function rebuildJsonView(){
+  if(!DATA){ $("jsonView").textContent = "Carregue o data.json para começar…"; return; }
+  applyFormToData();
+  $("jsonView").textContent = prettyJson(DATA);
+}
+
+/* ============================
+   ALERTA PREVIEW
+   ============================ */
+function renderAlertPreview(){
+  if(!DATA) return;
+  const on = !!DATA.alertaUrgente?.ativar;
+  $("alertPreviewWrap").style.display = on ? "block" : "none";
+  $("pAlertTitle").textContent = DATA.alertaUrgente?.titulo || "ALERTA URGENTE";
+  $("pAlertMsg").textContent = DATA.alertaUrgente?.mensagem || "—";
+
+  // piscar (opcional) no preview
+  const blink = !!DATA.alertaUrgente?.piscar;
+  $("alertPreview").style.animation = (on && blink) ? "blink 0.9s ease-in-out infinite" : "none";
+}
+
+(function injectBlink(){
+  const st = document.createElement("style");
+  st.textContent = `
+    @keyframes blink{
+      0%,100%{ filter:brightness(1); transform: translateY(0); }
+      50%{ filter:brightness(1.18); transform: translateY(-1px); }
+    }
+  `;
+  document.head.appendChild(st);
+})();
+
+/* ============================
+   VÍDEOS CRUD
+   ============================ */
+function renderVideos(){
+  ensureBaseShape();
+  const list = $("videosList");
+  list.innerHTML = "";
+
+  if(!DATA.publicidade.videos.length){
+    const d = document.createElement("div");
+    d.className = "hint";
+    d.innerHTML = "Nenhum vídeo cadastrado em <b>publicidade.videos</b>.";
+    list.appendChild(d);
+    return;
+  }
+
+  DATA.publicidade.videos.forEach((v, idx)=>{
+    const wrap = document.createElement("div");
+    wrap.className = "item";
+
+    const col = document.createElement("div");
+    col.className = "col";
+
+    const inpFile = document.createElement("input");
+    inpFile.placeholder = "./ads/seu_video.mp4";
+    inpFile.value = String(v.arquivo || "");
+    inpFile.oninput = ()=>{ v.arquivo = inpFile.value.trim(); rebuildJsonView(); };
+
+    const inpAdv = document.createElement("input");
+    inpAdv.placeholder = "Anunciante / texto";
+    inpAdv.value = String(v.anunciante || "");
+    inpAdv.oninput = ()=>{ v.anunciante = inpAdv.value.trim(); rebuildJsonView(); };
+
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.textContent = `#${idx+1}  arquivo: ${String(v.arquivo||"—")}`;
+
+    col.appendChild(chip);
+    col.appendChild(inpFile);
+    col.appendChild(inpAdv);
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const up = document.createElement("button");
+    up.className = "btn ghost";
+    up.textContent = "⬆️";
+    up.title = "Subir";
+    up.onclick = ()=>{
+      if(idx<=0) return;
+      const a = DATA.publicidade.videos;
+      [a[idx-1], a[idx]] = [a[idx], a[idx-1]];
+      renderVideos();
+      rebuildJsonView();
+    };
+
+    const down = document.createElement("button");
+    down.className = "btn ghost";
+    down.textContent = "⬇️";
+    down.title = "Descer";
+    down.onclick = ()=>{
+      const a = DATA.publicidade.videos;
+      if(idx>=a.length-1) return;
+      [a[idx+1], a[idx]] = [a[idx], a[idx+1]];
+      renderVideos();
+      rebuildJsonView();
+    };
+
+    const del = document.createElement("button");
+    del.className = "btn bad";
+    del.textContent = "🗑️";
+    del.title = "Excluir";
+    del.onclick = ()=>{
+      if(!confirm("Excluir este vídeo?")) return;
+      DATA.publicidade.videos.splice(idx,1);
+      renderVideos();
+      rebuildJsonView();
+    };
+
+    actions.appendChild(up);
+    actions.appendChild(down);
+    actions.appendChild(del);
+
+    wrap.appendChild(col);
+    wrap.appendChild(actions);
+    list.appendChild(wrap);
+  });
+}
+
+function addVideo(){
+  ensureBaseShape();
+  DATA.publicidade.videos.push({ arquivo:"./ads/novo.mp4", anunciante:"Novo vídeo" });
+  renderVideos();
+  rebuildJsonView();
+}
+
+function toggleShuffle(){
+  ensureBaseShape();
+  DATA.publicidade.shuffle = !DATA.publicidade.shuffle;
+  alert("Shuffle agora está: " + (DATA.publicidade.shuffle ? "LIGADO" : "DESLIGADO"));
+  rebuildJsonView();
+}
+
+/* ============================
+   BUSCA CIDADE (OPEN-METEO GEO)
+   ============================ */
+async function buscarCidade(){
+  const name = ($("fCidade").value||"").trim();
+  if(!name){ alert("Digite o nome da cidade."); return; }
+
+  try{
+    setStatus("Buscando cidade…","");
+    const url = "https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(name) + "&count=5&language=pt&format=json";
+    const res = await fetch(url, { cache:"no-store" });
+    const j = await res.json();
+    const arr = Array.isArray(j?.results) ? j.results : [];
+    if(!arr.length) throw new Error("Sem resultados");
+
+    // escolhe o primeiro
+    const r = arr[0];
+    $("fLat").value = Number(r.latitude || 0);
+    $("fLon").value = Number(r.longitude || 0);
+
+    // tenta timezone se vier
+    if(r.timezone) $("fTz").value = r.timezone;
+
+    // cidade “bonita”
+    const nice = [r.name, r.admin1, r.country].filter(Boolean).join(" - ");
+    $("fCidade").value = nice || name;
+
+    rebuildJsonView();
+    setStatus("Atualizado","ok");
+    alert("Cidade aplicada:\n" + (nice || name));
+  }catch(e){
+    console.error(e);
+    setStatus("Offline","bad");
+    alert("Não consegui buscar coordenadas agora. Você pode preencher lat/lon manualmente.");
+  }
+}
+
+/* ============================
+   DOWNLOAD LOCAL
+   ============================ */
+function downloadJson(){
+  if(!DATA){ alert("Carregue o data.json primeiro."); return; }
+  rebuildJsonView();
+  const blob = new Blob([prettyJson(DATA)], { type:"application/json;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "data.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1200);
+}
+
+/* ============================
+   COPY JSON
+   ============================ */
+async function copyJson(){
+  if(!DATA){ alert("Carregue o data.json primeiro."); return; }
+  rebuildJsonView();
+  try{
+    await navigator.clipboard.writeText(prettyJson(DATA));
+    alert("JSON copiado.");
+  }catch(e){
+    alert("Não consegui copiar automaticamente. Selecione o texto no painel e copie manualmente.");
+  }
+}
+
+/* ============================
+   PUBLISH PARA GITHUB (Contents API)
+   ============================ */
+function b64EncodeUnicode(str){
+  // base64 seguro para UTF-8
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+async function ghGetSha(token){
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(GITHUB_PATH)}?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
+  const res = await fetch(url, {
+    headers:{
+      "Authorization":"Bearer " + token,
+      "Accept":"application/vnd.github+json"
+    }
+  });
+  if(!res.ok){
+    const txt = await res.text().catch(()=> "");
+    throw new Error("GitHub GET sha falhou: " + res.status + " " + txt);
+  }
+  const j = await res.json();
+  return j?.sha || null;
+}
+
+async function ghPutFile(token, contentStr, sha){
+  const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${encodeURIComponent(GITHUB_PATH)}`;
+  const body = {
+    message: "Atualizar data.json via Admin",
+    content: b64EncodeUnicode(contentStr),
+    branch: GITHUB_BRANCH
+  };
+  if(sha) body.sha = sha;
+
+  const res = await fetch(url, {
+    method:"PUT",
+    headers:{
+      "Authorization":"Bearer " + token,
+      "Accept":"application/vnd.github+json",
+      "Content-Type":"application/json"
+    },
+    body: JSON.stringify(body)
+  });
+
+  if(!res.ok){
+    const txt = await res.text().catch(()=> "");
+    throw new Error("GitHub PUT falhou: " + res.status + " " + txt);
+  }
+  return await res.json();
+}
+
+async function publishToGitHub(){
+  if(!DATA){ alert("Carregue o data.json primeiro."); return; }
+
+  const token = getToken();
+  if(!token){
+    alert("Cole seu token e clique em 'Salvar token'.");
+    return;
+  }
+
+  rebuildJsonView();
+  const contentStr = prettyJson(DATA);
+
+  try{
+    setStatus("Publicando…","");
+    const sha = await ghGetSha(token);
+    await ghPutFile(token, contentStr, sha);
+
+    setStatus("Publicado!","ok");
+    alert("✅ Publicado no GitHub!\nAguarde alguns segundos e atualize o painel do síndico.");
+  }catch(e){
+    console.error(e);
+    setStatus("Erro","bad");
+    alert("❌ Falha ao publicar.\n\n" + String(e.message || e));
+  }
+}
+
+/* ============================
+   ALERTA: BOTÕES RÁPIDOS
+   ============================ */
+function alertOn(){
+  $("fAlertAtivar").value = "true";
+  rebuildJsonView();
+  alert("Alerta ligado (ainda falta PUBLICAR).");
+}
+function alertOff(){
+  $("fAlertAtivar").value = "false";
+  rebuildJsonView();
+  alert("Alerta desligado (ainda falta PUBLICAR).");
+}
+
+/* ============================
+   UI BIND
+   ============================ */
+function bind(){
+  $("btnSaveToken").onclick = saveToken;
+  $("btnClearToken").onclick = clearToken;
+
+  $("btnOpenPanel").onclick = ()=>{ window.open("./index.html", "_blank"); };
+
+  $("btnLoad").onclick = loadData;
+  $("btnDownload").onclick = downloadJson;
+  $("btnPublish").onclick = publishToGitHub;
+
+  $("btnRebuild").onclick = rebuildJsonView;
+  $("btnCopyJson").onclick = copyJson;
+
+  $("btnBuscarCidade").onclick = buscarCidade;
+
+  $("btnAddVideo").onclick = addVideo;
+  $("btnShuffleToggle").onclick = toggleShuffle;
+
+  $("btnAlertOn").onclick = alertOn;
+  $("btnAlertOff").onclick = alertOff;
+
+  // Atualiza JSON ao editar qualquer campo
+  const liveIds = [
+    "fTitulo","fSubtitulo","fReferencia",
+    "fRotInterval","fRotQtd",
+    "fCidade","fLat","fLon","fTz",
+    "fCabAtivar","fCabUrl",
+    "fAlertAtivar","fAlertPiscar","fAlertTitulo","fAlertMsg"
+  ];
+  liveIds.forEach(id=>{
+    const el = $(id);
+    if(!el) return;
+    el.addEventListener("input", rebuildJsonView);
+    el.addEventListener("change", rebuildJsonView);
+  });
+}
+
+bind();
+setStatus("Offline","bad");
 </script>
-
-    
-    // =========================
-    // Estado
-    // =========================
-    let baseData = null;     // JSON inteiro do data.json (preservado)
-    let avisos = [];         // array editável
-    let editingIndex = -1;
-
-    const $ = (id)=>document.getElementById(id);
-
-    function prioClass(p){
-      const x = String(p||"").toLowerCase();
-      if(x.includes("alta")) return "alta";
-      if(x.includes("m")) return "media";
-      return "baixa";
-    }
-
-    function safe(v){ return (v==null ? "" : String(v)); }
-
-    function setStatus(text, ok=null){
-      const el = $("statusPill");
-      el.textContent = text;
-      el.style.borderColor = ok===true ? "rgba(68,208,122,.55)" : ok===false ? "rgba(255,59,59,.55)" : "var(--line)";
-    }
-
-    // =========================
-    // Load data.json
-    // =========================
-    async function loadData(){
-      setStatus("Carregando data.json…");
-      try{
-        const url = "./data.json?ts=" + Date.now();
-        const res = await fetch(url, { cache:"no-store" });
-        if(!res.ok) throw new Error("HTTP " + res.status);
-        const data = await res.json();
-        applyLoadedData(data);
-        setStatus("OK • data.json carregado", true);
-      }catch(e){
-        setStatus("Falha ao carregar • cole o JSON no campo ao lado", false);
-      }
-    }
-
-    function applyLoadedData(data){
-      baseData = data && typeof data === "object" ? data : {};
-      avisos = Array.isArray(baseData.avisos) ? baseData.avisos.map(x=>({ ...x })) : [];
-      renderList();
-    }
-
-    // =========================
-    // Render list
-    // =========================
-    function renderList(){
-      const root = $("list");
-      root.innerHTML = "";
-
-      if(!avisos.length){
-        root.innerHTML = `<div class="hint">Nenhum aviso cadastrado. Clique em “Novo aviso”.</div>`;
-        return;
-      }
-
-      avisos.forEach((a, idx)=>{
-        const item = document.createElement("div");
-        item.className = "item";
-
-        const titulo = safe(a.titulo || "Aviso");
-        const desc = safe(a.descricao || "");
-        const pr = safe(a.prioridade || "Baixa");
-        const tp = safe(a.tipo || "");
-        const lc = safe(a.local || "");
-        const ini = safe(a.inicio || "");
-        const fim = safe(a.fim || "");
-
-        item.innerHTML = `
-          <div class="itemTop">
-            <p class="h">${escapeHtml(titulo)}</p>
-            <div class="actions">
-              <button class="btn small" data-act="up">⬆️</button>
-              <button class="btn small" data-act="down">⬇️</button>
-              <button class="btn small ok" data-act="edit">✏️ Editar</button>
-            </div>
-          </div>
-          <p class="d">${escapeHtml(desc || "—")}</p>
-          <div class="meta">
-            <span class="tag ${prioClass(pr)}">⚡ ${escapeHtml(pr)}</span>
-            ${tp ? `<span class="tag">🏷 ${escapeHtml(tp)}</span>` : ``}
-            ${lc ? `<span class="tag">📍 ${escapeHtml(lc)}</span>` : ``}
-            ${(ini||fim) ? `<span class="tag">🗓 ${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</span>` : ``}
-          </div>
-        `;
-
-        item.querySelector('[data-act="edit"]').onclick = ()=>openModal(idx);
-        item.querySelector('[data-act="up"]').onclick = ()=>move(idx, -1);
-        item.querySelector('[data-act="down"]').onclick = ()=>move(idx, +1);
-
-        root.appendChild(item);
-      });
-    }
-
-    function move(idx, dir){
-      const j = idx + dir;
-      if(j < 0 || j >= avisos.length) return;
-      const tmp = avisos[idx];
-      avisos[idx] = avisos[j];
-      avisos[j] = tmp;
-      renderList();
-    }
-
-    function sortByPriority(){
-      const rank = { alta:3, media:2, baixa:1 };
-      avisos.sort((a,b)=>{
-        const pa = prioClass(a?.prioridade);
-        const pb = prioClass(b?.prioridade);
-        return (rank[pb]||0) - (rank[pa]||0);
-      });
-      renderList();
-    }
-
-    // =========================
-    // Modal CRUD
-    // =========================
-    function openModal(idx){
-      editingIndex = idx;
-
-      const isNew = (idx < 0);
-      $("modalTitle").textContent = isNew ? "Novo aviso" : "Editar aviso";
-
-      const a = isNew ? {
-        titulo:"", descricao:"", prioridade:"Baixa", tipo:"", local:"", inicio:"", fim:""
-      } : (avisos[idx] || {});
-
-      $("fTitulo").value = safe(a.titulo);
-      $("fDesc").value = safe(a.descricao);
-      $("fPrioridade").value = normalizePrio(safe(a.prioridade));
-      $("fTipo").value = safe(a.tipo);
-      $("fLocal").value = safe(a.local);
-      $("fInicio").value = safe(a.inicio);
-      $("fFim").value = safe(a.fim);
-
-      $("btnDelete").style.display = isNew ? "none" : "inline-flex";
-
-      $("modalBack").style.display = "flex";
-    }
-
-    function closeModal(){
-      $("modalBack").style.display = "none";
-      editingIndex = -1;
-    }
-
-    function normalizePrio(p){
-      const x = String(p||"").toLowerCase();
-      if(x.includes("alta")) return "Alta";
-      if(x.includes("m")) return "Média";
-      return "Baixa";
-    }
-
-    function saveModal(){
-      const obj = {
-        titulo: $("fTitulo").value.trim(),
-        descricao: $("fDesc").value.trim(),
-        prioridade: $("fPrioridade").value,
-        tipo: $("fTipo").value.trim(),
-        local: $("fLocal").value.trim(),
-        inicio: $("fInicio").value.trim(),
-        fim: $("fFim").value.trim()
-      };
-
-      if(!obj.titulo) obj.titulo = "Aviso";
-      if(!obj.descricao) obj.descricao = "—";
-
-      if(editingIndex < 0){
-        avisos.unshift(obj); // novo entra no topo
-      }else{
-        avisos[editingIndex] = obj;
-      }
-      renderList();
-      closeModal();
-    }
-
-    function deleteModal(){
-      if(editingIndex < 0) return;
-      avisos.splice(editingIndex, 1);
-      renderList();
-      closeModal();
-    }
-
-    // =========================
-    // Export / Download
-    // =========================
-    function buildFinalData(){
-      const out = (baseData && typeof baseData === "object") ? structuredCloneSafe(baseData) : {};
-      out.avisos = avisos.map(x=>({ ...x }));
-      return out;
-    }
-
-    function structuredCloneSafe(obj){
-      try{ return structuredClone(obj); }catch(e){ return JSON.parse(JSON.stringify(obj)); }
-    }
-
-    function downloadJson(){
-      const finalData = buildFinalData();
-      const txt = JSON.stringify(finalData, null, 2);
-      const blob = new Blob([txt], { type:"application/json" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "data.json";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(()=>URL.revokeObjectURL(a.href), 2500);
-      setStatus("Baixado: data.json novo (substitua no GitHub)", true);
-    }
-
-    async function copyJson(){
-      const finalData = buildFinalData();
-      const txt = JSON.stringify(finalData, null, 2);
-      try{
-        await navigator.clipboard.writeText(txt);
-        setStatus("JSON copiado ✅", true);
-      }catch(e){
-        setStatus("Não foi possível copiar. Use o botão de baixar.", false);
-      }
-    }
-
-    // =========================
-    // Paste loader
-    // =========================
-    function loadFromPaste(){
-      const t = $("pasteJson").value.trim();
-      if(!t) return;
-      try{
-        const j = JSON.parse(t);
-        applyLoadedData(j);
-        setStatus("OK • carregado do campo", true);
-      }catch(e){
-        setStatus("JSON inválido no campo", false);
-      }
-    }
-
-    // =========================
-    // HTML escape
-    // =========================
-    function escapeHtml(s){
-      return String(s ?? "").replace(/[&<>"']/g, c => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-      }[c]));
-    }
-
-    // =========================
-    // Bind UI
-    // =========================
-    $("btnReload").onclick = loadData;
-    $("btnNew").onclick = ()=>openModal(-1);
-    $("btnSort").onclick = sortByPriority;
-
-    $("btnClose").onclick = closeModal;
-    $("btnCancel").onclick = closeModal;
-    $("btnSave").onclick = saveModal;
-    $("btnDelete").onclick = deleteModal;
-
-    $("btnDownload").onclick = downloadJson;
-    $("btnCopy").onclick = copyJson;
-    $("btnLoadFromPaste").onclick = loadFromPaste;
-
-    // Fecha modal clicando fora
-    $("modalBack").addEventListener("click", (e)=>{
-      if(e.target === $("modalBack")) closeModal();
-    });
-
-    // Start
-    loadData();
-  </script>
 </body>
 </html>
