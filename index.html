@@ -239,7 +239,7 @@
       width:100%;
     }
 
-    /* ===== MAIN em GRID (2x2 acima + newsBox abaixo) ===== */
+    /* ===== MAIN: quad 2x2 + news abaixo (TV/DESKTOP) ===== */
     .main{
       flex:1 1 auto;
       min-height:0;
@@ -496,11 +496,11 @@
     video::-webkit-media-controls-panel{ display:none !important; }
     video::-webkit-media-controls-enclosure{ display:none !important; }
 
-    /* ===== NEWS (agora com visual padrão do bloco geral) ===== */
+    /* ===== NEWS (PRETO) ===== */
     .newsBox{
       flex:0 0 auto;
-      background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
-      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(0,0,0,.88), rgba(0,0,0,.68));
+      border:1px solid rgba(255,255,255,.14);
       box-shadow:var(--shadow);
       border-radius: 18px;
       overflow: hidden;
@@ -518,13 +518,13 @@
       justify-content:space-between;
       gap:10px;
       border-bottom:1px solid rgba(255,255,255,.10);
-      background:rgba(7,20,34,.20);
+      background:rgba(0,0,0,.35);
       flex:0 0 auto;
     }
 
     .newsTitle{
       font-weight:950;
-      color:rgba(234,242,255,.95);
+      color:rgba(255,255,255,.94);
       letter-spacing:.3px;
     }
     #newsPill{ display:none !important; }
@@ -542,7 +542,7 @@
     .newsItem{
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
+      background: rgba(255,255,255,.06);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
       padding: 10px 10px 9px;
       overflow:hidden;
@@ -554,7 +554,7 @@
       font-size: clamp(11px, 1.25dvh, 15px);
       line-height: 1.18;
       letter-spacing: .12px;
-      color: rgba(234,242,255,.92);
+      color: rgba(255,255,255,.92);
       margin: 0;
       display:block;
       white-space:normal;
@@ -565,17 +565,18 @@
     .newsFooter{
       margin-top: 4px;
       font-size: 11px;
-      color: rgba(234,242,255,.72);
+      color: rgba(255,255,255,.70);
       font-weight: 900;
       text-align:left;
     }
     .newsFooterItem{
       font-size: 11px;
-      color: rgba(234,242,255,.60);
+      color: rgba(255,255,255,.55);
       margin-left: 6px;
       text-align:left;
     }
 
+    /* ===== TICKER: 1 linha (verso à esquerda / resto à direita) ===== */
     .ticker{
       flex:0 0 auto;
       width:100%;
@@ -596,15 +597,46 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
+      gap:12px;
       min-width:0;
       flex-wrap:nowrap;
+    }
+
+    .verseLeft{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      flex: 1 1 auto;
     }
 
     .tickerIcon{
       font-size:clamp(22px, 3.1vw, 28px);
       opacity:.95;
       flex:0 0 auto;
+      white-space:nowrap;
+    }
+
+    #ref{
+      color:rgba(234,242,255,.92);
+      font-weight: 900;
+      font-size: clamp(12px, 1.05vw, 16px);
+      line-height: 1.22;
+      margin:0;
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      flex: 1 1 auto;
+      text-align:left;
+    }
+
+    .footRight{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:12px;
+      flex: 0 0 auto;
       white-space:nowrap;
     }
 
@@ -616,24 +648,9 @@
       flex:0 0 auto;
     }
 
-    #ref{
-      color:rgba(234,242,255,.88);
-      font-weight:850;
-      font-size: clamp(12px, 1.05vw, 16px);
-      flex: 1 1 auto;
-      min-width: 0;
-      white-space: normal;
-      overflow: visible;
-      text-overflow: unset;
-      line-height: 1.22;
-      text-align:center;
-      margin:0 10px;
-    }
-
     .wxInline{
       flex:0 0 auto;
       width:auto;
-      margin-left:auto;
       display:flex;
       flex-direction:row;
       align-items:center;
@@ -679,7 +696,16 @@
       filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
     }
 
-    /* ================= MOBILE (NÃO ALTERADO) ================= */
+    /* ===== se não couber: vira 2 linhas no rodapé ===== */
+    @media (max-width: 1100px){
+      .tickerLine1{ flex-wrap:wrap; justify-content:center; }
+      .verseLeft{ flex:1 1 100%; }
+      #ref{ white-space:normal; overflow:visible; text-overflow:unset; text-align:center; }
+      .footRight{ flex: 1 1 100%; justify-content:center; }
+      .wxInline .wxL2::before{ content:""; }
+    }
+
+    /* ================= MOBILE (preservado; publicidade PERMITIDA) ================= */
     @media (max-width: 980px){
       :root{
         --ui: clamp(1, calc(100vmin / 900), 2.10);
@@ -740,13 +766,6 @@
       }
       #wxIconTop{ width:56px; height:56px; transform:none !important; }
       #wxIconTop svg{ width:56px; height:56px; }
-    }
-
-    @media (min-width: 981px) and (max-width: 1100px){
-      .tickerLine1{ flex-wrap:wrap; justify-content:center; }
-      #ref{ flex:1 1 100%; margin:0; }
-      .wxInline{ width:100%; justify-content:center; margin-left:0; }
-      .wxInline .wxL2::before{ content:""; }
     }
 
     @media (min-width: 981px) and (max-height: 720px){
@@ -825,6 +844,7 @@
 
       <div class="main">
         <div class="quadTop fade-in" id="avisosPane">
+          <!-- 1º quadro: único com "Avisos Importantes" -->
           <div class="panel tile">
             <div class="panelHead">
               <div class="panelTitle">🔔 Avisos Importantes</div>
@@ -833,22 +853,25 @@
             <div class="tileBody" id="slot1"></div>
           </div>
 
+          <!-- 2º quadro: sem "Avisos Importantes" -->
           <div class="panel tile">
             <div class="panelHead">
-              <div class="panelTitle">🔔 Avisos Importantes</div>
+              <div class="panelTitle" style="opacity:.85">🧩</div>
               <div class="pill" style="visibility:hidden">—</div>
             </div>
             <div class="tileBody" id="slot2"></div>
           </div>
 
+          <!-- 3º quadro: sem "Avisos Importantes" -->
           <div class="panel tile">
             <div class="panelHead">
-              <div class="panelTitle">🔔 Avisos Importantes</div>
+              <div class="panelTitle" style="opacity:.85">🧩</div>
               <div class="pill" style="visibility:hidden">—</div>
             </div>
             <div class="tileBody" id="slot3"></div>
           </div>
 
+          <!-- 4º quadro: Publicidade (também no celular) -->
           <div class="panel tile">
             <div class="panelHead">
               <div class="panelTitle">📣 Publicidade</div>
@@ -874,16 +897,20 @@
 
       <div class="ticker">
         <div class="tickerLine1">
-          <span class="tickerIcon">📖</span>
-          <span id="dataBiblica">—</span>
-          <span id="ref">—</span>
+          <div class="verseLeft">
+            <span class="tickerIcon">📖</span>
+            <span id="ref">—</span>
+          </div>
 
-          <div class="wxInline" id="wxInline">
-            <div class="wxL1">
-              <span id="wxIconInline" class="wxMiniSvg" aria-hidden="true"></span>
-              <span id="wxCityTemp">—</span>
+          <div class="footRight">
+            <span id="dataBiblica">—</span>
+            <div class="wxInline" id="wxInline">
+              <div class="wxL1">
+                <span id="wxIconInline" class="wxMiniSvg" aria-hidden="true"></span>
+                <span id="wxCityTemp">—</span>
+              </div>
+              <div class="wxL2" id="wxWindRain">—</div>
             </div>
-            <div class="wxL2" id="wxWindRain">—</div>
           </div>
         </div>
       </div>
@@ -1027,21 +1054,11 @@
     return el;
   }
 
-  function buildEmptyAvisoEl(){
-    const el = document.createElement("div");
-    el.className = "aviso baixa";
-    el.innerHTML = `
-      <p class="t">Sem aviso</p>
-      <p class="d">—</p>
-      <div class="metaLine"><span class="metaItem">📌 <b>Atualizado</b></span></div>
-    `;
-    return el;
-  }
-
-  function buildMiniAdEl(){
+  function buildMiniAdEl(offset){
     const wrap = document.createElement("div");
     wrap.className = "videoWrap";
     wrap.dataset.miniad = "1";
+    wrap.dataset.offset = String(offset || 0);
 
     const vbg = document.createElement("video");
     vbg.className = "videoBg";
@@ -1067,6 +1084,23 @@
     return wrap;
   }
 
+  /* ===== Rotação de avisos: 3 por tela, troca a cada 8s ===== */
+  let ROT_TIMER = null;
+  function startRotation(data){
+    try{ if(ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; } }catch(e){}
+    const rot = data?.rotacao || {};
+    const ativar = (rot.ativar !== false);
+    const intervalo = Math.max(3, Number(rot.intervaloSeg || 8));
+    if(!ativar) return;
+
+    ROT_TIMER = setInterval(()=>{
+      try{
+        window.__rotStart = (window.__rotStart || 0) + 3;
+        renderAvisos(window.__lastDataForTopbar || {});
+      }catch(e){}
+    }, intervalo * 1000);
+  }
+
   function renderAvisos(data){
     const pane = document.getElementById("avisosPane");
     const s1 = document.getElementById("slot1");
@@ -1090,20 +1124,22 @@
       return (rank[pb]||0) - (rank[pa]||0);
     });
 
-    const picks = avisosAll.slice(0,3);
-    const hasAny = picks.length > 0;
+    const start = Number(window.__rotStart || 0) || 0;
+    const picks = avisosAll.slice(start, start + 3);
+    if(picks.length < 3){
+      const rest = avisosAll.slice(0, Math.max(0, 3 - picks.length));
+      picks.push(...rest);
+    }
 
     setTimeout(()=>{
-      // slot1 e slot2: nunca viram vídeo extra (para não aparecer "outro vídeo" indevido)
       if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
-      else s1.appendChild(buildEmptyAvisoEl());
+      else s1.appendChild(buildMiniAdEl(1));
 
       if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
-      else s2.appendChild(buildEmptyAvisoEl());
+      else s2.appendChild(buildMiniAdEl(2));
 
-      // slot3 (penúltimo quadro dos 4): se faltar aviso OU não tiver nenhum aviso -> entra o vídeo extra
       if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
-      else s3.appendChild(buildMiniAdEl());
+      else s3.appendChild(buildMiniAdEl(3));
 
       requestAnimationFrame(()=>{
         if (window.innerWidth >= 981) autoFitAvisos();
@@ -1334,18 +1370,21 @@
     playSafe(vMain);
   }
 
-  function playMiniAdSingle(list, baseIdx){
-    // Só 1 mini vídeo (slot3) quando existir [data-miniad="1"]
-    const mini = document.querySelector('[data-miniad="1"]');
-    if(!mini || !list.length) return;
+  function playMiniAds(list, baseIdx){
+    const minis = Array.from(document.querySelectorAll('[data-miniad="1"]'));
+    if(!minis.length || !list.length) return;
 
-    const item = list[(baseIdx + 1) % list.length]; // “outro vídeo” (próximo do atual)
-    const src = String(item?.arquivo || "");
-    const sep = src.includes("?") ? "&" : "?";
-    const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
-    const vBg = mini.querySelector("video.videoBg");
-    const vMain = mini.querySelector("video.videoMain");
-    setVideoSrcPair(vMain, vBg, finalSrc);
+    minis.forEach(w=>{
+      const off = Number(w.dataset.offset || 0) || 0;
+      const i = (baseIdx + off) % list.length;
+      const item = list[i];
+      const src = String(item?.arquivo || "");
+      const sep = src.includes("?") ? "&" : "?";
+      const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+      const vBg = w.querySelector("video.videoBg");
+      const vMain = w.querySelector("video.videoMain");
+      setVideoSrcPair(vMain, vBg, finalSrc);
+    });
   }
 
   function adPlayByState(videos){
@@ -1382,8 +1421,7 @@
     st.t = 0;
     adSaveState(st);
 
-    // mini ad: somente 1, e somente se existir na tela (slot3 vazio)
-    playMiniAdSingle(list, idx);
+    playMiniAds(list, idx);
   }
 
   function adNext(videos){
@@ -1549,6 +1587,7 @@
 
       const data = await res.json();
       window.__lastDataForTopbar = data;
+      window.__rotStart = 0;
 
       if (status) status.textContent = "Atualizado";
       if (statusMini) statusMini.textContent = "Atualizado";
@@ -1557,6 +1596,7 @@
       setCityTitleFromConfig(data);
 
       renderAvisos(data);
+      startRotation(data);
 
       if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
         setText("dataBiblica", "📖");
