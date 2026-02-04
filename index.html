@@ -507,38 +507,26 @@
       gap:10px;
       pointer-events:none;
     }
-    .adTag{
-      flex:0 0 auto;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(12,35,56,.55);
-      color:rgba(234,242,255,.92);
-      font-weight:950;
-      letter-spacing:.4px;
-      text-transform:uppercase;
-      font-size: 11px;
-      line-height:1;
-      box-shadow: 0 10px 24px rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-    }
+    
+    .adTag{ display:none !important; }
+    
     .adText{
-      flex:1 1 auto;
-      min-width:0;
-      padding:7px 10px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.28);
-      color:rgba(234,242,255,.95);
-      font-weight:900;
-      font-size: clamp(12px, 1.35dvh, 16px);
-      line-height:1.15;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      box-shadow: 0 10px 24px rgba(0,0,0,.35);
-      backdrop-filter: blur(8px);
-    }
+  font-weight:950;
+  color:rgba(234,242,255,.96);
+
+  /* >>> REMOVER RETICÊNCIAS / 1 LINHA <<< */
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+
+  /* quebrar bem em telas menores */
+  overflow-wrap:anywhere;
+  word-break:break-word;
+
+  /* deixa passar para 2ª linha (ou mais) */
+  line-height: 1.15;
+  max-width: 100%;
+}
 
     video::-webkit-media-controls{ display:none !important; }
     video::-webkit-media-controls-panel{ display:none !important; }
@@ -879,7 +867,7 @@
             <div class="tileBody" id="slot4">
               <div class="videoWrap">
                 <div class="adOverlay">
-                  <div class="adTag">Publicidade</div>
+                 
                   <div class="adText" id="adLabel">—</div>
                 </div>
                 <video id="adVideoBg" class="videoBg" autoplay muted playsinline webkit-playsinline loop disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
@@ -1139,7 +1127,7 @@
 
     const overlay = document.createElement("div");
     overlay.className = "adOverlay";
-    overlay.innerHTML = `<div class="adTag">Publicidade</div><div class="adText">—</div>`;
+   overlay.innerHTML = `<div class="adText">—</div>`;
 
     const vbg = document.createElement("video");
     vbg.className = "videoBg";
