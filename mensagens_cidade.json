@@ -1,11 +1,17 @@
 {
-  "updatedAt": "2026-02-04T12:59:01-03:00",
+  "updatedAt": "2026-02-04T13:59:06-03:00",
   "items": [
     {
       "titulo": "Assembleia é cancelada e síndico alvo de protestos segue no comando de condomínio em Anápolis - Diário do Município Anápolis",
       "texto": "Assembleia é cancelada e síndico alvo de protestos segue no comando de condomínio em Anápolis &nbsp;&nbsp; Diário do Município Anápolis",
       "fonte": "news.google.com",
       "data": "04-02-2026"
+    },
+    {
+      "titulo": "Síndico destituído há seis meses em Anápolis se mantém no cargo e é alvo de protestos - Diário de Goiás",
+      "texto": "Síndico destituído há seis meses em Anápolis se mantém no cargo e é alvo de protestos &nbsp;&nbsp; Diário de Goiás",
+      "fonte": "news.google.com",
+      "data": "03-02-2026"
     },
     {
       "titulo": "Caso Daiane Alves: condomínio define novo gestor após prisão de síndico - Paranaíba Mais",
@@ -16,12 +22,6 @@
     {
       "titulo": "Carnaval aumenta locação por temporada e exige atenção de síndicos e moradores - CBN Ribeirão",
       "texto": "Carnaval aumenta locação por temporada e exige atenção de síndicos e moradores &nbsp;&nbsp; CBN Ribeirão",
-      "fonte": "news.google.com",
-      "data": "03-02-2026"
-    },
-    {
-      "titulo": "Moradores protestam contra gestão de síndico e apontam dívida de quase R$ 1 milhão em condomínio de Anápolis - Diário da Redação",
-      "texto": "Moradores protestam contra gestão de síndico e apontam dívida de quase R$ 1 milhão em condomínio de Anápolis &nbsp;&nbsp; Diário da Redação",
       "fonte": "news.google.com",
       "data": "03-02-2026"
     }
