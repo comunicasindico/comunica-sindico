@@ -52,16 +52,11 @@
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
 
-      /* NEWS: volta ao “padrão do quadro” */
+      /* Mensagens no Brasil: mesma cor dos quadros (padrão) */
       --news-bg: rgba(15,43,69,.92);
       --news-border: rgba(255,255,255,.10);
       --news-shadow: 0 14px 50px rgba(0,0,0,.35);
-
-      /* cards internos claros para fonte preta */
-      --news-item-bg: rgba(255,255,255,.88);
-      --news-item-border: rgba(0,0,0,.10);
-      --news-text: rgba(0,0,0,.92);
-      --news-meta: rgba(0,0,0,.58);
+      --news-title: rgba(234,242,255,.95);
     }
 
     *{box-sizing:border-box}
@@ -259,73 +254,29 @@
       gap:8px;
     }
 
-    /* ===== TÍTULOS GERAIS ACIMA DOS QUADROS ===== */
-    .quadHeader{
+    /* Cabeçalho único dos Avisos + botão Atualizar na mesma linha */
+    .sectionBar{
       flex:0 0 auto;
+      width:100%;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
       padding:10px 12px;
-      border-radius:var(--radius);
-      border:1px solid var(--line);
       background:rgba(8,28,46,.60);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
       box-shadow:var(--shadow);
       backdrop-filter: blur(8px);
     }
-    .quadHeader .leftTitle{
-      font-weight: 950;
-      letter-spacing:.4px;
+    .sectionTitle{
+      font-weight:950;
+      letter-spacing:.6px;
+      text-transform:uppercase;
       font-size: calc(18px * var(--ui2));
-      color: rgba(234,242,255,.96);
-      white-space:nowrap;
-    }
-    .quadHeader .rightTitle{
-      font-weight: 950;
-      font-size: calc(14px * var(--ui2));
-      color: rgba(234,242,255,.92);
-      white-space:nowrap;
-      text-align:right;
-    }
-    .quadHeader .rightTitle span{
-      font-weight: 850;
-      opacity:.90;
-      margin-left:10px;
-    }
-
-    .panel{
-      background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      display:flex;
-      flex-direction:column;
-      min-height:0;
-      overflow:hidden;
-    }
-
-    .panelHead{
-      padding:10px 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      background:rgba(7,20,34,.20);
-      flex:0 0 auto;
-    }
-
-    /* cabeçalhos mais “leves” nos quadros para liberar espaço */
-    .panelTitle{
-      font-weight: 950;
-      letter-spacing:.5px;
-      color:rgba(234,242,255,.93);
-      text-transform:none;
-      font-size: calc(15px * var(--ui));
-      min-width:0;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-      opacity:.92;
     }
 
     .pill{
@@ -346,6 +297,44 @@
     .pill:hover{ filter:brightness(1.08); }
     .pill:active{ transform:scale(.98); }
 
+    .panel{
+      background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+      overflow:hidden;
+    }
+
+    .quadTop{
+      flex:1 1 auto;
+      min-height:0;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap:8px;
+      width:100%;
+      height:100%;
+    }
+
+    .tile{
+      min-height:0;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* Agora sem cabeçalho dentro dos 3 avisos: mais área útil */
+    .tileBody{
+      padding:12px;
+      min-height:0;
+      flex:1 1 auto;
+      overflow:hidden;
+      display:flex;
+    }
+
     @keyframes avisoIn{
       from{ opacity:0; transform: translateY(8px) scale(.995); }
       to  { opacity:1; transform: translateY(0) scale(1); }
@@ -354,7 +343,7 @@
     .aviso{
       height:100%;
       width:100%;
-      padding:14px 14px 12px 16px;
+      padding:16px 16px 12px 18px;
       border-radius:16px;
       background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
       display:flex;
@@ -397,15 +386,13 @@
     }
     .aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
 
-    /* fonte padrão (desktop) */
     .aviso .t{
       margin:0;
       font-weight:950;
-      font-size: clamp(18px, 1.45vw, 24px);
       letter-spacing:.2px;
       color:#fff;
       text-shadow:0 1px 2px rgba(0,0,0,.6);
-      line-height:1.12;
+      line-height:1.10;
       white-space:normal;
       overflow-wrap:anywhere;
       word-break:break-word;
@@ -414,8 +401,7 @@
     .aviso .d{
       margin:0;
       color:#e0ecff;
-      line-height:1.26;
-      font-size: clamp(14px, 1.20vw, 19px);
+      line-height:1.24;
       overflow:hidden;
       white-space:normal;
       overflow-wrap:anywhere;
@@ -471,19 +457,6 @@
       background: linear-gradient(180deg, rgba(160,210,255,.55), rgba(0,80,160,.32));
     }
 
-    .quadTop{
-      flex:1 1 auto;
-      min-height:0;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap:8px;
-      width:100%;
-      height:100%;
-    }
-
-    .tile{ min-height:0; overflow:hidden; display:flex; flex-direction:column; }
-    .tileBody{ padding:10px; min-height:0; flex:1 1 auto; overflow:hidden; display:flex; }
     .fade-out{ opacity:0; transition: opacity .14s ease; }
     .fade-in { opacity:1; transition: opacity .14s ease; }
 
@@ -522,11 +495,55 @@
       background:transparent;
     }
 
+    /* Texto do anunciante DENTRO do quadro do vídeo */
+    .adOverlay{
+      position:absolute;
+      left:10px;
+      right:10px;
+      top:10px;
+      z-index:6;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      pointer-events:none;
+    }
+    .adTag{
+      flex:0 0 auto;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(12,35,56,.55);
+      color:rgba(234,242,255,.92);
+      font-weight:950;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      font-size: 11px;
+      line-height:1;
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+    }
+    .adText{
+      flex:1 1 auto;
+      min-width:0;
+      padding:7px 10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.28);
+      color:rgba(234,242,255,.95);
+      font-weight:900;
+      font-size: clamp(12px, 1.35dvh, 16px);
+      line-height:1.15;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+    }
+
     video::-webkit-media-controls{ display:none !important; }
     video::-webkit-media-controls-panel{ display:none !important; }
     video::-webkit-media-controls-enclosure{ display:none !important; }
 
-    /* ===== NEWS (padrão quadro + texto preto nos cards internos) ===== */
     .newsBox{
       flex:0 0 auto;
       background: var(--news-bg);
@@ -548,7 +565,7 @@
       justify-content:space-between;
       gap:10px;
       border-bottom:1px solid rgba(255,255,255,.10);
-      background:rgba(7,20,34,.20);
+      background:rgba(12,35,56,.35);
       flex:0 0 auto;
     }
 
@@ -567,20 +584,20 @@
 
     .newsItem{
       border-radius: 14px;
-      border: 1px solid var(--news-item-border);
-      background: var(--news-item-bg);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
       padding: 10px 10px 9px;
       overflow:hidden;
     }
 
     .newsItem .h{
       font-family: var(--font-soft);
-      font-weight: 850;
+      font-weight: 820;
       font-size: clamp(11px, 1.25dvh, 15px);
       line-height: 1.18;
       letter-spacing: .12px;
-      color: var(--news-text);
+      color: rgba(234,242,255,.95); /* texto padrão (não preto) */
       margin: 0;
       display:block;
       white-space:normal;
@@ -588,21 +605,18 @@
       word-break:break-word;
     }
 
-    .newsFooter{
-      margin-top: 4px;
+    /* Fonte e nome NA MESMA LINHA */
+    .newsSourceLine{
+      margin-top: 6px;
       font-size: 11px;
-      color: rgba(234,242,255,.70);
+      color: rgba(234,242,255,.72);
       font-weight: 900;
       text-align:left;
-    }
-    .newsFooterItem{
-      font-size: 11px;
-      color: rgba(234,242,255,.60);
-      margin-left: 6px;
-      text-align:left;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
-    /* ===== RODAPÉ ===== */
     .ticker{
       flex:0 0 auto;
       width:100%;
@@ -623,17 +637,9 @@
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:12px;
-      min-width:0;
-      flex-wrap:nowrap;
-    }
-
-    .verseLeft{
-      display:flex;
-      align-items:center;
       gap:10px;
       min-width:0;
-      flex: 1 1 auto;
+      flex-wrap:nowrap;
     }
 
     .tickerIcon{
@@ -643,35 +649,26 @@
       white-space:nowrap;
     }
 
-    #ref{
-      color:rgba(234,242,255,.92);
-      font-weight: 900;
-      font-size: clamp(12px, 1.05vw, 16px);
-      line-height: 1.22;
-      margin:0;
-      min-width:0;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-      flex: 1 1 auto;
-      text-align:left;
-    }
-
-    .footRight{
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:10px;
-      flex: 0 0 auto;
-      white-space:nowrap;
-    }
-
     #dataBiblica{
       font-weight:950;
       white-space:nowrap;
       color:rgba(234,242,255,.95);
       font-size: calc(16px * var(--ui2));
       flex:0 0 auto;
+    }
+
+    #ref{
+      color:rgba(234,242,255,.88);
+      font-weight:850;
+      font-size: clamp(12px, 1.05vw, 16px);
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      line-height: 1.22;
+      text-align:center;
+      margin:0 10px;
     }
 
     .wxInline{
@@ -723,16 +720,6 @@
       filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
     }
 
-    @media (max-width: 1100px){
-      .tickerLine1{ flex-wrap:wrap; justify-content:center; }
-      .verseLeft{ flex: 1 1 100%; justify-content:center; }
-      #ref{ white-space:normal; overflow:visible; text-overflow:unset; text-align:center; }
-      .footRight{ flex: 1 1 100%; justify-content:center; }
-      .wxInline{ margin-left:0; }
-      .wxInline .wxL2::before{ content:""; }
-    }
-
-    /* ===== MOBILE (mantém publicidade e tudo) ===== */
     @media (max-width: 980px){
       :root{
         --ui: clamp(1, calc(100vmin / 900), 2.10);
@@ -749,6 +736,8 @@
       .rightInfo{ display:none !important; }
       .subMobileLine{ display:flex; width:100%; }
 
+      .sectionBar{ justify-content:space-between; }
+
       .quadTop{
         display:flex;
         flex-direction:column;
@@ -758,9 +747,6 @@
 
       .tileBody{ padding:12px; }
 
-      #slot4 .videoWrap{ min-height: 240px; }
-      #slot4{ min-height: 240px; }
-
       .ticker{
         position:sticky;
         bottom:0;
@@ -769,6 +755,7 @@
         padding-bottom: max(12px, env(safe-area-inset-bottom));
       }
 
+      /* mantém clima/ícone do topo no celular como estava */
       .rightInfo{
         display:flex !important;
         position:absolute;
@@ -793,17 +780,11 @@
       #wxIconTop svg{ width:56px; height:56px; }
     }
 
-    /* ===== TV / Tela cheia: aumentar e padronizar fonte ===== */
-    html.isTV .aviso .t{
-      font-size: clamp(26px, 2.10vw, 40px);
-      line-height: 1.10;
-    }
-    html.isTV .aviso .d{
-      font-size: clamp(18px, 1.65vw, 28px);
-      line-height: 1.24;
-    }
-    html.isTV .metaLine{
-      font-size: 12px;
+    @media (min-width: 981px) and (max-width: 1100px){
+      .tickerLine1{ flex-wrap:wrap; justify-content:center; }
+      #ref{ flex:1 1 100%; margin:0; }
+      .wxInline{ width:100%; justify-content:center; margin-left:0; }
+      .wxInline .wxL2::before{ content:""; }
     }
 
     @media (min-width: 981px) and (max-height: 720px){
@@ -882,46 +863,25 @@
 
       <div class="main">
 
-        <!-- TÍTULOS gerais acima do 2x2 -->
-        <div class="quadHeader">
-          <div class="leftTitle">Avisos</div>
-          <div class="rightTitle">
-            Publicidade <span>Acabe de vez com os problemas de comunicação</span>
-          </div>
+        <!-- Avisos: título + Atualizar na mesma linha -->
+        <div class="sectionBar">
+          <div class="sectionTitle">Avisos</div>
+          <div class="pill" id="refPill" title="Clique para atualizar">Atualizar</div>
         </div>
 
         <div class="quadTop fade-in" id="avisosPane">
-          <div class="panel tile">
-            <div class="panelHead">
-              <div class="panelTitle" style="visibility:hidden">—</div>
-              <div class="pill" id="refPill" title="Clique para atualizar">Atualizar</div>
-            </div>
-            <div class="tileBody" id="slot1"></div>
-          </div>
+          <div class="panel tile"><div class="tileBody" id="slot1"></div></div>
+          <div class="panel tile"><div class="tileBody" id="slot2"></div></div>
+          <div class="panel tile"><div class="tileBody" id="slot3"></div></div>
 
+          <!-- Publicidade: texto fica dentro do vídeo -->
           <div class="panel tile">
-            <div class="panelHead">
-              <div class="panelTitle" style="visibility:hidden">—</div>
-              <div class="pill" style="visibility:hidden">—</div>
-            </div>
-            <div class="tileBody" id="slot2"></div>
-          </div>
-
-          <div class="panel tile">
-            <div class="panelHead">
-              <div class="panelTitle" style="visibility:hidden">—</div>
-              <div class="pill" style="visibility:hidden">—</div>
-            </div>
-            <div class="tileBody" id="slot3"></div>
-          </div>
-
-          <div class="panel tile">
-            <div class="panelHead">
-              <div class="panelTitle" id="adLabelTop">Publicidade —</div>
-              <div class="pill" id="adPill">—</div>
-            </div>
             <div class="tileBody" id="slot4">
               <div class="videoWrap">
+                <div class="adOverlay">
+                  <div class="adTag">Publicidade</div>
+                  <div class="adText" id="adLabel">—</div>
+                </div>
                 <video id="adVideoBg" class="videoBg" autoplay muted playsinline webkit-playsinline loop disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
                 <video id="adVideo" class="videoMain" autoplay muted playsinline webkit-playsinline disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
               </div>
@@ -931,7 +891,7 @@
 
         <div class="newsBox" id="newsBox" style="display:none">
           <div class="newsHead">
-            <div class="newsTitle" id="cityTitle">Mensagens no Brasil</div>
+            <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
             <div class="pill" id="newsPill">—</div>
           </div>
           <div id="newsBody"></div>
@@ -940,20 +900,16 @@
 
       <div class="ticker">
         <div class="tickerLine1">
-          <div class="verseLeft">
-            <span class="tickerIcon">📖</span>
-            <span id="ref">—</span>
-          </div>
+          <span class="tickerIcon">📖</span>
+          <span id="dataBiblica">—</span>
+          <span id="ref">—</span>
 
-          <div class="footRight">
-            <span id="dataBiblica">—</span>
-            <div class="wxInline" id="wxInline">
-              <div class="wxL1">
-                <span id="wxIconInline" class="wxMiniSvg" aria-hidden="true"></span>
-                <span id="wxCityTemp">—</span>
-              </div>
-              <div class="wxL2" id="wxWindRain">—</div>
+          <div class="wxInline" id="wxInline">
+            <div class="wxL1">
+              <span id="wxIconInline" class="wxMiniSvg" aria-hidden="true"></span>
+              <span id="wxCityTemp">—</span>
             </div>
+            <div class="wxL2" id="wxWindRain">—</div>
           </div>
         </div>
       </div>
@@ -1049,6 +1005,106 @@
     return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
   }
 
+  function isBigScreenMode(){
+    const tv = document.documentElement.classList.contains("isTV");
+    const fs = !!document.fullscreenElement;
+    return tv || fs;
+  }
+
+  function fitTextToBox(el, opts = {}){
+    if(!el) return;
+    const { maxPx = 36, minPx = 12, step = 1 } = opts;
+    el.style.fontSize = maxPx + "px";
+    el.style.overflow = "hidden";
+    el.offsetHeight;
+    let cur = maxPx;
+    while(cur > minPx && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1)){
+      cur -= step;
+      el.style.fontSize = cur + "px";
+    }
+    return cur;
+  }
+
+  // Padroniza TODOS pelo "maior aviso":
+  // 1) calcula o tamanho que cabe em cada card
+  // 2) pega o menor (pior caso) e aplica em todos
+  // 3) tenta crescer um pouco (opcional), mantendo TODOS cabendo
+  function autoFitAvisosUniform(){
+    const cards = Array.from(document.querySelectorAll(".aviso"));
+    if(!cards.length) return;
+
+    const big = isBigScreenMode();
+
+    // limites maiores em TV/tela cheia
+    const tMax = big ? 44 : 30;
+    const dMax = big ? 36 : 26;
+    const tMin = big ? 16 : 14;
+    const dMin = big ? 14 : 12;
+
+    const results = cards.map(card=>{
+      const t = card.querySelector(".t");
+      const d = card.querySelector(".d");
+      const tSize = t ? fitTextToBox(t, { maxPx: tMax, minPx: tMin, step: 1 }) : tMin;
+      const dSize = d ? fitTextToBox(d, { maxPx: dMax, minPx: dMin, step: 1 }) : dMin;
+      return { tSize, dSize };
+    });
+
+    let tUniform = Math.min(...results.map(r=>r.tSize));
+    let dUniform = Math.min(...results.map(r=>r.dSize));
+
+    // aplica uniformemente
+    cards.forEach(card=>{
+      const t = card.querySelector(".t");
+      const d = card.querySelector(".d");
+      if(t) t.style.fontSize = tUniform + "px";
+      if(d) d.style.fontSize = dUniform + "px";
+    });
+
+    // tenta aumentar mantendo todos cabendo (ganha “encher o quadro”)
+    const tryGrow = (delta)=>{
+      const tTry = tUniform + delta;
+      const dTry = dUniform + delta;
+      if(tTry > tMax || dTry > dMax) return false;
+
+      let ok = true;
+      cards.forEach(card=>{
+        const t = card.querySelector(".t");
+        const d = card.querySelector(".d");
+        if(t) t.style.fontSize = tTry + "px";
+        if(d) d.style.fontSize = dTry + "px";
+      });
+
+      cards.forEach(card=>{
+        const t = card.querySelector(".t");
+        const d = card.querySelector(".d");
+        if((t && (t.scrollHeight > t.clientHeight + 1 || t.scrollWidth > t.clientWidth + 1)) ||
+           (d && (d.scrollHeight > d.clientHeight + 1 || d.scrollWidth > d.clientWidth + 1))){
+          ok = false;
+        }
+      });
+
+      if(!ok){
+        // volta
+        cards.forEach(card=>{
+          const t = card.querySelector(".t");
+          const d = card.querySelector(".d");
+          if(t) t.style.fontSize = tUniform + "px";
+          if(d) d.style.fontSize = dUniform + "px";
+        });
+        return false;
+      }
+
+      tUniform = tTry;
+      dUniform = dTry;
+      return true;
+    };
+
+    // cresce em passos pequenos até o limite
+    for(let i=0;i<20;i++){
+      if(!tryGrow(1)) break;
+    }
+  }
+
   function buildAvisoEl(a){
     const el = document.createElement("div");
     el.className = `aviso ${prioridadeClass(a.prioridade)}`;
@@ -1081,6 +1137,10 @@
     wrap.dataset.miniad = "1";
     wrap.dataset.offset = String(offset || 0);
 
+    const overlay = document.createElement("div");
+    overlay.className = "adOverlay";
+    overlay.innerHTML = `<div class="adTag">Publicidade</div><div class="adText">—</div>`;
+
     const vbg = document.createElement("video");
     vbg.className = "videoBg";
     vbg.autoplay = true;
@@ -1100,23 +1160,10 @@
     v.setAttribute("disablepictureinpicture", "");
     v.setAttribute("controlslist", "nofullscreen noremoteplayback nodownload");
 
+    wrap.appendChild(overlay);
     wrap.appendChild(vbg);
     wrap.appendChild(v);
     return wrap;
-  }
-
-  /* ===== ROTACAO (garantida): alterna mesmo com 5 avisos ===== */
-  let ROT_TIMER = null;
-  function startRotation(){
-    try{ if(ROT_TIMER){ clearInterval(ROT_TIMER); ROT_TIMER = null; } }catch(e){}
-    ROT_TIMER = setInterval(()=>{
-      try{
-        const total = Array.isArray((window.__lastDataForTopbar||{}).avisos) ? (window.__lastDataForTopbar.avisos.length) : 0;
-        const step = (total >= 3) ? 3 : 1;
-        window.__rotStart = (Number(window.__rotStart || 0) || 0) + step;
-        renderAvisos(window.__lastDataForTopbar || {});
-      }catch(e){}
-    }, 8000);
   }
 
   function renderAvisos(data){
@@ -1124,8 +1171,7 @@
     const s1 = document.getElementById("slot1");
     const s2 = document.getElementById("slot2");
     const s3 = document.getElementById("slot3");
-    const s4 = document.getElementById("slot4");
-    if(!pane || !s1 || !s2 || !s3 || !s4) return;
+    if(!pane || !s1 || !s2 || !s3) return;
 
     s1.innerHTML = "";
     s2.innerHTML = "";
@@ -1134,7 +1180,7 @@
     pane.classList.remove("fade-in");
     pane.classList.add("fade-out");
 
-    const avisosAll = Array.isArray(data.avisos) ? data.avisos.slice() : [];
+    const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
     avisosAll.sort((a,b)=>{
       const pa = prioridadeClass(a?.prioridade);
       const pb = prioridadeClass(b?.prioridade);
@@ -1142,15 +1188,7 @@
       return (rank[pb]||0) - (rank[pa]||0);
     });
 
-    const total = avisosAll.length;
-    let start = Number(window.__rotStart || 0) || 0;
-    if(total > 0) start = start % total; else start = 0;
-
-    const picks = [];
-    for(let k=0;k<3;k++){
-      if(total === 0) break;
-      picks.push(avisosAll[(start + k) % total]);
-    }
+    const picks = avisosAll.slice(0,3);
 
     setTimeout(()=>{
       if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
@@ -1161,6 +1199,10 @@
 
       if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
       else s3.appendChild(buildMiniAdEl(3));
+
+      requestAnimationFrame(()=>{
+        if (!isMobile()) autoFitAvisosUniform();
+      });
 
       pane.classList.remove("fade-out");
       pane.classList.add("fade-in");
@@ -1319,11 +1361,11 @@
     try { sessionStorage.setItem(AD_STATE_KEY, JSON.stringify(st || {})); } catch(e){}
   }
 
-  function adFilterVideos(list){
+  function adFilterMp4(list){
     const arr = Array.isArray(list) ? list : [];
     return arr.filter(x=>{
       const src = String(x?.arquivo || "").trim();
-      return /\.(mp4|m4v|webm|ogg)(\?.*)?$/i.test(src);
+      return /\.mp4(\?.*)?$/i.test(src);
     });
   }
 
@@ -1363,17 +1405,8 @@
 
   function setVideoSrcPair(vMain, vBg, src){
     if(!vMain || !vBg) return;
-
-    const next = (src || "").split("?")[0];
-    if(!next){
-      try{ vMain.pause(); vBg.pause(); }catch(e){}
-      vMain.removeAttribute("src");
-      vBg.removeAttribute("src");
-      try{ vMain.load(); vBg.load(); }catch(e){}
-      return;
-    }
-
     const curMain = (vMain.currentSrc || vMain.src || "").split("?")[0];
+    const next = (src || "").split("?")[0];
     if(curMain !== next){
       try{ vMain.pause(); }catch(e){}
       try{ vBg.pause(); }catch(e){}
@@ -1384,7 +1417,6 @@
       vMain.src = src;
       try{ vBg.load(); vMain.load(); }catch(e){}
     }
-
     const playSafe = (v)=>{
       try{
         const p = v.play();
@@ -1411,23 +1443,21 @@
       const vBg = w.querySelector("video.videoBg");
       const vMain = w.querySelector("video.videoMain");
       setVideoSrcPair(vMain, vBg, finalSrc);
+
+      // overlay texto do miniAd
+      const label = w.querySelector(".adOverlay .adText");
+      if(label) label.textContent = String(item?.anunciante || "—");
     });
   }
 
   function adPlayByState(videos){
     const adVideo = document.getElementById("adVideo");
     const adVideoBg = document.getElementById("adVideoBg");
-    const adPill  = document.getElementById("adPill");
-    const adTop   = document.getElementById("adLabelTop");
+    const adLabel = document.getElementById("adLabel");
     if(!adVideo || !adVideoBg) return;
 
     let list = Array.isArray(videos) ? videos : [];
-    if(!list.length){
-      if(adPill) adPill.textContent = "Sem vídeo";
-      if(adTop) adTop.textContent = "Publicidade —";
-      setVideoSrcPair(adVideo, adVideoBg, "");
-      return;
-    }
+    if(!list.length) return;
 
     try{
       const cfg = (window.__lastDataForTopbar || {});
@@ -1445,8 +1475,7 @@
     const sep = src.includes("?") ? "&" : "?";
     const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
 
-    if (adPill) adPill.textContent = "No ar";
-    if (adTop) adTop.textContent = `Publicidade — ${String(item?.anunciante || "").trim() || "Anúncio"}`;
+    if(adLabel) adLabel.textContent = String(item?.anunciante || "—");
 
     setVideoSrcPair(adVideo, adVideoBg, finalSrc);
 
@@ -1479,22 +1508,16 @@
     const pub = data?.publicidade;
     if (!pub?.ativar) return;
 
-    const videosOk = adFilterVideos(pub?.videos);
+    const videosMp4 = adFilterMp4(pub?.videos);
+    if (!videosMp4.length) return;
+
     const v = document.getElementById("adVideo");
     if(!v) return;
 
-    if(!videosOk.length){
-      const adPill  = document.getElementById("adPill");
-      const adTop   = document.getElementById("adLabelTop");
-      if(adPill) adPill.textContent = "Sem vídeo";
-      if(adTop) adTop.textContent = "Publicidade —";
-      return;
-    }
+    v.onended = () => adNext(videosMp4);
+    v.onerror = () => setTimeout(()=>adNext(videosMp4), 1200);
 
-    v.onended = () => adNext(videosOk);
-    v.onerror = () => setTimeout(()=>adNext(videosOk), 1200);
-
-    adPlayByState(videosOk);
+    adPlayByState(videosMp4);
   }
 
   function decodeHtmlEntities_(s){
@@ -1530,7 +1553,7 @@
       if(!items.length){
         newsBody.innerHTML = `
           <div class="newsItem"><p class="h">Sem mensagens no momento</p></div>
-          <div class="newsFooter">Fonte: indisponível</div>
+          <div class="newsSourceLine">Fonte: indisponível</div>
         `;
         newsBox.style.display = "flex";
         return;
@@ -1548,18 +1571,19 @@
         html += `<div class="newsItem"><p class="h">${escapeHtml(titulo)}</p></div>`;
       });
 
-      let fontesHtml = "";
+      // Fonte na MESMA linha (ganha espaço)
+      let fonteLine = "";
       if(fontes.size){
-        fontesHtml = `<div class="newsFooter">Fonte:</div>`;
-        fontes.forEach(f=>{ fontesHtml += `<div class="newsFooterItem">${escapeHtml(f)}</div>`; });
+        const joined = Array.from(fontes).join(" • ");
+        fonteLine = `<div class="newsSourceLine">Fonte: ${escapeHtml(joined)}</div>`;
       }
 
-      newsBody.innerHTML = html + fontesHtml;
+      newsBody.innerHTML = html + fonteLine;
       newsBox.style.display = "flex";
     }catch(e){
       newsBody.innerHTML = `
         <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
-        <div class="newsFooter">Fonte: news.google.com (offline)</div>
+        <div class="newsSourceLine">Fonte: news.google.com (offline)</div>
       `;
       newsBox.style.display = "flex";
     }
@@ -1610,7 +1634,7 @@
   function setCityTitleFromConfig(cfg){
     const el = document.getElementById("cityTitle");
     if(!el) return;
-    const t = cfg?.publicidade?.cidadeTitulo || cfg?.cidadeTitulo || "Mensagens no Brasil";
+    const t = cfg?.publicidade?.cidadeTitulo || cfg?.cidadeTitulo || "📰 Mensagens no Brasil";
     el.textContent = String(t);
   }
 
@@ -1627,7 +1651,6 @@
 
       const data = await res.json();
       window.__lastDataForTopbar = data;
-      window.__rotStart = 0;
 
       if (status) status.textContent = "Atualizado";
       if (statusMini) statusMini.textContent = "Atualizado";
@@ -1636,7 +1659,6 @@
       setCityTitleFromConfig(data);
 
       renderAvisos(data);
-      startRotation();
 
       if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
         setText("dataBiblica", "📖");
@@ -1648,9 +1670,16 @@
 
       await carregarVersiculo(data);
       await carregarClima(data);
+
       await carregarMensagensCidade();
       aplicarImagemTopbar(data);
+
       iniciarPublicidade(data);
+
+      // garante padronização em TV/tela cheia também (após tudo renderizado)
+      requestAnimationFrame(()=>{
+        if(!isMobile()) autoFitAvisosUniform();
+      });
 
       return data;
 
@@ -1672,10 +1701,65 @@
   window.addEventListener("resize", ()=>{
     clearTimeout(__rzT);
     __rzT = setTimeout(()=>{
+      if(!isMobile()){
+        try{ autoFitAvisosUniform(); }catch(e){}
+      }
       try{ carregarMensagensCidade(); }catch(e){}
       try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
     }, 160);
   }, {passive:true});
+
+  // Ao entrar/sair de tela cheia, refaz o fit (aumenta automaticamente)
+  document.addEventListener("fullscreenchange", ()=>{
+    try{
+      if(!isMobile()) autoFitAvisosUniform();
+    }catch(e){}
+  });
+</script>
+
+<script>
+  const fundos = {
+    azul:    ["#061726", "#0b1f33"],
+    verde:   ["#0b2e1a", "#134d2c"],
+    amarelo: ["#3a3300", "#665c00"],
+    laranja: ["#3a1f00", "#663300"],
+    branco:  ["#f2f2f2", "#dcdcdc"],
+    preto:   ["#000000", "#111111"]
+  };
+
+  function setFundo(cor){
+    if(!fundos[cor]) return;
+    document.documentElement.style.setProperty("--bg1", fundos[cor][0]);
+    document.documentElement.style.setProperty("--bg2", fundos[cor][1]);
+    try { localStorage.setItem("fundoEscolhido", cor); } catch(e){}
+  }
+
+  function fundoAleatorio(){
+    const cores = Object.keys(fundos);
+    const cor = cores[Math.floor(Math.random() * cores.length)];
+    setFundo(cor);
+    return cor;
+  }
+
+  (function carregarFundoSalvo(){
+    try{
+      const salvo = localStorage.getItem("fundoEscolhido");
+      if(salvo && fundos[salvo]) setFundo(salvo);
+    }catch(e){}
+  })();
+
+  window.addEventListener("keydown", (e)=>{
+    const k = String(e.key || "").toLowerCase();
+    if (k === "1") setFundo("azul");
+    else if (k === "2") setFundo("verde");
+    else if (k === "3") setFundo("amarelo");
+    else if (k === "4") setFundo("laranja");
+    else if (k === "5") setFundo("branco");
+    else if (k === "6") setFundo("preto");
+    else if (k === "r") fundoAleatorio();
+  });
+
+  setInterval(fundoAleatorio, 300000);
 </script>
 
 <script>
