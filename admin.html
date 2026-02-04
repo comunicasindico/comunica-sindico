@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Comunica Síndico — Admin</title>
+  <style>
+    :root{
+      --bg:#0b1320; --card:#0f1c2c; --line:rgba(255,255,255,.10);
+      --txt:rgba(235,245,255,.92); --mut:rgba(235,245,255,.65);
+      --ok:#44d07a; --bad:#ff5a5a; --warn:#ffb347;
+      --radius:16px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    html,body{height:100%; background: radial-gradient(1200px 800px at 15% 10%, #17385a 0%, var(--bg) 60%); color:var(--txt); margin:0;}
+    .wrap{max-width:980px; margin:0 auto; padding:16px;}
+    .top{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      padding:14px 14px; border:1px solid var(--line); border-radius:var(--radius);
+      background: rgba(15,28,44,.78); backdrop-filter: blur(10px);
+      position: sticky; top: 10px; z-index: 10;
+    }
+    .brand{display:flex; flex-direction:column; gap:2px; min-width:0}
+    .brand .t{font-weight:950; letter-spacing:.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .brand .s{font-size:12px; color:var(--mut); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+    .btn{
+      border:1px solid var(--line); background: rgba(255,255,255,.06);
+      color:var(--txt); padding:10px 12px; border-radius:999px;
+      font-weight:900; cursor:pointer; user-select:none;
+    }
+    .btn:hover{filter:brightness(1.08);}
+    .btn:active{transform:scale(.98);}
+    .btn.ok{background: rgba(68,208,122,.12); border-color: rgba(68,208,122,.35);}
+    .btn.warn{background: rgba(255,179,71,.12); border-color: rgba(255,179,71,.35);}
+    .btn.bad{background: rgba(255,90,90,.14); border-color: rgba(255,90,90,.38);}
+    .grid{display:grid; grid-template-columns: 1fr; gap:12px; margin-top:12px;}
+    .card{
+      border:1px solid var(--line); border-radius:var(--radius);
+      background: rgba(15,28,44,.70); backdrop-filter: blur(10px);
+      overflow:hidden;
+    }
+    .card h2{
+      margin:0; padding:12px 14px; font-size:14px; letter-spacing:.6px; text-transform:uppercase;
+      border-bottom:1px solid var(--line); background: rgba(255,255,255,.04);
+    }
+    .content{padding:12px 14px; display:flex; flex-direction:column; gap:10px;}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+    label{font-size:12px; color:var(--mut); font-weight:900; letter-spacing:.2px;}
+    input, select, textarea{
+      width:100%;
+      border:1px solid var(--line); background: rgba(0,0,0,.25);
+      color:var(--txt); border-radius:12px; padding:10px 10px;
+      outline:none;
+    }
+    textarea{min-height:84px; resize:vertical;}
+    .field{flex:1 1 220px; display:flex; flex-direction:column; gap:6px;}
+    .field.small{flex:1 1 140px;}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px; border:1px solid var(--line);
+      background: rgba(255,255,255,.05); font-weight:900; font-size:12px; color:var(--mut);
+    }
+    .dot{width:10px;height:10px;border-radius:50%;}
+    .dot.ok{background:var(--ok);}
+    .dot.bad{background:var(--bad);}
+    .hint{font-size:12px; color:var(--mut); line-height:1.35;}
+    .list{display:flex; flex-direction:column; gap:8px;}
+    .item{
+      border:1px solid var(--line); border-radius:14px; padding:10px; background: rgba(0,0,0,.18);
+      display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start;
+    }
+    .item .meta{flex:1 1 380px; display:flex; flex-direction:column; gap:6px; min-width:0;}
+    .item .meta b{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .item .controls{display:flex; gap:8px; flex-wrap:wrap;}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:rgba(255,255,255,.85);}
+    .footer{
+      margin-top:12px; padding:12px 14px; border:1px dashed rgba(255,255,255,.14);
+      border-radius: var(--radius); color:var(--mut); font-size:12px; line-height:1.4;
+      background: rgba(0,0,0,.16);
+    }
+    .dangerBox{
+      border:1px solid rgba(255,90,90,.35);
+      background: rgba(255,90,90,.12);
+      border-radius: 14px;
+      padding:10px 12px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <div class="t">Comunica Síndico — Admin</div>
+      <div class="s" id="statusLine">Carregando…</div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnReload">Recarregar</button>
+      <button class="btn warn" id="btnPreview">Prévia (JSON)</button>
+      <button class="btn ok" id="btnDownload">Gerar data.json</button>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h2>Status</h2>
+      <div class="content">
+        <div class="row">
+          <span class="pill"><span class="dot" id="dot" class=""></span> <span id="st">—</span></span>
+          <span class="pill">Fonte: <code id="src">—</code></span>
+        </div>
+        <div class="hint">
+          Este painel <b>não altera automaticamente</b> o GitHub/Wix (site estático).  
+          Ele <b>gera</b> um <code>data.json</code> pronto para você subir/commitar por cima do antigo.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Alerta urgente</h2>
+      <div class="content">
+        <div class="dangerBox">
+          <div class="row" style="justify-content:space-between;">
+            <div class="pill"><span class="dot bad"></span> Modo Alerta (substitui “Mensagens no Brasil”)</div>
+            <button class="btn bad" id="btnToggleAlert">Desligar</button>
+          </div>
+          <div class="hint" style="margin-top:6px;">
+            Quando <b>ativar=true</b>, o painel do condômino deve esconder as mensagens e mostrar só o alerta.
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field small">
+            <label>ativar</label>
+            <select id="alertAtivar">
+              <option value="true">true (ligado)</option>
+              <option value="false">false (desligado)</option>
+            </select>
+          </div>
+          <div class="field small">
+            <label>piscar</label>
+            <select id="alertPiscar">
+              <option value="true">true</option>
+              <option value="false">false</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>título</label>
+            <input id="alertTitulo" placeholder="ALERTA URGENTE" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>mensagem</label>
+          <textarea id="alertMsg" placeholder="Digite a mensagem do alerta..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Clima e cidade</h2>
+      <div class="content">
+        <div class="row">
+          <div class="field">
+            <label>Cidade (atalhos)</label>
+            <select id="cityPreset">
+              <option value="">— escolher —</option>
+              <option value="São Paulo|-23.5505|-46.6333|America/Sao_Paulo">São Paulo</option>
+              <option value="Rio de Janeiro|-22.9068|-43.1729|America/Sao_Paulo">Rio de Janeiro</option>
+              <option value="Florianópolis|-27.5949|-48.5482|America/Sao_Paulo">Florianópolis</option>
+              <option value="Porto Velho|-8.7608|-63.8999|America/Porto_Velho">Porto Velho</option>
+              <option value="Brasília|-15.7939|-47.8828|America/Sao_Paulo">Brasília</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>cidade (texto)</label>
+            <input id="climaCidade" placeholder="São Paulo" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field small">
+            <label>latitude</label>
+            <input id="climaLat" inputmode="decimal" placeholder="-23.5505" />
+          </div>
+          <div class="field small">
+            <label>longitude</label>
+            <input id="climaLon" inputmode="decimal" placeholder="-46.6333" />
+          </div>
+          <div class="field">
+            <label>timezone</label>
+            <input id="climaTz" placeholder="America/Sao_Paulo" />
+          </div>
+        </div>
+
+        <div class="hint">
+          Dica: se quiser uma cidade diferente, troque <b>cidade/lat/lon/timezone</b> aqui e gere o <code>data.json</code>.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Imagem do cabeçalho (cidade)</h2>
+      <div class="content">
+        <div class="row">
+          <div class="field small">
+            <label>ativar</label>
+            <select id="cabAtivar">
+              <option value="false">false</option>
+              <option value="true">true</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>url (imagem)</label>
+            <input id="cabUrl" placeholder="https://..." />
+          </div>
+        </div>
+        <div class="hint">
+          Isso controla: <code>publicidade.cabecalhoImagem</code> (ativar/url).
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Vídeos (publicidade.videos)</h2>
+      <div class="content">
+        <div class="row">
+          <div class="field">
+            <label>Novo vídeo: arquivo (url/relativo)</label>
+            <input id="newVideoArquivo" placeholder="./ads/novo.mp4" />
+          </div>
+          <div class="field">
+            <label>Novo vídeo: anunciante (texto)</label>
+            <input id="newVideoAnunciante" placeholder="Texto do anunciante" />
+          </div>
+          <button class="btn ok" id="btnAddVideo">Adicionar</button>
+        </div>
+
+        <div class="list" id="videoList"></div>
+
+        <div class="hint">
+          Remover/adicionar aqui e depois clicar em <b>Gerar data.json</b>.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <b>Como publicar:</b> depois de baixar o <code>data.json</code> gerado, você substitui o arquivo no GitHub:
+    <br/>Repo → <code>data.json</code> → Upload/Replace → Commit.
+  </div>
+</div>
+
+<script>
+(function(){
+  const DATA_URL = "https://comunicasindico.github.io/comunica-sindico/data.json";
+
+  let original = null;
+  let working  = null;
+
+  const $ = (id)=>document.getElementById(id);
+
+  function setStatus(ok, text){
+    $("st").textContent = text || (ok ? "Online" : "Offline");
+    $("statusLine").textContent = (ok ? "Lido com sucesso" : "Falha ao ler") + " • " + new Date().toLocaleString("pt-BR");
+    $("dot").className = "dot " + (ok ? "ok" : "bad");
+  }
+
+  function deepClone(obj){ return JSON.parse(JSON.stringify(obj || {})); }
+
+  function ensurePaths(){
+    if(!working.publicidade) working.publicidade = {};
+    if(!Array.isArray(working.publicidade.videos)) working.publicidade.videos = [];
+    if(!working.publicidade.cabecalhoImagem) working.publicidade.cabecalhoImagem = { ativar:false, url:"" };
+
+    if(!working.clima) working.clima = { cidade:"", latitude:0, longitude:0, timezone:"America/Sao_Paulo" };
+
+    if(!working.alertaUrgente) working.alertaUrgente = {
+      ativar:false, titulo:"ALERTA URGENTE", mensagem:"", piscar:true
+    };
+  }
+
+  function bindFromData(){
+    ensurePaths();
+
+    // ALERTA
+    $("alertAtivar").value = String(!!working.alertaUrgente.ativar);
+    $("alertPiscar").value = String(working.alertaUrgente.piscar !== false);
+    $("alertTitulo").value = String(working.alertaUrgente.titulo || "");
+    $("alertMsg").value = String(working.alertaUrgente.mensagem || "");
+
+    // Botão rápido
+    $("btnToggleAlert").textContent = working.alertaUrgente.ativar ? "Desligar" : "Ligar";
+
+    // CLIMA
+    $("climaCidade").value = String(working.clima.cidade || "");
+    $("climaLat").value = String(working.clima.latitude ?? "");
+    $("climaLon").value = String(working.clima.longitude ?? "");
+    $("climaTz").value = String(working.clima.timezone || "America/Sao_Paulo");
+
+    // CABEÇALHO
+    $("cabAtivar").value = String(!!working.publicidade.cabecalhoImagem.ativar);
+    $("cabUrl").value = String(working.publicidade.cabecalhoImagem.url || "");
+
+    // VIDEOS
+    renderVideoList();
+  }
+
+  function readUIToData(){
+    ensurePaths();
+
+    // ALERTA
+    working.alertaUrgente.ativar   = ($("alertAtivar").value === "true");
+    working.alertaUrgente.piscar   = ($("alertPiscar").value === "true");
+    working.alertaUrgente.titulo   = $("alertTitulo").value.trim() || "ALERTA URGENTE";
+    working.alertaUrgente.mensagem = $("alertMsg").value.trim();
+
+    // CLIMA
+    working.clima.cidade    = $("climaCidade").value.trim() || working.clima.cidade || "";
+    working.clima.latitude  = Number(String($("climaLat").value).replace(",", ".")) || working.clima.latitude;
+    working.clima.longitude = Number(String($("climaLon").value).replace(",", ".")) || working.clima.longitude;
+    working.clima.timezone  = $("climaTz").value.trim() || working.clima.timezone || "America/Sao_Paulo";
+
+    // CABEÇALHO
+    working.publicidade.cabecalhoImagem.ativar = ($("cabAtivar").value === "true");
+    working.publicidade.cabecalhoImagem.url    = $("cabUrl").value.trim();
+  }
+
+  function renderVideoList(){
+    const list = $("videoList");
+    list.innerHTML = "";
+
+    const vids = Array.isArray(working?.publicidade?.videos) ? working.publicidade.videos : [];
+    if(!vids.length){
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `<div class="meta"><b>Nenhum vídeo cadastrado</b><div class="hint">Adicione acima.</div></div>`;
+      list.appendChild(div);
+      return;
+    }
+
+    vids.forEach((v, idx)=>{
+      const item = document.createElement("div");
+      item.className = "item";
+
+      const arquivo = String(v?.arquivo || "");
+      const anunc   = String(v?.anunciante || "");
+
+      item.innerHTML = `
+        <div class="meta">
+          <b>${idx+1}. ${escapeHtml(anunc || "—")}</b>
+          <div class="hint"><code>${escapeHtml(arquivo || "—")}</code></div>
+        </div>
+        <div class="controls">
+          <button class="btn" data-up="${idx}">↑</button>
+          <button class="btn" data-down="${idx}">↓</button>
+          <button class="btn bad" data-del="${idx}">Remover</button>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+
+    list.querySelectorAll("button[data-del]").forEach(b=>{
+      b.onclick = ()=>{
+        const i = Number(b.getAttribute("data-del"));
+        working.publicidade.videos.splice(i,1);
+        renderVideoList();
+      };
+    });
+    list.querySelectorAll("button[data-up]").forEach(b=>{
+      b.onclick = ()=>{
+        const i = Number(b.getAttribute("data-up"));
+        if(i<=0) return;
+        const a = working.publicidade.videos;
+        [a[i-1], a[i]] = [a[i], a[i-1]];
+        renderVideoList();
+      };
+    });
+    list.querySelectorAll("button[data-down]").forEach(b=>{
+      b.onclick = ()=>{
+        const i = Number(b.getAttribute("data-down"));
+        const a = working.publicidade.videos;
+        if(i>=a.length-1) return;
+        [a[i+1], a[i]] = [a[i], a[i+1]];
+        renderVideoList();
+      };
+    });
+  }
+
+  function escapeHtml(s){
+    return String(s ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+
+  function downloadJson(filename, obj){
+    const blob = new Blob([JSON.stringify(obj, null, 2)], {type:"application/json;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 800);
+  }
+
+  async function load(){
+    $("src").textContent = DATA_URL;
+    try{
+      const res = await fetch(DATA_URL + "?ts=" + Date.now(), {cache:"no-store"});
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      original = data;
+      working = deepClone(data);
+      setStatus(true, "Online");
+      bindFromData();
+    }catch(e){
+      original = null;
+      working = { };
+      setStatus(false, "Offline");
+      ensurePaths();
+      bindFromData();
+    }
+  }
+
+  // UI events
+  $("btnReload").onclick = load;
+
+  $("btnPreview").onclick = ()=>{
+    readUIToData();
+    const w = window.open("", "_blank");
+    if(!w) return alert("Bloqueador impediu abrir aba.");
+    w.document.write("<pre style='white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace;'>" +
+      escapeHtml(JSON.stringify(working, null, 2)) +
+      "</pre>");
+    w.document.close();
+  };
+
+  $("btnDownload").onclick = ()=>{
+    readUIToData();
+    downloadJson("data.json", working);
+  };
+
+  $("btnAddVideo").onclick = ()=>{
+    const arq = $("newVideoArquivo").value.trim();
+    const an  = $("newVideoAnunciante").value.trim();
+    if(!arq) return alert("Informe o arquivo do vídeo (ex.: ./ads/novo.mp4)");
+    working.publicidade.videos.push({ arquivo: arq, anunciante: an || "—" });
+    $("newVideoArquivo").value = "";
+    $("newVideoAnunciante").value = "";
+    renderVideoList();
+  };
+
+  $("btnToggleAlert").onclick = ()=>{
+    const cur = ($("alertAtivar").value === "true");
+    $("alertAtivar").value = String(!cur);
+    // mantém campos e só alterna
+    readUIToData();
+    $("btnToggleAlert").textContent = working.alertaUrgente.ativar ? "Desligar" : "Ligar";
+  };
+
+  // preset cidade
+  $("cityPreset").onchange = ()=>{
+    const v = $("cityPreset").value;
+    if(!v) return;
+    const [city, lat, lon, tz] = v.split("|");
+    $("climaCidade").value = city || "";
+    $("climaLat").value = lat || "";
+    $("climaLon").value = lon || "";
+    $("climaTz").value = tz || "America/Sao_Paulo";
+  };
+
+  // Atualiza botão rápido ao mexer no select
+  $("alertAtivar").onchange = ()=>{
+    $("btnToggleAlert").textContent = ($("alertAtivar").value === "true") ? "Desligar" : "Ligar";
+  };
+
+  load();
+})();
+</script>
+</body>
+</html>
