@@ -711,6 +711,9 @@
         --ui: clamp(1, calc(100vmin / 900), 2.10);
         --ui2: clamp(1, calc(100vmin / 850), 2.70);
         --tv-safe-bottom: 0px;
+          /* MOBILE: garantir que a Publicidade apareça e tenha altura */
+      #slot4 .videoWrap{ min-height: 240px; }
+      #slot4{ min-height: 240px; }
       }
 
       body{ overflow:auto; -webkit-overflow-scrolling: touch; padding:0; height:auto; min-height:100svh; }
@@ -1086,69 +1089,79 @@
 
   /* ===== Rotação de avisos: 3 por tela, troca a cada 8s ===== */
   let ROT_TIMER = null;
-  function startRotation(data){
-    try{ if(ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; } }catch(e){}
-    const rot = data?.rotacao || {};
-    const ativar = (rot.ativar !== false);
-    const intervalo = Math.max(3, Number(rot.intervaloSeg || 8));
-    if(!ativar) return;
+ let ROT_TIMER = null;
 
-    ROT_TIMER = setInterval(()=>{
-      try{
-        window.__rotStart = (window.__rotStart || 0) + 3;
-        renderAvisos(window.__lastDataForTopbar || {});
-      }catch(e){}
-    }, intervalo * 1000);
+function startRotation(){
+  try{ if(ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; } }catch(e){}
+  // sempre 8 segundos (independente do data.json)
+  ROT_TIMER = setInterval(()=>{
+    try{
+      // avança 3 por “página” (slot1/slot2/slot3)
+      window.__rotStart = (Number(window.__rotStart || 0) || 0) + 3;
+      renderAvisos(window.__lastDataForTopbar || {});
+    }catch(e){}
+  }, 8000);
+}
+
+function renderAvisos(data){
+  const pane = document.getElementById("avisosPane");
+  const s1 = document.getElementById("slot1");
+  const s2 = document.getElementById("slot2");
+  const s3 = document.getElementById("slot3");
+  if(!pane || !s1 || !s2 || !s3) return;
+
+  s1.innerHTML = "";
+  s2.innerHTML = "";
+  s3.innerHTML = "";
+
+  pane.classList.remove("fade-in");
+  pane.classList.add("fade-out");
+
+  const avisosAll = Array.isArray(data.avisos) ? data.avisos.slice() : [];
+
+  // ordena por prioridade (alta > media > baixa)
+  avisosAll.sort((a,b)=>{
+    const pa = prioridadeClass(a?.prioridade);
+    const pb = prioridadeClass(b?.prioridade);
+    const rank = { alta:3, media:2, baixa:1 };
+    return (rank[pb]||0) - (rank[pa]||0);
+  });
+
+  const total = avisosAll.length;
+  let start = Number(window.__rotStart || 0) || 0;
+
+  // se passou do fim, volta pro começo
+  if(total > 0) start = start % total;
+  else start = 0;
+
+  // pega 3 avisos “em volta”, circulando pelo array
+  const picks = [];
+  for(let k=0; k<3; k++){
+    if(total === 0) break;
+    picks.push(avisosAll[(start + k) % total]);
   }
 
-  function renderAvisos(data){
-    const pane = document.getElementById("avisosPane");
-    const s1 = document.getElementById("slot1");
-    const s2 = document.getElementById("slot2");
-    const s3 = document.getElementById("slot3");
-    const s4 = document.getElementById("slot4");
-    if(!pane || !s1 || !s2 || !s3 || !s4) return;
+  // atualiza o ponteiro para não travar quando total < 3
+  window.__rotStart = start;
 
-    s1.innerHTML = "";
-    s2.innerHTML = "";
-    s3.innerHTML = "";
+  setTimeout(()=>{
+    if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
+    else s1.appendChild(buildMiniAdEl(1));
 
-    pane.classList.remove("fade-in");
-    pane.classList.add("fade-out");
+    if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
+    else s2.appendChild(buildMiniAdEl(2));
 
-    const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
-    avisosAll.sort((a,b)=>{
-      const pa = prioridadeClass(a?.prioridade);
-      const pb = prioridadeClass(b?.prioridade);
-      const rank = { alta:3, media:2, baixa:1 };
-      return (rank[pb]||0) - (rank[pa]||0);
+    if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
+    else s3.appendChild(buildMiniAdEl(3));
+
+    requestAnimationFrame(()=>{
+      if (window.innerWidth >= 981) autoFitAvisos();
     });
 
-    const start = Number(window.__rotStart || 0) || 0;
-    const picks = avisosAll.slice(start, start + 3);
-    if(picks.length < 3){
-      const rest = avisosAll.slice(0, Math.max(0, 3 - picks.length));
-      picks.push(...rest);
-    }
-
-    setTimeout(()=>{
-      if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
-      else s1.appendChild(buildMiniAdEl(1));
-
-      if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
-      else s2.appendChild(buildMiniAdEl(2));
-
-      if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
-      else s3.appendChild(buildMiniAdEl(3));
-
-      requestAnimationFrame(()=>{
-        if (window.innerWidth >= 981) autoFitAvisos();
-      });
-
-      pane.classList.remove("fade-out");
-      pane.classList.add("fade-in");
-    }, 140);
-  }
+    pane.classList.remove("fade-out");
+    pane.classList.add("fade-in");
+  }, 140);
+}
 
   function hojeKeyMMDD() {
     const d = new Date();
@@ -1596,7 +1609,7 @@
       setCityTitleFromConfig(data);
 
       renderAvisos(data);
-      startRotation(data);
+      startRotation();
 
       if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
         setText("dataBiblica", "📖");
