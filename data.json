@@ -26,32 +26,36 @@
   },
 
   "publicidade": {
-  "ativar": true,
-  "shuffle": true,
-  "cidadeTitulo": "Mensagens no Brasil",
-  "videos": [
-    {
-      "arquivo": "./ads/calibram.mp4",
-      "anunciante": "Calibra Ltda – (48) 3628-1414 – BR-101, Km 336"
+    "ativar": true,
+    "shuffle": true,
+    "cidadeTitulo": "Mensagens no Brasil",
+    "cabecalhoImagem": {
+      "ativar": false,
+      "url": ""
     },
-    {
-      "arquivo": "./ads/comunica_sindico_logo.mp4",
-      "anunciante": "Acabe de vez com os problemas de comunicação."
-    },
-    {
-      "arquivo": "./ads/cslogo.mp4",
-      "anunciante": "Tecnologia e responsabilidade social e ambiental."
-    },
-    {
-      "arquivo": "./ads/luisa.mp4",
-      "anunciante": "Luisa visitando papai no trabalho"
-    },
-    {
-      "arquivo": "./ads/03_larissa.mp4",
-      "anunciante": "Larissa em seu primeiro aninho"
-    }
-  ]
-},
+    "videos": [
+      {
+        "arquivo": "./ads/calibram.mp4",
+        "anunciante": "Calibra Ltda – (48) 3628-1414 – BR-101, Km 336"
+      },
+      {
+        "arquivo": "./ads/comunica_sindico_logo.mp4",
+        "anunciante": "Acabe de vez com os problemas de comunicação."
+      },
+      {
+        "arquivo": "./ads/cslogo.mp4",
+        "anunciante": "Tecnologia e responsabilidade social e ambiental."
+      },
+      {
+        "arquivo": "./ads/luisa.mp4",
+        "anunciante": "Luisa visitando papai no trabalho"
+      },
+      {
+        "arquivo": "./ads/03_larissa.mp4",
+        "anunciante": "Larissa em seu primeiro aninho"
+      }
+    ]
+  },
 
   "avisos": [
     {
@@ -99,5 +103,12 @@
       "inicio": "29/01/26 - 17:35",
       "fim": "19/02/26 - 17:35"
     }
-  ]
+  ],
+
+  "alertaUrgente": {
+    "ativar": false,
+    "titulo": "ALERTA URGENTE",
+    "mensagem": "",
+    "piscar": true
+  }
 }
