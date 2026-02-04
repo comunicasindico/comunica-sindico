@@ -917,7 +917,60 @@ html.isTV .wrap{
 html.urgentOn #newsBox{ display:none !important; }
 html.urgentOn .newsBox{ display:none !important; }
 
+/* ============================
+   ALERTA URGENTE (substitui Mensagens no Brasil)
+   ============================ */
+.alertBox{
+  flex:0 0 auto;
+  border-radius:18px;
+  border:2px solid rgba(255,255,255,.22);
+  background: linear-gradient(180deg, rgba(180,0,0,.95), rgba(120,0,0,.92));
+  box-shadow: 0 18px 40px rgba(0,0,0,.55);
+  overflow:hidden;
+  display:none; /* aparece só quando ativar */
+}
 
+.alertHead{
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.18);
+}
+
+.alertTitle{
+  font-weight:950;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  color:#fff;
+  font-size: clamp(18px, 2.2vw, 30px);
+  line-height:1.1;
+}
+
+.alertBody{
+  padding:14px 16px 16px;
+}
+
+.alertMsg{
+  margin:0;
+  color:#fff;
+  font-weight:950;
+  font-size: clamp(20px, 3.2vw, 48px);
+  line-height:1.08;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+  text-shadow: 0 2px 14px rgba(0,0,0,.45);
+}
+
+@keyframes alertBlink{
+  0%,100%{ filter:brightness(1); }
+  50%{ filter:brightness(1.25); }
+}
+.alertBox.blink{
+  animation: alertBlink .9s ease-in-out infinite;
+}
 
 
 
@@ -996,6 +1049,17 @@ html.urgentOn .newsBox{ display:none !important; }
   <div class="urgentTitle" id="urgentTitle">ALERTA URGENTE</div>
   <div class="urgentMsg" id="urgentMsg">—</div>
 </div>
+     
+        <!-- ALERTA URGENTE (ocupa o lugar das mensagens quando ativado) -->
+<div class="alertBox" id="alertBox" style="display:none">
+  <div class="alertHead">
+    <div class="alertTitle" id="alertTitle">ALERTA URGENTE</div>
+    <div class="pill" id="alertOffBtn" title="Desligar alerta">Desligar</div>
+  </div>
+  <div class="alertBody">
+    <p class="alertMsg" id="alertMsg">—</p>
+  </div>
+</div>
         
         <div class="newsBox" id="newsBox" style="display:none">
           <div class="newsHead">
@@ -1004,7 +1068,7 @@ html.urgentOn .newsBox{ display:none !important; }
           </div>
           <div id="newsBody"></div>
         </div>
-      </div>
+       </div>
 
       <div class="ticker">
         <div class="tickerLine1">
@@ -1064,6 +1128,37 @@ html.urgentOn .newsBox{ display:none !important; }
       }[c]));
     }
 
+
+    function applyUrgentAlert(cfg){
+  const alertBox = document.getElementById("alertBox");
+  const newsBox  = document.getElementById("newsBox");
+  const tEl = document.getElementById("alertTitle");
+  const mEl = document.getElementById("alertMsg");
+
+  const a = cfg?.alertaUrgente || {};
+  const on = !!a.ativar;
+
+  if(!alertBox || !newsBox) return;
+
+  if(on){
+    // mostra alerta
+    if(tEl) tEl.textContent = String(a.titulo || "ALERTA URGENTE");
+    if(mEl) mEl.textContent = String(a.mensagem || "—");
+
+    alertBox.style.display = "block";
+    newsBox.style.display = "none";
+
+    alertBox.classList.toggle("blink", !!a.piscar);
+  }else{
+    alertBox.style.display = "none";
+    alertBox.classList.remove("blink");
+    // newsBox volta (será reativado por carregarMensagensCidade)
+  }
+}
+
+
+
+    
     // ✅ "mobile" só se NÃO for TV (não cai no layout mobile por zoom)
     function isMobile(){
       return window.matchMedia("(max-width: 980px)").matches &&
@@ -1087,7 +1182,18 @@ html.urgentOn .newsBox{ display:none !important; }
       if(btn) btn.onclick = instalarApp;
       const refPill = document.getElementById("refPill");
       if(refPill) refPill.onclick = refreshPage;
-    })();
+
+      const alertOffBtn = document.getElementById("alertOffBtn");
+if(alertOffBtn) alertOffBtn.onclick = ()=>{
+  // desligar LOCAL (somente nesta tela, não altera o data.json)
+  try{
+    const cfg = window.__lastDataForTopbar || {};
+    if(cfg.alertaUrgente) cfg.alertaUrgente.ativar = false;
+    applyUrgentAlert(cfg);
+    carregarMensagensCidade();
+  }catch(e){}
+};
+      })();
 
     function parseBRDateTime(v){
       const s = String(v ?? "").trim();
@@ -1665,8 +1771,18 @@ html.urgentOn .newsBox{ display:none !important; }
         `;
         newsBox.style.display = "flex";
       }
+
+      // se alerta estiver ativo, não mostra Mensagens no Brasil
+try{
+  const cfg = window.__lastDataForTopbar || {};
+  if(cfg?.alertaUrgente?.ativar){
+    if(newsBox) newsBox.style.display = "none";
+    return;
+  }
+}catch(e){}
     }
 
+    
     function aplicarImagemTopbar(data){
       const cidade = String(data?.clima?.cidade || "").toLowerCase();
       const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
@@ -1765,9 +1881,7 @@ function applyHeaderCityImage(data){
 
         const data = await res.json();
         window.__lastDataForTopbar = data;
-
-
-        applyUrgentAlert(data);
+      
         applyHeaderCityImage(data);
         
         if (status) status.textContent = "Atualizado";
@@ -1777,7 +1891,8 @@ function applyHeaderCityImage(data){
         setCityTitleFromConfig(data);
 
         renderAvisos(data);
-
+        applyUrgentAlert(data);
+        
         if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
           setText("dataBiblica", "📖");
           setText("ref", "Carregando…");
