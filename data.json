@@ -3,13 +3,11 @@
   "titulo": "Comunica Síndico — Condôminos",
   "subtitulo": "Painel Informativo",
   "referencia": "Atualizado automaticamente",
-
   "temaDoDia": {
     "modo": "biblico-anual",
     "arquivo": "./versiculos.json",
     "fallback": "Você tem valor. Valorize o que você tem."
   },
-
   "rotacao": {
     "ativar": true,
     "intervaloSeg": 8,
@@ -17,24 +15,20 @@
     "mostrarProgresso": true,
     "pausarNoMouse": false
   },
-
   "clima": {
     "cidade": "Tubarão",
     "latitude": -23.5505,
     "longitude": -46.6333,
     "timezone": "America/Sao_Paulo"
   },
-  
   "cabecalhoImagem": {
-      "ativar": false,
-      "url": ""
+    "ativar": false,
+    "url": ""
   },
-  
   "publicidade": {
     "ativar": true,
     "shuffle": true,
     "cidadeTitulo": "Mensagens no Brasil",
-  
     "videos": [
       {
         "arquivo": "./ads/calibram.mp4",
@@ -56,9 +50,12 @@
         "arquivo": "./ads/03_larissa.mp4",
         "anunciante": "Larissa em seu primeiro aninho"
       }
-    ]
+    ],
+    "cabecalhoImagem": {
+      "ativar": false,
+      "url": ""
+    }
   },
-
   "avisos": [
     {
       "titulo": "Piscina",
@@ -67,7 +64,11 @@
       "tipo": "Informativo",
       "local": "Piscina",
       "inicio": "29/01/26 - 12:57",
-      "fim": "10/02/26 - 12:57"
+      "fim": "10/02/26 - 12:57",
+      "id": "a_43f314ada7b288_1770242054695",
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-04T21:54:14.695Z"
     },
     {
       "titulo": "Limpeza",
@@ -76,7 +77,11 @@
       "tipo": "Serviços",
       "local": "Lixeira",
       "inicio": "29/01/26 - 17:35",
-      "fim": "10/02/26 - 17:35"
+      "fim": "10/02/26 - 17:35",
+      "id": "a_2f6455f1e543e_1770242054695",
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-04T21:54:14.695Z"
     },
     {
       "titulo": "Alarme no Hall",
@@ -85,7 +90,11 @@
       "tipo": "Segurança",
       "local": "Hall de Entrada",
       "inicio": "29/01/26 - 17:35",
-      "fim": "15/02/26 - 17:35"
+      "fim": "15/02/26 - 17:35",
+      "id": "a_6288821c3fea_1770242054695",
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-04T21:54:14.695Z"
     },
     {
       "titulo": "Carrinho interno",
@@ -94,7 +103,11 @@
       "tipo": "Serviços",
       "local": "Lixeira",
       "inicio": "29/01/26 - 17:35",
-      "fim": "18/02/26 - 17:35"
+      "fim": "18/02/26 - 17:35",
+      "id": "a_f5ed75700308e_1770242054695",
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-04T21:54:14.695Z"
     },
     {
       "titulo": "Carrinho interno",
@@ -103,14 +116,17 @@
       "tipo": "Serviços",
       "local": "Garagem",
       "inicio": "29/01/26 - 17:35",
-      "fim": "19/02/26 - 17:35"
+      "fim": "19/02/26 - 17:35",
+      "id": "a_7b1edbd8f6ce7_1770242054695",
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-04T21:54:14.695Z"
     }
   ],
-
- "alertaUrgente": {
-  "ativar": false,
-  "titulo": "ALERTA URGENTE",
-  "mensagem": "ATENÇÃO! COMUNICA SÍNDICO está chegando, o melhor aplicativo digital para seu condomínio.",
-  "piscar": true
-}
+  "alertaUrgente": {
+    "ativar": false,
+    "titulo": "ALERTA URGENTE",
+    "mensagem": "ATENÇÃO! COMUNICA SÍNDICO está chegando, o melhor aplicativo digital para seu condomínio.",
+    "piscar": true
+  }
 }
