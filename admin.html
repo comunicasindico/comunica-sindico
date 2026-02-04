@@ -1,486 +1,560 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Comunica Síndico — Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Comunica Síndico — Admin (Avisos)</title>
+  <meta name="robots" content="noindex,nofollow" />
   <style>
     :root{
-      --bg:#0b1320; --card:#0f1c2c; --line:rgba(255,255,255,.10);
-      --txt:rgba(235,245,255,.92); --mut:rgba(235,245,255,.65);
-      --ok:#44d07a; --bad:#ff5a5a; --warn:#ffb347;
-      --radius:16px;
+      --bg1:#071725; --bg2:#0b1f33;
+      --panel: rgba(10,30,50,.72);
+      --line: rgba(140,200,255,.18);
+      --txt: rgba(234,242,255,.94);
+      --muted: rgba(234,242,255,.72);
+      --shadow: 0 18px 44px rgba(0,0,0,.45);
+      --radius: 18px;
+      --danger: #ff3b3b;
+      --ok: #44d07a;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100svh;
+      color:var(--txt);
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 20% 10%, #143c5f 0%, rgba(20,60,95,0) 55%),
+                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      padding:16px;
     }
-    html,body{height:100%; background: radial-gradient(1200px 800px at 15% 10%, #17385a 0%, var(--bg) 60%); color:var(--txt); margin:0;}
-    .wrap{max-width:980px; margin:0 auto; padding:16px;}
+    .wrap{ max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:12px; }
     .top{
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-      padding:14px 14px; border:1px solid var(--line); border-radius:var(--radius);
-      background: rgba(15,28,44,.78); backdrop-filter: blur(10px);
-      position: sticky; top: 10px; z-index: 10;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:12px 14px; border-radius:var(--radius);
+      border:1px solid var(--line); background: rgba(8,28,46,.60);
+      box-shadow: var(--shadow);
     }
-    .brand{display:flex; flex-direction:column; gap:2px; min-width:0}
-    .brand .t{font-weight:950; letter-spacing:.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .brand .s{font-size:12px; color:var(--mut); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+    .brand{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+    .title{ font-weight:950; letter-spacing:.2px; font-size:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .sub{ font-weight:850; font-size:12px; color:var(--muted); }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
     .btn{
-      border:1px solid var(--line); background: rgba(255,255,255,.06);
-      color:var(--txt); padding:10px 12px; border-radius:999px;
-      font-weight:900; cursor:pointer; user-select:none;
+      appearance:none; border:1px solid var(--line);
+      background: rgba(12,35,56,.40);
+      color: var(--txt); font-weight:900;
+      padding:10px 12px; border-radius:999px;
+      cursor:pointer; user-select:none;
+      display:inline-flex; gap:8px; align-items:center;
     }
-    .btn:hover{filter:brightness(1.08);}
-    .btn:active{transform:scale(.98);}
-    .btn.ok{background: rgba(68,208,122,.12); border-color: rgba(68,208,122,.35);}
-    .btn.warn{background: rgba(255,179,71,.12); border-color: rgba(255,179,71,.35);}
-    .btn.bad{background: rgba(255,90,90,.14); border-color: rgba(255,90,90,.38);}
-    .grid{display:grid; grid-template-columns: 1fr; gap:12px; margin-top:12px;}
-    .card{
-      border:1px solid var(--line); border-radius:var(--radius);
-      background: rgba(15,28,44,.70); backdrop-filter: blur(10px);
-      overflow:hidden;
-    }
-    .card h2{
-      margin:0; padding:12px 14px; font-size:14px; letter-spacing:.6px; text-transform:uppercase;
-      border-bottom:1px solid var(--line); background: rgba(255,255,255,.04);
-    }
-    .content{padding:12px 14px; display:flex; flex-direction:column; gap:10px;}
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
-    label{font-size:12px; color:var(--mut); font-weight:900; letter-spacing:.2px;}
-    input, select, textarea{
-      width:100%;
-      border:1px solid var(--line); background: rgba(0,0,0,.25);
-      color:var(--txt); border-radius:12px; padding:10px 10px;
-      outline:none;
-    }
-    textarea{min-height:84px; resize:vertical;}
-    .field{flex:1 1 220px; display:flex; flex-direction:column; gap:6px;}
-    .field.small{flex:1 1 140px;}
+    .btn:hover{ filter:brightness(1.08); }
+    .btn:active{ transform:scale(.98); }
+    .btn.ok{ border-color: rgba(68,208,122,.55); }
+    .btn.danger{ border-color: rgba(255,59,59,.55); }
+    .btn.small{ padding:8px 10px; font-size:12px; }
     .pill{
       display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px; border-radius:999px; border:1px solid var(--line);
-      background: rgba(255,255,255,.05); font-weight:900; font-size:12px; color:var(--mut);
+      padding:8px 10px; border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.20);
+      font-weight:900; font-size:12px;
+      color: var(--muted);
     }
-    .dot{width:10px;height:10px;border-radius:50%;}
-    .dot.ok{background:var(--ok);}
-    .dot.bad{background:var(--bad);}
-    .hint{font-size:12px; color:var(--mut); line-height:1.35;}
-    .list{display:flex; flex-direction:column; gap:8px;}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:12px;
+    }
+    @media (max-width: 960px){ .grid{ grid-template-columns:1fr; } }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panelHead{
+      padding:12px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background: rgba(12,35,56,.35);
+    }
+    .panelTitle{ font-weight:950; letter-spacing:.3px; }
+    .panelBody{ padding:12px 14px; display:flex; flex-direction:column; gap:10px; }
+
+    .list{ display:flex; flex-direction:column; gap:10px; }
     .item{
-      border:1px solid var(--line); border-radius:14px; padding:10px; background: rgba(0,0,0,.18);
-      display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 16px;
+      background: rgba(0,0,0,.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+      padding:12px 12px 10px;
+      display:flex; flex-direction:column; gap:8px;
     }
-    .item .meta{flex:1 1 380px; display:flex; flex-direction:column; gap:6px; min-width:0;}
-    .item .meta b{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .item .controls{display:flex; gap:8px; flex-wrap:wrap;}
-    code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; color:rgba(255,255,255,.85);}
-    .footer{
-      margin-top:12px; padding:12px 14px; border:1px dashed rgba(255,255,255,.14);
-      border-radius: var(--radius); color:var(--mut); font-size:12px; line-height:1.4;
-      background: rgba(0,0,0,.16);
+    .itemTop{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+    .h{
+      margin:0; font-weight:950; line-height:1.12;
+      overflow-wrap:anywhere;
     }
-    .dangerBox{
-      border:1px solid rgba(255,90,90,.35);
-      background: rgba(255,90,90,.12);
-      border-radius: 14px;
-      padding:10px 12px;
+    .d{
+      margin:0; color: var(--muted);
+      line-height:1.20; overflow-wrap:anywhere;
     }
+    .meta{
+      display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+      color: rgba(234,242,255,.82);
+      font-size:12px; font-weight:900;
+    }
+    .tag{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:5px 8px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      font-size:11px; font-weight:950;
+    }
+    .tag.alta{ border-color: rgba(255,59,59,.65); }
+    .tag.media{ border-color: rgba(255,179,71,.65); }
+    .tag.baixa{ border-color: rgba(120,190,255,.65); }
+
+    .actions{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+    .hint{ font-size:12px; color: rgba(234,242,255,.70); line-height:1.35; }
+
+    /* Modal */
+    .modalBack{
+      position:fixed; inset:0; background: rgba(0,0,0,.55);
+      display:none; align-items:center; justify-content:center;
+      padding:16px; z-index:9999;
+    }
+    .modal{
+      width:min(720px, 100%);
+      border:1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(8,28,46,.95);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modalHead{
+      padding:12px 14px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background: rgba(12,35,56,.35);
+    }
+    .modalTitle{ font-weight:950; }
+    .modalBody{ padding:12px 14px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    @media (max-width: 720px){ .modalBody{ grid-template-columns:1fr; } }
+
+    label{ font-size:12px; font-weight:900; color: rgba(234,242,255,.85); display:flex; flex-direction:column; gap:6px; }
+    input, select, textarea{
+      width:100%;
+      padding:10px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--txt);
+      outline:none;
+      font-weight:800;
+    }
+    textarea{ min-height:120px; resize:vertical; }
+    .modalFoot{
+      padding:12px 14px;
+      border-top:1px solid rgba(255,255,255,.10);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .right{ margin-left:auto; display:flex; gap:10px; flex-wrap:wrap; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
   </style>
 </head>
 
 <body>
-<div class="wrap">
-  <div class="top">
-    <div class="brand">
-      <div class="t">Comunica Síndico — Admin</div>
-      <div class="s" id="statusLine">Carregando…</div>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="title">Admin — Avisos</div>
+        <div class="sub">CRUD completo (criar/editar/excluir/ordenar) • preserva o resto do data.json</div>
+      </div>
+      <div class="row">
+        <span class="pill" id="statusPill">Carregando data.json…</span>
+        <button class="btn small" id="btnReload">🔄 Recarregar</button>
+        <button class="btn small ok" id="btnNew">➕ Novo aviso</button>
+      </div>
     </div>
-    <div class="actions">
-      <button class="btn" id="btnReload">Recarregar</button>
-      <button class="btn warn" id="btnPreview">Prévia (JSON)</button>
-      <button class="btn ok" id="btnDownload">Gerar data.json</button>
+
+    <div class="grid">
+      <!-- LISTA -->
+      <div class="panel">
+        <div class="panelHead">
+          <div class="panelTitle">Lista de Avisos</div>
+          <div class="row">
+            <button class="btn small" id="btnSort">↕️ Ordenar por prioridade</button>
+          </div>
+        </div>
+        <div class="panelBody">
+          <div class="hint">
+            • Use <b>⬆️⬇️</b> para ajustar ordem manual. <br/>
+            • <b>Salvar</b> gera um <b>novo data.json</b> para você substituir no GitHub.
+          </div>
+          <div class="list" id="list"></div>
+        </div>
+      </div>
+
+      <!-- AÇÕES / SALVAR -->
+      <div class="panel">
+        <div class="panelHead">
+          <div class="panelTitle">Salvar / Publicar</div>
+        </div>
+        <div class="panelBody">
+          <div class="hint">
+            ✅ Este admin <b>não muda nada sozinho</b>. <br/>
+            Ele cria um <b>data.json novo</b> com os avisos atualizados.
+          </div>
+
+          <button class="btn ok" id="btnDownload">💾 Baixar data.json novo</button>
+          <button class="btn" id="btnCopy">📋 Copiar JSON para área de transferência</button>
+
+          <div class="panel" style="box-shadow:none; background:rgba(0,0,0,.12);">
+            <div class="panelHead" style="background:rgba(0,0,0,.10);">
+              <div class="panelTitle">Colar data.json (opcional)</div>
+            </div>
+            <div class="panelBody">
+              <div class="hint">
+                Se o fetch falhar, cole aqui o conteúdo do seu data.json e clique em “Carregar do campo”.
+              </div>
+              <textarea id="pasteJson" class="mono" placeholder="Cole aqui o JSON completo do data.json…"></textarea>
+              <button class="btn small" id="btnLoadFromPaste">⬆️ Carregar do campo</button>
+            </div>
+          </div>
+
+          <div class="hint">
+            Depois de baixar, substitua no GitHub: <b>data.json</b> (mesmo caminho).<br/>
+            Aí o painel da TV/PC atualiza normalmente.
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="grid">
+  <!-- MODAL -->
+  <div class="modalBack" id="modalBack">
+    <div class="modal">
+      <div class="modalHead">
+        <div class="modalTitle" id="modalTitle">Editar aviso</div>
+        <button class="btn small danger" id="btnClose">✖ Fechar</button>
+      </div>
 
-    <div class="card">
-      <h2>Status</h2>
-      <div class="content">
-        <div class="row">
-          <span class="pill"><span class="dot" id="dot" class=""></span> <span id="st">—</span></span>
-          <span class="pill">Fonte: <code id="src">—</code></span>
-        </div>
-        <div class="hint">
-          Este painel <b>não altera automaticamente</b> o GitHub/Wix (site estático).  
-          Ele <b>gera</b> um <code>data.json</code> pronto para você subir/commitar por cima do antigo.
+      <div class="modalBody">
+        <label>Título
+          <input id="fTitulo" maxlength="120" />
+        </label>
+
+        <label>Prioridade
+          <select id="fPrioridade">
+            <option>Alta</option>
+            <option>Média</option>
+            <option>Baixa</option>
+          </select>
+        </label>
+
+        <label>Tipo
+          <input id="fTipo" maxlength="60" placeholder="Ex: Segurança, Serviços, Informativo..." />
+        </label>
+
+        <label>Local
+          <input id="fLocal" maxlength="60" placeholder="Ex: Hall, Piscina, Garagem..." />
+        </label>
+
+        <label>Início (texto)
+          <input id="fInicio" maxlength="40" placeholder="Ex: 29/01/26 - 12:57" />
+        </label>
+
+        <label>Fim (texto)
+          <input id="fFim" maxlength="40" placeholder="Ex: 10/02/26 - 12:57" />
+        </label>
+
+        <label style="grid-column:1 / -1;">Descrição
+          <textarea id="fDesc" maxlength="800"></textarea>
+        </label>
+      </div>
+
+      <div class="modalFoot">
+        <button class="btn danger" id="btnDelete">🗑 Excluir</button>
+        <div class="right">
+          <button class="btn" id="btnCancel">Cancelar</button>
+          <button class="btn ok" id="btnSave">Salvar</button>
         </div>
       </div>
     </div>
-
-    <div class="card">
-      <h2>Alerta urgente</h2>
-      <div class="content">
-        <div class="dangerBox">
-          <div class="row" style="justify-content:space-between;">
-            <div class="pill"><span class="dot bad"></span> Modo Alerta (substitui “Mensagens no Brasil”)</div>
-            <button class="btn bad" id="btnToggleAlert">Desligar</button>
-          </div>
-          <div class="hint" style="margin-top:6px;">
-            Quando <b>ativar=true</b>, o painel do condômino deve esconder as mensagens e mostrar só o alerta.
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field small">
-            <label>ativar</label>
-            <select id="alertAtivar">
-              <option value="true">true (ligado)</option>
-              <option value="false">false (desligado)</option>
-            </select>
-          </div>
-          <div class="field small">
-            <label>piscar</label>
-            <select id="alertPiscar">
-              <option value="true">true</option>
-              <option value="false">false</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>título</label>
-            <input id="alertTitulo" placeholder="ALERTA URGENTE" />
-          </div>
-        </div>
-
-        <div class="field">
-          <label>mensagem</label>
-          <textarea id="alertMsg" placeholder="Digite a mensagem do alerta..."></textarea>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Clima e cidade</h2>
-      <div class="content">
-        <div class="row">
-          <div class="field">
-            <label>Cidade (atalhos)</label>
-            <select id="cityPreset">
-              <option value="">— escolher —</option>
-              <option value="São Paulo|-23.5505|-46.6333|America/Sao_Paulo">São Paulo</option>
-              <option value="Rio de Janeiro|-22.9068|-43.1729|America/Sao_Paulo">Rio de Janeiro</option>
-              <option value="Florianópolis|-27.5949|-48.5482|America/Sao_Paulo">Florianópolis</option>
-              <option value="Porto Velho|-8.7608|-63.8999|America/Porto_Velho">Porto Velho</option>
-              <option value="Brasília|-15.7939|-47.8828|America/Sao_Paulo">Brasília</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>cidade (texto)</label>
-            <input id="climaCidade" placeholder="São Paulo" />
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="field small">
-            <label>latitude</label>
-            <input id="climaLat" inputmode="decimal" placeholder="-23.5505" />
-          </div>
-          <div class="field small">
-            <label>longitude</label>
-            <input id="climaLon" inputmode="decimal" placeholder="-46.6333" />
-          </div>
-          <div class="field">
-            <label>timezone</label>
-            <input id="climaTz" placeholder="America/Sao_Paulo" />
-          </div>
-        </div>
-
-        <div class="hint">
-          Dica: se quiser uma cidade diferente, troque <b>cidade/lat/lon/timezone</b> aqui e gere o <code>data.json</code>.
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Imagem do cabeçalho (cidade)</h2>
-      <div class="content">
-        <div class="row">
-          <div class="field small">
-            <label>ativar</label>
-            <select id="cabAtivar">
-              <option value="false">false</option>
-              <option value="true">true</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>url (imagem)</label>
-            <input id="cabUrl" placeholder="https://..." />
-          </div>
-        </div>
-        <div class="hint">
-          Isso controla: <code>publicidade.cabecalhoImagem</code> (ativar/url).
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Vídeos (publicidade.videos)</h2>
-      <div class="content">
-        <div class="row">
-          <div class="field">
-            <label>Novo vídeo: arquivo (url/relativo)</label>
-            <input id="newVideoArquivo" placeholder="./ads/novo.mp4" />
-          </div>
-          <div class="field">
-            <label>Novo vídeo: anunciante (texto)</label>
-            <input id="newVideoAnunciante" placeholder="Texto do anunciante" />
-          </div>
-          <button class="btn ok" id="btnAddVideo">Adicionar</button>
-        </div>
-
-        <div class="list" id="videoList"></div>
-
-        <div class="hint">
-          Remover/adicionar aqui e depois clicar em <b>Gerar data.json</b>.
-        </div>
-      </div>
-    </div>
-
   </div>
 
-  <div class="footer">
-    <b>Como publicar:</b> depois de baixar o <code>data.json</code> gerado, você substitui o arquivo no GitHub:
-    <br/>Repo → <code>data.json</code> → Upload/Replace → Commit.
-  </div>
-</div>
+  <script>
+    // =========================
+    // Estado
+    // =========================
+    let baseData = null;     // JSON inteiro do data.json (preservado)
+    let avisos = [];         // array editável
+    let editingIndex = -1;
 
-<script>
-(function(){
-  const DATA_URL = "https://comunicasindico.github.io/comunica-sindico/data.json";
+    const $ = (id)=>document.getElementById(id);
 
-  let original = null;
-  let working  = null;
-
-  const $ = (id)=>document.getElementById(id);
-
-  function setStatus(ok, text){
-    $("st").textContent = text || (ok ? "Online" : "Offline");
-    $("statusLine").textContent = (ok ? "Lido com sucesso" : "Falha ao ler") + " • " + new Date().toLocaleString("pt-BR");
-    $("dot").className = "dot " + (ok ? "ok" : "bad");
-  }
-
-  function deepClone(obj){ return JSON.parse(JSON.stringify(obj || {})); }
-
-  function ensurePaths(){
-    if(!working.publicidade) working.publicidade = {};
-    if(!Array.isArray(working.publicidade.videos)) working.publicidade.videos = [];
-    if(!working.publicidade.cabecalhoImagem) working.publicidade.cabecalhoImagem = { ativar:false, url:"" };
-
-    if(!working.clima) working.clima = { cidade:"", latitude:0, longitude:0, timezone:"America/Sao_Paulo" };
-
-    if(!working.alertaUrgente) working.alertaUrgente = {
-      ativar:false, titulo:"ALERTA URGENTE", mensagem:"", piscar:true
-    };
-  }
-
-  function bindFromData(){
-    ensurePaths();
-
-    // ALERTA
-    $("alertAtivar").value = String(!!working.alertaUrgente.ativar);
-    $("alertPiscar").value = String(working.alertaUrgente.piscar !== false);
-    $("alertTitulo").value = String(working.alertaUrgente.titulo || "");
-    $("alertMsg").value = String(working.alertaUrgente.mensagem || "");
-
-    // Botão rápido
-    $("btnToggleAlert").textContent = working.alertaUrgente.ativar ? "Desligar" : "Ligar";
-
-    // CLIMA
-    $("climaCidade").value = String(working.clima.cidade || "");
-    $("climaLat").value = String(working.clima.latitude ?? "");
-    $("climaLon").value = String(working.clima.longitude ?? "");
-    $("climaTz").value = String(working.clima.timezone || "America/Sao_Paulo");
-
-    // CABEÇALHO
-    $("cabAtivar").value = String(!!working.publicidade.cabecalhoImagem.ativar);
-    $("cabUrl").value = String(working.publicidade.cabecalhoImagem.url || "");
-
-    // VIDEOS
-    renderVideoList();
-  }
-
-  function readUIToData(){
-    ensurePaths();
-
-    // ALERTA
-    working.alertaUrgente.ativar   = ($("alertAtivar").value === "true");
-    working.alertaUrgente.piscar   = ($("alertPiscar").value === "true");
-    working.alertaUrgente.titulo   = $("alertTitulo").value.trim() || "ALERTA URGENTE";
-    working.alertaUrgente.mensagem = $("alertMsg").value.trim();
-
-    // CLIMA
-    working.clima.cidade    = $("climaCidade").value.trim() || working.clima.cidade || "";
-    working.clima.latitude  = Number(String($("climaLat").value).replace(",", ".")) || working.clima.latitude;
-    working.clima.longitude = Number(String($("climaLon").value).replace(",", ".")) || working.clima.longitude;
-    working.clima.timezone  = $("climaTz").value.trim() || working.clima.timezone || "America/Sao_Paulo";
-
-    // CABEÇALHO
-    working.publicidade.cabecalhoImagem.ativar = ($("cabAtivar").value === "true");
-    working.publicidade.cabecalhoImagem.url    = $("cabUrl").value.trim();
-  }
-
-  function renderVideoList(){
-    const list = $("videoList");
-    list.innerHTML = "";
-
-    const vids = Array.isArray(working?.publicidade?.videos) ? working.publicidade.videos : [];
-    if(!vids.length){
-      const div = document.createElement("div");
-      div.className = "item";
-      div.innerHTML = `<div class="meta"><b>Nenhum vídeo cadastrado</b><div class="hint">Adicione acima.</div></div>`;
-      list.appendChild(div);
-      return;
+    function prioClass(p){
+      const x = String(p||"").toLowerCase();
+      if(x.includes("alta")) return "alta";
+      if(x.includes("m")) return "media";
+      return "baixa";
     }
 
-    vids.forEach((v, idx)=>{
-      const item = document.createElement("div");
-      item.className = "item";
+    function safe(v){ return (v==null ? "" : String(v)); }
 
-      const arquivo = String(v?.arquivo || "");
-      const anunc   = String(v?.anunciante || "");
-
-      item.innerHTML = `
-        <div class="meta">
-          <b>${idx+1}. ${escapeHtml(anunc || "—")}</b>
-          <div class="hint"><code>${escapeHtml(arquivo || "—")}</code></div>
-        </div>
-        <div class="controls">
-          <button class="btn" data-up="${idx}">↑</button>
-          <button class="btn" data-down="${idx}">↓</button>
-          <button class="btn bad" data-del="${idx}">Remover</button>
-        </div>
-      `;
-      list.appendChild(item);
-    });
-
-    list.querySelectorAll("button[data-del]").forEach(b=>{
-      b.onclick = ()=>{
-        const i = Number(b.getAttribute("data-del"));
-        working.publicidade.videos.splice(i,1);
-        renderVideoList();
-      };
-    });
-    list.querySelectorAll("button[data-up]").forEach(b=>{
-      b.onclick = ()=>{
-        const i = Number(b.getAttribute("data-up"));
-        if(i<=0) return;
-        const a = working.publicidade.videos;
-        [a[i-1], a[i]] = [a[i], a[i-1]];
-        renderVideoList();
-      };
-    });
-    list.querySelectorAll("button[data-down]").forEach(b=>{
-      b.onclick = ()=>{
-        const i = Number(b.getAttribute("data-down"));
-        const a = working.publicidade.videos;
-        if(i>=a.length-1) return;
-        [a[i+1], a[i]] = [a[i], a[i+1]];
-        renderVideoList();
-      };
-    });
-  }
-
-  function escapeHtml(s){
-    return String(s ?? "").replace(/[&<>"']/g, c => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    }[c]));
-  }
-
-  function downloadJson(filename, obj){
-    const blob = new Blob([JSON.stringify(obj, null, 2)], {type:"application/json;charset=utf-8"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url), 800);
-  }
-
-  async function load(){
-    $("src").textContent = DATA_URL;
-    try{
-      const res = await fetch(DATA_URL + "?ts=" + Date.now(), {cache:"no-store"});
-      if(!res.ok) throw new Error("HTTP " + res.status);
-      const data = await res.json();
-      original = data;
-      working = deepClone(data);
-      setStatus(true, "Online");
-      bindFromData();
-    }catch(e){
-      original = null;
-      working = { };
-      setStatus(false, "Offline");
-      ensurePaths();
-      bindFromData();
+    function setStatus(text, ok=null){
+      const el = $("statusPill");
+      el.textContent = text;
+      el.style.borderColor = ok===true ? "rgba(68,208,122,.55)" : ok===false ? "rgba(255,59,59,.55)" : "var(--line)";
     }
-  }
 
-  // UI events
-  $("btnReload").onclick = load;
+    // =========================
+    // Load data.json
+    // =========================
+    async function loadData(){
+      setStatus("Carregando data.json…");
+      try{
+        const url = "./data.json?ts=" + Date.now();
+        const res = await fetch(url, { cache:"no-store" });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+        applyLoadedData(data);
+        setStatus("OK • data.json carregado", true);
+      }catch(e){
+        setStatus("Falha ao carregar • cole o JSON no campo ao lado", false);
+      }
+    }
 
-  $("btnPreview").onclick = ()=>{
-    readUIToData();
-    const w = window.open("", "_blank");
-    if(!w) return alert("Bloqueador impediu abrir aba.");
-    w.document.write("<pre style='white-space:pre-wrap;font-family:ui-monospace,Consolas,monospace;'>" +
-      escapeHtml(JSON.stringify(working, null, 2)) +
-      "</pre>");
-    w.document.close();
-  };
+    function applyLoadedData(data){
+      baseData = data && typeof data === "object" ? data : {};
+      avisos = Array.isArray(baseData.avisos) ? baseData.avisos.map(x=>({ ...x })) : [];
+      renderList();
+    }
 
-  $("btnDownload").onclick = ()=>{
-    readUIToData();
-    downloadJson("data.json", working);
-  };
+    // =========================
+    // Render list
+    // =========================
+    function renderList(){
+      const root = $("list");
+      root.innerHTML = "";
 
-  $("btnAddVideo").onclick = ()=>{
-    const arq = $("newVideoArquivo").value.trim();
-    const an  = $("newVideoAnunciante").value.trim();
-    if(!arq) return alert("Informe o arquivo do vídeo (ex.: ./ads/novo.mp4)");
-    working.publicidade.videos.push({ arquivo: arq, anunciante: an || "—" });
-    $("newVideoArquivo").value = "";
-    $("newVideoAnunciante").value = "";
-    renderVideoList();
-  };
+      if(!avisos.length){
+        root.innerHTML = `<div class="hint">Nenhum aviso cadastrado. Clique em “Novo aviso”.</div>`;
+        return;
+      }
 
-  $("btnToggleAlert").onclick = ()=>{
-    const cur = ($("alertAtivar").value === "true");
-    $("alertAtivar").value = String(!cur);
-    // mantém campos e só alterna
-    readUIToData();
-    $("btnToggleAlert").textContent = working.alertaUrgente.ativar ? "Desligar" : "Ligar";
-  };
+      avisos.forEach((a, idx)=>{
+        const item = document.createElement("div");
+        item.className = "item";
 
-  // preset cidade
-  $("cityPreset").onchange = ()=>{
-    const v = $("cityPreset").value;
-    if(!v) return;
-    const [city, lat, lon, tz] = v.split("|");
-    $("climaCidade").value = city || "";
-    $("climaLat").value = lat || "";
-    $("climaLon").value = lon || "";
-    $("climaTz").value = tz || "America/Sao_Paulo";
-  };
+        const titulo = safe(a.titulo || "Aviso");
+        const desc = safe(a.descricao || "");
+        const pr = safe(a.prioridade || "Baixa");
+        const tp = safe(a.tipo || "");
+        const lc = safe(a.local || "");
+        const ini = safe(a.inicio || "");
+        const fim = safe(a.fim || "");
 
-  // Atualiza botão rápido ao mexer no select
-  $("alertAtivar").onchange = ()=>{
-    $("btnToggleAlert").textContent = ($("alertAtivar").value === "true") ? "Desligar" : "Ligar";
-  };
+        item.innerHTML = `
+          <div class="itemTop">
+            <p class="h">${escapeHtml(titulo)}</p>
+            <div class="actions">
+              <button class="btn small" data-act="up">⬆️</button>
+              <button class="btn small" data-act="down">⬇️</button>
+              <button class="btn small ok" data-act="edit">✏️ Editar</button>
+            </div>
+          </div>
+          <p class="d">${escapeHtml(desc || "—")}</p>
+          <div class="meta">
+            <span class="tag ${prioClass(pr)}">⚡ ${escapeHtml(pr)}</span>
+            ${tp ? `<span class="tag">🏷 ${escapeHtml(tp)}</span>` : ``}
+            ${lc ? `<span class="tag">📍 ${escapeHtml(lc)}</span>` : ``}
+            ${(ini||fim) ? `<span class="tag">🗓 ${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</span>` : ``}
+          </div>
+        `;
 
-  load();
-})();
-</script>
+        item.querySelector('[data-act="edit"]').onclick = ()=>openModal(idx);
+        item.querySelector('[data-act="up"]').onclick = ()=>move(idx, -1);
+        item.querySelector('[data-act="down"]').onclick = ()=>move(idx, +1);
+
+        root.appendChild(item);
+      });
+    }
+
+    function move(idx, dir){
+      const j = idx + dir;
+      if(j < 0 || j >= avisos.length) return;
+      const tmp = avisos[idx];
+      avisos[idx] = avisos[j];
+      avisos[j] = tmp;
+      renderList();
+    }
+
+    function sortByPriority(){
+      const rank = { alta:3, media:2, baixa:1 };
+      avisos.sort((a,b)=>{
+        const pa = prioClass(a?.prioridade);
+        const pb = prioClass(b?.prioridade);
+        return (rank[pb]||0) - (rank[pa]||0);
+      });
+      renderList();
+    }
+
+    // =========================
+    // Modal CRUD
+    // =========================
+    function openModal(idx){
+      editingIndex = idx;
+
+      const isNew = (idx < 0);
+      $("modalTitle").textContent = isNew ? "Novo aviso" : "Editar aviso";
+
+      const a = isNew ? {
+        titulo:"", descricao:"", prioridade:"Baixa", tipo:"", local:"", inicio:"", fim:""
+      } : (avisos[idx] || {});
+
+      $("fTitulo").value = safe(a.titulo);
+      $("fDesc").value = safe(a.descricao);
+      $("fPrioridade").value = normalizePrio(safe(a.prioridade));
+      $("fTipo").value = safe(a.tipo);
+      $("fLocal").value = safe(a.local);
+      $("fInicio").value = safe(a.inicio);
+      $("fFim").value = safe(a.fim);
+
+      $("btnDelete").style.display = isNew ? "none" : "inline-flex";
+
+      $("modalBack").style.display = "flex";
+    }
+
+    function closeModal(){
+      $("modalBack").style.display = "none";
+      editingIndex = -1;
+    }
+
+    function normalizePrio(p){
+      const x = String(p||"").toLowerCase();
+      if(x.includes("alta")) return "Alta";
+      if(x.includes("m")) return "Média";
+      return "Baixa";
+    }
+
+    function saveModal(){
+      const obj = {
+        titulo: $("fTitulo").value.trim(),
+        descricao: $("fDesc").value.trim(),
+        prioridade: $("fPrioridade").value,
+        tipo: $("fTipo").value.trim(),
+        local: $("fLocal").value.trim(),
+        inicio: $("fInicio").value.trim(),
+        fim: $("fFim").value.trim()
+      };
+
+      if(!obj.titulo) obj.titulo = "Aviso";
+      if(!obj.descricao) obj.descricao = "—";
+
+      if(editingIndex < 0){
+        avisos.unshift(obj); // novo entra no topo
+      }else{
+        avisos[editingIndex] = obj;
+      }
+      renderList();
+      closeModal();
+    }
+
+    function deleteModal(){
+      if(editingIndex < 0) return;
+      avisos.splice(editingIndex, 1);
+      renderList();
+      closeModal();
+    }
+
+    // =========================
+    // Export / Download
+    // =========================
+    function buildFinalData(){
+      const out = (baseData && typeof baseData === "object") ? structuredCloneSafe(baseData) : {};
+      out.avisos = avisos.map(x=>({ ...x }));
+      return out;
+    }
+
+    function structuredCloneSafe(obj){
+      try{ return structuredClone(obj); }catch(e){ return JSON.parse(JSON.stringify(obj)); }
+    }
+
+    function downloadJson(){
+      const finalData = buildFinalData();
+      const txt = JSON.stringify(finalData, null, 2);
+      const blob = new Blob([txt], { type:"application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "data.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 2500);
+      setStatus("Baixado: data.json novo (substitua no GitHub)", true);
+    }
+
+    async function copyJson(){
+      const finalData = buildFinalData();
+      const txt = JSON.stringify(finalData, null, 2);
+      try{
+        await navigator.clipboard.writeText(txt);
+        setStatus("JSON copiado ✅", true);
+      }catch(e){
+        setStatus("Não foi possível copiar. Use o botão de baixar.", false);
+      }
+    }
+
+    // =========================
+    // Paste loader
+    // =========================
+    function loadFromPaste(){
+      const t = $("pasteJson").value.trim();
+      if(!t) return;
+      try{
+        const j = JSON.parse(t);
+        applyLoadedData(j);
+        setStatus("OK • carregado do campo", true);
+      }catch(e){
+        setStatus("JSON inválido no campo", false);
+      }
+    }
+
+    // =========================
+    // HTML escape
+    // =========================
+    function escapeHtml(s){
+      return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    // =========================
+    // Bind UI
+    // =========================
+    $("btnReload").onclick = loadData;
+    $("btnNew").onclick = ()=>openModal(-1);
+    $("btnSort").onclick = sortByPriority;
+
+    $("btnClose").onclick = closeModal;
+    $("btnCancel").onclick = closeModal;
+    $("btnSave").onclick = saveModal;
+    $("btnDelete").onclick = deleteModal;
+
+    $("btnDownload").onclick = downloadJson;
+    $("btnCopy").onclick = copyJson;
+    $("btnLoadFromPaste").onclick = loadFromPaste;
+
+    // Fecha modal clicando fora
+    $("modalBack").addEventListener("click", (e)=>{
+      if(e.target === $("modalBack")) closeModal();
+    });
+
+    // Start
+    loadData();
+  </script>
 </body>
 </html>
