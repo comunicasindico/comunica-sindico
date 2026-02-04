@@ -1,107 +1,1738 @@
-{
-  "titulo": "Comunica Síndico — Condôminos",
-  "subtitulo": "Gestão inteligente para o seu condomínio",
-  "referencia": "",
-  "temaDoDia": {
-    "modo": "biblico-anual",
-    "arquivo": "./versiculos.json",
-    "fallback": "Você tem valor. Valorize o que você tem."
-  },
-  "rotacao": {
-    "ativar": true,
-    "intervaloSeg": 10,
-    "quantidadePorTela": 3,
-    "mostrarProgresso": true,
-    "pausarNoMouse": true
-  },
-  "emergencia": {
-    "ativar": true,
-    "intervaloSeg": 5,
-    "piscar": true,
-    "somenteAlta": true
-  },
-  "publicidade": {
-    "ativar": true,
-    "intervaloSeg": 8,
-    "shuffle": true,
-    "fit": "contain",
-    "videos": [
-      { "arquivo": "ads/comunica_sindico_logo.mp4", "anunciante": "Acabe de vez com os problemas de comunicação." },
-      { "arquivo": "ads/luisa.mp4", "anunciante": "Luisa em seu primeiro trabalho" },
-      { "arquivo": "ads/calibram.mp4", "anunciante": "Calibra Ltda (48) 3628-1414 Br 101, 147 Km 336" },
-      { "arquivo": "ads/rafinhako.mp4", "anunciante": "Rafinha - Corretor de Imóveis" },
-      { "arquivo": "ads/cslogo.mp4", "anunciante": "Entre no novo mundo da tecnologia e respeito ao meio ambiente." }
-    ],
-    "mensagens": [
-      {
-        "titulo": "📰 Notícias",
-        "texto": "Sem notícias no momento. (verifique RSS)"
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <link rel="canonical" href="./">
+  <script>
+  (function () {
+    try {
+      const u = new URL(location.href);
+      if (u.search) { u.search = ""; location.replace(u.toString()); return; }
+      if (u.pathname.endsWith("/index.html")) {
+        u.pathname = u.pathname.replace(/\/index\.html$/i, "/");
+        location.replace(u.toString()); return;
       }
-    ]
-  },
-  "clima": {
-    "cidade": "Tubarão/SC",
-    "latitude": -28.4767,
-    "longitude": -49.0144,
-    "timezone": "America/Sao_Paulo",
-    "alertaChuvaMin": 50,
-    "horasAlerta": 3
-  },
-  "avisos": [
-    {
-      "id": "001",
-      "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família. Seja sábio e cuide de seu lar.",
-      "prioridade": "Alta",
-      "tipo": "Segurança",
-      "local": "Hall de Entrada",
-      "inicio": "29/01/26 - 17:35",
-      "fim": "10/02/26 - 17:35",
-      "emergencia": true
-    },
-    {
-      "id": "002",
-      "titulo": "Carrinho interno",
-      "descricao": "O excesso de peso acaba rasgando as sacolas dentro do carrinho, dificultando bastante o manuseio pela prestadora de serviços e os sacos maiores \"trancam\" ali dentro ocupando muito mais espaço do que um descarte do dia a dia.",
-      "prioridade": "Alta",
-      "tipo": "Serviços",
-      "local": "Lixeira",
-     "inicio": "29/01/26 - 17:35",
-      "fim": "10/02/26 - 17:35",
-      "emergencia": true
-    },
-    {
-      "id": "003",
-      "titulo": "Carrinho interno",
-      "descricao": "Caso optem por colocar várias sacolas menores dentro de um saco grande de lixo, pedimos que levem esse saco diretamente até a lixeira externa, e não ao carrinho que fica dentro do prédio (ele é exclusivo para sacolas menores).",
-      "prioridade": "Média",
-      "tipo": "Serviços",
-      "local": "Garagem",
-     "inicio": "29/01/26 - 17:35",
-      "fim": "10/02/26 - 17:35",
-      "emergencia": true
-    },
-    {
-      "id": "004",
-      "titulo": "Piscina",
-      "descricao": "Evite nadar sozinho, qualquer anormalidade sempre uma pessoa próxima poderá auxiliar.",
-      "prioridade": "Média",
-      "tipo": "Informativo",
-      "local": "Piscina",
-      "inicio": "28/01/26 - 12:57",
-      "fim": "10/02/26 - 12:57",
-      "emergencia": false
-    },
-    {
-      "id": "005",
-      "titulo": "Limpeza",
-      "descricao": "Utilizem, por favor, sacolas reforçadas, próprias para lixo, e evitem sacolas finas de mercado, pois elas rasgam com facilidade.",
-      "prioridade": "Baixa",
-      "tipo": "Serviços",
-      "local": "Lixeira",
-      "inicio": "29/01/26 - 17:35",
-      "fim": "10/02/26 - 17:35",
-      "emergencia": false
+    } catch (e) {}
+  })();
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Comunica Síndico - Condôminos</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#0b223a">
+
+  <style>
+    :root{
+      --bg1:#061726;
+      --bg2:#0b1f33;
+      --line:rgba(255,255,255,.10);
+      --txt:#eaf2ff;
+      --muted:rgba(234,242,255,.75);
+      --shadow: 0 14px 50px rgba(0,0,0,.35);
+      --radius: 18px;
+      --sat: env(safe-area-inset-top);
+      --sar: env(safe-area-inset-right);
+      --sab: env(safe-area-inset-bottom);
+      --sal: env(safe-area-inset-left);
+
+      --ui:  clamp(1, calc(100dvh / 980), 1.70);
+      --ui2: clamp(1, calc(100dvh / 920), 2.05);
+
+      --tv-safe-bottom: 18px;
+
+      --topbar-bg: none;
+      --topbar-img-opacity: .92;
+
+      --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+      --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
+
+      /* NEWS: volta ao “padrão do quadro” */
+      --news-bg: rgba(15,43,69,.92);
+      --news-border: rgba(255,255,255,.10);
+      --news-shadow: 0 14px 50px rgba(0,0,0,.35);
+
+      /* cards internos claros para fonte preta */
+      --news-item-bg: rgba(255,255,255,.88);
+      --news-item-border: rgba(0,0,0,.10);
+      --news-text: rgba(0,0,0,.92);
+      --news-meta: rgba(0,0,0,.58);
     }
-  ]
-}
+
+    *{box-sizing:border-box}
+    html,body{height:100%;width:100%}
+
+    body{
+      margin:0;
+      font-family:"Segoe UI",Arial,sans-serif;
+      color:var(--txt);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(16,56,91,0.55), transparent 60%),
+        radial-gradient(900px 600px at 85% 15%, rgba(11,52,84,0.55), transparent 60%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+      overflow:hidden;
+      overscroll-behavior:none;
+      touch-action:manipulation;
+      min-height:100dvh;
+      height:100dvh;
+      width:100%;
+      padding:0;
+    }
+
+    .wrap{
+      height:100dvh;
+      min-height:100dvh;
+      width:100%;
+      padding:
+        calc(10px + var(--sat))
+        calc(10px + var(--sar))
+        calc(max(10px, var(--tv-safe-bottom)) + var(--sab))
+        calc(10px + var(--sal));
+      display:block;
+    }
+
+    .container{
+      width:100%;
+      height:100%;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      max-width:none;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 16px;
+      background:rgba(8,28,46,.60);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(8px);
+      flex:0 0 auto;
+      width:100%;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .topbar::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-image: var(--topbar-bg);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transform:none !important;
+      image-rendering:auto;
+      will-change:transform;
+      opacity: var(--topbar-img-opacity);
+      pointer-events:none;
+    }
+
+    .topbar::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(5,20,35,.55), rgba(5,20,35,.25)),
+        radial-gradient(900px 420px at 20% 20%, rgba(0,0,0,.12), transparent 65%);
+      pointer-events:none;
+    }
+
+    .topbar > *{ position:relative; z-index:1; }
+
+    .brand{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1 1 auto;}
+
+    #titulo{
+      margin:0;
+      font-size: clamp(30px, 3.0vw, 52px);
+      font-weight: 950;
+      letter-spacing:.2px;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      line-height: 1.06;
+    }
+
+    #subtitulo{
+      margin:0;
+      font-size: calc(12.5px * var(--ui));
+      color:var(--muted);
+      font-weight:800;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .subMobileLine{
+      display:none;
+      margin-top:2px;
+      font-size: calc(12.5px * var(--ui));
+      color: rgba(234,242,255,.84);
+      font-weight: 850;
+      gap: 8px;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      text-align:center;
+    }
+    .subMobileLine .sep{ opacity:.55; font-weight:900; }
+
+    .rightInfo{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:nowrap;
+      justify-content:flex-end;
+      flex:0 0 auto;
+    }
+
+    .badge{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(12,35,56,.55);
+      color:var(--muted);
+      font-weight:900;
+      font-size: calc(12px * var(--ui));
+      white-space:nowrap;
+    }
+
+    .dot{width:10px;height:10px;border-radius:50%;background:#ff5a5a}
+    #statusJson{font-weight:950;color:rgba(234,242,255,.92)}
+
+    .btnInstall{
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(12,35,56,.55);
+      color:rgba(234,242,255,.92);
+      padding:10px 12px;
+      border-radius:999px;
+      font-weight:900;
+      cursor:pointer;
+      font-size: calc(14px * var(--ui));
+      white-space:nowrap;
+    }
+
+    #wxIconTop{
+      display:inline-flex;
+      width: 46px;
+      height: 46px;
+      align-items:center;
+      justify-content:center;
+      transform: translateY(1px);
+    }
+    #wxIconTop svg{
+      width: 46px;
+      height: 46px;
+      display:block;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,.45));
+    }
+
+    .updateBanner{
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(120,190,255,.35);
+      background:rgba(7,20,34,.28);
+      box-shadow:var(--shadow);
+      font-weight:900;
+      flex:0 0 auto;
+      width:100%;
+    }
+
+    .main{
+      flex:1 1 auto;
+      min-height:0;
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    /* ===== TÍTULOS GERAIS ACIMA DOS QUADROS ===== */
+    .quadHeader{
+      flex:0 0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:rgba(8,28,46,.60);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    .quadHeader .leftTitle{
+      font-weight: 950;
+      letter-spacing:.4px;
+      font-size: calc(18px * var(--ui2));
+      color: rgba(234,242,255,.96);
+      white-space:nowrap;
+    }
+    .quadHeader .rightTitle{
+      font-weight: 950;
+      font-size: calc(14px * var(--ui2));
+      color: rgba(234,242,255,.92);
+      white-space:nowrap;
+      text-align:right;
+    }
+    .quadHeader .rightTitle span{
+      font-weight: 850;
+      opacity:.90;
+      margin-left:10px;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(15,43,69,.92), rgba(11,33,55,.92));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+      overflow:hidden;
+    }
+
+    .panelHead{
+      padding:10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:rgba(7,20,34,.20);
+      flex:0 0 auto;
+    }
+
+    /* cabeçalhos mais “leves” nos quadros para liberar espaço */
+    .panelTitle{
+      font-weight: 950;
+      letter-spacing:.5px;
+      color:rgba(234,242,255,.93);
+      text-transform:none;
+      font-size: calc(15px * var(--ui));
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      opacity:.92;
+    }
+
+    .pill{
+      font-size: calc(12px * var(--ui));
+      font-weight:900;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(12,35,56,.35);
+      color:var(--muted);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+      user-select:none;
+      cursor:pointer;
+    }
+    .pill:hover{ filter:brightness(1.08); }
+    .pill:active{ transform:scale(.98); }
+
+    @keyframes avisoIn{
+      from{ opacity:0; transform: translateY(8px) scale(.995); }
+      to  { opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    .aviso{
+      height:100%;
+      width:100%;
+      padding:14px 14px 12px 16px;
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(20,60,95,.88), rgba(10,30,50,.88));
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      border:1px solid rgba(140,200,255,.22);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 -14px 22px rgba(0,0,0,.28),
+        0 14px 34px rgba(0,0,0,.45);
+      animation: avisoIn .22s ease both;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .aviso::before{
+      content:"";
+      position:absolute;
+      inset:10px auto 10px 10px;
+      width:6px;
+      border-radius:999px;
+      background:rgba(255,255,255,.15);
+    }
+
+    .aviso.alta{
+      border:1px solid rgba(255,90,90,.9);
+      background:linear-gradient(180deg, rgba(255,80,80,.28), rgba(12,30,50,.92));
+    }
+    .aviso.alta::before{ background:linear-gradient(180deg,#ff5a5a,#c0392b); }
+
+    .aviso.media{
+      border:1px solid rgba(255,179,71,.85);
+      background:linear-gradient(180deg, rgba(255,180,70,.25), rgba(12,30,50,.92));
+    }
+    .aviso.media::before{ background:linear-gradient(180deg,#ffb347,#e67e22); }
+
+    .aviso.baixa{
+      border:1px solid rgba(77,166,255,.85);
+      background:linear-gradient(180deg, rgba(100,170,255,.25), rgba(12,30,50,.92));
+    }
+    .aviso.baixa::before{ background:linear-gradient(180deg,#6fb6ff,#2980b9); }
+
+    /* fonte padrão (desktop) */
+    .aviso .t{
+      margin:0;
+      font-weight:950;
+      font-size: clamp(18px, 1.45vw, 24px);
+      letter-spacing:.2px;
+      color:#fff;
+      text-shadow:0 1px 2px rgba(0,0,0,.6);
+      line-height:1.12;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
+
+    .aviso .d{
+      margin:0;
+      color:#e0ecff;
+      line-height:1.26;
+      font-size: clamp(14px, 1.20vw, 19px);
+      overflow:hidden;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      flex:1 1 auto;
+      min-height:0;
+    }
+
+    .metaLine{
+      margin-top:auto;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      color:rgba(234,242,255,.92);
+      font-size: 11px;
+      font-weight:900;
+      line-height: 1.15;
+    }
+
+    .metaItem{ display:inline-flex; align-items:center; gap:6px; opacity:.95; }
+    .metaItem b{ font-weight:950; color:#fff; }
+    .metaSep{ opacity:.35; font-weight:900; }
+
+    .prioBadge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:950;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      font-size: 10px;
+      line-height:1;
+      border:1px solid rgba(255,255,255,.22);
+      background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.35),
+        inset 0 -2px 6px rgba(0,0,0,.35),
+        0 6px 14px rgba(0,0,0,.35);
+    }
+    .prioBadge.alta{
+      border-color: rgba(255,90,90,.80);
+      background: linear-gradient(180deg, rgba(255,120,120,.50), rgba(160,0,0,.35));
+    }
+    .prioBadge.media{
+      border-color: rgba(255,179,71,.75);
+      background: linear-gradient(180deg, rgba(255,210,120,.55), rgba(160,90,0,.35));
+    }
+    .prioBadge.baixa{
+      border-color: rgba(120,190,255,.70);
+      background: linear-gradient(180deg, rgba(160,210,255,.55), rgba(0,80,160,.32));
+    }
+
+    .quadTop{
+      flex:1 1 auto;
+      min-height:0;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap:8px;
+      width:100%;
+      height:100%;
+    }
+
+    .tile{ min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+    .tileBody{ padding:10px; min-height:0; flex:1 1 auto; overflow:hidden; display:flex; }
+    .fade-out{ opacity:0; transition: opacity .14s ease; }
+    .fade-in { opacity:1; transition: opacity .14s ease; }
+
+    .videoWrap{
+      width:100%;
+      height:100%;
+      background:#000;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      border-radius:14px;
+      position:relative;
+      flex:1 1 auto;
+      min-height:0;
+    }
+
+    .videoBg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      filter: blur(18px) saturate(1.08);
+      transform: scale(1.12);
+      opacity:.55;
+      background:#000;
+    }
+
+    .videoMain{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      background:transparent;
+    }
+
+    video::-webkit-media-controls{ display:none !important; }
+    video::-webkit-media-controls-panel{ display:none !important; }
+    video::-webkit-media-controls-enclosure{ display:none !important; }
+
+    /* ===== NEWS (padrão quadro + texto preto nos cards internos) ===== */
+    .newsBox{
+      flex:0 0 auto;
+      background: var(--news-bg);
+      border: 1px solid var(--news-border);
+      box-shadow: var(--news-shadow);
+      border-radius: 18px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+
+    .newsHead{
+      padding:10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background:rgba(7,20,34,.20);
+      flex:0 0 auto;
+    }
+
+    .newsTitle{ font-weight:950; color:rgba(234,242,255,.95); }
+    #newsPill{ display:none !important; }
+
+    #newsBody{
+      padding: 10px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height:0;
+      flex:1 1 auto;
+      overflow:hidden;
+    }
+
+    .newsItem{
+      border-radius: 14px;
+      border: 1px solid var(--news-item-border);
+      background: var(--news-item-bg);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.35);
+      padding: 10px 10px 9px;
+      overflow:hidden;
+    }
+
+    .newsItem .h{
+      font-family: var(--font-soft);
+      font-weight: 850;
+      font-size: clamp(11px, 1.25dvh, 15px);
+      line-height: 1.18;
+      letter-spacing: .12px;
+      color: var(--news-text);
+      margin: 0;
+      display:block;
+      white-space:normal;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+    }
+
+    .newsFooter{
+      margin-top: 4px;
+      font-size: 11px;
+      color: rgba(234,242,255,.70);
+      font-weight: 900;
+      text-align:left;
+    }
+    .newsFooterItem{
+      font-size: 11px;
+      color: rgba(234,242,255,.60);
+      margin-left: 6px;
+      text-align:left;
+    }
+
+    /* ===== RODAPÉ ===== */
+    .ticker{
+      flex:0 0 auto;
+      width:100%;
+      padding:10px 12px;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:rgba(8,28,46,.60);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(8px);
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin:0;
+    }
+
+    .tickerLine1{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      min-width:0;
+      flex-wrap:nowrap;
+    }
+
+    .verseLeft{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      flex: 1 1 auto;
+    }
+
+    .tickerIcon{
+      font-size:clamp(22px, 3.1vw, 28px);
+      opacity:.95;
+      flex:0 0 auto;
+      white-space:nowrap;
+    }
+
+    #ref{
+      color:rgba(234,242,255,.92);
+      font-weight: 900;
+      font-size: clamp(12px, 1.05vw, 16px);
+      line-height: 1.22;
+      margin:0;
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      flex: 1 1 auto;
+      text-align:left;
+    }
+
+    .footRight{
+      display:flex;
+      align-items:center;
+      justify-content:flex-end;
+      gap:10px;
+      flex: 0 0 auto;
+      white-space:nowrap;
+    }
+
+    #dataBiblica{
+      font-weight:950;
+      white-space:nowrap;
+      color:rgba(234,242,255,.95);
+      font-size: calc(16px * var(--ui2));
+      flex:0 0 auto;
+    }
+
+    .wxInline{
+      flex:0 0 auto;
+      width:auto;
+      margin-left:auto;
+      display:flex;
+      flex-direction:row;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+      font-size: clamp(11px, 0.95vw, 14px);
+    }
+
+    .wxInline .wxL1{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight: 950;
+      color: rgba(234,242,255,.92);
+      line-height: 1.15;
+    }
+
+    .wxInline .wxL2{
+      font-weight: 900;
+      color: rgba(234,242,255,.78);
+      line-height: 1.15;
+    }
+
+    .wxInline .wxL2::before{
+      content:" • ";
+      opacity:.65;
+      font-weight:900;
+      margin-right:2px;
+    }
+
+    .wxMiniSvg{
+      display:inline-flex;
+      width: 18px;
+      height: 18px;
+      align-items:center;
+      justify-content:center;
+      transform: translateY(1px);
+    }
+    .wxMiniSvg svg{
+      width: 18px;
+      height: 18px;
+      display:block;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,.35));
+    }
+
+    @media (max-width: 1100px){
+      .tickerLine1{ flex-wrap:wrap; justify-content:center; }
+      .verseLeft{ flex: 1 1 100%; justify-content:center; }
+      #ref{ white-space:normal; overflow:visible; text-overflow:unset; text-align:center; }
+      .footRight{ flex: 1 1 100%; justify-content:center; }
+      .wxInline{ margin-left:0; }
+      .wxInline .wxL2::before{ content:""; }
+    }
+
+    /* ===== MOBILE (mantém publicidade e tudo) ===== */
+    @media (max-width: 980px){
+      :root{
+        --ui: clamp(1, calc(100vmin / 900), 2.10);
+        --ui2: clamp(1, calc(100vmin / 850), 2.70);
+        --tv-safe-bottom: 0px;
+      }
+
+      body{ overflow:auto; -webkit-overflow-scrolling: touch; padding:0; height:auto; min-height:100svh; }
+      .wrap{ min-height:100svh; height:auto; padding: calc(14px + var(--sat)) calc(14px + var(--sar)) calc(14px + var(--sab)) calc(14px + var(--sal)); }
+      .container{ min-height:auto; height:auto; gap:10px; }
+
+      .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
+      .brand{ width:100%; align-items:center; text-align:center; }
+      .rightInfo{ display:none !important; }
+      .subMobileLine{ display:flex; width:100%; }
+
+      .quadTop{
+        display:flex;
+        flex-direction:column;
+        height:auto;
+        gap:10px;
+      }
+
+      .tileBody{ padding:12px; }
+
+      #slot4 .videoWrap{ min-height: 240px; }
+      #slot4{ min-height: 240px; }
+
+      .ticker{
+        position:sticky;
+        bottom:0;
+        z-index:50;
+        margin:0;
+        padding-bottom: max(12px, env(safe-area-inset-bottom));
+      }
+
+      .rightInfo{
+        display:flex !important;
+        position:absolute;
+        top: 12px;
+        right: 12px;
+        gap: 0;
+        align-items:center;
+        justify-content:flex-end;
+        z-index: 5;
+      }
+      .rightInfo .badge[title="Status do painel"]{ display:none !important; }
+      #clock{ display:none !important; }
+      #btnInstalarApp{ display:none !important; }
+      .rightInfo .badge[title="Hora e Clima"]{
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        gap: 0 !important;
+      }
+      #wxIconTop{ width:56px; height:56px; transform:none !important; }
+      #wxIconTop svg{ width:56px; height:56px; }
+    }
+
+    /* ===== TV / Tela cheia: aumentar e padronizar fonte ===== */
+    html.isTV .aviso .t{
+      font-size: clamp(26px, 2.10vw, 40px);
+      line-height: 1.10;
+    }
+    html.isTV .aviso .d{
+      font-size: clamp(18px, 1.65vw, 28px);
+      line-height: 1.24;
+    }
+    html.isTV .metaLine{
+      font-size: 12px;
+    }
+
+    @media (min-width: 981px) and (max-height: 720px){
+      :root{ --tv-safe-bottom: 44px; }
+    }
+
+    html.isTV body{
+      overflow:hidden !important;
+      height:100dvh !important;
+      min-height:100dvh !important;
+    }
+
+    html.isTV :root{
+      --ui:  clamp(1, calc(100dvh / 980), 1.70);
+      --ui2: clamp(1, calc(100dvh / 920), 2.05);
+      --tv-safe-bottom: 44px;
+    }
+
+    html.isTV .wrap{
+      height:100dvh !important;
+      min-height:100dvh !important;
+      padding:
+        calc(10px + var(--sat))
+        calc(10px + var(--sar))
+        calc(max(12px, var(--tv-safe-bottom)) + var(--sab))
+        calc(10px + var(--sal)) !important;
+    }
+
+    .wxsvg .sun-rays{ transform-origin: 32px 32px; animation: wx-rotate 6s linear infinite; }
+    @keyframes wx-rotate{ from{ transform: rotate(0deg);} to{ transform: rotate(360deg);} }
+    .wxsvg .sun-core{ animation: wx-pulse 2.4s ease-in-out infinite; transform-origin: 32px 32px; }
+    @keyframes wx-pulse{ 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.08);} }
+    .wxsvg .cloud{ animation: wx-float 3.2s ease-in-out infinite; }
+    @keyframes wx-float{ 0%,100%{ transform: translateX(0);} 50%{ transform: translateX(2.5px);} }
+    .wxsvg .drops line{ animation: wx-rain 1.1s linear infinite; }
+    .wxsvg .drops line:nth-child(2){ animation-delay:.15s; }
+    .wxsvg .drops line:nth-child(3){ animation-delay:.30s; }
+    @keyframes wx-rain{ 0%{ transform: translateY(0); opacity:.15;} 15%{opacity:1;} 100%{ transform: translateY(8px); opacity:.05;} }
+    .wxsvg .bolt{ animation: wx-bolt 1.4s ease-in-out infinite; }
+    @keyframes wx-bolt{ 0%,100%{ opacity:.35; transform: translateY(0);} 50%{ opacity:1; transform: translateY(1px);} }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="container">
+
+      <div class="topbar">
+        <div class="brand">
+          <div class="title" id="titulo">Comunica Síndico - Condôminos</div>
+          <div class="sub" id="subtitulo">Painel Informativo</div>
+
+          <div class="subMobileLine" id="subMobileLine">
+            <span id="statusJsonMini">Carregando...</span>
+            <span class="sep">º</span>
+            <span id="clockMini">--:--</span>
+          </div>
+        </div>
+
+        <div class="rightInfo">
+          <div class="badge" title="Status do painel">
+            <span class="dot" id="dotOnline"></span>
+            <span id="statusJson">Carregando...</span>
+          </div>
+
+          <div class="badge" title="Hora e Clima">
+            <span id="wxIconTop" aria-label="Clima" role="img"></span>
+            <span id="clock">--:--</span>
+          </div>
+
+          <button id="btnInstalarApp" class="btnInstall" style="display:none">⬇️ Instalar App</button>
+        </div>
+      </div>
+
+      <div id="updateBanner" class="updateBanner" style="display:none">⬇️ Nova versão disponível. Atualizando…</div>
+
+      <div class="main">
+
+        <!-- TÍTULOS gerais acima do 2x2 -->
+        <div class="quadHeader">
+          <div class="leftTitle">Avisos</div>
+          <div class="rightTitle">
+            Publicidade <span>Acabe de vez com os problemas de comunicação</span>
+          </div>
+        </div>
+
+        <div class="quadTop fade-in" id="avisosPane">
+          <div class="panel tile">
+            <div class="panelHead">
+              <div class="panelTitle" style="visibility:hidden">—</div>
+              <div class="pill" id="refPill" title="Clique para atualizar">Atualizar</div>
+            </div>
+            <div class="tileBody" id="slot1"></div>
+          </div>
+
+          <div class="panel tile">
+            <div class="panelHead">
+              <div class="panelTitle" style="visibility:hidden">—</div>
+              <div class="pill" style="visibility:hidden">—</div>
+            </div>
+            <div class="tileBody" id="slot2"></div>
+          </div>
+
+          <div class="panel tile">
+            <div class="panelHead">
+              <div class="panelTitle" style="visibility:hidden">—</div>
+              <div class="pill" style="visibility:hidden">—</div>
+            </div>
+            <div class="tileBody" id="slot3"></div>
+          </div>
+
+          <div class="panel tile">
+            <div class="panelHead">
+              <div class="panelTitle" id="adLabelTop">Publicidade —</div>
+              <div class="pill" id="adPill">—</div>
+            </div>
+            <div class="tileBody" id="slot4">
+              <div class="videoWrap">
+                <video id="adVideoBg" class="videoBg" autoplay muted playsinline webkit-playsinline loop disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
+                <video id="adVideo" class="videoMain" autoplay muted playsinline webkit-playsinline disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="newsBox" id="newsBox" style="display:none">
+          <div class="newsHead">
+            <div class="newsTitle" id="cityTitle">Mensagens no Brasil</div>
+            <div class="pill" id="newsPill">—</div>
+          </div>
+          <div id="newsBody"></div>
+        </div>
+      </div>
+
+      <div class="ticker">
+        <div class="tickerLine1">
+          <div class="verseLeft">
+            <span class="tickerIcon">📖</span>
+            <span id="ref">—</span>
+          </div>
+
+          <div class="footRight">
+            <span id="dataBiblica">—</span>
+            <div class="wxInline" id="wxInline">
+              <div class="wxL1">
+                <span id="wxIconInline" class="wxMiniSvg" aria-hidden="true"></span>
+                <span id="wxCityTemp">—</span>
+              </div>
+              <div class="wxL2" id="wxWindRain">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  let deferredPrompt = null;
+  function mostrarBotaoInstalar(show){
+    const b = document.getElementById("btnInstalarApp");
+    if (b) b.style.display = show ? "inline-flex" : "none";
+  }
+  window.addEventListener("beforeinstallprompt", (e)=>{
+    e.preventDefault();
+    deferredPrompt = e;
+    mostrarBotaoInstalar(true);
+  });
+  window.addEventListener("appinstalled", ()=>{
+    deferredPrompt = null;
+    mostrarBotaoInstalar(false);
+  });
+  async function instalarApp(){
+    if(!deferredPrompt) return;
+    await deferredPrompt.prompt();
+    deferredPrompt = null;
+    mostrarBotaoInstalar(false);
+  }
+
+  function prioridadeClass(p){
+    const x = String(p || "").toLowerCase();
+    if (x === "alta") return "alta";
+    if (x === "média" || x === "media") return "media";
+    return "baixa";
+  }
+  function safeText(v){ return (v == null ? "" : String(v)); }
+  function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
+  function pad2(n){ return String(n).padStart(2,"0"); }
+  function escapeHtml(s){
+    return String(s ?? "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+  function isMobile(){ return window.matchMedia("(max-width: 980px)").matches; }
+  function refreshPage(){ location.reload(); }
+
+  function tickClock(){
+    const d = new Date();
+    const hhmm = `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+    setText("clock", hhmm);
+    setText("clockMini", hhmm);
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  (function bindUI(){
+    const btn = document.getElementById("btnInstalarApp");
+    if(btn) btn.onclick = instalarApp;
+    const refPill = document.getElementById("refPill");
+    if(refPill) refPill.onclick = refreshPage;
+  })();
+
+  function parseBRDateTime(v){
+    const s = String(v ?? "").trim();
+    if(!s) return null;
+
+    const m = s.match(/^(\d{2})\/(\d{2})\/(\d{2}|\d{4})\s*(?:-\s*)?(\d{2}):(\d{2})$/);
+    if(m){
+      const dd = Number(m[1]);
+      const mm = Number(m[2]);
+      let yyyy = Number(m[3]);
+      if(String(m[3]).length === 2) yyyy = 2000 + yyyy;
+      const HH = Number(m[4]);
+      const MM = Number(m[5]);
+      const d = new Date(yyyy, mm-1, dd, HH, MM, 0, 0);
+      if(!isNaN(d.getTime())) return d;
+    }
+
+    const d2 = new Date(s);
+    if(!isNaN(d2.getTime())) return d2;
+    return null;
+  }
+
+  function formatDT_BR(v){
+    if(!v) return "";
+    const d = parseBRDateTime(v);
+    if(!d) return String(v);
+    const dd = pad2(d.getDate());
+    const mm = pad2(d.getMonth()+1);
+    const aa = String(d.getFullYear()).slice(-2);
+    const HH = pad2(d.getHours());
+    const MM = pad2(d.getMinutes());
+    return `${dd}/${mm}/${aa} - ${HH}:${MM}`;
+  }
+
+  function buildAvisoEl(a){
+    const el = document.createElement("div");
+    el.className = `aviso ${prioridadeClass(a.prioridade)}`;
+
+    const titulo = safeText(a.titulo || "Aviso");
+    const desc = safeText(a.descricao || "");
+    const tipo = safeText(a.tipo || "");
+    const local = safeText(a.local || "");
+    const ini = formatDT_BR(a.inicio || "");
+    const fim = formatDT_BR(a.fim || "");
+
+    const itens = [];
+    if(local) itens.push(`<span class="metaItem">📍 <b>${escapeHtml(local)}</b></span>`);
+    if(tipo)  itens.push(`<span class="metaItem">🏷️ <b>${escapeHtml(tipo)}</b></span>`);
+    const pr = safeText(a.prioridade || "Baixa");
+    itens.push(`<span class="metaItem">⚡ <span class="prioBadge ${prioridadeClass(pr)}">${escapeHtml(pr)}</span></span>`);
+    if(ini || fim) itens.push(`<span class="metaItem">🗓️ <b>${escapeHtml(ini)}${fim ? " → " + escapeHtml(fim) : ""}</b></span>`);
+
+    el.innerHTML = `
+      <p class="t">${escapeHtml(titulo)}</p>
+      ${desc ? `<p class="d">${escapeHtml(desc)}</p>` : `<p class="d">—</p>`}
+      <div class="metaLine">${itens.join(`<span class="metaSep">•</span>`)}</div>
+    `;
+    return el;
+  }
+
+  function buildMiniAdEl(offset){
+    const wrap = document.createElement("div");
+    wrap.className = "videoWrap";
+    wrap.dataset.miniad = "1";
+    wrap.dataset.offset = String(offset || 0);
+
+    const vbg = document.createElement("video");
+    vbg.className = "videoBg";
+    vbg.autoplay = true;
+    vbg.muted = true;
+    vbg.playsInline = true;
+    vbg.loop = true;
+    vbg.setAttribute("webkit-playsinline", "");
+    vbg.setAttribute("disablepictureinpicture", "");
+    vbg.setAttribute("controlslist", "nofullscreen noremoteplayback nodownload");
+
+    const v = document.createElement("video");
+    v.className = "videoMain";
+    v.autoplay = true;
+    v.muted = true;
+    v.playsInline = true;
+    v.setAttribute("webkit-playsinline", "");
+    v.setAttribute("disablepictureinpicture", "");
+    v.setAttribute("controlslist", "nofullscreen noremoteplayback nodownload");
+
+    wrap.appendChild(vbg);
+    wrap.appendChild(v);
+    return wrap;
+  }
+
+  /* ===== ROTACAO (garantida): alterna mesmo com 5 avisos ===== */
+  let ROT_TIMER = null;
+  function startRotation(){
+    try{ if(ROT_TIMER){ clearInterval(ROT_TIMER); ROT_TIMER = null; } }catch(e){}
+    ROT_TIMER = setInterval(()=>{
+      try{
+        const total = Array.isArray((window.__lastDataForTopbar||{}).avisos) ? (window.__lastDataForTopbar.avisos.length) : 0;
+        const step = (total >= 3) ? 3 : 1;
+        window.__rotStart = (Number(window.__rotStart || 0) || 0) + step;
+        renderAvisos(window.__lastDataForTopbar || {});
+      }catch(e){}
+    }, 8000);
+  }
+
+  function renderAvisos(data){
+    const pane = document.getElementById("avisosPane");
+    const s1 = document.getElementById("slot1");
+    const s2 = document.getElementById("slot2");
+    const s3 = document.getElementById("slot3");
+    const s4 = document.getElementById("slot4");
+    if(!pane || !s1 || !s2 || !s3 || !s4) return;
+
+    s1.innerHTML = "";
+    s2.innerHTML = "";
+    s3.innerHTML = "";
+
+    pane.classList.remove("fade-in");
+    pane.classList.add("fade-out");
+
+    const avisosAll = Array.isArray(data.avisos) ? data.avisos.slice() : [];
+    avisosAll.sort((a,b)=>{
+      const pa = prioridadeClass(a?.prioridade);
+      const pb = prioridadeClass(b?.prioridade);
+      const rank = { alta:3, media:2, baixa:1 };
+      return (rank[pb]||0) - (rank[pa]||0);
+    });
+
+    const total = avisosAll.length;
+    let start = Number(window.__rotStart || 0) || 0;
+    if(total > 0) start = start % total; else start = 0;
+
+    const picks = [];
+    for(let k=0;k<3;k++){
+      if(total === 0) break;
+      picks.push(avisosAll[(start + k) % total]);
+    }
+
+    setTimeout(()=>{
+      if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
+      else s1.appendChild(buildMiniAdEl(1));
+
+      if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
+      else s2.appendChild(buildMiniAdEl(2));
+
+      if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
+      else s3.appendChild(buildMiniAdEl(3));
+
+      pane.classList.remove("fade-out");
+      pane.classList.add("fade-in");
+    }, 140);
+  }
+
+  function hojeKeyMMDD() {
+    const d = new Date();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${mm}-${dd}`;
+  }
+
+  async function carregarVersiculo(data) {
+    if (!data?.temaDoDia || data.temaDoDia.modo !== "biblico-anual") return;
+    try {
+      const res = await fetch("versiculos.json?ts=" + Date.now(), { cache: "no-store" });
+      const v = await res.json();
+      const key = hojeKeyMMDD();
+      const texto = v?.versos?.[key];
+      setText("dataBiblica", v?.cabecalho || "");
+      setText("ref", texto ? texto : (v?.titulo ? v.titulo : "Verso não encontrado"));
+    } catch (e) {}
+  }
+
+  function wxSvgSun(){
+    return `
+    <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="sun-rays" fill="none" stroke="rgba(255,220,120,.95)" stroke-width="3" stroke-linecap="round">
+        <line x1="32" y1="6"  x2="32" y2="14"/>
+        <line x1="32" y1="50" x2="32" y2="58"/>
+        <line x1="6"  y1="32" x2="14" y2="32"/>
+        <line x1="50" y1="32" x2="58" y2="32"/>
+        <line x1="12" y1="12" x2="18" y2="18"/>
+        <line x1="46" y1="46" x2="52" y2="52"/>
+        <line x1="46" y1="18" x2="52" y2="12"/>
+        <line x1="12" y1="52" x2="18" y2="46"/>
+      </g>
+      <circle class="sun-core" cx="32" cy="32" r="12" fill="rgba(255,200,60,.98)"/>
+      <circle cx="32" cy="32" r="12" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+    </svg>`;
+  }
+
+  function wxSvgCloud(){
+    return `
+    <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="cloud">
+        <path d="M22 44h22a12 12 0 0 0 0-24 15 15 0 0 0-29-3A11 11 0 0 0 22 44z"
+          fill="rgba(235,245,255,.92)"/>
+        <path d="M22 44h22a12 12 0 0 0 0-24 15 15 0 0 0-29-3A11 11 0 0 0 22 44z"
+          fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+      </g>
+    </svg>`;
+  }
+
+  function wxSvgRain(){
+    return `
+    <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="cloud">
+        <path d="M20 40h24a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 20 40z"
+          fill="rgba(235,245,255,.92)"/>
+        <path d="M20 40h24a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 20 40z"
+          fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+      </g>
+      <g class="drops" stroke="rgba(120,200,255,.95)" stroke-width="3" stroke-linecap="round">
+        <line x1="26" y1="44" x2="24" y2="52"/>
+        <line x1="34" y1="44" x2="32" y2="52"/>
+        <line x1="42" y1="44" x2="40" y2="52"/>
+      </g>
+    </svg>`;
+  }
+
+  function wxSvgStorm(){
+    return `
+    <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g class="cloud">
+        <path d="M18 40h26a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 18 40z"
+          fill="rgba(235,245,255,.92)"/>
+        <path d="M18 40h26a11 11 0 0 0 0-22 14 14 0 0 0-27-3A10 10 0 0 0 18 40z"
+          fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+      </g>
+      <path class="bolt" d="M30 42l-4 10h6l-3 10 12-16h-6l3-4z"
+        fill="rgba(255,210,80,.98)"/>
+    </svg>`;
+  }
+
+  function wxSvgByCode(code){
+    const c = Number(code);
+    const isSun   = (c === 0);
+    const isCloud = ([1,2,3,45,48].includes(c));
+    const isRain  = ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(c));
+    const isStorm = ([95,96,99].includes(c));
+    if (isSun)   return { label:"Ensolarado", svg: wxSvgSun() };
+    if (isStorm) return { label:"Tempestade", svg: wxSvgStorm() };
+    if (isRain)  return { label:"Chuva", svg: wxSvgRain() };
+    if (isCloud) return { label:"Nublado", svg: wxSvgCloud() };
+    return { label:"Clima", svg: wxSvgCloud() };
+  }
+
+  function wxSetIcon(elId, code){
+    const el = document.getElementById(elId);
+    if(!el) return;
+    const o = wxSvgByCode(code);
+    el.innerHTML = o.svg;
+    el.setAttribute("role","img");
+    el.setAttribute("aria-label", o.label || "Clima");
+  }
+
+  async function carregarClima(data){
+    const c = data?.clima;
+    try {
+      if (!c?.latitude || !c?.longitude) throw new Error("Sem coordenadas");
+
+      const url =
+        "https://api.open-meteo.com/v1/forecast" +
+        `?latitude=${encodeURIComponent(c.latitude)}` +
+        `&longitude=${encodeURIComponent(c.longitude)}` +
+        `&current=temperature_2m,precipitation,weather_code,wind_speed_10m` +
+        `&timezone=${encodeURIComponent(c.timezone || "America/Sao_Paulo")}`;
+
+      const res = await fetch(url, { cache: "no-store" });
+      const j = await res.json();
+      const cur = j?.current;
+      if (!cur) throw new Error("Sem current");
+
+      const t = Math.round(cur.temperature_2m);
+      const w = Math.round(cur.wind_speed_10m);
+      const p = cur.precipitation;
+      const code = Number(cur.weather_code);
+
+      wxSetIcon("wxIconTop", code);
+      wxSetIcon("wxIconInline", code);
+
+      setText("wxCityTemp", `${c.cidade || "—"} ${t}°C`);
+      setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
+
+    } catch (e) {
+      const cloud = wxSvgCloud();
+      const top = document.getElementById("wxIconTop");
+      const mini = document.getElementById("wxIconInline");
+      if (top) top.innerHTML = cloud;
+      if (mini) mini.innerHTML = cloud;
+      setText("wxCityTemp", `${data?.clima?.cidade || "—"} (offline)`);
+      setText("wxWindRain", `Vento — km/h • Chuva — mm`);
+    }
+  }
+
+  const AD_STATE_KEY = "CS_AD_STATE_V2";
+  const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V2";
+
+  function adLoadState(){
+    try { return JSON.parse(sessionStorage.getItem(AD_STATE_KEY) || "{}"); }
+    catch(e){ return {}; }
+  }
+  function adSaveState(st){
+    try { sessionStorage.setItem(AD_STATE_KEY, JSON.stringify(st || {})); } catch(e){}
+  }
+
+  function adFilterVideos(list){
+    const arr = Array.isArray(list) ? list : [];
+    return arr.filter(x=>{
+      const src = String(x?.arquivo || "").trim();
+      return /\.(mp4|m4v|webm|ogg)(\?.*)?$/i.test(src);
+    });
+  }
+
+  function adShuffleCopy(arr){
+    const a = arr.slice();
+    for(let i=a.length-1; i>0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function adGetShuffledList(originalList){
+    try{
+      const raw = sessionStorage.getItem(AD_SHUFFLE_KEY);
+      if(raw){
+        const saved = JSON.parse(raw);
+        const filesNow = originalList.map(x => String(x?.arquivo||""));
+        const filesSaved = Array.isArray(saved?.files) ? saved.files : [];
+        if(filesSaved.join("|") === filesNow.join("|") && Array.isArray(saved?.order)){
+          const order = saved.order;
+          const map = new Map(originalList.map(x => [String(x?.arquivo||""), x]));
+          const rebuilt = order.map(f => map.get(f)).filter(Boolean);
+          filesNow.forEach(f=>{ if(!order.includes(f)) rebuilt.push(map.get(f)); });
+          return rebuilt;
+        }
+      }
+    }catch(e){}
+    const shuffled = adShuffleCopy(originalList);
+    try{
+      const order = shuffled.map(x => String(x?.arquivo||""));
+      const files = originalList.map(x => String(x?.arquivo||""));
+      sessionStorage.setItem(AD_SHUFFLE_KEY, JSON.stringify({ files, order }));
+    }catch(e){}
+    return shuffled;
+  }
+
+  function setVideoSrcPair(vMain, vBg, src){
+    if(!vMain || !vBg) return;
+
+    const next = (src || "").split("?")[0];
+    if(!next){
+      try{ vMain.pause(); vBg.pause(); }catch(e){}
+      vMain.removeAttribute("src");
+      vBg.removeAttribute("src");
+      try{ vMain.load(); vBg.load(); }catch(e){}
+      return;
+    }
+
+    const curMain = (vMain.currentSrc || vMain.src || "").split("?")[0];
+    if(curMain !== next){
+      try{ vMain.pause(); }catch(e){}
+      try{ vBg.pause(); }catch(e){}
+      vMain.removeAttribute("src");
+      vBg.removeAttribute("src");
+      try{ vMain.load(); vBg.load(); }catch(e){}
+      vBg.src = src;
+      vMain.src = src;
+      try{ vBg.load(); vMain.load(); }catch(e){}
+    }
+
+    const playSafe = (v)=>{
+      try{
+        const p = v.play();
+        if(p && p.catch) p.catch(()=>{});
+      }catch(e){}
+    };
+    vBg.onloadedmetadata = () => playSafe(vBg);
+    vMain.onloadedmetadata = () => playSafe(vMain);
+    playSafe(vBg);
+    playSafe(vMain);
+  }
+
+  function playMiniAds(list, baseIdx){
+    const minis = Array.from(document.querySelectorAll('[data-miniad="1"]'));
+    if(!minis.length || !list.length) return;
+
+    minis.forEach(w=>{
+      const off = Number(w.dataset.offset || 0) || 0;
+      const i = (baseIdx + off) % list.length;
+      const item = list[i];
+      const src = String(item?.arquivo || "");
+      const sep = src.includes("?") ? "&" : "?";
+      const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+      const vBg = w.querySelector("video.videoBg");
+      const vMain = w.querySelector("video.videoMain");
+      setVideoSrcPair(vMain, vBg, finalSrc);
+    });
+  }
+
+  function adPlayByState(videos){
+    const adVideo = document.getElementById("adVideo");
+    const adVideoBg = document.getElementById("adVideoBg");
+    const adPill  = document.getElementById("adPill");
+    const adTop   = document.getElementById("adLabelTop");
+    if(!adVideo || !adVideoBg) return;
+
+    let list = Array.isArray(videos) ? videos : [];
+    if(!list.length){
+      if(adPill) adPill.textContent = "Sem vídeo";
+      if(adTop) adTop.textContent = "Publicidade —";
+      setVideoSrcPair(adVideo, adVideoBg, "");
+      return;
+    }
+
+    try{
+      const cfg = (window.__lastDataForTopbar || {});
+      const pub = cfg?.publicidade || {};
+      if (pub.shuffle) list = adGetShuffledList(list);
+    }catch(e){}
+
+    const st = adLoadState();
+    let idx = Number.isFinite(st.idx) ? st.idx : 0;
+    if(idx < 0) idx = 0;
+    if(idx >= list.length) idx = 0;
+
+    const item = list[idx];
+    const src = String(item?.arquivo || "");
+    const sep = src.includes("?") ? "&" : "?";
+    const finalSrc = src ? (src + sep + "ts=" + Date.now()) : "";
+
+    if (adPill) adPill.textContent = "No ar";
+    if (adTop) adTop.textContent = `Publicidade — ${String(item?.anunciante || "").trim() || "Anúncio"}`;
+
+    setVideoSrcPair(adVideo, adVideoBg, finalSrc);
+
+    st.idx = idx;
+    st.paused = false;
+    st.t = 0;
+    adSaveState(st);
+
+    playMiniAds(list, idx);
+  }
+
+  function adNext(videos){
+    const list = videos;
+    if(!list.length) return;
+
+    const st = adLoadState();
+    let idx = Number.isFinite(st.idx) ? st.idx : 0;
+    idx++;
+    if(idx >= list.length) idx = 0;
+
+    st.idx = idx;
+    st.t = 0;
+    st.paused = false;
+    adSaveState(st);
+
+    adPlayByState(list);
+  }
+
+  function iniciarPublicidade(data){
+    const pub = data?.publicidade;
+    if (!pub?.ativar) return;
+
+    const videosOk = adFilterVideos(pub?.videos);
+    const v = document.getElementById("adVideo");
+    if(!v) return;
+
+    if(!videosOk.length){
+      const adPill  = document.getElementById("adPill");
+      const adTop   = document.getElementById("adLabelTop");
+      if(adPill) adPill.textContent = "Sem vídeo";
+      if(adTop) adTop.textContent = "Publicidade —";
+      return;
+    }
+
+    v.onended = () => adNext(videosOk);
+    v.onerror = () => setTimeout(()=>adNext(videosOk), 1200);
+
+    adPlayByState(videosOk);
+  }
+
+  function decodeHtmlEntities_(s){
+    const t = document.createElement("textarea");
+    t.innerHTML = String(s ?? "");
+    return t.value;
+  }
+  function normalizeText_(s){
+    return decodeHtmlEntities_(s).replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+  }
+
+  function getNewsMaxItems(){
+    const h = window.innerHeight || 900;
+    if (isMobile()) return 8;
+    if (h < 720) return 3;
+    if (h < 880) return 4;
+    return 6;
+  }
+
+  async function carregarMensagensCidade(){
+    const newsBox  = document.getElementById("newsBox");
+    const newsBody = document.getElementById("newsBody");
+    if(!newsBox || !newsBody) return;
+
+    try{
+      const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
+      if(!res.ok) throw new Error("HTTP " + res.status);
+
+      const j = await res.json();
+      const items = Array.isArray(j.items) ? j.items : [];
+      const maxItems = getNewsMaxItems();
+
+      if(!items.length){
+        newsBody.innerHTML = `
+          <div class="newsItem"><p class="h">Sem mensagens no momento</p></div>
+          <div class="newsFooter">Fonte: indisponível</div>
+        `;
+        newsBox.style.display = "flex";
+        return;
+      }
+
+      let html = "";
+      const fontes = new Set();
+
+      items.slice(0, maxItems).forEach(x=>{
+        let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
+        titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
+        titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
+        if(!titulo) titulo = "Mensagem";
+        if(x.fonte) fontes.add(normalizeText_(x.fonte));
+        html += `<div class="newsItem"><p class="h">${escapeHtml(titulo)}</p></div>`;
+      });
+
+      let fontesHtml = "";
+      if(fontes.size){
+        fontesHtml = `<div class="newsFooter">Fonte:</div>`;
+        fontes.forEach(f=>{ fontesHtml += `<div class="newsFooterItem">${escapeHtml(f)}</div>`; });
+      }
+
+      newsBody.innerHTML = html + fontesHtml;
+      newsBox.style.display = "flex";
+    }catch(e){
+      newsBody.innerHTML = `
+        <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
+        <div class="newsFooter">Fonte: news.google.com (offline)</div>
+      `;
+      newsBox.style.display = "flex";
+    }
+  }
+
+  function aplicarImagemTopbar(data){
+    const cidade = String(data?.clima?.cidade || "").toLowerCase();
+    const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
+
+    const h = new Date().getHours();
+    const estaNoite = (h >= 18 || h <= 4);
+
+    const isMob = window.matchMedia("(max-width: 980px)").matches;
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+    const longest = Math.max(vw, vh);
+
+    const is2560 = longest >= 2400;
+    const is1920 = longest >= 1700;
+
+    let img = "./img/tubarao01.jpg";
+
+    if(isTubarao){
+      if(estaNoite){
+        if(isMob)       img = "./img/tubarao_noite.jpg";
+        else if(is2560) img = "./img/tubarao_noite-2560p.jpg";
+        else if(is1920) img = "./img/tubarao_noite-1920p.jpg";
+        else            img = "./img/tubarao_noite-1280p.jpg";
+      }else{
+        if(isMob)       img = "./img/tubarao01.jpg";
+        else if(is2560) img = "./img/tubarao01-2560p.jpg";
+        else if(is1920) img = "./img/tubarao01-1920p.jpg";
+        else            img = "./img/tubarao01-1280p.jpg";
+      }
+    }
+
+    const test = new Image();
+    test.decoding = "async";
+    test.onload = () => {
+      document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
+    };
+    test.onerror = () => {
+      document.documentElement.style.setProperty("--topbar-bg", `url('./img/tubarao01.jpg')`);
+    };
+    test.src = img + "?v=1";
+  }
+
+  function setCityTitleFromConfig(cfg){
+    const el = document.getElementById("cityTitle");
+    if(!el) return;
+    const t = cfg?.publicidade?.cidadeTitulo || cfg?.cidadeTitulo || "Mensagens no Brasil";
+    el.textContent = String(t);
+  }
+
+  async function loadAll(){
+    const status = document.getElementById("statusJson");
+    const statusMini = document.getElementById("statusJsonMini");
+    const dot = document.getElementById("dotOnline");
+
+    try{
+      const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const ct = (res.headers.get("content-type") || "").toLowerCase();
+      if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
+
+      const data = await res.json();
+      window.__lastDataForTopbar = data;
+      window.__rotStart = 0;
+
+      if (status) status.textContent = "Atualizado";
+      if (statusMini) statusMini.textContent = "Atualizado";
+      if (dot) dot.style.background = "#44d07a";
+
+      setCityTitleFromConfig(data);
+
+      renderAvisos(data);
+      startRotation();
+
+      if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
+        setText("dataBiblica", "📖");
+        setText("ref", "Carregando…");
+      } else {
+        setText("dataBiblica", "📌 Avisos");
+        setText("ref", safeText(data.referencia || "Atualizado"));
+      }
+
+      await carregarVersiculo(data);
+      await carregarClima(data);
+      await carregarMensagensCidade();
+      aplicarImagemTopbar(data);
+      iniciarPublicidade(data);
+
+      return data;
+
+    } catch(e){
+      if (status) status.textContent = "Offline";
+      if (statusMini) statusMini.textContent = "Offline";
+      if (dot) dot.style.background = "#ff5a5a";
+      return null;
+    }
+  }
+
+  loadAll();
+
+  setInterval(() => {
+    try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
+  }, 60000);
+
+  let __rzT = null;
+  window.addEventListener("resize", ()=>{
+    clearTimeout(__rzT);
+    __rzT = setTimeout(()=>{
+      try{ carregarMensagensCidade(); }catch(e){}
+      try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
+    }, 160);
+  }, {passive:true});
+</script>
+
+<script>
+  (function detectAndMarkTV(){
+    try{
+      const ua = (navigator.userAgent || "").toLowerCase();
+      const isTV =
+        ua.includes("smart-tv") ||
+        ua.includes("smarttv") ||
+        ua.includes("hbbtv") ||
+        ua.includes("appletv") ||
+        ua.includes("googletv") ||
+        ua.includes("android tv") ||
+        ua.includes("aft") ||
+        ua.includes("bravia") ||
+        ua.includes("sonydtv") ||
+        ua.includes("netcast") ||
+        ua.includes("tizen") ||
+        ua.includes("web0s") || ua.includes("webos") ||
+        ua.includes("viera") ||
+        ua.includes("roku");
+
+      const likelyTVLandscape =
+        (window.innerWidth > window.innerHeight) &&
+        (Math.max(window.innerWidth, window.innerHeight) >= 900);
+
+      if(isTV || likelyTVLandscape){
+        document.documentElement.classList.add("isTV");
+      }else{
+        document.documentElement.classList.remove("isTV");
+      }
+    }catch(e){}
+  })();
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", async () => {
+      try {
+        const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
+        try { await reg.update(); } catch(e){}
+        reg.addEventListener("updatefound", () => {
+          const nw = reg.installing;
+          if(!nw) return;
+          nw.addEventListener("statechange", () => {
+            if (nw.state === "installed" && navigator.serviceWorker.controller) {
+              nw.postMessage("SKIP_WAITING");
+            }
+          });
+        });
+      } catch(e){}
+    });
+
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      const banner = document.getElementById("updateBanner");
+      if(banner) banner.style.display = "block";
+      setTimeout(()=>window.location.reload(), 1200);
+    });
+  }
+</script>
+</body>
+</html>
