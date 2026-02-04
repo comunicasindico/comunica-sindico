@@ -825,8 +825,31 @@
   }
   #wxIconTop{ width:56px; height:56px; transform:none !important; }
   #wxIconTop svg{ width:56px; height:56px; }
+      }
+/* ===== MOBILE: garantir altura do vídeo (publicidade) ===== */
+#slot4{
+  display:block !important;   /* não deixa o flex esmagar */
+  padding:12px !important;
 }
 
+#slot4 .videoWrap{
+  width:100% !important;
+
+  /* dá altura real, independente do pai */
+  aspect-ratio: 16 / 9;
+  height:auto !important;
+
+  /* evita ficar minúsculo */
+  min-height: 220px;
+
+  position:relative; /* mantém os vídeos absolute OK */
+}
+
+/* em telas bem pequenas, garante mais altura */
+@media (max-width: 420px){
+  #slot4 .videoWrap{ min-height: 200px; }
+}
+    
     @media (min-width: 981px) and (max-width: 1100px){
       .tickerLine1{ flex-wrap:wrap; justify-content:center; }
       #ref{ flex:1 1 100%; margin:0; }
