@@ -1389,7 +1389,25 @@ if(alertOffBtn) alertOffBtn.onclick = ()=>{
 
       if (ROT_TIMER) { clearInterval(ROT_TIMER); ROT_TIMER = null; }
 
-      const avisosAll = Array.isArray(data.avisos) ? data.avisos.slice() : [];
+      const avisosAllRaw = Array.isArray(data.avisos) ? data.avisos.slice() : [];
+
+// ✅ compat Admin: {titulo, descricao, nivel, ativo}
+// ✅ compat antigo: {titulo, descricao, prioridade}
+const avisosAll = avisosAllRaw
+  .filter(a => a && (a.ativo !== false))
+  .map(a => {
+    const nivel = String(a.nivel ?? a.prioridade ?? "baixa").toLowerCase();
+    const prioridade =
+      nivel.includes("alt") ? "alta" :
+      nivel.includes("med") ? "media" : "baixa";
+
+    return {
+      ...a,
+      titulo: String(a.titulo ?? "Aviso"),
+      descricao: String(a.descricao ?? a.msg ?? ""),
+      prioridade
+    };
+  });
 
       const rank = { alta:3, media:2, baixa:1 };
       avisosAll.sort((a,b)=>{
@@ -1434,7 +1452,7 @@ if(alertOffBtn) alertOffBtn.onclick = ()=>{
       ROT_TIMER = setInterval(()=>{
         window.__rotStart = (window.__rotStart + 1) % avisosAll.length;
         paint();
-      }, 8000);
+      }, Math.max(3000, Number(data?.rotacao?.intervaloSeg || 8) * 1000));
     }
 
     function hojeKeyMMDD() {
@@ -1784,6 +1802,11 @@ try{
 
     
     function aplicarImagemTopbar(data){
+      // Se Admin definiu imagem do cabeçalho, NÃO sobrescreve.
+      try{
+        const cab = data?.publicidade?.cabecalhoImagem || {};
+        if(cab.ativar && String(cab.url||"").trim()) return;
+      }catch(e){}
       const cidade = String(data?.clima?.cidade || "").toLowerCase();
       const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
 
@@ -1833,7 +1856,7 @@ try{
     }
 
 
-function applyUrgentAlert(data){
+function applyUrgentBox(data){
   const urgent = data?.alertaUrgente || {};
   const box = document.getElementById("urgentBox");
   if(!box) return;
@@ -1860,11 +1883,15 @@ function applyUrgentAlert(data){
 
 function applyHeaderCityImage(data){
   const cfg = data?.publicidade?.cabecalhoImagem || {};
-  if(cfg.ativar && cfg.url){
-    document.querySelector(".topbar").style.backgroundImage = `url('${cfg.url}')`;
-    document.querySelector(".topbar").style.backgroundSize = "cover";
-    document.querySelector(".topbar").style.backgroundPosition = "center";
+  const on  = !!cfg.ativar;
+  const url = String(cfg.url || "").trim();
+
+  if(on && url){
+    const finalUrl = url + (url.includes("?") ? "&" : "?") + "ts=" + Date.now();
+    document.documentElement.style.setProperty("--topbar-bg", `url('${finalUrl}')`);
+    return true; // Admin mandou
   }
+  return false;
 }
 
     
@@ -1882,7 +1909,7 @@ function applyHeaderCityImage(data){
         const data = await res.json();
         window.__lastDataForTopbar = data;
       
-        applyHeaderCityImage(data);
+        const adminBgOn = applyHeaderCityImage(data);
         
         if (status) status.textContent = "Atualizado";
         if (statusMini) statusMini.textContent = "Atualizado";
@@ -1891,7 +1918,7 @@ function applyHeaderCityImage(data){
         setCityTitleFromConfig(data);
 
         renderAvisos(data);
-        applyUrgentAlert(data);
+        applyUrgentBox(data);
         
         if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
           setText("dataBiblica", "📖");
@@ -1905,7 +1932,9 @@ function applyHeaderCityImage(data){
         await carregarClima(data);
 
         await carregarMensagensCidade();
-        aplicarImagemTopbar(data);
+        if(!adminBgOn){
+          aplicarImagemTopbar(data);
+        }
 
         iniciarPublicidade(data);
 
