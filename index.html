@@ -52,11 +52,11 @@
       --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
       --font-soft: ui-rounded, "SF Pro Rounded", "Segoe UI", var(--font-ui);
 
-      --news-bg: rgba(8, 24, 40, .62);
-      --news-border: rgba(255,255,255,.12);
-      --news-shadow: 0 18px 40px rgba(0,0,0,.38);
-      --news-title: rgba(190,235,255,.98);
-    }
+      --news-bg: rgba(34, 12, 48, .62);        /* roxo elegante */
+      --news-border: rgba(255, 160, 255, .22); /* borda lilás */
+      --news-shadow: 0 18px 40px rgba(0,0,0,.42);
+      --news-title: rgba(255, 210, 255, .98);  /* título claro */
+      }
 
     *{box-sizing:border-box}
     html,body{height:100%;width:100%}
@@ -1303,49 +1303,52 @@
   }
 
   function renderAvisos(data){
-    const pane = document.getElementById("avisosPane");
-    if (!pane) return;
+  const pane = document.getElementById("avisosPane");
+  if (!pane) return;
 
-    const s1 = document.getElementById("slot1");
-    const s2 = document.getElementById("slot2");
-    const s3 = document.getElementById("slot3");
-    const s4 = document.getElementById("slot4");
-    if(!s1 || !s2 || !s3 || !s4) return;
+  const s1 = document.getElementById("slot1");
+  const s2 = document.getElementById("slot2");
+  const s3 = document.getElementById("slot3");
+  const s4 = document.getElementById("slot4");
+  if(!s1 || !s2 || !s3 || !s4) return;
 
-    s1.innerHTML = ""; s2.innerHTML = ""; s3.innerHTML = ""; s4.innerHTML = "";
-    pane.classList.remove("fade-in");
-    pane.classList.add("fade-out");
+  s1.innerHTML = ""; s2.innerHTML = ""; s3.innerHTML = ""; s4.innerHTML = "";
+  pane.classList.remove("fade-in");
+  pane.classList.add("fade-out");
 
-    const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
-    avisosAll.sort((a,b)=>{
-      const pa = prioridadeClass(a?.prioridade);
-      const pb = prioridadeClass(b?.prioridade);
-      const rank = { alta:3, media:2, baixa:1 };
-      return (rank[pb]||0) - (rank[pa]||0);
+  const avisosAll = Array.isArray(data.avisos) ? data.avisos : [];
+  avisosAll.sort((a,b)=>{
+    const pa = prioridadeClass(a?.prioridade);
+    const pb = prioridadeClass(b?.prioridade);
+    const rank = { alta:3, media:2, baixa:1 };
+    return (rank[pb]||0) - (rank[pa]||0);
+  });
+
+  const picks = avisosAll.slice(0,3);
+
+  setTimeout(()=>{
+    // Slot1 e Slot2: aviso (ou vídeo se vazio — para não deixar buraco)
+    if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
+    else s1.appendChild(buildMiniAdEl(1));
+
+    if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
+    else s2.appendChild(buildMiniAdEl(2));
+
+    // Slot3: se não houver aviso 3, passa vídeo
+    if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
+    else s3.appendChild(buildMiniAdEl(3));
+
+    // Slot4: SEMPRE vídeo
+    s4.appendChild(buildMiniAdEl(0));
+
+    requestAnimationFrame(()=>{
+      if (window.innerWidth >= 981) autoFitAvisos();
     });
 
-    const picks = avisosAll.slice(0,3);
-
-    setTimeout(()=>{
-      if(picks[0]) s1.appendChild(buildAvisoEl(picks[0]));
-      else s1.appendChild(buildMiniAdEl(1));
-
-      if(picks[1]) s2.appendChild(buildAvisoEl(picks[1]));
-      else s2.appendChild(buildMiniAdEl(2));
-
-      if(picks[2]) s3.appendChild(buildAvisoEl(picks[2]));
-      else s3.appendChild(buildMiniAdEl(3));
-
-      s4.appendChild(buildMiniAdEl(0));
-
-      requestAnimationFrame(()=>{
-        if (window.innerWidth >= 981) autoFitAvisos();
-      });
-
-      pane.classList.remove("fade-out");
-      pane.classList.add("fade-in");
-    }, 140);
-  }
+    pane.classList.remove("fade-out");
+    pane.classList.add("fade-in");
+  }, 140);
+}
 
   function hojeKeyMMDD() {
     const d = new Date();
