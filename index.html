@@ -40,7 +40,15 @@
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
       const isViewportBig = (Math.max(vw, vh) >= 1100 && Math.min(vw, vh) >= 650);
 
-      const shouldTV = !isMobileUA && (isTVua || isPhysBig || isViewportBig);
+ // 1) Força manual: use ?tv=1 na URL (recomendado para SEMP/BrowseHere)
+const qs = new URLSearchParams(location.search);
+const forceTV = (qs.get("tv") === "1");
+
+// 2) BrowseHere (SEMP): trate como TV
+const isBrowseHere = ua.includes("browsehere") || ua.includes("browse here");
+
+// ✅ TV final: forçado OU BrowseHere OU heurísticas
+const shouldTV = forceTV || isBrowseHere || (!isMobileUA && (isTVua || isPhysBig || isViewportBig));
 
       document.documentElement.classList.toggle("isMobileUA", !!isMobileUA);
       document.documentElement.classList.toggle("isTV", !!shouldTV);
@@ -840,6 +848,37 @@
       overflow-wrap:anywhere;
       word-break:break-word;
     }
+
+/* ✅ TV: trava 100% sem scroll (BrowseHere/SEMP) */
+html.isTV, html.isTV body{
+  height:100dvh !important;
+  width:100vw !important;
+  overflow:hidden !important;
+}
+
+html.isTV body{
+  position: fixed !important;
+  inset: 0 !important;
+}
+
+html.isTV .wrap{
+  position: fixed !important;
+  inset: 0 !important;
+  overflow:hidden !important;
+}
+
+/* ✅ mesmo que o @media (max-width:980px) dispare por zoom, mantém 2x2 */
+@media (max-width: 980px){
+  html.isTV .main{ 
+    display:block !important;
+  }
+  html.isTV .quadTop{
+    display:grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 1fr 1fr !important;
+  }
+}
+    
   </style>
 </head>
 
