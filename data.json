@@ -24,15 +24,17 @@
     "longitude": -46.6333,
     "timezone": "America/Sao_Paulo"
   },
-
+  
+  "cabecalhoImagem": {
+      "ativar": false,
+      "url": ""
+  },
+  
   "publicidade": {
     "ativar": true,
     "shuffle": true,
     "cidadeTitulo": "Mensagens no Brasil",
-    "cabecalhoImagem": {
-      "ativar": false,
-      "url": ""
-    },
+  
     "videos": [
       {
         "arquivo": "./ads/calibram.mp4",
