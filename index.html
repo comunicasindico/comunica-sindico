@@ -813,6 +813,40 @@
     @keyframes wx-rain{ 0%{ transform: translateY(0); opacity:.15;} 15%{opacity:1;} 100%{ transform: translateY(8px); opacity:.05;} }
     .wxsvg .bolt{ animation: wx-bolt 1.4s ease-in-out infinite; }
     @keyframes wx-bolt{ 0%,100%{ opacity:.35; transform: translateY(0);} 50%{ opacity:1; transform: translateY(1px);} }
+  
+  .adNav{
+  position:absolute;
+  top:50%;
+  transform: translateY(-50%);
+  width:30px;
+  height:30px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(0,0,0,.28);
+  color:rgba(255,255,255,.92);
+  font-size:14px;
+  cursor:pointer;
+  z-index:6;
+  opacity:.35;
+  transition: opacity .15s ease, transform .15s ease, filter .15s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+}
+.adNav:hover{ opacity:.85; filter:brightness(1.06); }
+.adNav:active{ transform: translateY(-50%) scale(.96); }
+
+.adPrev{ left:8px; }
+.adNext{ right:8px; }
+
+/* no mobile: ainda mais discreto */
+@media (max-width: 980px){
+  .adNav{ width:28px; height:28px; font-size:13px; opacity:.28; }
+}
+  
+  
+  
   </style>
 </head>
 
@@ -870,6 +904,10 @@
                  
                   <div class="adText" id="adLabel">—</div>
                 </div>
+
+                <button class="adNav adPrev" type="button" onclick="adPrevBtn()" aria-label="Anterior">⏮</button>
+                <button class="adNav adNext" type="button" onclick="adNextBtn()" aria-label="Próximo">⏭</button>
+                
                 <video id="adVideoBg" class="videoBg" autoplay muted playsinline webkit-playsinline loop disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
                 <video id="adVideo" class="videoMain" autoplay muted playsinline webkit-playsinline disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
               </div>
@@ -1492,6 +1530,37 @@
     adPlayByState(list);
   }
 
+  function adNextBtn(){
+  try{
+    const data = window.__lastDataForTopbar || {};
+    const pub = data.publicidade || {};
+    const videosMp4 = adFilterMp4(pub.videos);
+    if(!videosMp4.length) return;
+    adNext(videosMp4);
+  }catch(e){}
+}
+
+function adPrevBtn(){
+  try{
+    const data = window.__lastDataForTopbar || {};
+    const pub = data.publicidade || {};
+    const videosMp4 = adFilterMp4(pub.videos);
+    if(!videosMp4.length) return;
+
+    const st = adLoadState();
+    let idx = Number.isFinite(st.idx) ? st.idx : 0;
+    idx = idx - 1;
+    if(idx < 0) idx = videosMp4.length - 1;
+
+    st.idx = idx;
+    st.t = 0;
+    st.paused = false;
+    adSaveState(st);
+
+    adPlayByState(videosMp4, true);
+  }catch(e){}
+}
+  
   function iniciarPublicidade(data){
     const pub = data?.publicidade;
     if (!pub?.ativar) return;
