@@ -6,7 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Comunica Síndico — Condôminos</title>
 
-  <!-- ✅ MARCA isTV / isMobileUA ANTES DO CSS (à prova de zoom) -->
+  <!-- =========================================================
+       SCRIPT (pré-CSS) — detecta Mobile/TV antes do CSS
+       ========================================================= -->
   <script>
   (function preClassifyDevice(){
     try{
@@ -40,15 +42,15 @@
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
       const isViewportBig = (Math.max(vw, vh) >= 1100 && Math.min(vw, vh) >= 650);
 
- // 1) Força manual: use ?tv=1 na URL (recomendado para SEMP/BrowseHere)
-const qs = new URLSearchParams(location.search);
-const forceTV = (qs.get("tv") === "1");
+      // 1) Força manual: use ?tv=1 na URL (recomendado para SEMP/BrowseHere)
+      const qs = new URLSearchParams(location.search);
+      const forceTV = (qs.get("tv") === "1");
 
-// 2) BrowseHere (SEMP): trate como TV
-const isBrowseHere = ua.includes("browsehere") || ua.includes("browse here");
+      // 2) BrowseHere (SEMP): trate como TV
+      const isBrowseHere = ua.includes("browsehere") || ua.includes("browse here");
 
-// ✅ TV final: forçado OU BrowseHere OU heurísticas
-const shouldTV = forceTV || isBrowseHere || (!isMobileUA && (isTVua || isPhysBig || isViewportBig));
+      // ✅ TV final: forçado OU BrowseHere OU heurísticas
+      const shouldTV = forceTV || isBrowseHere || (!isMobileUA && (isTVua || isPhysBig || isViewportBig));
 
       document.documentElement.classList.toggle("isMobileUA", !!isMobileUA);
       document.documentElement.classList.toggle("isTV", !!shouldTV);
@@ -56,6 +58,9 @@ const shouldTV = forceTV || isBrowseHere || (!isMobileUA && (isTVua || isPhysBig
   })();
   </script>
 
+  <!-- =========================================================
+       STYLE / CSS (enxuto, sem patches duplicados)
+       ========================================================= -->
   <style>
     :root{
       --bg1:#061726;
@@ -139,7 +144,6 @@ const shouldTV = forceTV || isBrowseHere || (!isMobileUA && (isTVua || isPhysBig
 
     .brand{ display:flex; flex-direction:column; gap:4px; min-width:0; }
     .title{ font-weight:950; letter-spacing:.3px; font-size: calc(18px * var(--ui2)); line-height:1.1; }
-    .sub{ color:rgba(234,242,255,.84); font-weight:850; font-size: calc(12px * var(--ui)); }
     .subMobileLine{ display:none; align-items:center; justify-content:center; gap:10px; color:rgba(234,242,255,.8); font-weight:900; }
     .sep{ opacity:.35; font-weight:900; }
 
@@ -849,328 +853,169 @@ const shouldTV = forceTV || isBrowseHere || (!isMobileUA && (isTVua || isPhysBig
       word-break:break-word;
     }
 
-/* ✅ TV: trava 100% sem scroll (BrowseHere/SEMP) */
-html.isTV, html.isTV body{
-  height:100dvh !important;
-  width:100vw !important;
-  overflow:hidden !important;
-}
+    /* ✅ TV: trava 100% sem scroll (BrowseHere/SEMP) */
+    html.isTV, html.isTV body{
+      height:100dvh !important;
+      width:100vw !important;
+      overflow:hidden !important;
+    }
 
-html.isTV body{
-  position: fixed !important;
-  inset: 0 !important;
-}
+    html.isTV body{
+      position: fixed !important;
+      inset: 0 !important;
+    }
 
-html.isTV .wrap{
-  position: fixed !important;
-  inset: 0 !important;
-  overflow:hidden !important;
-}
+    html.isTV .wrap{
+      position: fixed !important;
+      inset: 0 !important;
+      overflow:hidden !important;
+    }
 
-/* ✅ mesmo que o @media (max-width:980px) dispare por zoom, mantém 2x2 */
-@media (max-width: 980px){
-  html.isTV .main{ 
-    display:block !important;
-  }
-  html.isTV .quadTop{
-    display:grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    grid-template-rows: 1fr 1fr !important;
-  }
-}
+    /* ===== ALERTA URGENTE ===== */
+    .urgentBox{
+      border-radius:18px;
+      border:2px solid rgba(255,255,255,.25);
+      background: linear-gradient(180deg, rgba(255,0,0,.92), rgba(140,0,0,.95));
+      color:#fff;
+      padding:18px;
+      box-shadow: 0 18px 44px rgba(0,0,0,.55);
+    }
 
-/* ===== ALERTA URGENTE ===== */
-.urgentBox{
-  border-radius:18px;
-  border:2px solid rgba(255,255,255,.25);
-  background: linear-gradient(180deg, rgba(255,0,0,.92), rgba(140,0,0,.95));
-  color:#fff;
-  padding:18px;
-  box-shadow: 0 18px 44px rgba(0,0,0,.55);
-}
+    .urgentTitle{
+      font-weight: 950;
+      text-transform: uppercase;
+      font-size: clamp(26px, 3vw, 48px);
+      line-height: 1.1;
+    }
 
-.urgentTitle{
-  font-weight: 950;
-  text-transform: uppercase;
-  font-size: clamp(26px, 3vw, 48px);
-  line-height: 1.1;
-}
+    .urgentMsg{
+      margin-top: 12px;
+      font-weight: 900;
+      font-size: clamp(22px, 2.8vw, 42px);
+      line-height: 1.15;
+    }
 
-.urgentMsg{
-  margin-top: 12px;
-  font-weight: 900;
-  font-size: clamp(22px, 2.8vw, 42px);
-  line-height: 1.15;
-}
+    .urgentBlink{
+      animation: urgentBlink 1s steps(1) infinite;
+    }
 
-.urgentBlink{
-  animation: urgentBlink 1s steps(1) infinite;
-}
+    @keyframes urgentBlink{
+      0%,49% { filter: brightness(1.1); }
+      50%,100% { filter: brightness(.75); }
+    }
 
-@keyframes urgentBlink{
-  0%,49% { filter: brightness(1.1); }
-  50%,100% { filter: brightness(.75); }
-}
+    /* Quando alerta urgente estiver ativo, some com as mensagens no Brasil */
+    html.urgentOn #newsBox{ display:none !important; }
+    html.urgentOn .newsBox{ display:none !important; }
 
+    /* ============================
+       ALERTA URGENTE (substitui Mensagens no Brasil)
+       ============================ */
+    .alertBox{
+      flex:0 0 auto;
+      border-radius:18px;
+      border:2px solid rgba(255,255,255,.22);
+      background: linear-gradient(180deg, rgba(180,0,0,.95), rgba(120,0,0,.92));
+      box-shadow: 0 18px 40px rgba(0,0,0,.55);
+      overflow:hidden;
+      display:none; /* aparece só quando ativar */
+    }
 
-/* Quando alerta urgente estiver ativo, some com as mensagens no Brasil */
-html.urgentOn #newsBox{ display:none !important; }
-html.urgentOn .newsBox{ display:none !important; }
+    .alertHead{
+      padding:12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.18);
+    }
 
-/* ============================
-   ALERTA URGENTE (substitui Mensagens no Brasil)
-   ============================ */
-.alertBox{
-  flex:0 0 auto;
-  border-radius:18px;
-  border:2px solid rgba(255,255,255,.22);
-  background: linear-gradient(180deg, rgba(180,0,0,.95), rgba(120,0,0,.92));
-  box-shadow: 0 18px 40px rgba(0,0,0,.55);
-  overflow:hidden;
-  display:none; /* aparece só quando ativar */
-}
+    .alertTitle{
+      font-weight:950;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+      color:#fff;
+      font-size: clamp(18px, 2.2vw, 30px);
+      line-height:1.1;
+    }
 
-.alertHead{
-  padding:12px 14px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  border-bottom:1px solid rgba(255,255,255,.18);
-  background: rgba(0,0,0,.18);
-}
+    .alertBody{
+      padding:14px 16px 16px;
+    }
 
-.alertTitle{
-  font-weight:950;
-  letter-spacing:.8px;
-  text-transform:uppercase;
-  color:#fff;
-  font-size: clamp(18px, 2.2vw, 30px);
-  line-height:1.1;
-}
+    .alertMsg{
+      margin:0;
+      color:#fff;
+      font-weight:950;
+      font-size: clamp(20px, 3.2vw, 48px);
+      line-height:1.08;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      text-shadow: 0 2px 14px rgba(0,0,0,.45);
+    }
 
-.alertBody{
-  padding:14px 16px 16px;
-}
+    @keyframes alertBlink{
+      0%,100%{ filter:brightness(1); }
+      50%{ filter:brightness(1.25); }
+    }
+    .alertBox.blink{
+      animation: alertBlink .9s ease-in-out infinite;
+    }
 
-.alertMsg{
-  margin:0;
-  color:#fff;
-  font-weight:950;
-  font-size: clamp(20px, 3.2vw, 48px);
-  line-height:1.08;
-  overflow-wrap:anywhere;
-  word-break:break-word;
-  text-shadow: 0 2px 14px rgba(0,0,0,.45);
-}
+    /* =========================================================
+       TOPBAR — DESKTOP/TV LIMPO (NÃO AFETA MOBILE)
+       ========================================================= */
+    html:not(.isMobileUA) .topbar{
+      gap: 14px;
+    }
 
-@keyframes alertBlink{
-  0%,100%{ filter:brightness(1); }
-  50%{ filter:brightness(1.25); }
-}
-.alertBox.blink{
-  animation: alertBlink .9s ease-in-out infinite;
-}
+    html:not(.isMobileUA) .topbar .brand{
+      flex: 1 1 auto;
+      min-width: 0;
+    }
 
-/* ✅ Título gigante, caixa alta e negrito */
-.topbar .brand .title{
-  font-weight: 1000;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  line-height: 1.05;
+    /* COMUNICA SÍNDICO - CONDÔMINOS (grande, sem "…") */
+    html:not(.isMobileUA) .topbar .brand .title{
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      line-height: 1.05;
 
-  /* ocupa o espaço e cresce na tela cheia */
-  font-size: clamp(34px, 4.2vw, 78px);
+      font-size: clamp(32px, 3.4vw, 72px);
 
-  /* evita quebrar layout; se precisar, corta com … */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
+    }
 
-/* ✅ “Painel informativo” na direita, abaixo dos badges */
-.subRight{
-  margin-top: 6px;
-  font-weight: 1000;
-  opacity: .92;
-  text-align: right;
+    /* direita compacta: Atualizado + Hora/Clima + Painel Informativo (1 vez) */
+    html:not(.isMobileUA) .topbar .rightInfo{
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
 
-  font-size: clamp(14px, 1.25vw, 22px);
-}
+    html:not(.isMobileUA) .topbar .badge{
+      padding: 8px 10px;
+      gap: 8px;
+    }
 
-/* ✅ garante que a coluna do título ganhe o máximo possível */
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 14px;
-}
+    .subRight{
+      margin-top: 0;
+      font-weight: 950;
+      opacity: .92;
+      text-align: right;
+      font-size: clamp(13px, 1.05vw, 18px);
+      white-space: nowrap;
+    }
 
-.topbar .brand{
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.topbar .rightInfo{
-  flex: 0 0 auto;
-  display:flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-}
-
-/* =====================================================
-   PATCH DESKTOP — NÃO AFETA CELULAR
-   ===================================================== */
-@media (min-width: 900px){
-
-  /* Topbar continua igual no mobile */
-  .topbar{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:14px;
-  }
-
-  /* Deixa a área do título ocupar o máximo possível */
-  .topbar .brand{
-    flex:1 1 auto;
-    min-width:0;
-  }
-
-  /* TÍTULO GRANDE — DESKTOP APENAS */
-  .topbar .brand .title{
-    font-weight:1000;
-    text-transform:uppercase;
-    letter-spacing:.8px;
-    line-height:1.05;
-
-    /* cresce conforme a tela */
-    font-size:clamp(36px, 4.2vw, 78px);
-
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
-  /* Painel informativo à direita, abaixo dos badges */
-  .topbar .rightInfo .subRight{
-    margin-top:6px;
-    font-weight:1000;
-    opacity:.92;
-    text-align:right;
-    font-size:clamp(14px, 1.25vw, 22px);
-  }
-
-  /* Coluna direita organizada */
-  .topbar .rightInfo{
-    flex:0 0 auto;
-    display:flex;
-    flex-direction:column;
-    align-items:flex-end;
-    gap:10px;
-  }
-}
-/* =================== FIM PATCH =================== */
-
-/* DESKTOP: caixa alta e grande */
-@media (min-width: 900px){
-  #titulo{
-    text-transform: uppercase;
-    font-weight: 1000;
-    letter-spacing: .8px;
-    line-height: 1.05;
-    font-size: clamp(36px, 4.2vw, 78px);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-/* MOBILE: garante que não muda (fica como era) */
-@media (max-width: 899px){
-  #titulo{
-    text-transform: none;
-  }
-}
-
-    /* =========================
-   PATCH 2 — DESKTOP: "Painel Informativo" ao lado direito embaixo do Atualizado + hora
-   (sem mexer no celular)
-   ========================= */
-@media (min-width: 900px){
-
-  /* rightInfo vira coluna para ter "Atualizado" em cima e "Hora" embaixo */
-  .rightInfo{
-    display:flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6px;                 /* bem próximo, sem espaço excedente */
-  }
-
-  /* garante que badges não estiquem e fiquem bem colados */
-  .rightInfo .badge{
-    margin:0;
-  }
-
-  /* O badge da hora (2º badge) vira "linha" com o subtítulo ao lado direito */
-  .rightInfo .badge:nth-of-type(2){
-    display:flex;
-    align-items:center;
-    gap: 8px;                 /* espaço curto entre hora e "Painel Informativo" */
-    position: relative;
-  }
-
-  /* Esconde o subtítulo embaixo do título (só no desktop) */
-  .brand #subtitulo{
-    display:none;
-  }
-
-  /* Cria o "Painel Informativo" ao lado direito do badge de hora */
-  .rightInfo .badge:nth-of-type(2)::after{
-    content: attr(data-subtitle);
-    font-weight: 900;
-    color: rgba(234,242,255,.92);
-    white-space: nowrap;
-    margin-left: 2px;         /* bem colado */
-    opacity: .95;
-  }
-}
-
-/* =====================================================
-   PATCH FINAL — MOBILE VOLTA AO TAMANHO ORIGINAL
-   ===================================================== */
-
-/* DESKTOP: título grande e caixa alta */
-@media (min-width: 900px){
-  #titulo{
-    text-transform: uppercase;
-    font-weight: 1000;
-    letter-spacing: .8px;
-    line-height: 1.05;
-    font-size: clamp(36px, 4.2vw, 78px);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
-/* MOBILE: força exatamente o tamanho antigo (pequeno) */
-@media (max-width: 899px){
-  #titulo{
-    text-transform: none;
-    font-weight: 900;
-
-    /* 🔒 tamanho compacto, igual ao original */
-    font-size: 1.05rem;
-    line-height: 1.2;
-  }
-}
-
-
-    
-    
-    
+    /* MOBILE: não mostra "Painel informativo" extra (mobile fica como era) */
+    html.isMobileUA:not(.isTV) .subRight{
+      display:none !important;
+    }
   </style>
 </head>
 
@@ -1178,10 +1023,13 @@ html.urgentOn .newsBox{ display:none !important; }
   <div class="wrap">
     <div class="container">
 
+      <!-- =========================================================
+           HTML — TOPBAR
+           ========================================================= -->
       <div class="topbar">
         <div class="brand">
           <div class="title" id="titulo">Comunica Síndico - Condôminos</div>
-         
+
           <div class="subMobileLine" id="subMobileLine">
             <span id="statusJsonMini">Carregando...</span>
             <span class="sep">º</span>
@@ -1195,14 +1043,14 @@ html.urgentOn .newsBox{ display:none !important; }
             <span id="statusJson">Carregando...</span>
           </div>
 
-         <div class="badge" title="Hora e Clima" data-subtitle="Painel Informativo">
+          <div class="badge" title="Hora e Clima">
             <span id="wxIconTop" aria-label="Clima" role="img"></span>
             <span id="clock">--:--</span>
           </div>
 
-         <!-- ✅ Painel informativo ao lado direito, abaixo de Atualizado + Hora -->
+          <!-- PC/TV: aparece | Mobile: some (via CSS acima) -->
           <div class="subRight" id="subtitulo">Painel informativo</div>
-        
+
           <button id="btnInstalarApp" class="btnInstall" style="display:none">⬇️ Instalar App</button>
         </div>
       </div>
@@ -1242,22 +1090,22 @@ html.urgentOn .newsBox{ display:none !important; }
           </div>
         </div>
 
-<div class="urgentBox" id="urgentBox" style="display:none">
-  <div class="urgentTitle" id="urgentTitle">ALERTA URGENTE</div>
-  <div class="urgentMsg" id="urgentMsg">—</div>
-</div>
-     
+        <div class="urgentBox" id="urgentBox" style="display:none">
+          <div class="urgentTitle" id="urgentTitle">ALERTA URGENTE</div>
+          <div class="urgentMsg" id="urgentMsg">—</div>
+        </div>
+
         <!-- ALERTA URGENTE (ocupa o lugar das mensagens quando ativado) -->
-<div class="alertBox" id="alertBox" style="display:none">
-  <div class="alertHead">
-    <div class="alertTitle" id="alertTitle">ALERTA URGENTE</div>
-    <div class="pill" id="alertOffBtn" title="Desligar alerta">Desligar</div>
-  </div>
-  <div class="alertBody">
-    <p class="alertMsg" id="alertMsg">—</p>
-  </div>
-</div>
-        
+        <div class="alertBox" id="alertBox" style="display:none">
+          <div class="alertHead">
+            <div class="alertTitle" id="alertTitle">ALERTA URGENTE</div>
+            <div class="pill" id="alertOffBtn" title="Desligar alerta">Desligar</div>
+          </div>
+          <div class="alertBody">
+            <p class="alertMsg" id="alertMsg">—</p>
+          </div>
+        </div>
+
         <div class="newsBox" id="newsBox" style="display:none">
           <div class="newsHead">
             <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
@@ -1265,7 +1113,7 @@ html.urgentOn .newsBox{ display:none !important; }
           </div>
           <div id="newsBody"></div>
         </div>
-       </div>
+      </div>
 
       <div class="ticker">
         <div class="tickerLine1">
@@ -1286,7 +1134,9 @@ html.urgentOn .newsBox{ display:none !important; }
     </div>
   </div>
 
-  <!-- ✅ APP SCRIPT -->
+  <!-- =========================================================
+       SCRIPT — APP
+       ========================================================= -->
   <script>
     let deferredPrompt = null;
 
@@ -1325,37 +1175,6 @@ html.urgentOn .newsBox{ display:none !important; }
       }[c]));
     }
 
-
-    function applyUrgentAlert(cfg){
-  const alertBox = document.getElementById("alertBox");
-  const newsBox  = document.getElementById("newsBox");
-  const tEl = document.getElementById("alertTitle");
-  const mEl = document.getElementById("alertMsg");
-
-  const a = cfg?.alertaUrgente || {};
-  const on = !!a.ativar;
-
-  if(!alertBox || !newsBox) return;
-
-  if(on){
-    // mostra alerta
-    if(tEl) tEl.textContent = String(a.titulo || "ALERTA URGENTE");
-    if(mEl) mEl.textContent = String(a.mensagem || "—");
-
-    alertBox.style.display = "block";
-    newsBox.style.display = "none";
-
-    alertBox.classList.toggle("blink", !!a.piscar);
-  }else{
-    alertBox.style.display = "none";
-    alertBox.classList.remove("blink");
-    // newsBox volta (será reativado por carregarMensagensCidade)
-  }
-}
-
-
-
-    
     // ✅ "mobile" só se NÃO for TV (não cai no layout mobile por zoom)
     function isMobile(){
       return window.matchMedia("(max-width: 980px)").matches &&
@@ -1363,7 +1182,30 @@ html.urgentOn .newsBox{ display:none !important; }
              !document.documentElement.classList.contains("isTV");
     }
 
-    function refreshPage(){ location.reload(); }
+    async function refreshNow(){
+      // feedback rápido
+      const status = document.getElementById("statusJson");
+      const statusMini = document.getElementById("statusJsonMini");
+      const dot = document.getElementById("dotOnline");
+      if(status) status.textContent = "Atualizando…";
+      if(statusMini) statusMini.textContent = "Atualizando…";
+      if(dot) dot.style.background = "#ffb347";
+
+      // tenta atualizar SW (ajuda em PWA)
+      try{
+        if(navigator.serviceWorker){
+          const regs = await navigator.serviceWorker.getRegistrations();
+          regs.forEach(r => { try{ r.update(); }catch(e){} });
+        }
+      }catch(e){}
+
+      // carrega o data.json de novo
+      try{
+        await loadAll();
+      }catch(e){
+        location.reload();
+      }
+    }
 
     function tickClock(){
       const d = new Date();
@@ -1377,20 +1219,21 @@ html.urgentOn .newsBox{ display:none !important; }
     (function bindUI(){
       const btn = document.getElementById("btnInstalarApp");
       if(btn) btn.onclick = instalarApp;
+
       const refPill = document.getElementById("refPill");
-      if(refPill) refPill.onclick = refreshPage;
+      if(refPill) refPill.onclick = refreshNow;
 
       const alertOffBtn = document.getElementById("alertOffBtn");
-if(alertOffBtn) alertOffBtn.onclick = ()=>{
-  // desligar LOCAL (somente nesta tela, não altera o data.json)
-  try{
-    const cfg = window.__lastDataForTopbar || {};
-    if(cfg.alertaUrgente) cfg.alertaUrgente.ativar = false;
-    applyUrgentAlert(cfg);
-    carregarMensagensCidade();
-  }catch(e){}
-};
-      })();
+      if(alertOffBtn) alertOffBtn.onclick = ()=>{
+        // desligar LOCAL (somente nesta tela, não altera o data.json)
+        try{
+          const cfg = window.__lastDataForTopbar || {};
+          if(cfg.alertaUrgente) cfg.alertaUrgente.ativar = false;
+          applyUrgentBox(cfg);
+          carregarMensagensCidade();
+        }catch(e){}
+      };
+    })();
 
     function parseBRDateTime(v){
       const s = String(v ?? "").trim();
@@ -1588,23 +1431,23 @@ if(alertOffBtn) alertOffBtn.onclick = ()=>{
 
       const avisosAllRaw = Array.isArray(data.avisos) ? data.avisos.slice() : [];
 
-// ✅ compat Admin: {titulo, descricao, nivel, ativo}
-// ✅ compat antigo: {titulo, descricao, prioridade}
-const avisosAll = avisosAllRaw
-  .filter(a => a && (a.ativo !== false))
-  .map(a => {
-    const nivel = String(a.nivel ?? a.prioridade ?? "baixa").toLowerCase();
-    const prioridade =
-      nivel.includes("alt") ? "alta" :
-      nivel.includes("med") ? "media" : "baixa";
+      // ✅ compat Admin: {titulo, descricao, nivel, ativo}
+      // ✅ compat antigo: {titulo, descricao, prioridade}
+      const avisosAll = avisosAllRaw
+        .filter(a => a && (a.ativo !== false))
+        .map(a => {
+          const nivel = String(a.nivel ?? a.prioridade ?? "baixa").toLowerCase();
+          const prioridade =
+            nivel.includes("alt") ? "alta" :
+            nivel.includes("med") ? "media" : "baixa";
 
-    return {
-      ...a,
-      titulo: String(a.titulo ?? "Aviso"),
-      descricao: String(a.descricao ?? a.msg ?? ""),
-      prioridade
-    };
-  });
+          return {
+            ...a,
+            titulo: String(a.titulo ?? "Aviso"),
+            descricao: String(a.descricao ?? a.msg ?? ""),
+            prioridade
+          };
+        });
 
       const rank = { alta:3, media:2, baixa:1 };
       avisosAll.sort((a,b)=>{
@@ -1988,16 +1831,15 @@ const avisosAll = avisosAllRaw
       }
 
       // se alerta estiver ativo, não mostra Mensagens no Brasil
-try{
-  const cfg = window.__lastDataForTopbar || {};
-  if(cfg?.alertaUrgente?.ativar){
-    if(newsBox) newsBox.style.display = "none";
-    return;
-  }
-}catch(e){}
+      try{
+        const cfg = window.__lastDataForTopbar || {};
+        if(cfg?.alertaUrgente?.ativar){
+          if(newsBox) newsBox.style.display = "none";
+          return;
+        }
+      }catch(e){}
     }
 
-    
     function aplicarImagemTopbar(data){
       // Se Admin definiu imagem do cabeçalho, NÃO sobrescreve.
       try{
@@ -2052,46 +1894,44 @@ try{
       el.textContent = String(t);
     }
 
+    function applyUrgentBox(data){
+      const urgent = data?.alertaUrgente || {};
+      const box = document.getElementById("urgentBox");
+      if(!box) return;
 
-function applyUrgentBox(data){
-  const urgent = data?.alertaUrgente || {};
-  const box = document.getElementById("urgentBox");
-  if(!box) return;
+      const msg = String(urgent.mensagem || "").trim();
+      const on = !!urgent.ativar && msg.length > 0;
 
-  const msg = String(urgent.mensagem || "").trim();
-  const on = !!urgent.ativar && msg.length > 0;
+      // ✅ classe global que derruba a news via CSS
+      document.documentElement.classList.toggle("urgentOn", on);
 
-  // ✅ classe global que derruba a news via CSS
-  document.documentElement.classList.toggle("urgentOn", on);
+      if(on){
+        const tEl = document.getElementById("urgentTitle");
+        const mEl = document.getElementById("urgentMsg");
+        if(tEl) tEl.textContent = urgent.titulo || "ALERTA URGENTE";
+        if(mEl) mEl.textContent = msg;
 
-  if(on){
-    const tEl = document.getElementById("urgentTitle");
-    const mEl = document.getElementById("urgentMsg");
-    if(tEl) tEl.textContent = urgent.titulo || "ALERTA URGENTE";
-    if(mEl) mEl.textContent = msg;
+        box.style.display = "block";
+        box.classList.toggle("urgentBlink", !!urgent.piscar);
+      }else{
+        box.style.display = "none";
+        box.classList.remove("urgentBlink");
+      }
+    }
 
-    box.style.display = "block";
-    box.classList.toggle("urgentBlink", !!urgent.piscar);
-  }else{
-    box.style.display = "none";
-    box.classList.remove("urgentBlink");
-  }
-}
+    function applyHeaderCityImage(data){
+      const cfg = data?.publicidade?.cabecalhoImagem || {};
+      const on  = !!cfg.ativar;
+      const url = String(cfg.url || "").trim();
 
-function applyHeaderCityImage(data){
-  const cfg = data?.publicidade?.cabecalhoImagem || {};
-  const on  = !!cfg.ativar;
-  const url = String(cfg.url || "").trim();
+      if(on && url){
+        const finalUrl = url + (url.includes("?") ? "&" : "?") + "ts=" + Date.now();
+        document.documentElement.style.setProperty("--topbar-bg", `url('${finalUrl}')`);
+        return true; // Admin mandou
+      }
+      return false;
+    }
 
-  if(on && url){
-    const finalUrl = url + (url.includes("?") ? "&" : "?") + "ts=" + Date.now();
-    document.documentElement.style.setProperty("--topbar-bg", `url('${finalUrl}')`);
-    return true; // Admin mandou
-  }
-  return false;
-}
-
-    
     async function loadAll(){
       const status = document.getElementById("statusJson");
       const statusMini = document.getElementById("statusJsonMini");
@@ -2105,9 +1945,9 @@ function applyHeaderCityImage(data){
 
         const data = await res.json();
         window.__lastDataForTopbar = data;
-      
+
         const adminBgOn = applyHeaderCityImage(data);
-        
+
         if (status) status.textContent = "Atualizado";
         if (statusMini) statusMini.textContent = "Atualizado";
         if (dot) dot.style.background = "#44d07a";
@@ -2116,7 +1956,7 @@ function applyHeaderCityImage(data){
 
         renderAvisos(data);
         applyUrgentBox(data);
-        
+
         if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
           setText("dataBiblica", "📖");
           setText("ref", "Carregando…");
@@ -2125,10 +1965,12 @@ function applyHeaderCityImage(data){
           setText("ref", safeText(data.referencia || "Atualizado"));
         }
 
-        await carregarVersiculo(data);
-        await carregarClima(data);
+        // ✅ paraleliza (percepção melhor no celular)
+        const pVerso  = carregarVersiculo(data);
+        const pClima  = carregarClima(data);
+        const pMsgs   = carregarMensagensCidade();
+        await Promise.allSettled([pVerso, pClima, pMsgs]);
 
-        await carregarMensagensCidade();
         if(!adminBgOn){
           aplicarImagemTopbar(data);
         }
@@ -2149,8 +1991,10 @@ function applyHeaderCityImage(data){
       }
     }
 
+    // primeira carga
     loadAll();
 
+    // atualiza imagem de cabeçalho de tempos em tempos
     setInterval(() => {
       try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
     }, 60000);
@@ -2174,7 +2018,9 @@ function applyHeaderCityImage(data){
     });
   </script>
 
-  <!-- ✅ FUNDO (atalhos teclado) -->
+  <!-- =========================================================
+       SCRIPT — FUNDO (atalhos teclado)
+       ========================================================= -->
   <script>
     const fundos = {
       azul:    ["#061726", "#0b1f33"],
@@ -2220,7 +2066,9 @@ function applyHeaderCityImage(data){
     setInterval(fundoAleatorio, 300000);
   </script>
 
-  <!-- ✅ SERVICE WORKER -->
+  <!-- =========================================================
+       SCRIPT — SERVICE WORKER
+       ========================================================= -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", async () => {
