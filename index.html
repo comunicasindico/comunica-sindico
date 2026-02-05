@@ -1094,6 +1094,52 @@ html.urgentOn .newsBox{ display:none !important; }
   }
 }
 
+    /* =========================
+   PATCH 2 — DESKTOP: "Painel Informativo" ao lado direito embaixo do Atualizado + hora
+   (sem mexer no celular)
+   ========================= */
+@media (min-width: 900px){
+
+  /* rightInfo vira coluna para ter "Atualizado" em cima e "Hora" embaixo */
+  .rightInfo{
+    display:flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;                 /* bem próximo, sem espaço excedente */
+  }
+
+  /* garante que badges não estiquem e fiquem bem colados */
+  .rightInfo .badge{
+    margin:0;
+  }
+
+  /* O badge da hora (2º badge) vira "linha" com o subtítulo ao lado direito */
+  .rightInfo .badge:nth-of-type(2){
+    display:flex;
+    align-items:center;
+    gap: 8px;                 /* espaço curto entre hora e "Painel Informativo" */
+    position: relative;
+  }
+
+  /* Esconde o subtítulo embaixo do título (só no desktop) */
+  .brand #subtitulo{
+    display:none;
+  }
+
+  /* Cria o "Painel Informativo" ao lado direito do badge de hora */
+  .rightInfo .badge:nth-of-type(2)::after{
+    content: attr(data-subtitle);
+    font-weight: 900;
+    color: rgba(234,242,255,.92);
+    white-space: nowrap;
+    margin-left: 2px;         /* bem colado */
+    opacity: .95;
+  }
+}
+
+
+
+    
     
     
   </style>
@@ -1120,7 +1166,7 @@ html.urgentOn .newsBox{ display:none !important; }
             <span id="statusJson">Carregando...</span>
           </div>
 
-          <div class="badge" title="Hora e Clima">
+         <div class="badge" title="Hora e Clima" data-subtitle="Painel Informativo">
             <span id="wxIconTop" aria-label="Clima" role="img"></span>
             <span id="clock">--:--</span>
           </div>
