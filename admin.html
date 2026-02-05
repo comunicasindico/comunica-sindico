@@ -90,12 +90,26 @@
       outline:none;
       font-weight:750;
     }
-    input[type="checkbox"]{
+    
+   /* ✅ Edge/Avast: checkbox tem que ficar NATIVO (não herdar estilo de input) */
+input[type="checkbox"]{
+  width:18px !important;
+  height:18px !important;
   padding:0 !important;
-  background:transparent !important;
-  border:none !important;
-  box-shadow:none !important;
+  margin:0 !important;
+
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+
+  accent-color: var(--ok);
+  cursor: pointer;
 }
+
 
     textarea{ min-height:88px; resize:vertical; font-weight:650; line-height:1.25; }
     input::placeholder, textarea::placeholder{ color:rgba(234,242,255,.45); font-weight:650; }
