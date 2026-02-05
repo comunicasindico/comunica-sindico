@@ -748,37 +748,39 @@ function getToken(){
   if(v) return v;
 
   try{
-    const local = (localStorage.getItem(GH_TOKEN_LOCAL) || "").trim();
-    if(local) return local;
-  }catch(e){}
-
-  try{
-    return (sessionStorage.getItem(GH_TOKEN_SESSION) || "").trim();
-  }catch(e){ return ""; }
+    return (
+      localStorage.getItem("CS_GH_TOKEN") ||
+      sessionStorage.getItem("CS_GH_TOKEN") ||
+      ""
+    ).trim();
+  }catch(e){
+    return "";
+  }
 }
 
 function saveToken(){
   const v = ($("token").value || "").trim();
   if(!v){ alert("Cole seu token primeiro."); return; }
 
-  const remember = !!$("rememberToken")?.checked;
+  const remember = $("rememberToken")?.checked;
 
   try{
     if(remember){
-      localStorage.setItem(GH_TOKEN_LOCAL, v);
-      sessionStorage.removeItem(GH_TOKEN_SESSION);
+      localStorage.setItem("CS_GH_TOKEN", v);     // 🔐 persistente
+      sessionStorage.removeItem("CS_GH_TOKEN");
     }else{
-      sessionStorage.setItem(GH_TOKEN_SESSION, v);
-      localStorage.removeItem(GH_TOKEN_LOCAL);
+      sessionStorage.setItem("CS_GH_TOKEN", v);   // 🕒 só sessão
+      localStorage.removeItem("CS_GH_TOKEN");
     }
   }catch(e){}
 
   $("token").value = "";
   alert(remember
-    ? "✅ Token salvo neste navegador (persistente)."
-    : "✅ Token salvo nesta sessão (ao fechar o navegador, será perdido)."
+    ? "Token salvo neste navegador (lembrado)."
+    : "Token salvo apenas nesta sessão."
   );
 }
+
 
 function clearToken(){
   try{ sessionStorage.removeItem(GH_TOKEN_SESSION); }catch(e){}
@@ -1526,6 +1528,16 @@ if(!isAuthed()){
 } else {
   setTab("tAlerta");
 }
+
+  // Marca a caixinha se o token já estiver persistido
+try{
+  if(localStorage.getItem("CS_GH_TOKEN")){
+    const cb = $("rememberToken");
+    if(cb) cb.checked = true;
+  }
+}catch(e){}
+
+  
 </script>
 </body>
 </html>
