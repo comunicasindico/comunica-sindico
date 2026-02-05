@@ -51,15 +51,8 @@
     .field{ display:flex; flex-direction:column; gap:6px; }
     label{ font-size:12px; font-weight:900; letter-spacing:.25px; color:rgba(234,242,255,.88); }
     input, textarea, select{
-      /* ✅ Checkbox visível no PC (tema escuro) */
-#rememberToken{
-  width: 18px;
-  height: 18px;
-  accent-color: var(--ok);
-  transform: translateY(1px);
-  flex: 0 0 auto;
-}
-
+     
+      /* ✅ Checkbox visível e clicável */
 .rememberRow{
   display:flex;
   gap:10px;
@@ -72,6 +65,16 @@
   cursor:pointer;
   user-select:none;
 }
+
+#rememberToken{
+  width: 18px;
+  height: 18px;
+  accent-color: var(--ok);
+  cursor:pointer;
+  pointer-events:auto;
+  flex: 0 0 auto;
+}
+
 
 .rememberRow span{
   font-weight:900;
@@ -87,6 +90,13 @@
       outline:none;
       font-weight:750;
     }
+    input[type="checkbox"]{
+  padding:0 !important;
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+}
+
     textarea{ min-height:88px; resize:vertical; font-weight:650; line-height:1.25; }
     input::placeholder, textarea::placeholder{ color:rgba(234,242,255,.45); font-weight:650; }
     .mini{ font-size:12px; color:var(--muted); font-weight:800; line-height:1.25; }
@@ -484,10 +494,11 @@
               <label>Token do GitHub (PAT com permissão repo)</label>
               <input id="token" type="password" placeholder="ghp_..." />
 
-              <div class="rememberRow" onclick="document.getElementById('rememberToken').click()">
+              <label class="rememberRow" for="rememberToken">
   <input type="checkbox" id="rememberToken" />
   <span>Lembrar token neste navegador (menos seguro)</span>
-</div>
+</label>
+
 
 
               <div class="mini">Cole aqui, clique em <b>Salvar token</b>, depois <b>Publicar</b>.</div>
