@@ -296,7 +296,7 @@
 
           <div class="hint">
             ✅ Fluxo: <b>Carregar</b> → editar nas abas → <b>Publicar no GitHub</b>. <br/>
-            🔒 Token do GitHub fica somente no navegador (sessionStorage).
+            🔒 Token do GitHub fica somente no navegador (sessionStorage) ou opcionalmente persistente (localStorage).
           </div>
 
           <!-- Tabs -->
@@ -456,6 +456,12 @@
             <div class="field">
               <label>Token do GitHub (PAT com permissão repo)</label>
               <input id="token" type="password" placeholder="ghp_..." />
+
+              <label style="display:flex;gap:8px;align-items:center;margin-top:8px;font-weight:800;opacity:.9">
+                <input type="checkbox" id="rememberToken" />
+                Lembrar token neste navegador (menos seguro)
+              </label>
+
               <div class="mini">Cole aqui, clique em <b>Salvar token</b>, depois <b>Publicar</b>.</div>
               <div class="btnRow">
                 <button class="btn ghost" id="btnSaveToken">💾 Salvar token</button>
@@ -615,6 +621,7 @@ async function handleCreatePass(){
   $("newPass2").value = "";
 
   hideLogin();
+  setTab("tAlerta");
   alert("✅ Senha criada. Você já está logado.");
 }
 
@@ -630,6 +637,7 @@ async function handleEnterPass(){
   setAuth(true);
   $("enterPass").value = "";
   hideLogin();
+  setTab("tAlerta");
 }
 
 function handleResetPass(){
@@ -663,24 +671,66 @@ function logout(){
 }
 
 /* ============================
-   TOKEN
+   TOKEN (sessionStorage + opcional localStorage)
    ============================ */
+const GH_TOKEN_SESSION_KEY = "CS_GH_TOKEN";
+const GH_TOKEN_LOCAL_KEY   = "CS_GH_TOKEN_LOCAL";
+
+function getSavedToken(){
+  try{
+    return (
+      (sessionStorage.getItem(GH_TOKEN_SESSION_KEY) || "").trim() ||
+      (localStorage.getItem(GH_TOKEN_LOCAL_KEY) || "").trim() ||
+      ""
+    );
+  }catch(e){
+    return "";
+  }
+}
+
 function getToken(){
   const v = ($("token").value || "").trim();
   if(v) return v;
-  try{ return (sessionStorage.getItem("CS_GH_TOKEN")||"").trim(); }catch(e){ return ""; }
+  return getSavedToken();
 }
+
 function saveToken(){
   const v = ($("token").value || "").trim();
   if(!v){ alert("Cole seu token primeiro."); return; }
-  try{ sessionStorage.setItem("CS_GH_TOKEN", v); }catch(e){}
+
+  const remember = !!$("rememberToken")?.checked;
+
+  try{
+    sessionStorage.setItem(GH_TOKEN_SESSION_KEY, v);
+    if(remember) localStorage.setItem(GH_TOKEN_LOCAL_KEY, v);
+    else localStorage.removeItem(GH_TOKEN_LOCAL_KEY);
+  }catch(e){}
+
   $("token").value = "";
-  alert("Token salvo neste navegador (sessão atual).");
+
+  alert(remember
+    ? "Token salvo neste navegador (persistente)."
+    : "Token salvo neste navegador (somente nesta sessão)."
+  );
 }
+
 function clearToken(){
-  try{ sessionStorage.removeItem("CS_GH_TOKEN"); }catch(e){}
+  try{
+    sessionStorage.removeItem(GH_TOKEN_SESSION_KEY);
+    localStorage.removeItem(GH_TOKEN_LOCAL_KEY);
+  }catch(e){}
+
   $("token").value = "";
+  const cb = $("rememberToken");
+  if(cb) cb.checked = false;
+
   alert("Token removido deste navegador.");
+}
+
+function initTokenUI(){
+  const tokLocal = (()=>{ try{ return (localStorage.getItem(GH_TOKEN_LOCAL_KEY)||"").trim(); }catch(e){ return ""; }})();
+  const cb = $("rememberToken");
+  if(cb) cb.checked = !!tokLocal;
 }
 
 /* ============================
@@ -726,7 +776,6 @@ function ensureBaseShape(){
 
   // ✅ AVISOS
   DATA.avisos = Array.isArray(DATA.avisos) ? DATA.avisos : [];
-  // Normaliza itens
   DATA.avisos.forEach(a=>{
     a.id = a.id ?? ("a_" + Math.random().toString(16).slice(2) + "_" + Date.now());
     a.titulo = String(a.titulo ?? "");
@@ -787,7 +836,6 @@ function fillFormFromData(){
   $("fCabAtivar").value = String(!!DATA.publicidade.cabecalhoImagem.ativar);
   $("fCabUrl").value = DATA.publicidade.cabecalhoImagem.url || "";
 
-  // preview imagem
   renderCabPreview();
 
   $("fAlertAtivar").value = String(!!DATA.alertaUrgente.ativar);
@@ -1275,7 +1323,7 @@ function renderCabPreview(){
   }
   const img = document.createElement("img");
   img.alt = "Prévia";
-  img.src = url + (url.includes("?") ? "&" : "?") + "ts=" + Date.now(); // cache-buster local no preview
+  img.src = url + (url.includes("?") ? "&" : "?") + "ts=" + Date.now();
   prev.appendChild(img);
 }
 
@@ -1286,7 +1334,7 @@ function fileToBase64Plain(file){
       const dataUrl = String(fr.result || "");
       const comma = dataUrl.indexOf(",");
       if(comma<0) return reject(new Error("Falha ao ler arquivo"));
-      resolve(dataUrl.slice(comma+1)); // base64 puro
+      resolve(dataUrl.slice(comma+1));
     };
     fr.onerror = ()=>reject(fr.error || new Error("Erro no FileReader"));
     fr.readAsDataURL(file);
@@ -1305,7 +1353,6 @@ async function uploadCabImage(){
     setStatus("Enviando imagem…","");
     const b64 = await fileToBase64Plain(file);
 
-    // pega sha se existir
     const sha = await ghGetShaForPath(token, GITHUB_CAB_PATH);
 
     await ghPutFileRaw(
@@ -1316,7 +1363,6 @@ async function uploadCabImage(){
       "Atualizar imagem do cabeçalho (cidade)"
     );
 
-    // preenche o campo e liga automaticamente
     $("fCabAtivar").value = "true";
     $("fCabUrl").value = CAB_PUBLIC_URL;
 
@@ -1350,17 +1396,14 @@ function alertOff(){
    BIND UI
    ============================ */
 function bind(){
-  // Tabs
   document.querySelectorAll(".tab").forEach(b=>{
     b.onclick = ()=> setTab(b.dataset.tab);
   });
 
-  // Login
   $("btnCreatePass").onclick = handleCreatePass;
   $("btnEnterPass").onclick = handleEnterPass;
   $("btnResetPass").onclick = handleResetPass;
 
-  // Config
   $("btnSaveToken").onclick = saveToken;
   $("btnClearToken").onclick = clearToken;
   $("btnOpenPanel").onclick = ()=>{ window.open("./index.html", "_blank"); };
@@ -1371,28 +1414,22 @@ function bind(){
   $("btnChangePass").onclick = handleChangePass;
   $("btnLogout").onclick = logout;
 
-  // Preview/JSON
   $("btnRebuild").onclick = rebuildJsonView;
   $("btnCopyJson").onclick = copyJson;
 
-  // Cidade
   $("btnBuscarCidade").onclick = buscarCidade;
   $("btnUploadCab").onclick = uploadCabImage;
   $("fCabUrl").addEventListener("input", renderCabPreview);
 
-  // Avisos
   $("btnAddAviso").onclick = addAviso;
   $("btnSortAvisos").onclick = sortAvisos;
 
-  // Vídeos
   $("btnAddVideo").onclick = addVideo;
   $("btnShuffleToggle").onclick = toggleShuffle;
 
-  // Alerta
   $("btnAlertOn").onclick = alertOn;
   $("btnAlertOff").onclick = alertOff;
 
-  // Live update
   const liveIds = [
     "fTitulo","fSubtitulo","fReferencia",
     "fRotInterval","fRotQtd",
@@ -1412,15 +1449,14 @@ function bind(){
    INIT
    ============================ */
 bind();
+initTokenUI();
 setStatus("Offline","bad");
 
-// Protege o admin
 if(!isAuthed()){
   showLogin();
+} else {
+  setTab("tAlerta");
 }
-
-// Se quiser: ao abrir, já mostra a aba Alerta
-setTab("tAlerta");
 </script>
 </body>
 </html>
