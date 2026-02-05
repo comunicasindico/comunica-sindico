@@ -51,6 +51,33 @@
     .field{ display:flex; flex-direction:column; gap:6px; }
     label{ font-size:12px; font-weight:900; letter-spacing:.25px; color:rgba(234,242,255,.88); }
     input, textarea, select{
+      /* ✅ Checkbox visível no PC (tema escuro) */
+#rememberToken{
+  width: 18px;
+  height: 18px;
+  accent-color: var(--ok);
+  transform: translateY(1px);
+  flex: 0 0 auto;
+}
+
+.rememberRow{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-top:8px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+  cursor:pointer;
+  user-select:none;
+}
+
+.rememberRow span{
+  font-weight:900;
+  opacity:.92;
+}
+
       width:100%;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.12);
@@ -457,10 +484,11 @@
               <label>Token do GitHub (PAT com permissão repo)</label>
               <input id="token" type="password" placeholder="ghp_..." />
 
-              <label style="display:flex;gap:8px;align-items:center;margin-top:8px;font-weight:800;opacity:.9">
-                <input type="checkbox" id="rememberToken" />
-                Lembrar token neste navegador (menos seguro)
-              </label>
+              <div class="rememberRow" onclick="document.getElementById('rememberToken').click()">
+  <input type="checkbox" id="rememberToken" />
+  <span>Lembrar token neste navegador (menos seguro)</span>
+</div>
+
 
               <div class="mini">Cole aqui, clique em <b>Salvar token</b>, depois <b>Publicar</b>.</div>
               <div class="btnRow">
@@ -570,6 +598,8 @@ function prettyJson(obj){ return JSON.stringify(obj, null, 2); }
    ============================ */
 const PASS_KEY = "CS_ADMIN_PASS_HASH";
 const AUTH_KEY = "CS_ADMIN_AUTH_OK";
+const GH_TOKEN_SESSION = "CS_GH_TOKEN";
+const GH_TOKEN_LOCAL   = "CS_GH_TOKEN_PERSIST";
 
 async function sha256Hex(str){
   const data = new TextEncoder().encode(str);
@@ -691,7 +721,15 @@ function getSavedToken(){
 function getToken(){
   const v = ($("token").value || "").trim();
   if(v) return v;
-  return getSavedToken();
+
+  try{
+    const local = (localStorage.getItem(GH_TOKEN_LOCAL) || "").trim();
+    if(local) return local;
+  }catch(e){}
+
+  try{
+    return (sessionStorage.getItem(GH_TOKEN_SESSION) || "").trim();
+  }catch(e){ return ""; }
 }
 
 function saveToken(){
@@ -701,31 +739,30 @@ function saveToken(){
   const remember = !!$("rememberToken")?.checked;
 
   try{
-    sessionStorage.setItem(GH_TOKEN_SESSION_KEY, v);
-    if(remember) localStorage.setItem(GH_TOKEN_LOCAL_KEY, v);
-    else localStorage.removeItem(GH_TOKEN_LOCAL_KEY);
+    if(remember){
+      localStorage.setItem(GH_TOKEN_LOCAL, v);
+      sessionStorage.removeItem(GH_TOKEN_SESSION);
+    }else{
+      sessionStorage.setItem(GH_TOKEN_SESSION, v);
+      localStorage.removeItem(GH_TOKEN_LOCAL);
+    }
   }catch(e){}
 
   $("token").value = "";
-
   alert(remember
-    ? "Token salvo neste navegador (persistente)."
-    : "Token salvo neste navegador (somente nesta sessão)."
+    ? "✅ Token salvo neste navegador (persistente)."
+    : "✅ Token salvo nesta sessão (ao fechar o navegador, será perdido)."
   );
 }
 
 function clearToken(){
-  try{
-    sessionStorage.removeItem(GH_TOKEN_SESSION_KEY);
-    localStorage.removeItem(GH_TOKEN_LOCAL_KEY);
-  }catch(e){}
-
+  try{ sessionStorage.removeItem(GH_TOKEN_SESSION); }catch(e){}
+  try{ localStorage.removeItem(GH_TOKEN_LOCAL); }catch(e){}
   $("token").value = "";
-  const cb = $("rememberToken");
-  if(cb) cb.checked = false;
-
+  if($("rememberToken")) $("rememberToken").checked = false;
   alert("Token removido deste navegador.");
 }
+
 
 function initTokenUI(){
   const tokLocal = (()=>{ try{ return (localStorage.getItem(GH_TOKEN_LOCAL_KEY)||"").trim(); }catch(e){ return ""; }})();
@@ -1452,6 +1489,13 @@ bind();
 initTokenUI();
 setStatus("Offline","bad");
 
+  // ✅ Se existe token persistente, marca o checkbox
+try{
+  const hasLocal = (localStorage.getItem(GH_TOKEN_LOCAL)||"").trim().length > 0;
+  if($("rememberToken")) $("rememberToken").checked = hasLocal;
+}catch(e){}
+
+  
 if(!isAuthed()){
   showLogin();
 } else {
