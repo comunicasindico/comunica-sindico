@@ -1137,6 +1137,35 @@ html.urgentOn .newsBox{ display:none !important; }
   }
 }
 
+/* =====================================================
+   PATCH FINAL — MOBILE VOLTA AO TAMANHO ORIGINAL
+   ===================================================== */
+
+/* DESKTOP: título grande e caixa alta */
+@media (min-width: 900px){
+  #titulo{
+    text-transform: uppercase;
+    font-weight: 1000;
+    letter-spacing: .8px;
+    line-height: 1.05;
+    font-size: clamp(36px, 4.2vw, 78px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* MOBILE: força exatamente o tamanho antigo (pequeno) */
+@media (max-width: 899px){
+  #titulo{
+    text-transform: none;
+    font-weight: 900;
+
+    /* 🔒 tamanho compacto, igual ao original */
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+}
 
 
     
