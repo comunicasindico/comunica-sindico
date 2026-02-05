@@ -50,37 +50,9 @@
     .row > *{ flex:1; }
     .field{ display:flex; flex-direction:column; gap:6px; }
     label{ font-size:12px; font-weight:900; letter-spacing:.25px; color:rgba(234,242,255,.88); }
-    input, textarea, select{
-     
-      /* ✅ Checkbox visível e clicável */
-.rememberRow{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  margin-top:8px;
-  padding:10px 12px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.18);
-  cursor:pointer;
-  user-select:none;
-}
 
-#rememberToken{
-  width: 18px;
-  height: 18px;
-  accent-color: var(--ok);
-  cursor:pointer;
-  pointer-events:auto;
-  flex: 0 0 auto;
-}
-
-
-.rememberRow span{
-  font-weight:900;
-  opacity:.92;
-}
-
+    /* ✅ Inputs padrão (sem afetar checkbox) */
+    input:not([type="checkbox"]), textarea, select{
       width:100%;
       border-radius:14px;
       border:1px solid rgba(255,255,255,.12);
@@ -90,27 +62,6 @@
       outline:none;
       font-weight:750;
     }
-    
-   /* ✅ Edge/Avast: checkbox tem que ficar NATIVO (não herdar estilo de input) */
-input[type="checkbox"]{
-  width:18px !important;
-  height:18px !important;
-  padding:0 !important;
-  margin:0 !important;
-
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-
-  appearance: auto !important;
-  -webkit-appearance: auto !important;
-
-  accent-color: var(--ok);
-  cursor: pointer;
-}
-
-
     textarea{ min-height:88px; resize:vertical; font-weight:650; line-height:1.25; }
     input::placeholder, textarea::placeholder{ color:rgba(234,242,255,.45); font-weight:650; }
     .mini{ font-size:12px; color:var(--muted); font-weight:800; line-height:1.25; }
@@ -145,7 +96,42 @@ input[type="checkbox"]{
       color:var(--muted);
       white-space:nowrap;
     }
+    .pill.ok{ border-color: rgba(68,208,122,.55); background: rgba(68,208,122,.16); color: rgba(234,242,255,.96); }
     .hr{ height:1px; background: rgba(255,255,255,.10); margin:4px 0; }
+
+    /* ✅ Linhas de checkbox (Edge/Avast/Chrome/Edge) */
+    .rememberRow{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-top:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      cursor:pointer;
+      user-select:none;
+    }
+    .rememberRow input[type="checkbox"]{
+      width:18px !important;
+      height:18px !important;
+      padding:0 !important;
+      margin:0 !important;
+
+      background: transparent !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+
+      appearance: auto !important;
+      -webkit-appearance: auto !important;
+
+      accent-color: var(--ok);
+      cursor:pointer;
+      pointer-events:auto;
+      flex:0 0 auto;
+    }
+    .rememberRow span{ font-weight:900; opacity:.92; }
 
     /* Tabs */
     .tabs{ display:flex; gap:8px; flex-wrap:wrap; }
@@ -340,7 +326,12 @@ input[type="checkbox"]{
             <div class="title">Admin (Discreto)</div>
             <div class="sub">Gerencia <b>Alerta</b>, <b>Avisos</b>, <b>Vídeos</b> e <b>Cidade</b></div>
           </div>
-          <div class="pill" id="statusPill">Offline</div>
+
+          <!-- ✅ Badge verde AUTO + status -->
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div class="pill ok" id="autoPill" style="display:none">AUTO</div>
+            <div class="pill" id="statusPill">Offline</div>
+          </div>
         </div>
 
         <div class="body">
@@ -517,8 +508,9 @@ input[type="checkbox"]{
                 <input type="checkbox" id="autoCarregar" />
                 <span>Autocarregar data.json ao abrir</span>
               </label>
-              <div class="mini">
-                Se marcado, o <b>data.json</b> é carregado automaticamente ao entrar no Admin.
+
+              <div class="mini" id="autoLoadStatus" style="margin-top:6px;opacity:.95">
+                Autocarregar: <b>desligado</b>
               </div>
 
               <div class="mini">Cole aqui, clique em <b>Salvar token</b>, depois <b>Publicar</b>.</div>
@@ -596,8 +588,8 @@ const GITHUB_BRANCH = "main";
 const GITHUB_PATH   = "data.json";
 
 /* Upload da imagem do cabeçalho (caminho fixo) */
-const GITHUB_CAB_PATH = "assets/cidade-header.jpg";     // <- será criado/atualizado no repo
-const CAB_PUBLIC_URL  = "./assets/cidade-header.jpg";   // <- como o GitHub Pages servirá no site
+const GITHUB_CAB_PATH = "assets/cidade-header.jpg";
+const CAB_PUBLIC_URL  = "./assets/cidade-header.jpg";
 
 /* ============================
    ESTADO
@@ -607,6 +599,12 @@ let DATA_ORIGINAL = null;
 
 const $ = (id)=>document.getElementById(id);
 const statusPill = $("statusPill");
+const autoPill   = $("autoPill");
+
+function setAutoBadge(show){
+  if(!autoPill) return;
+  autoPill.style.display = show ? "inline-flex" : "none";
+}
 
 function setStatus(text, type){
   statusPill.textContent = text;
@@ -629,8 +627,6 @@ function prettyJson(obj){ return JSON.stringify(obj, null, 2); }
    ============================ */
 const PASS_KEY = "CS_ADMIN_PASS_HASH";
 const AUTH_KEY = "CS_ADMIN_AUTH_OK";
-const GH_TOKEN_SESSION = "CS_GH_TOKEN";
-const GH_TOKEN_LOCAL   = "CS_GH_TOKEN_PERSIST";
 
 async function sha256Hex(str){
   const data = new TextEncoder().encode(str);
@@ -681,10 +677,9 @@ async function handleCreatePass(){
   $("newPass1").value = "";
   $("newPass2").value = "";
 
-    hideLogin();
+  hideLogin();
   await maybeAutoCarregar();
   alert("✅ Senha criada. Você já está logado.");
-
 }
 
 async function handleEnterPass(){
@@ -696,7 +691,7 @@ async function handleEnterPass(){
     $("enterPass").value = "";
     return;
   }
-    setAuth(true);
+  setAuth(true);
   $("enterPass").value = "";
   hideLogin();
   await maybeAutoCarregar();
@@ -733,33 +728,20 @@ function logout(){
 }
 
 /* ============================
-   TOKEN (sessionStorage + opcional localStorage)
+   TOKEN (sessão + lembrar)
    ============================ */
-const GH_TOKEN_SESSION_KEY = "CS_GH_TOKEN";
+const GH_TOKEN_SESSION_KEY = "CS_GH_TOKEN_SESSION";
 const GH_TOKEN_LOCAL_KEY   = "CS_GH_TOKEN_LOCAL";
-
-function getSavedToken(){
-  try{
-    return (
-      (sessionStorage.getItem(GH_TOKEN_SESSION_KEY) || "").trim() ||
-      (localStorage.getItem(GH_TOKEN_LOCAL_KEY) || "").trim() ||
-      ""
-    );
-  }catch(e){
-    return "";
-  }
-}
 
 function getToken(){
   const v = ($("token").value || "").trim();
   if(v) return v;
-
   try{
     return (
-      localStorage.getItem("CS_GH_TOKEN") ||
-      sessionStorage.getItem("CS_GH_TOKEN") ||
+      (sessionStorage.getItem(GH_TOKEN_SESSION_KEY)||"").trim() ||
+      (localStorage.getItem(GH_TOKEN_LOCAL_KEY)||"").trim() ||
       ""
-    ).trim();
+    );
   }catch(e){
     return "";
   }
@@ -769,45 +751,55 @@ function saveToken(){
   const v = ($("token").value || "").trim();
   if(!v){ alert("Cole seu token primeiro."); return; }
 
-  const remember = $("rememberToken")?.checked;
+  const remember = !!$("rememberToken")?.checked;
 
   try{
     if(remember){
-      localStorage.setItem("CS_GH_TOKEN", v);     // 🔐 persistente
-      sessionStorage.removeItem("CS_GH_TOKEN");
+      localStorage.setItem(GH_TOKEN_LOCAL_KEY, v);
+      sessionStorage.removeItem(GH_TOKEN_SESSION_KEY);
     }else{
-      sessionStorage.setItem("CS_GH_TOKEN", v);   // 🕒 só sessão
-      localStorage.removeItem("CS_GH_TOKEN");
+      sessionStorage.setItem(GH_TOKEN_SESSION_KEY, v);
+      localStorage.removeItem(GH_TOKEN_LOCAL_KEY);
     }
   }catch(e){}
 
   $("token").value = "";
-  alert(remember
-    ? "Token salvo neste navegador (lembrado)."
-    : "Token salvo apenas nesta sessão."
-  );
+  alert(remember ? "Token salvo neste navegador (lembrado)." : "Token salvo apenas nesta sessão.");
 }
 
-
 function clearToken(){
-  try{ sessionStorage.removeItem(GH_TOKEN_SESSION); }catch(e){}
-  try{ localStorage.removeItem(GH_TOKEN_LOCAL); }catch(e){}
+  try{ sessionStorage.removeItem(GH_TOKEN_SESSION_KEY); }catch(e){}
+  try{ localStorage.removeItem(GH_TOKEN_LOCAL_KEY); }catch(e){}
   $("token").value = "";
   if($("rememberToken")) $("rememberToken").checked = false;
   alert("Token removido deste navegador.");
 }
 
-
 function initTokenUI(){
-  const tokLocal = (()=>{ try{ return (localStorage.getItem(GH_TOKEN_LOCAL_KEY)||"").trim(); }catch(e){ return ""; }})();
-  const cb = $("rememberToken");
-  if(cb) cb.checked = !!tokLocal;
+  try{
+    const hasLocal = (localStorage.getItem(GH_TOKEN_LOCAL_KEY)||"").trim().length > 0;
+    if($("rememberToken")) $("rememberToken").checked = hasLocal;
+  }catch(e){}
 }
 
 /* ============================
-   AUTOCARREGAR data.json
+   AUTOCARREGAR (tudo junto)
    ============================ */
 const AUTOLOAD_KEY = "CS_ADMIN_AUTOLOAD";
+
+function setAutoLoadStatus(text, type){
+  const el = $("autoLoadStatus");
+  if(!el) return;
+
+  const color =
+    type==="ok"   ? "rgba(68,208,122,.95)" :
+    type==="warn" ? "rgba(255,179,71,.95)" :
+    type==="bad"  ? "rgba(255,90,90,.95)" :
+    "rgba(234,242,255,.78)";
+
+  el.innerHTML = text;
+  el.style.color = color;
+}
 
 function getAutoCarregar(){
   try{ return localStorage.getItem(AUTOLOAD_KEY) === "1"; }
@@ -822,15 +814,28 @@ function setAutoCarregar(v){
 function applyAutoCarregarUI(){
   const cb = $("autoCarregar");
   if(cb) cb.checked = getAutoCarregar();
+  setAutoLoadStatus(`Autocarregar: <b>${getAutoCarregar() ? "ligado" : "desligado"}</b>`, getAutoCarregar() ? "ok" : "");
+}
+
+function bindAutoCarregar(){
+  const cb = $("autoCarregar");
+  if(!cb) return;
+
+  // "browser teimoso": garante clique no checkbox
+  cb.addEventListener("click", (e)=> e.stopPropagation());
+
+  cb.addEventListener("change", ()=>{
+    setAutoCarregar(!!cb.checked);
+    applyAutoCarregarUI();
+  });
 }
 
 async function maybeAutoCarregar(){
   if(getAutoCarregar()){
-    await loadData();
+    await loadData("auto");
   }
 }
 
-  
 /* ============================
    BASE SHAPE (data.json)
    ============================ */
@@ -872,7 +877,6 @@ function ensureBaseShape(){
   DATA.alertaUrgente.mensagem = String(DATA.alertaUrgente.mensagem ?? "");
   DATA.alertaUrgente.piscar = (DATA.alertaUrgente.piscar ?? true);
 
-  // ✅ AVISOS
   DATA.avisos = Array.isArray(DATA.avisos) ? DATA.avisos : [];
   DATA.avisos.forEach(a=>{
     a.id = a.id ?? ("a_" + Math.random().toString(16).slice(2) + "_" + Date.now());
@@ -887,10 +891,12 @@ function ensureBaseShape(){
 }
 
 /* ============================
-   LOAD data.json (mesma pasta)
+   LOAD data.json
    ============================ */
-async function loadData(){
-  setStatus("Carregando…","");
+async function loadData(origin){
+  const mode = origin === "auto" ? "Autocarregando…" : "Carregando…";
+  setStatus(mode,"");
+  setAutoBadge(false);
 
   try{
     const res = await fetch("./data.json?ts=" + Date.now(), { cache:"no-store" });
@@ -906,9 +912,19 @@ async function loadData(){
     rebuildJsonView();
 
     setStatus("Atualizado","ok");
+
+    if(origin === "auto"){
+      setAutoBadge(true); // ✅ badge verde AUTO
+      setAutoLoadStatus(`✅ Autocarregar: <b>data.json carregado automaticamente</b>`, "ok");
+    }else{
+      setAutoBadge(false);
+      setAutoLoadStatus(`ℹ️ Autocarregar: <b>carregado manualmente</b>`, "warn");
+    }
   }catch(e){
     console.error(e);
     setStatus("Offline","bad");
+    setAutoBadge(false);
+    setAutoLoadStatus(`❌ Autocarregar: <b>falhou (offline)</b>`, "bad");
     alert("Não consegui carregar ./data.json. Confirme se admin.html está na mesma pasta do data.json.");
   }
 }
@@ -1505,7 +1521,10 @@ function bind(){
   $("btnSaveToken").onclick = saveToken;
   $("btnClearToken").onclick = clearToken;
   $("btnOpenPanel").onclick = ()=>{ window.open("./index.html", "_blank"); };
-  $("btnLoad").onclick = loadData;
+
+  // ✅ manual = carrega manual
+  $("btnLoad").onclick = ()=> loadData("manual");
+
   $("btnDownload").onclick = downloadJson;
   $("btnPublish").onclick = publishToGitHub;
 
@@ -1541,12 +1560,15 @@ function bind(){
     el.addEventListener("input", rebuildJsonView);
     el.addEventListener("change", rebuildJsonView);
   });
-    // Autocarregar
-  const cbAuto = $("autoCarregar");
-  if(cbAuto){
-    applyAutoCarregarUI();
-    cbAuto.addEventListener("change", ()=> setAutoCarregar(cbAuto.checked));
-    cbAuto.addEventListener("click",  ()=> setAutoCarregar(cbAuto.checked));
+
+  // ✅ Autocarregar
+  bindAutoCarregar();
+
+  // ✅ Plano B infalível: forçar toggle em label/click "teimoso"
+  const r1 = $("rememberToken");
+  if(r1){
+    r1.addEventListener("click", (e)=> e.stopPropagation());
+    r1.addEventListener("change", ()=>{}); // só pra garantir event chain
   }
 }
 
@@ -1555,35 +1577,16 @@ function bind(){
    ============================ */
 bind();
 initTokenUI();
-setStatus("Offline","bad");
-
-// aplica estado visual dos checkboxes
 applyAutoCarregarUI();
+setStatus("Offline","bad");
+setAutoBadge(false);
 
-// mantém o checkbox "Lembrar token" correto
-try{
-  const hasLocal = (localStorage.getItem(GH_TOKEN_LOCAL)||"").trim().length > 0;
-  if($("rememberToken")) $("rememberToken").checked = hasLocal;
-}catch(e){}
-
-// controle de login + autocarregar
 if(!isAuthed()){
   showLogin();
 }else{
-  // já autenticado → autocarrega se marcado
   maybeAutoCarregar();
   setTab("tAlerta");
 }
-
-  // Marca a caixinha se o token já estiver persistido
-try{
-  if(localStorage.getItem("CS_GH_TOKEN")){
-    const cb = $("rememberToken");
-    if(cb) cb.checked = true;
-  }
-}catch(e){}
-
-  
 </script>
 </body>
 </html>
