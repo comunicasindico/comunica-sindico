@@ -509,11 +509,17 @@ input[type="checkbox"]{
               <input id="token" type="password" placeholder="ghp_..." />
 
               <label class="rememberRow" for="rememberToken">
-  <input type="checkbox" id="rememberToken" />
-  <span>Lembrar token neste navegador (menos seguro)</span>
-</label>
+                <input type="checkbox" id="rememberToken" />
+                <span>Lembrar token neste navegador (menos seguro)</span>
+              </label>
 
-
+              <label class="rememberRow" for="autoCarregar">
+                <input type="checkbox" id="autoCarregar" />
+                <span>Autocarregar data.json ao abrir</span>
+              </label>
+              <div class="mini">
+                Se marcado, o <b>data.json</b> é carregado automaticamente ao entrar no Admin.
+              </div>
 
               <div class="mini">Cole aqui, clique em <b>Salvar token</b>, depois <b>Publicar</b>.</div>
               <div class="btnRow">
@@ -675,9 +681,10 @@ async function handleCreatePass(){
   $("newPass1").value = "";
   $("newPass2").value = "";
 
-  hideLogin();
-  setTab("tAlerta");
+    hideLogin();
+  await maybeAutoCarregar();
   alert("✅ Senha criada. Você já está logado.");
+
 }
 
 async function handleEnterPass(){
@@ -689,10 +696,10 @@ async function handleEnterPass(){
     $("enterPass").value = "";
     return;
   }
-  setAuth(true);
+    setAuth(true);
   $("enterPass").value = "";
   hideLogin();
-  setTab("tAlerta");
+  await maybeAutoCarregar();
 }
 
 function handleResetPass(){
@@ -797,6 +804,33 @@ function initTokenUI(){
   if(cb) cb.checked = !!tokLocal;
 }
 
+/* ============================
+   AUTOCARREGAR data.json
+   ============================ */
+const AUTOLOAD_KEY = "CS_ADMIN_AUTOLOAD";
+
+function getAutoCarregar(){
+  try{ return localStorage.getItem(AUTOLOAD_KEY) === "1"; }
+  catch(e){ return false; }
+}
+
+function setAutoCarregar(v){
+  try{ localStorage.setItem(AUTOLOAD_KEY, v ? "1" : "0"); }
+  catch(e){}
+}
+
+function applyAutoCarregarUI(){
+  const cb = $("autoCarregar");
+  if(cb) cb.checked = getAutoCarregar();
+}
+
+async function maybeAutoCarregar(){
+  if(getAutoCarregar()){
+    await loadData();
+  }
+}
+
+  
 /* ============================
    BASE SHAPE (data.json)
    ============================ */
@@ -1507,6 +1541,13 @@ function bind(){
     el.addEventListener("input", rebuildJsonView);
     el.addEventListener("change", rebuildJsonView);
   });
+    // Autocarregar
+  const cbAuto = $("autoCarregar");
+  if(cbAuto){
+    applyAutoCarregarUI();
+    cbAuto.addEventListener("change", ()=> setAutoCarregar(cbAuto.checked));
+    cbAuto.addEventListener("click",  ()=> setAutoCarregar(cbAuto.checked));
+  }
 }
 
 /* ============================
@@ -1516,16 +1557,21 @@ bind();
 initTokenUI();
 setStatus("Offline","bad");
 
-  // ✅ Se existe token persistente, marca o checkbox
+// aplica estado visual dos checkboxes
+applyAutoCarregarUI();
+
+// mantém o checkbox "Lembrar token" correto
 try{
   const hasLocal = (localStorage.getItem(GH_TOKEN_LOCAL)||"").trim().length > 0;
   if($("rememberToken")) $("rememberToken").checked = hasLocal;
 }catch(e){}
 
-  
+// controle de login + autocarregar
 if(!isAuthed()){
   showLogin();
-} else {
+}else{
+  // já autenticado → autocarrega se marcado
+  maybeAutoCarregar();
   setTab("tAlerta");
 }
 
