@@ -85,16 +85,20 @@ self.addEventListener("message", (event) => {
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   const url = new URL(req.url);
-
+  // Nunca interferir em métodos não-GET (POST/PUT/etc)
+  if (req.method !== "GET") return;
   if (!sameOrigin(url)) return;
 
   if (isNavigation(req)) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(CACHE_NAME);
+         // Cacheia navegação pelo caminho (sem query) para não duplicar
+        const navKey = new Request(url.pathname, { method: "GET" }); 
+         
         try {
           const fresh = await fetch(req, { cache: "no-store" });
-          cache.put(req, fresh.clone());
+          cache.put(navKey, fresh.clone());
 
           try {
             const shell = await fetch("./index.html", { cache: "no-store" });
@@ -103,8 +107,8 @@ self.addEventListener("fetch", (event) => {
 
           return fresh;
         } catch {
-          const cachedNav = await cache.match(req);
-          if (cachedNav) return cachedNav;
+         const cachedNav = await cache.match(navKey);
+         if (cachedNav) return cachedNav;
 
           const cachedShell = await cache.match("./index.html");
           return cachedShell || (await cache.match("./offline.html"));
