@@ -1,55 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <title>Comunica Síndico — Painel do Síndico</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <!-- PWA -->
-  <link rel="manifest" href="./manifest-sindico.json">
-  <meta name="theme-color" content="#0c2338">
+  <title>Síndico — Comunica Síndico</title>
 
-  <style>
-    html,body{margin:0;height:100%;background:#0c2338}
-    iframe{border:0;width:100%;height:100%}
-    #installBtn{
-      position:fixed;bottom:16px;right:16px;
-      background:#22c55e;color:#000;
-      border:none;border-radius:24px;
-      padding:12px 18px;font-weight:700;
-      cursor:pointer;display:none;
-      z-index:9999
-    }
-  </style>
-</head>
-<body>
-
-  <iframe
-    src="https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec"
-    allow="camera *; fullscreen *">
-  </iframe>
-
-  <button id="installBtn">📲 Instalar App</button>
+  <!-- Redirecionamento imediato -->
+  <meta http-equiv="refresh" content="0; url=./sindico/sindico.html" />
 
   <script>
-    let deferredPrompt;
-    const btn = document.getElementById("installBtn");
-
-    window.addEventListener("beforeinstallprompt", e => {
-      e.preventDefault();
-      deferredPrompt = e;
-      btn.style.display = "block";
-    });
-
-    btn.onclick = async () => {
-      btn.style.display = "none";
-      if(deferredPrompt){
-        deferredPrompt.prompt();
-        await deferredPrompt.userChoice;
-        deferredPrompt = null;
-      }
-    };
+    // fallback JS
+    window.location.replace("./sindico/sindico.html");
   </script>
+</head>
 
+<body>
+  <p style="font-family:system-ui; padding:20px">
+    Redirecionando para o painel do Síndico…
+    <br />
+    <a href="./sindico/sindico.html">Clique aqui se não redirecionar automaticamente</a>
+  </p>
 </body>
 </html>
