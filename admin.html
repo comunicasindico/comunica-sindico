@@ -6,6 +6,67 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Admin — Comunica Síndico</title>
 
+  <!-- =========================================================
+       PWA / ÍCONES (ADMIN)
+       Ajuste os caminhos se sua pasta for diferente.
+       ========================================================= -->
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Síndico Admin" />
+
+  <!-- Ícones -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./admin/assets/icons/192.png" />
+  <link rel="icon" type="image/png" sizes="256x256" href="./admin/assets/icons/256.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="./admin/assets/icons/512.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="./admin/assets/icons/192.png" />
+  <link rel="apple-touch-icon" sizes="256x256" href="./admin/assets/icons/256.png" />
+
+  <!-- Preview/compartilhamento (opcional) -->
+  <meta property="og:title" content="Comunica Síndico — Admin" />
+  <meta property="og:description" content="Painel Administrativo do Síndico" />
+  <meta property="og:image" content="./admin/assets/icons/admin-base.jpeg.JPG" />
+
+  <!-- Manifest: tenta carregar arquivo; se não existir, cria um manifest dinâmico (fallback). -->
+  <link rel="manifest" href="./admin/manifest-admin.json" id="manifestLink" />
+
+  <script>
+  (function ensureManifest(){
+    const MANIFEST_URL = "./admin/manifest-admin.json";
+    const ICON_192 = "./admin/assets/icons/192.png";
+    const ICON_256 = "./admin/assets/icons/256.png";
+    const ICON_512 = "./admin/assets/icons/512.png";
+    const START_URL = "./admin.html";
+
+    // Se o manifest existir, ótimo. Se não, cria um dinâmico (fallback).
+    fetch(MANIFEST_URL, { cache: "no-store" })
+      .then(r=>{
+        if(r.ok) return; // existe, não faz nada
+        throw new Error("manifest missing");
+      })
+      .catch(()=>{
+        const manifest = {
+          name: "Comunica Síndico — Admin",
+          short_name: "Síndico Admin",
+          start_url: START_URL,
+          scope: "./",
+          display: "standalone",
+          background_color: "#0b1220",
+          theme_color: "#0b1220",
+          icons: [
+            { src: ICON_192, sizes: "192x192", type: "image/png" },
+            { src: ICON_256, sizes: "256x256", type: "image/png" },
+            { src: ICON_512, sizes: "512x512", type: "image/png" }
+          ]
+        };
+        const blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.getElementById("manifestLink");
+        if(link) link.href = url;
+      });
+  })();
+  </script>
+
   <style>
     :root{
       --bg:#0b1220;
@@ -99,7 +160,7 @@
     .pill.ok{ border-color: rgba(68,208,122,.55); background: rgba(68,208,122,.16); color: rgba(234,242,255,.96); }
     .hr{ height:1px; background: rgba(255,255,255,.10); margin:4px 0; }
 
-    /* ✅ Linhas de checkbox (Edge/Avast/Chrome/Edge) */
+    /* ✅ Linhas de checkbox */
     .rememberRow{
       display:flex;
       gap:10px;
@@ -156,7 +217,7 @@
     .panel{ display:none; }
     .panel.active{ display:block; }
 
-    /* Listas (vídeos/avisos) */
+    /* Listas */
     .list{ display:flex; flex-direction:column; gap:10px; }
     .item{
       border:1px solid rgba(255,255,255,.10);
@@ -821,9 +882,7 @@ function bindAutoCarregar(){
   const cb = $("autoCarregar");
   if(!cb) return;
 
-  // "browser teimoso": garante clique no checkbox
   cb.addEventListener("click", (e)=> e.stopPropagation());
-
   cb.addEventListener("change", ()=>{
     setAutoCarregar(!!cb.checked);
     applyAutoCarregarUI();
@@ -914,7 +973,7 @@ async function loadData(origin){
     setStatus("Atualizado","ok");
 
     if(origin === "auto"){
-      setAutoBadge(true); // ✅ badge verde AUTO
+      setAutoBadge(true);
       setAutoLoadStatus(`✅ Autocarregar: <b>data.json carregado automaticamente</b>`, "ok");
     }else{
       setAutoBadge(false);
@@ -1522,7 +1581,6 @@ function bind(){
   $("btnClearToken").onclick = clearToken;
   $("btnOpenPanel").onclick = ()=>{ window.open("./index.html", "_blank"); };
 
-  // ✅ manual = carrega manual
   $("btnLoad").onclick = ()=> loadData("manual");
 
   $("btnDownload").onclick = downloadJson;
@@ -1561,14 +1619,12 @@ function bind(){
     el.addEventListener("change", rebuildJsonView);
   });
 
-  // ✅ Autocarregar
   bindAutoCarregar();
 
-  // ✅ Plano B infalível: forçar toggle em label/click "teimoso"
   const r1 = $("rememberToken");
   if(r1){
     r1.addEventListener("click", (e)=> e.stopPropagation());
-    r1.addEventListener("change", ()=>{}); // só pra garantir event chain
+    r1.addEventListener("change", ()=>{});
   }
 }
 
