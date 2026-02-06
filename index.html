@@ -291,11 +291,39 @@
       flex:1 1 auto;
       min-height:0;
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1.15fr 1.15fr;
       gap:8px;
       width:100%;
       height:100%;
+      position:relative;
+    }
+
+    /* ===== Layout 3x3 (com spans) =====
+       Linha 1: slot1 / slot2 / slot3 (avisos)
+       Linhas 2-3: slot4 (vídeo) ocupa toda a largura
+       Linha 2 (coluna 2): slot5 (Mensagens no Brasil) por cima do vídeo, sem bordas
+    */
+    #slot1{ grid-column:1 / 2; grid-row:1 / 2; }
+    #slot2{ grid-column:2 / 3; grid-row:1 / 2; }
+    #slot3{ grid-column:3 / 4; grid-row:1 / 2; }
+
+    /* Vídeo (um bloco só, maior) — ocupa 4º e 6º “mentalizados” (span) */
+    #slot4{
+      grid-column:1 / 4;
+      grid-row:2 / 4;
+      position:relative;
+      z-index:1;
+    }
+
+    /* Mensagens (5º quadrante) — sobre o vídeo, sem bordas */
+    #slot5{
+      grid-column:2 / 3;
+      grid-row:2 / 3;
+      z-index:5;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
     }
 
     .tile{ min-height:0; overflow:hidden; display:flex; flex-direction:column; }
@@ -484,6 +512,36 @@
       flex-direction:column;
       min-height:0;
     }
+
+    /* ===== Slot 5 (Mensagens) dentro do grid, SEM bordas ===== */
+    #slot5 .newsBox{
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      border-radius: 0 !important;
+    }
+    #slot5 .newsHead{
+      background: transparent !important;
+      border-bottom: none !important;
+      padding: 0 0 8px 0 !important;
+    }
+    #slot5 #newsBody{
+      padding: 0 !important;
+      gap: 6px !important;
+    }
+    #slot5 .newsItem{
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 6px 0 !important;
+    }
+    #slot5 .newsItem .h{
+      font-size: clamp(11px, 1.15dvh, 14px) !important;
+      font-weight: 900 !important;
+    }
+    #slot5 .newsSourceLine{ display:none !important; }
 
     .newsHead{
       padding:10px 12px;
@@ -1151,6 +1209,7 @@
           <div class="panel tile"><div class="tileBody" id="slot2"></div></div>
           <div class="panel tile"><div class="tileBody" id="slot3"></div></div>
 
+          <!-- Vídeo (bloco único grande) -->
           <div class="panel tile">
             <div class="tileBody" id="slot4">
 
@@ -1168,6 +1227,17 @@
                 <div class="adBelowText" id="adLabelBelow">—</div>
               </div>
 
+            </div>
+          </div>
+
+          <!-- Mensagens no Brasil (5º quadrante) — sem bordas, usando o espaço -->
+          <div class="tile" id="slot5">
+            <div class="newsBox" id="newsBox" style="display:none">
+              <div class="newsHead">
+                <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
+                <div class="pill" id="newsPill">—</div>
+              </div>
+              <div id="newsBody"></div>
             </div>
           </div>
         </div>
@@ -1188,13 +1258,6 @@
           </div>
         </div>
 
-        <div class="newsBox" id="newsBox" style="display:none">
-          <div class="newsHead">
-            <div class="newsTitle" id="cityTitle">📰 Mensagens no Brasil</div>
-            <div class="pill" id="newsPill">—</div>
-          </div>
-          <div id="newsBody"></div>
-        </div>
       </div>
 
       <div class="ticker">
@@ -1860,11 +1923,9 @@
     }
 
     function getNewsMaxItems(){
-      const h = window.innerHeight || 900;
+      // Pedido: caber / reduzir para 3 mensagens no painel (PC/TV)
       if (isMobile()) return 8;
-      if (h < 720) return 3;
-      if (h < 880) return 4;
-      return 6;
+      return 3;
     }
 
     async function carregarMensagensCidade(){
@@ -1948,155 +2009,110 @@
       const is1920 = longest >= 1700;
 
       let img = "./img/tubarao01.jpg";
-
-      if(isTubarao){
-        if(estaNoite){
-          if(isMob)       img = "./img/tubarao_noite.jpg";
-          else if(is2560) img = "./img/tubarao_noite-2560p.jpg";
-          else if(is1920) img = "./img/tubarao_noite-1920p.jpg";
-          else            img = "./img/tubarao_noite-1280p.jpg";
-        }else{
-          if(isMob)       img = "./img/tubarao01.jpg";
-          else if(is2560) img = "./img/tubarao01-2560p.jpg";
-          else if(is1920) img = "./img/tubarao01-1920p.jpg";
-          else            img = "./img/tubarao01-1280p.jpg";
-        }
+      if(!isTubarao){
+        img = estaNoite ? "./img/bg_night.jpg" : "./img/bg_day.jpg";
+      }else{
+        if(is2560) img = estaNoite ? "./img/tubarao_night_2560.jpg" : "./img/tubarao_day_2560.jpg";
+        else if(is1920) img = estaNoite ? "./img/tubarao_night_1920.jpg" : "./img/tubarao_day_1920.jpg";
+        else img = estaNoite ? "./img/tubarao_night.jpg" : "./img/tubarao_day.jpg";
       }
 
-      const test = new Image();
-      test.decoding = "async";
-      test.onload = () => {
-        document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
-      };
-      test.onerror = () => {
-        document.documentElement.style.setProperty("--topbar-bg", `url('./img/tubarao01.jpg')`);
-      };
-      test.src = img + "?v=1";
-    }
+      // mobile economiza (opcional)
+      if(isMob) img = "./img/tubarao01.jpg";
 
-    async function loadAll(){
-      const status = document.getElementById("statusJson");
-      const statusMini = document.getElementById("statusJsonMini");
-      const dot = document.getElementById("dotOnline");
-
-      try{
-        const res = await fetch("data.json?ts=" + Date.now(), { cache:"no-store" });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const ct = (res.headers.get("content-type") || "").toLowerCase();
-        if (!ct.includes("application/json")) throw new Error("Resposta não-JSON: " + ct);
-
-        const data = await res.json();
-        window.__lastDataForTopbar = data;
-
-        // Topbar / títulos
-        setText("titulo", data?.titulo || "Comunica Síndico — Condôminos");
-        setText("subtitulo", data?.subtitulo || "Painel informativo");
-
-        // Referência / status
-        const refText = data?.referencia || "Atualizado automaticamente";
-        if(status) status.textContent = refText;
-        if(statusMini) statusMini.textContent = refText;
-        if(dot) dot.style.background = "#46d16b";
-
-        // Topbar imagem
-        try{ aplicarImagemTopbar(data); }catch(e){}
-
-        // Avisos
-        renderAvisos(data);
-
-        // Versículo
-        try{ await carregarVersiculo(data); }catch(e){}
-
-        // Clima
-        try{ await carregarClima(data); }catch(e){}
-
-        // Publicidade
-        try{ iniciarPublicidade(data); }catch(e){}
-
-        // Mensagens no Brasil
-        try{ carregarMensagensCidade(); }catch(e){}
-
-        // Alerta urgente (novo bloco)
-        try{ applyUrgentBox(data); }catch(e){}
-
-        // Cidade no título (se existir no data.json)
-        try{
-          const cityTitle = document.getElementById("cityTitle");
-          const c = data?.clima?.cidade;
-          if(cityTitle && c) cityTitle.textContent = "📰 Mensagens no Brasil";
-        }catch(e){}
-
-        // Ajuste final
-        requestAnimationFrame(()=>{ try{ autoFitAvisosUniform(); }catch(e){} });
-
-      }catch(e){
-        if(status) status.textContent = "Offline";
-        if(statusMini) statusMini.textContent = "Offline";
-        if(dot) dot.style.background = "#ff5a5a";
-      }
+      document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
     }
 
     function applyUrgentBox(data){
-      const cfg = data?.alertaUrgente || data?.emergencia || {};
-      const alertBox = document.getElementById("alertBox");
-      const alertMsg = document.getElementById("alertMsg");
-      const newsBox = document.getElementById("newsBox");
+      try{
+        const u = data?.alertaUrgente;
+        const urgentBox = document.getElementById("urgentBox");
+        const alertBox  = document.getElementById("alertBox");
+        if(!urgentBox || !alertBox) return;
 
-      const ativar = !!cfg.ativar;
-      const msg = String(cfg.mensagem || cfg.msg || cfg.texto || "").trim();
-      const piscar = !!cfg.piscar;
+        const on = !!(u?.ativar && String(u?.mensagem||"").trim());
+        document.documentElement.classList.toggle("urgentOn", on);
 
-      // flag global (pra esconder Mensagens no Brasil via CSS)
-      document.documentElement.classList.toggle("urgentOn", ativar && !!msg);
+        if(on){
+          const blink = !!u?.piscar;
+          const title = String(u?.titulo || "ALERTA URGENTE");
+          const msg   = String(u?.mensagem || "—");
+          setText("urgentTitle", title);
+          setText("urgentMsg", msg);
+          urgentBox.style.display = "block";
 
-      if(alertBox){
-        if(ativar && msg){
+          setText("alertTitle", title);
+          setText("alertMsg", msg);
           alertBox.style.display = "block";
-          if(alertMsg) alertMsg.textContent = msg;
-          alertBox.classList.toggle("blink", piscar);
+          alertBox.classList.toggle("blink", blink);
+
+          // oculta mensagens
+          const newsBox = document.getElementById("newsBox");
           if(newsBox) newsBox.style.display = "none";
         }else{
+          urgentBox.style.display = "none";
           alertBox.style.display = "none";
           alertBox.classList.remove("blink");
-          if(newsBox) newsBox.style.display = "flex";
+          document.documentElement.classList.remove("urgentOn");
         }
+      }catch(e){}
+    }
+
+    async function fetchDataJson(){
+      const url = "./data.json?ts=" + Date.now();
+      const res = await fetch(url, { cache:"no-store" });
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      return await res.json();
+    }
+
+    function updateStatus(ok){
+      const dot = document.getElementById("dotOnline");
+      const s1 = document.getElementById("statusJson");
+      const s2 = document.getElementById("statusJsonMini");
+      if(dot) dot.style.background = ok ? "#2ecc71" : "#ff5a5a";
+      if(s1) s1.textContent = ok ? "Atualizado automaticamente" : "Offline";
+      if(s2) s2.textContent = ok ? "Atualizado automaticamente" : "Offline";
+    }
+
+    async function loadAll(){
+      try{
+        const data = await fetchDataJson();
+        window.__lastDataForTopbar = data || {};
+        updateStatus(true);
+
+        aplicarImagemTopbar(data);
+        renderAvisos(data);
+        await carregarVersiculo(data);
+        await carregarClima(data);
+        iniciarPublicidade(data);
+
+        applyUrgentBox(data);
+        await carregarMensagensCidade();
+      }catch(e){
+        updateStatus(false);
+        try{ await carregarMensagensCidade(); }catch(_){}
       }
     }
 
-    // primeira carga
+    // auto carregar
     loadAll();
 
-    // atualiza automático (se quiser, deixe ligado no data.json)
-    setInterval(()=>{
-      loadAll();
-    }, 60 * 1000);
+    // auto refresh suave
+    setInterval(()=>{ loadAll(); }, 60 * 1000);
 
-    // PWA / Service Worker
-    if ("serviceWorker" in navigator){
-      window.addEventListener("load", async () => {
-        try {
-          const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
-          try { await reg.update(); } catch(e){}
-          reg.addEventListener("updatefound", () => {
-            const nw = reg.installing;
-            if(!nw) return;
-            nw.addEventListener("statechange", () => {
-              if (nw.state === "installed" && navigator.serviceWorker.controller) {
-                nw.postMessage("SKIP_WAITING");
-              }
-            });
-          });
-        } catch(e){}
-      });
-
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
-        const banner = document.getElementById("updateBanner");
-        if(banner) banner.style.display = "block";
-        setTimeout(()=>window.location.reload(), 1200);
+    // Service Worker (se existir)
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.register("./sw.js").catch(()=>{});
+      navigator.serviceWorker.addEventListener("message", (event)=>{
+        try{
+          if(event?.data?.type === "NEW_VERSION"){
+            const b = document.getElementById("updateBanner");
+            if(b) b.style.display = "block";
+            setTimeout(()=>location.reload(), 1200);
+          }
+        }catch(e){}
       });
     }
   </script>
-
 </body>
 </html>
-
