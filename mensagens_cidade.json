@@ -1,6 +1,12 @@
 {
-  "updatedAt": "2026-02-06T05:58:56-03:00",
+  "updatedAt": "2026-02-06T06:58:57-03:00",
   "items": [
+    {
+      "titulo": "Condomínio do Edifício José de Almeida Pires - Tribuna de Minas",
+      "texto": "Condomínio do Edifício José de Almeida Pires &nbsp;&nbsp; Tribuna de Minas",
+      "fonte": "news.google.com",
+      "data": "06-02-2026"
+    },
     {
       "titulo": "Síndico do Torres do Mirante renuncia após protestos, crise e denúncias em Anápolis - Portal 6",
       "texto": "Síndico do Torres do Mirante renuncia após protestos, crise e denúncias em Anápolis &nbsp;&nbsp; Portal 6",
@@ -16,12 +22,6 @@
     {
       "titulo": "Síndico de condomínio em Anápolis renuncia após protesto de moradores - Diário de Goiás",
       "texto": "Síndico de condomínio em Anápolis renuncia após protesto de moradores &nbsp;&nbsp; Diário de Goiás",
-      "fonte": "news.google.com",
-      "data": "05-02-2026"
-    },
-    {
-      "titulo": "Síndico alvo de protesto renuncia após pressão de moradores - Diário do Município Anápolis",
-      "texto": "Síndico alvo de protesto renuncia após pressão de moradores &nbsp;&nbsp; Diário do Município Anápolis",
       "fonte": "news.google.com",
       "data": "05-02-2026"
     }
