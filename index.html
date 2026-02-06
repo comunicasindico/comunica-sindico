@@ -14,9 +14,6 @@
     try{
       const ua = (navigator.userAgent || "").toLowerCase();
 
-      // mobile UA (NÃO pega Android TV)
-      const isMobileUA = /mobi|iphone|ipod|ipad|android.*mobile/.test(ua);
-
       // UAs típicas de TV
       const isTVua =
         ua.includes("smart-tv") || ua.includes("smarttv") ||
@@ -27,6 +24,13 @@
         ua.includes("web0s") || ua.includes("webos") ||
         ua.includes("viera") || ua.includes("roku") ||
         ua.includes("aft") || ua.includes("tv");
+
+      // 1) Força manual: use ?tv=1 na URL (recomendado para SEMP/BrowseHere)
+      const qs = new URLSearchParams(location.search);
+      const forceTV = (qs.get("tv") === "1");
+
+      // 2) BrowseHere (SEMP): trate como TV
+      const isBrowseHere = ua.includes("browsehere") || ua.includes("browse here");
 
       // 🔒 “tamanho físico” (screen.* não muda com zoom)
       const sw = Number(screen.width || 0);
@@ -42,18 +46,26 @@
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
       const isViewportBig = (Math.max(vw, vh) >= 1100 && Math.min(vw, vh) >= 650);
 
-      // 1) Força manual: use ?tv=1 na URL (recomendado para SEMP/BrowseHere)
-      const qs = new URLSearchParams(location.search);
-      const forceTV = (qs.get("tv") === "1");
+      // ✅ TV final: forçado OU BrowseHere OU heurísticas (quando não é mobile UA)
+      const looksMobileUA = /mobi|iphone|ipod|ipad|android.*mobile/.test(ua);
+      const isTV = !!(forceTV || isBrowseHere || (!looksMobileUA && (isTVua || isPhysBig || isViewportBig)));
 
-      // 2) BrowseHere (SEMP): trate como TV
-      const isBrowseHere = ua.includes("browsehere") || ua.includes("browse here");
+      // mobile UA (NÃO pega TV / BrowseHere)
+      const isMobileUA = !!(looksMobileUA && !isTV && !isBrowseHere);
 
-      // ✅ TV final: forçado OU BrowseHere OU heurísticas
-      const shouldTV = forceTV || isBrowseHere || (!isMobileUA && (isTVua || isPhysBig || isViewportBig));
+      // orientação (para permitir rolagem na TV SOMENTE se estiver vertical)
+      function applyOrientation(){
+        const w = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
+        const h = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0);
+        const isPortrait = h > w;
+        document.documentElement.classList.toggle("isPortrait", isPortrait);
+      }
 
-      document.documentElement.classList.toggle("isMobileUA", !!isMobileUA);
-      document.documentElement.classList.toggle("isTV", !!shouldTV);
+      document.documentElement.classList.toggle("isMobileUA", isMobileUA);
+      document.documentElement.classList.toggle("isTV", isTV);
+      applyOrientation();
+      window.addEventListener("resize", applyOrientation, { passive:true });
+      window.addEventListener("orientationchange", applyOrientation, { passive:true });
     }catch(e){}
   })();
   </script>
@@ -750,18 +762,18 @@
       }
     }
 
-    /* ✅ FORÇA 2x2 EM TV MESMO SE @media disparar por zoom */
+    /* ✅ FORÇA 2x2 EM TV MESMO SE @media disparar por zoom (exceto TV em pé) */
     @media (max-width: 980px){
-      html.isTV .quadTop{
+      html.isTV:not(.isPortrait) .quadTop{
         display:grid !important;
         grid-template-columns: 1fr 1fr !important;
         grid-template-rows: 1fr 1fr !important;
         height:100% !important;
       }
-      html.isTV, html.isTV body{ overflow:hidden !important; height:100dvh !important; min-height:100dvh !important; }
-      html.isTV .wrap{ height:100dvh !important; min-height:100dvh !important; overflow:hidden !important; }
-      html.isTV .container{ height:100% !important; overflow:hidden !important; }
-      html.isTV .main{ overflow:hidden !important; }
+      html.isTV:not(.isPortrait), html.isTV:not(.isPortrait) body{ overflow:hidden !important; height:100dvh !important; min-height:100dvh !important; }
+      html.isTV:not(.isPortrait) .wrap{ height:100dvh !important; min-height:100dvh !important; overflow:hidden !important; }
+      html.isTV:not(.isPortrait) .container{ height:100% !important; overflow:hidden !important; }
+      html.isTV:not(.isPortrait) .main{ overflow:hidden !important; }
     }
 
     @media (min-width: 981px) and (max-width: 1100px){
@@ -782,7 +794,7 @@
       --tv-safe-bottom: 44px;
     }
 
-    html.isTV .wrap{
+    html.isTV:not(.isPortrait) .wrap{
       height:100dvh !important;
       min-height:100dvh !important;
       padding:
@@ -853,19 +865,60 @@
       word-break:break-word;
     }
 
-    /* ✅ TV: trava 100% sem scroll (BrowseHere/SEMP) */
-    html.isTV, html.isTV body{
+    /* ============================================================
+       ✅ TV EM PÉ (VERTICAL): libera rolagem igual celular
+       - SOMENTE se html.isTV.isPortrait
+       ============================================================ */
+    html.isTV.isPortrait, html.isTV.isPortrait body{
+      height:auto !important;
+      min-height:100svh !important;
+      overflow:auto !important;
+      -webkit-overflow-scrolling: touch;
+    }
+    html.isTV.isPortrait body{
+      position: static !important;
+      inset: auto !important;
+    }
+    html.isTV.isPortrait .wrap{
+      position: relative !important;
+      inset: auto !important;
+      height:auto !important;
+      min-height:100svh !important;
+      overflow:visible !important;
+      padding:
+        calc(14px + var(--sat))
+        calc(14px + var(--sar))
+        calc(14px + var(--sab))
+        calc(14px + var(--sal)) !important;
+    }
+    html.isTV.isPortrait .container{
+      height:auto !important;
+      min-height:auto !important;
+      overflow:visible !important;
+    }
+    html.isTV.isPortrait .main{
+      overflow:visible !important;
+    }
+    html.isTV.isPortrait .quadTop{
+      display:flex !important;
+      flex-direction:column !important;
+      height:auto !important;
+      gap:10px !important;
+    }
+
+    /* ✅ TV: trava 100% sem scroll (BrowseHere/SEMP) — somente landscape */
+    html.isTV:not(.isPortrait), html.isTV:not(.isPortrait) body{
       height:100dvh !important;
       width:100vw !important;
       overflow:hidden !important;
     }
 
-    html.isTV body{
+    html.isTV:not(.isPortrait) body{
       position: fixed !important;
       inset: 0 !important;
     }
 
-    html.isTV .wrap{
+    html.isTV:not(.isPortrait) .wrap{
       position: fixed !important;
       inset: 0 !important;
       overflow:hidden !important;
@@ -1175,11 +1228,16 @@
       }[c]));
     }
 
-    // ✅ "mobile" só se NÃO for TV (não cai no layout mobile por zoom)
     function isMobile(){
-      return window.matchMedia("(max-width: 980px)").matches &&
-             document.documentElement.classList.contains("isMobileUA") &&
-             !document.documentElement.classList.contains("isTV");
+      const el = document.documentElement;
+      const isTV = el.classList.contains("isTV");
+      const isPortrait = el.classList.contains("isPortrait");
+      // "mobile" = celular real OU TV em pé (para liberar comportamento de rolagem)
+      return (
+        window.matchMedia("(max-width: 980px)").matches &&
+        el.classList.contains("isMobileUA") &&
+        !isTV
+      ) || (isTV && isPortrait);
     }
 
     async function refreshNow(){
@@ -1887,51 +1945,6 @@
       test.src = img + "?v=1";
     }
 
-    function setCityTitleFromConfig(cfg){
-      const el = document.getElementById("cityTitle");
-      if(!el) return;
-      const t = cfg?.publicidade?.cidadeTitulo || cfg?.cidadeTitulo || "📰 Mensagens no Brasil";
-      el.textContent = String(t);
-    }
-
-    function applyUrgentBox(data){
-      const urgent = data?.alertaUrgente || {};
-      const box = document.getElementById("urgentBox");
-      if(!box) return;
-
-      const msg = String(urgent.mensagem || "").trim();
-      const on = !!urgent.ativar && msg.length > 0;
-
-      // ✅ classe global que derruba a news via CSS
-      document.documentElement.classList.toggle("urgentOn", on);
-
-      if(on){
-        const tEl = document.getElementById("urgentTitle");
-        const mEl = document.getElementById("urgentMsg");
-        if(tEl) tEl.textContent = urgent.titulo || "ALERTA URGENTE";
-        if(mEl) mEl.textContent = msg;
-
-        box.style.display = "block";
-        box.classList.toggle("urgentBlink", !!urgent.piscar);
-      }else{
-        box.style.display = "none";
-        box.classList.remove("urgentBlink");
-      }
-    }
-
-    function applyHeaderCityImage(data){
-      const cfg = data?.publicidade?.cabecalhoImagem || {};
-      const on  = !!cfg.ativar;
-      const url = String(cfg.url || "").trim();
-
-      if(on && url){
-        const finalUrl = url + (url.includes("?") ? "&" : "?") + "ts=" + Date.now();
-        document.documentElement.style.setProperty("--topbar-bg", `url('${finalUrl}')`);
-        return true; // Admin mandou
-      }
-      return false;
-    }
-
     async function loadAll(){
       const status = document.getElementById("statusJson");
       const statusMini = document.getElementById("statusJsonMini");
@@ -1946,131 +1959,91 @@
         const data = await res.json();
         window.__lastDataForTopbar = data;
 
-        const adminBgOn = applyHeaderCityImage(data);
+        // Topbar / títulos
+        setText("titulo", data?.titulo || "Comunica Síndico — Condôminos");
+        setText("subtitulo", data?.subtitulo || "Painel informativo");
 
-        if (status) status.textContent = "Atualizado";
-        if (statusMini) statusMini.textContent = "Atualizado";
-        if (dot) dot.style.background = "#44d07a";
+        // Referência / status
+        const refText = data?.referencia || "Atualizado automaticamente";
+        if(status) status.textContent = refText;
+        if(statusMini) statusMini.textContent = refText;
+        if(dot) dot.style.background = "#46d16b";
 
-        setCityTitleFromConfig(data);
+        // Topbar imagem
+        try{ aplicarImagemTopbar(data); }catch(e){}
 
+        // Avisos
         renderAvisos(data);
-        applyUrgentBox(data);
 
-        if (data.temaDoDia && data.temaDoDia.modo === "biblico-anual") {
-          setText("dataBiblica", "📖");
-          setText("ref", "Carregando…");
-        } else {
-          setText("dataBiblica", "📌 Avisos");
-          setText("ref", safeText(data.referencia || "Atualizado"));
+        // Versículo
+        try{ await carregarVersiculo(data); }catch(e){}
+
+        // Clima
+        try{ await carregarClima(data); }catch(e){}
+
+        // Publicidade
+        try{ iniciarPublicidade(data); }catch(e){}
+
+        // Mensagens no Brasil
+        try{ carregarMensagensCidade(); }catch(e){}
+
+        // Alerta urgente (novo bloco)
+        try{ applyUrgentBox(data); }catch(e){}
+
+        // Cidade no título (se existir no data.json)
+        try{
+          const cityTitle = document.getElementById("cityTitle");
+          const c = data?.clima?.cidade;
+          if(cityTitle && c) cityTitle.textContent = "📰 Mensagens no Brasil";
+        }catch(e){}
+
+        // Ajuste final
+        requestAnimationFrame(()=>{ try{ autoFitAvisosUniform(); }catch(e){} });
+
+      }catch(e){
+        if(status) status.textContent = "Offline";
+        if(statusMini) statusMini.textContent = "Offline";
+        if(dot) dot.style.background = "#ff5a5a";
+      }
+    }
+
+    function applyUrgentBox(data){
+      const cfg = data?.alertaUrgente || data?.emergencia || {};
+      const alertBox = document.getElementById("alertBox");
+      const alertMsg = document.getElementById("alertMsg");
+      const newsBox = document.getElementById("newsBox");
+
+      const ativar = !!cfg.ativar;
+      const msg = String(cfg.mensagem || cfg.msg || cfg.texto || "").trim();
+      const piscar = !!cfg.piscar;
+
+      // flag global (pra esconder Mensagens no Brasil via CSS)
+      document.documentElement.classList.toggle("urgentOn", ativar && !!msg);
+
+      if(alertBox){
+        if(ativar && msg){
+          alertBox.style.display = "block";
+          if(alertMsg) alertMsg.textContent = msg;
+          alertBox.classList.toggle("blink", piscar);
+          if(newsBox) newsBox.style.display = "none";
+        }else{
+          alertBox.style.display = "none";
+          alertBox.classList.remove("blink");
+          if(newsBox) newsBox.style.display = "flex";
         }
-
-        // ✅ paraleliza (percepção melhor no celular)
-        const pVerso  = carregarVersiculo(data);
-        const pClima  = carregarClima(data);
-        const pMsgs   = carregarMensagensCidade();
-        await Promise.allSettled([pVerso, pClima, pMsgs]);
-
-        if(!adminBgOn){
-          aplicarImagemTopbar(data);
-        }
-
-        iniciarPublicidade(data);
-
-        requestAnimationFrame(()=>{
-          if(!isMobile()) autoFitAvisosUniform();
-        });
-
-        return data;
-
-      } catch(e){
-        if (status) status.textContent = "Offline";
-        if (statusMini) statusMini.textContent = "Offline";
-        if (dot) dot.style.background = "#ff5a5a";
-        return null;
       }
     }
 
     // primeira carga
     loadAll();
 
-    // atualiza imagem de cabeçalho de tempos em tempos
-    setInterval(() => {
-      try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
-    }, 60000);
+    // atualiza automático (se quiser, deixe ligado no data.json)
+    setInterval(()=>{
+      loadAll();
+    }, 60 * 1000);
 
-    let __rzT = null;
-    window.addEventListener("resize", ()=>{
-      clearTimeout(__rzT);
-      __rzT = setTimeout(()=>{
-        if(!isMobile()){
-          try{ autoFitAvisosUniform(); }catch(e){}
-        }
-        try{ carregarMensagensCidade(); }catch(e){}
-        try{ if(window.__lastDataForTopbar) aplicarImagemTopbar(window.__lastDataForTopbar); }catch(e){}
-      }, 160);
-    }, {passive:true});
-
-    document.addEventListener("fullscreenchange", ()=>{
-      try{
-        if(!isMobile()) autoFitAvisosUniform();
-      }catch(e){}
-    });
-  </script>
-
-  <!-- =========================================================
-       SCRIPT — FUNDO (atalhos teclado)
-       ========================================================= -->
-  <script>
-    const fundos = {
-      azul:    ["#061726", "#0b1f33"],
-      verde:   ["#0b2e1a", "#134d2c"],
-      amarelo: ["#3a3300", "#665c00"],
-      laranja: ["#3a1f00", "#663300"],
-      branco:  ["#f2f2f2", "#dcdcdc"],
-      preto:   ["#000000", "#111111"]
-    };
-
-    function setFundo(cor){
-      if(!fundos[cor]) return;
-      document.documentElement.style.setProperty("--bg1", fundos[cor][0]);
-      document.documentElement.style.setProperty("--bg2", fundos[cor][1]);
-      try { localStorage.setItem("fundoEscolhido", cor); } catch(e){}
-    }
-
-    function fundoAleatorio(){
-      const cores = Object.keys(fundos);
-      const cor = cores[Math.floor(Math.random() * cores.length)];
-      setFundo(cor);
-      return cor;
-    }
-
-    (function carregarFundoSalvo(){
-      try{
-        const salvo = localStorage.getItem("fundoEscolhido");
-        if(salvo && fundos[salvo]) setFundo(salvo);
-      }catch(e){}
-    })();
-
-    window.addEventListener("keydown", (e)=>{
-      const k = String(e.key || "").toLowerCase();
-      if (k === "1") setFundo("azul");
-      else if (k === "2") setFundo("verde");
-      else if (k === "3") setFundo("amarelo");
-      else if (k === "4") setFundo("laranja");
-      else if (k === "5") setFundo("branco");
-      else if (k === "6") setFundo("preto");
-      else if (k === "r") fundoAleatorio();
-    });
-
-    setInterval(fundoAleatorio, 300000);
-  </script>
-
-  <!-- =========================================================
-       SCRIPT — SERVICE WORKER
-       ========================================================= -->
-  <script>
-    if ("serviceWorker" in navigator) {
+    // PWA / Service Worker
+    if ("serviceWorker" in navigator){
       window.addEventListener("load", async () => {
         try {
           const reg = await navigator.serviceWorker.register("./sw.js", { scope: "./" });
@@ -2097,3 +2070,4 @@
 
 </body>
 </html>
+
