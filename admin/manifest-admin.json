@@ -1,0 +1,27 @@
+{
+  "id": "/admin/",
+  "name": "Comunica Síndico — Admin",
+  "short_name": "Admin",
+  "description": "Administração do Comunica Síndico",
+  "lang": "pt-BR",
+
+  "start_url": "/comunica-sindico/admin/admin.html",
+  "scope": "/comunica-sindico/admin/",
+
+  "display": "standalone",
+  "orientation": "any",
+
+  "background_color": "#0c2338",
+  "theme_color": "#0c2338",
+
+  "icons": [
+    { "src": "admin/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "admin/icon-512x512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "admin/icon-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
