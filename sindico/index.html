@@ -8,11 +8,11 @@
   <title>Síndico(a) — Comunica Síndico</title>
 
   <!-- PWA -->
-  <link rel="manifest" href="./manifest.json">
+  <link rel="manifest" href="../manifest.json">
   <meta name="theme-color" content="#0b223a">
 
-  <link rel="icon" href="./icons/icon-192.png">
-  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+ <link rel="icon" href="../assets/icons/icon-192.png">
+ <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
 
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -169,34 +169,20 @@ body{
     }
   }
 
-  // Service Worker (GitHub Pages + repo)
-  if ("serviceWorker" in navigator) {
-    const base = "/comunica-sindico/sindico/";
-    const swUrl = base + "sw.js";
-    const scope = base;
-
-    window.addEventListener("load", async () => {
-      try{
-        const reg = await navigator.serviceWorker.register(swUrl, { scope });
-        try { await reg.update(); } catch(e){}
-
-        reg.addEventListener("updatefound", () => {
-          const nw = reg.installing;
-          if(!nw) return;
-          nw.addEventListener("statechange", () => {
-            if (nw.state === "installed" && navigator.serviceWorker.controller) {
-              nw.postMessage("SKIP_WAITING");
-            }
-          });
-        });
-      }catch(e){}
-    });
-
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-      setTimeout(() => window.location.reload(), 600);
-    });
-  }
 })();
+
+    // Service Worker GLOBAL (um só para todo o projeto)
+if ("serviceWorker" in navigator) {
+  const base = "/comunica-sindico/";
+  const swUrl = base + "sw.js";
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register(swUrl, { scope: base })
+      .catch(() => {});
+  });
+}
+
+    
   </script>
 
 </body>
