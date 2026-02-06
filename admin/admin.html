@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
+
+  <title>Admin — Comunica Síndico</title>
+
+  <!-- MANIFEST DO ADMIN -->
+  <link rel="manifest" href="./manifest-admin.json">
+  <meta name="theme-color" content="#0c2338">
+
+  <!-- ÍCONES (fallback navegador) -->
+  <link rel="icon" href="./admin/icon-192x192.png">
+  <link rel="apple-touch-icon" href="./admin/icon-192x192.png">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Síndico Admin">
+
+  <style>
+    :root{
+      --bg:#061726;
+      --card:#0c2338;
+      --txt:#eaf2ff;
+      --line:rgba(255,255,255,.15);
+      --accent:#4da3ff;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)),
+        url("https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80")
+        center/cover no-repeat fixed;
+      color:var(--txt);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .card{
+      width:min(760px,100%);
+      background:rgba(12,35,56,.85);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:28px;
+      box-shadow:0 14px 40px rgba(0,0,0,.45);
+      text-align:center;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    h1{
+      margin:0 0 10px 0;
+      font-size:26px;
+    }
+    p{
+      margin:0 0 18px 0;
+      opacity:.9;
+      line-height:1.4;
+      font-size:16px;
+    }
+    .actions{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.2);
+      background:#0f2f4f;
+      color:var(--txt);
+      padding:14px 22px;
+      font-weight:700;
+      font-size:15px;
+      text-decoration:none;
+      cursor:pointer;
+    }
+    .btn:hover{filter:brightness(1.1)}
+    .mini{
+      margin-top:14px;
+      font-size:13px;
+      opacity:.75;
+    }
+    .badge{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.2);
+      font-size:12px;
+      margin-bottom:12px;
+      opacity:.9;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <div class="badge" id="mode">Carregando...</div>
+
+    <h1>🛠️ Admin — Comunica Síndico</h1>
+    <p>Painel administrativo para gestão global do sistema, usuários, conteúdos e integrações.</p>
+
+    <div class="actions">
+      <a class="btn" href="./" target="_self">📣 Condôminos</a>
+      <a class="btn" href="./sindico/" target="_self">🏢 Síndico</a>
+    </div>
+
+    <p class="mini" id="hint">
+      Este app pode ser instalado como aplicativo independente no celular, tablet, PC ou TV.
+    </p>
+  </div>
+
+  <script>
+  (function(){
+    const mode = document.getElementById("mode");
+    const hint = document.getElementById("hint");
+
+    const isStandalone =
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      (window.navigator.standalone === true);
+
+    mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
+
+    if (hint) {
+      hint.textContent = isStandalone
+        ? "App Admin instalado. Funciona como aplicativo independente."
+        : "Instale este app pelo menu do navegador (Adicionar à tela inicial).";
+    }
+  })();
+
+  // Service Worker GLOBAL
+  if ("serviceWorker" in navigator) {
+    const base = "/comunica-sindico/";
+    const swUrl = base + "sw.js";
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register(swUrl, { scope: base }).catch(() => {});
+    });
+  }
+  </script>
+
+</body>
+</html>
