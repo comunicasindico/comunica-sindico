@@ -2,28 +2,54 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Comunica Síndico — Painel do Síndico</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Redirecionamento imediato -->
-  <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec" />
-
-  <script>
-    // fallback (caso o refresh seja bloqueado)
-    location.replace("https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec");
-  </script>
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest-sindico.json">
+  <meta name="theme-color" content="#0c2338">
 
   <style>
-    body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:0;display:grid;place-items:center;height:100vh;background:#0c2338;color:#fff}
-    a{color:#fff}
-    .box{max-width:720px;padding:24px;text-align:center}
+    html,body{margin:0;height:100%;background:#0c2338}
+    iframe{border:0;width:100%;height:100%}
+    #installBtn{
+      position:fixed;bottom:16px;right:16px;
+      background:#22c55e;color:#000;
+      border:none;border-radius:24px;
+      padding:12px 18px;font-weight:700;
+      cursor:pointer;display:none;
+      z-index:9999
+    }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>Redirecionando para o Painel do Síndico…</h1>
-    <p>Se não abrir automaticamente, toque aqui:</p>
-    <p><a href="https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec">Abrir Painel do Síndico</a></p>
-  </div>
+
+  <iframe
+    src="https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec"
+    allow="camera *; fullscreen *">
+  </iframe>
+
+  <button id="installBtn">📲 Instalar App</button>
+
+  <script>
+    let deferredPrompt;
+    const btn = document.getElementById("installBtn");
+
+    window.addEventListener("beforeinstallprompt", e => {
+      e.preventDefault();
+      deferredPrompt = e;
+      btn.style.display = "block";
+    });
+
+    btn.onclick = async () => {
+      btn.style.display = "none";
+      if(deferredPrompt){
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+      }
+    };
+  </script>
+
 </body>
 </html>
