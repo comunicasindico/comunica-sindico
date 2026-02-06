@@ -1,126 +1,158 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
-  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
-  <title>Síndico(a) — Comunica Síndico</title>
-<link rel="manifest" href="../manifest-sindico.json">
-<meta name="theme-color" content="#0c2338">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Síndico — Comunica Síndico</title>
+
+  <!-- ===============================
+       PWA / MANIFEST (SÍNDICO)
+       =============================== -->
+  <link rel="manifest" href="./manifest-sindico.json" />
+  <meta name="theme-color" content="#0b223a" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Síndico" />
+
+  <!-- Ícones do Síndico -->
+  <link rel="icon" sizes="192x192" href="./icons/icon-192x192.png" />
+  <link rel="icon" sizes="512x512" href="./icons/icon-512x512.png" />
+  <link rel="apple-touch-icon" href="./icons/icon-192x192.png" />
 
   <style>
     :root{
-      --card:rgba(12,35,56,.55);
+      --bg:#061726;
+      --card:#0c2338;
       --txt:#eaf2ff;
       --line:rgba(255,255,255,.15);
+      --accent:#4da3ff;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
+      min-height:100vh;
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)),
+        url("../tubarao01.jpg")
+        center/cover no-repeat fixed;
       color:var(--txt);
       display:flex;
-      min-height:100dvh;
       align-items:center;
       justify-content:center;
       padding:18px;
-
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.45)),
-        url("https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1600&q=80")
-        center/cover no-repeat fixed;
     }
-    .box{
-      width:min(720px,100%);
-      padding:26px;
+    .card{
+      width:min(900px,100%);
+      background:rgba(12,35,56,.88);
       border:1px solid var(--line);
-      border-radius:18px;
-      background: rgba(10,20,35,.75);
+      border-radius:20px;
+      padding:32px;
+      box-shadow:0 18px 50px rgba(0,0,0,.5);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
       text-align:center;
-      box-shadow:0 14px 40px rgba(0,0,0,.4);
     }
-    h1{margin:0 0 10px 0;font-size:24px}
-    p{margin:0 0 14px 0;opacity:.9;font-size:16px;line-height:1.35}
+    h1{
+      margin:0 0 10px;
+      font-size:30px;
+    }
+    p{
+      margin:0 0 18px;
+      opacity:.92;
+      line-height:1.45;
+      font-size:17px;
+    }
     .actions{
       display:flex;
-      gap:10px;
+      gap:14px;
       justify-content:center;
       flex-wrap:wrap;
-      margin-top:6px;
+      margin-top:16px;
     }
     .btn{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
+      gap:10px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(12,35,56,.75);
+      border:1px solid rgba(255,255,255,.25);
+      background:#0f2f4f;
       color:var(--txt);
-      padding:14px 20px;
+      padding:16px 26px;
       font-weight:800;
-      font-size:15px;
+      font-size:16px;
       text-decoration:none;
       cursor:pointer;
-      user-select:none;
     }
-    .btn:hover{filter:brightness(1.08)}
-    .mini{font-size:13px;opacity:.75;margin-top:10px}
+    .btn:hover{filter:brightness(1.12)}
+    .mini{
+      margin-top:18px;
+      font-size:13px;
+      opacity:.75;
+    }
     .badge{
       display:inline-block;
-      font-size:12px;
-      padding:8px 10px;
+      padding:8px 14px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      opacity:.85;
-      margin-bottom:12px;
+      border:1px solid rgba(255,255,255,.25);
+      font-size:13px;
+      margin-bottom:14px;
+      opacity:.9;
     }
   </style>
 </head>
 
 <body>
-  <div class="box">
-    <div class="badge" id="mode">Abrindo...</div>
 
-    <h1>📣 Síndico(a) — Comunica Síndico</h1>
-    <p>Painel administrativo para gerenciar avisos e e-mails dos condôminos.</p>
+  <div class="card">
+    <div class="badge" id="mode">Carregando…</div>
+
+    <h1>🏢 Síndico — Comunica Síndico</h1>
+    <p>
+      Painel do Síndico para acompanhamento do condomínio,
+      alertas, avisos, vídeos e informações em tempo real.
+    </p>
 
     <div class="actions">
-      <a class="btn" id="go" rel="noopener"
-         href="https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec">
-        🚀 Abrir Painel do Síndico
-      </a>
+      <a class="btn" href="../index.html">📣 Condôminos</a>
+      <a class="btn" href="../admin/admin.html">🛠️ Admin</a>
     </div>
 
-    <p class="mini" id="hint">Abra o painel acima. Para instalar o app, use a página principal do Comunica Síndico.</p>
+    <p class="mini" id="hint">
+      Este app pode ser instalado como aplicativo independente no celular, tablet, PC ou TV.
+    </p>
   </div>
 
   <script>
-  (function(){
-    const goEl = document.getElementById("go");
-    const mode = document.getElementById("mode");
-    const hint = document.getElementById("hint");
+    // Detecta modo app
+    (function(){
+      const mode = document.getElementById("mode");
+      const hint = document.getElementById("hint");
 
-    const isStandalone =
-      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
-      (window.navigator.standalone === true);
+      const isStandalone =
+        (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+        (window.navigator.standalone === true);
 
-    mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
+      mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
 
-    if (hint) {
       hint.textContent = isStandalone
-        ? "Toque em “Abrir painel” (o painel é online no Apps Script)."
-        : "Abra o painel ou instale o app pela página principal.";
-    }
+        ? "App do Síndico instalado e funcionando de forma independente."
+        : "Instale este app pelo menu do navegador (Adicionar à tela inicial).";
+    })();
 
-    // no navegador, abre em nova aba; no app instalado, abre normal.
-    if(goEl){
-      if(!isStandalone) goEl.setAttribute("target","_blank");
-      else goEl.removeAttribute("target");
+    // Service Worker GLOBAL
+    if ("serviceWorker" in navigator) {
+      const base = "/comunica-sindico/";
+      const swUrl = base + "sw.js";
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register(swUrl, { scope: base }).catch(() => {});
+      });
     }
-  })();
   </script>
+
 </body>
 </html>
