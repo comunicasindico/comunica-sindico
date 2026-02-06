@@ -1,41 +1,69 @@
-const CACHE_VERSION = "v13";
-const CACHE_PREFIX = "cs-condominos-";
-const CACHE_NAME = `${CACHE_PREFIX}${CACHE_VERSION}`;
+/* ==========================================================
+   Comunica Síndico — sw.js (GLOBAL) — 3 PAINÉIS
+   - Escopo: /comunica-sindico/
+   - Condôminos + Síndico + Admin
+   - HTML: network-first + fallback offline por área
+   - JSON crítico: network-first + fallback (resolve ?ts=)
+   - Vídeos/Range: não cachear
+   - Não interfere em cross-domain (script.google.com etc.)
+   ========================================================== */
 
+const CACHE_VERSION = "v1";
+const CACHE_PREFIX  = "cs-global-";
+const CACHE_NAME    = `${CACHE_PREFIX}${CACHE_VERSION}`;
+
+// Pré-cache essencial (sem depender de /sindico/manifest etc.)
 const ASSETS = [
   "./",
   "./index.html",
+  "./admin.html",
+  "./sindico/",
+  "./sindico/index.html",
   "./manifest.json",
   "./data.json",
   "./versiculos.json",
-  "./icons/icon-192.png",
-  "./icons/icon-512.png",
-  "./icons/icon-512-maskable.png"
+  "./assets/icons/icon-192.png",
+  "./assets/icons/icon-512.png"
 ];
 
-const OFFLINE_HTML = `<!doctype html>
+// Offline (Condôminos/Admin)
+const OFFLINE_MAIN = `<!doctype html>
 <html lang="pt-BR"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Condôminos - Offline</title>
+<title>Comunica Síndico — Offline</title>
 <style>
   body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#061726;color:#eaf2ff;
   display:flex;min-height:100vh;align-items:center;justify-content:center}
-  .c{max-width:520px;padding:22px;border:1px solid rgba(255,255,255,.12);
+  .c{max-width:560px;padding:22px;border:1px solid rgba(255,255,255,.12);
   border-radius:16px;background:rgba(12,35,56,.35)}
   h1{margin:0 0 10px 0;font-size:20px}
   p{margin:0;opacity:.85;line-height:1.35}
 </style>
 <div class="c">
   <h1>Sem internet no momento</h1>
-  <p>Você pode abrir parcialmente com dados em cache. Assim que a conexão voltar, ele se atualiza sozinho.</p>
+  <p>Você pode abrir parcialmente com dados em cache. Assim que a conexão voltar, ele se atualiza.</p>
+</div></html>`;
+
+// Offline (Síndico)
+const OFFLINE_SINDICO = `<!doctype html>
+<html lang="pt-BR"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Síndico(a) — Offline</title>
+<style>
+  body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#061726;color:#eaf2ff;
+  display:flex;min-height:100vh;align-items:center;justify-content:center}
+  .c{max-width:560px;padding:22px;border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;background:rgba(12,35,56,.35)}
+  h1{margin:0 0 10px 0;font-size:20px}
+  p{margin:0;opacity:.85;line-height:1.35}
+</style>
+<div class="c">
+  <h1>Sem internet no momento</h1>
+  <p>O app do Síndico abre, mas o painel online (Apps Script) precisa de conexão.</p>
 </div></html>`;
 
 function sameOrigin(url){
   return url.origin === self.location.origin;
-}
-
-function isInSindicoScope(url){
-  return url.pathname.includes("/sindico/");
 }
 
 function isNavigation(req){
@@ -44,7 +72,7 @@ function isNavigation(req){
 
 function isVideoRequest(req, url){
   const p = url.pathname.toLowerCase();
-  return p.endsWith(".mp4") || req.destination === "video";
+  return p.endsWith(".mp4") || p.endsWith(".webm") || req.destination === "video";
 }
 
 function hasRangeHeader(req){
@@ -60,11 +88,20 @@ function isAnyJson(url){
   return url.pathname.toLowerCase().endsWith(".json");
 }
 
+function isSindicoPath(url){
+  return url.pathname.includes("/sindico/");
+}
+
 // normaliza: remove query/hash e transforma em "./arquivo"
 function toRelativePath(url){
   const p = url.pathname;
   const last = p.split("/").pop() || "";
   return `./${last}`;
+}
+
+// chave limpa para navegação (sem query) evita duplicação
+function navKeyFrom(url){
+  return new Request(url.pathname, { method: "GET" });
 }
 
 async function addAllSafe(cache, assets){
@@ -82,9 +119,15 @@ self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
     await addAllSafe(cache, ASSETS);
-    await cache.put("./offline.html", new Response(OFFLINE_HTML, {
+
+    await cache.put("./offline.html", new Response(OFFLINE_MAIN, {
       headers: { "Content-Type":"text/html; charset=utf-8" }
     }));
+
+    await cache.put("./offline-sindico.html", new Response(OFFLINE_SINDICO, {
+      headers: { "Content-Type":"text/html; charset=utf-8" }
+    }));
+
     self.skipWaiting();
   })());
 });
@@ -110,8 +153,8 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return;
   if (!sameOrigin(url)) return;
 
-  // mantém como você já queria: SW não interfere no /sindico/
-  if (isInSindicoScope(url)) return;
+  // ✅ só atua dentro do app (evita pegar outras coisas do domínio)
+  if (!url.pathname.startsWith("/comunica-sindico/")) return;
 
   // vídeos e Range: não cachear
   if (isVideoRequest(req, url) || hasRangeHeader(req)) {
@@ -119,34 +162,42 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // NAVEGAÇÃO (HTML)
+  // NAVEGAÇÃO (HTML) — network-first + fallback (sem duplicar por query)
   if (isNavigation(req)) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
+      const navKey = navKeyFrom(url);
+
       try{
         const fresh = await fetch(req, { cache:"no-store" });
-        if (fresh && fresh.ok) cache.put(req, fresh.clone());
+        if (fresh && fresh.ok) await cache.put(navKey, fresh.clone());
 
-        // tenta atualizar o shell também
+        // atualiza shell principal/síndico para fallback rápido
         try{
-          const freshShell = await fetch("./index.html", { cache:"no-store" });
-          if (freshShell && freshShell.ok) cache.put("./index.html", freshShell.clone());
+          const shellPath = isSindicoPath(url) ? "./sindico/index.html" : "./index.html";
+          const freshShell = await fetch(shellPath, { cache:"no-store" });
+          if (freshShell && freshShell.ok) await cache.put(shellPath, freshShell.clone());
         }catch(e){}
 
         return fresh;
       }catch(e){
-        // fallback: tenta URL exata, depois "./index.html", depois offline.html
-        const cachedNav = await cache.match(req);
+        const cachedNav = await cache.match(navKey);
         if (cachedNav) return cachedNav;
 
-        const cachedShell = await cache.match("./index.html");
-        return cachedShell || (await cache.match("./offline.html"));
+        // fallback shell por área
+        const shellPath = isSindicoPath(url) ? "./sindico/index.html" : "./index.html";
+        const cachedShell = await cache.match(shellPath);
+        if (cachedShell) return cachedShell;
+
+        // offline por área
+        const offlinePath = isSindicoPath(url) ? "./offline-sindico.html" : "./offline.html";
+        return (await cache.match(offlinePath)) || new Response("Offline", { status:503, statusText:"Offline" });
       }
     })());
     return;
   }
 
-  // JSON CRÍTICO (data/versiculos) — network-first + fallback que resolve query (?ts=)
+  // JSON (data/versiculos e outros) — network-first + fallback que resolve query (?ts=)
   if (isCriticalJson(url) || isAnyJson(url)) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
@@ -155,13 +206,11 @@ self.addEventListener("fetch", (event) => {
       try{
         const fresh = await fetch(req, { cache:"no-store" });
         if (fresh && fresh.ok) {
-          // grava tanto pela request (com query) quanto pelo path limpo
-          cache.put(req, fresh.clone());
-          cache.put(rel, fresh.clone());
+          await cache.put(req, fresh.clone());
+          await cache.put(rel, fresh.clone());
         }
         return fresh;
       }catch(e){
-        // tenta casar com query, depois com path limpo
         return (await cache.match(req)) ||
                (await cache.match(rel)) ||
                new Response("{}", { headers: { "Content-Type":"application/json; charset=utf-8" }});
@@ -170,21 +219,23 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // OUTROS (stale-while-revalidate)
+  // OUTROS (stale-while-revalidate) — rápido
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(req);
+    const cached = await cache.match(req, { ignoreSearch: true });
+
     if (cached) {
       event.waitUntil((async () => {
         try{
-          const fresh = await fetch(req);
+          const fresh = await fetch(req, { cache:"no-store" });
           if (fresh && fresh.ok) await cache.put(req, fresh.clone());
         }catch(e){}
       })());
       return cached;
     }
+
     try{
-      const fresh = await fetch(req);
+      const fresh = await fetch(req, { cache:"no-store" });
       if (fresh && fresh.ok) await cache.put(req, fresh.clone());
       return fresh;
     }catch(e){
