@@ -1,37 +1,32 @@
 {
-  "id": "./",
-  "name": "Comunica Síndico",
-  "short_name": "Comunica",
-  "description": "Plataforma de comunicação do condomínio: Condôminos, Síndico e Administração.",
+  "id": "/comunica-sindico/",
+  "name": "Comunica Síndico — Condôminos",
+  "short_name": "Condôminos",
+  "description": "Painel de avisos e informações do condomínio.",
   "lang": "pt-BR",
 
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/comunica-sindico/index.html?app=condominos",
+  "scope": "/comunica-sindico/",
 
   "display": "standalone",
-  "orientation": "any",
+  "orientation": "portrait",
 
   "background_color": "#061726",
   "theme_color": "#0b223a",
 
-  "categories": ["productivity", "utilities"],
-  "prefer_related_applications": false,
-
   "icons": [
     {
-      "src": "./assets/icons/icon-192.png",
+      "src": "/comunica-sindico/icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "./assets/icons/icon-512.png",
+      "src": "/comunica-sindico/icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
-      "src": "./assets/icons/icon-512-maskable.png",
+      "src": "/comunica-sindico/icons/icon-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
