@@ -1,26 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Síndico — Comunica Síndico</title>
-
-  <!-- Redirecionamento imediato -->
-  <meta http-equiv="refresh" content="0; url=./sindico/sindico.html" />
-
+  <meta http-equiv="refresh" content="0;url=/comunica-sindico/sindico/sindico.html">
   <script>
-    // fallback JS
-    window.location.replace("./sindico/sindico.html");
+    location.replace("/comunica-sindico/sindico/sindico.html?ts=" + Date.now());
   </script>
 </head>
-
-<body>
-  <p style="font-family:system-ui; padding:20px">
-    Redirecionando para o painel do Síndico…
-    <br />
-    <a href="./sindico/sindico.html">Clique aqui se não redirecionar automaticamente</a>
-  </p>
+<body style="font-family:Arial,sans-serif;background:#061726;color:#eaf2ff;display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0">
+  <div style="max-width:520px;padding:18px;border:1px solid rgba(255,255,255,.15);border-radius:16px;background:rgba(12,35,56,.35);text-align:center">
+    <b>Redirecionando para o Síndico…</b><br><br>
+    Se não redirecionar, clique:
+    <a href="/comunica-sindico/sindico/sindico.html" style="color:#9fd1ff">abrir Síndico</a>
+  </div>
 </body>
 </html>
