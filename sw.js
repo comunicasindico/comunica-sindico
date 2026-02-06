@@ -8,7 +8,7 @@
    - Não interfere em cross-domain (script.google.com etc.)
    ========================================================== */
 
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v14";
 const CACHE_PREFIX  = "cs-global-";
 const CACHE_NAME    = `${CACHE_PREFIX}${CACHE_VERSION}`;
 
