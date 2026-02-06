@@ -116,7 +116,7 @@
       <a class="btn" href="../" target="_self">📣 Condôminos</a>
 
       <!-- ✅ ALTERAÇÃO: 2º botão agora vai para o painel do SÍNDICO (raiz) -->
-      <a class="btn" href="../sindico.html" target="_self">🏢 Painel do Síndico</a>
+     <a class="btn" id="btnPainelSindico" href="/comunica-sindico/sindico.html?ts=1" target="_self">🏢 Painel do Síndico</a>
     </div>
 
     <p class="mini" id="hint">
@@ -150,6 +150,18 @@
       navigator.serviceWorker.register(swUrl, { scope: base }).catch(() => {});
     });
   }
+    <script>
+  (function(){
+    const b = document.getElementById("btnPainelSindico");
+    if(!b) return;
+
+    b.addEventListener("click", (e)=>{
+      e.preventDefault();
+      location.href = "/comunica-sindico/sindico.html?ts=" + Date.now();
+    });
+  })();
+</script>
+
   </script>
 
 </body>
