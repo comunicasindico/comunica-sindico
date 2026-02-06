@@ -1,24 +1,37 @@
 {
-  "id": "/sindico/",
+  "id": "/comunica-sindico/sindico/",
   "name": "Comunica Síndico — Síndico",
   "short_name": "Síndico",
-  "description": "Painel do Síndico",
+  "description": "Painel do Síndico para acompanhamento e gestão.",
   "lang": "pt-BR",
 
-  "start_url": "/comunica-sindico/sindico/sindico.html",
+  "start_url": "/comunica-sindico/sindico/sindico.html?app=sindico",
   "scope": "/comunica-sindico/sindico/",
 
   "display": "standalone",
   "orientation": "any",
 
-  "background_color": "#0c2338",
-  "theme_color": "#0c2338",
+  "background_color": "#061726",
+  "theme_color": "#0b223a",
 
   "icons": [
-    { "src": "sindico/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "sindico/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" },
     {
-      "src": "sindico/icons/icon-512x512-maskable.png",
+      "src": "/comunica-sindico/sindico/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/comunica-sindico/sindico/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/comunica-sindico/sindico/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/comunica-sindico/sindico/icons/icon-512x512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
