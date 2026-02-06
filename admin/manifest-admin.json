@@ -1,11 +1,11 @@
 {
-  "id": "/admin/",
+  "id": "/comunica-sindico/admin/",
   "name": "Comunica Síndico — Admin",
   "short_name": "Admin",
-  "description": "Administração do Comunica Síndico",
+  "description": "Painel administrativo do Comunica Síndico.",
   "lang": "pt-BR",
 
-  "start_url": "/comunica-sindico/admin/admin.html",
+  "start_url": "/comunica-sindico/admin/admin.html?app=admin",
   "scope": "/comunica-sindico/admin/",
 
   "display": "standalone",
@@ -15,13 +15,9 @@
   "theme_color": "#0c2338",
 
   "icons": [
-    { "src": "admin/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "admin/icon-512x512.png", "sizes": "512x512", "type": "image/png" },
-    {
-      "src": "admin/icon-512x512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "/comunica-sindico/admin/icons/icon-144x144.png", "sizes": "144x144", "type": "image/png" },
+    { "src": "/comunica-sindico/admin/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/comunica-sindico/admin/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/comunica-sindico/admin/icons/icon-512x512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
