@@ -4,16 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
-
   <title>Síndico — Comunica Síndico</title>
 
   <!-- MANIFEST DO SÍNDICO -->
   <link rel="manifest" href="./manifest-sindico.json">
   <meta name="theme-color" content="#0c2338">
 
-  <!-- ÍCONES (fallback navegador) -->
-  <link rel="icon" href="./icons/icon-192x192.png">
-  <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
+  <!-- ÍCONES -->
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192x192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192x192.png">
 
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,10 +21,9 @@
   <style>
     :root{
       --bg:#061726;
-      --card:#0c2338;
       --txt:#eaf2ff;
       --line:rgba(255,255,255,.15);
-      --accent:#4da3ff;
+      --card:rgba(12,35,56,.78);
     }
     *{box-sizing:border-box}
     body{
@@ -33,9 +31,8 @@
       min-height:100vh;
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
       background:
-        linear-gradient(180deg, rgba(0,0,0,.20), rgba(0,0,0,.55)),
-        url("../tubarao01.jpg")
-        center/cover no-repeat fixed;
+        linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)),
+        url("../tubarao01.jpg") center/cover no-repeat fixed;
       color:var(--txt);
       display:flex;
       align-items:center;
@@ -43,53 +40,15 @@
       padding:18px;
     }
     .card{
-      width:min(860px,100%);
-      background:rgba(12,35,56,.82);
+      width:min(980px,100%);
+      background:var(--card);
       border:1px solid var(--line);
-      border-radius:18px;
-      padding:28px;
+      border-radius:22px;
+      padding:26px 26px 20px;
       box-shadow:0 14px 40px rgba(0,0,0,.45);
       text-align:center;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-    }
-    h1{
-      margin:0 0 10px 0;
-      font-size:26px;
-    }
-    p{
-      margin:0 0 18px 0;
-      opacity:.9;
-      line-height:1.4;
-      font-size:16px;
-    }
-    .actions{
-      display:flex;
-      gap:12px;
-      justify-content:center;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.2);
-      background:#0f2f4f;
-      color:var(--txt);
-      padding:14px 22px;
-      font-weight:800;
-      font-size:15px;
-      text-decoration:none;
-      cursor:pointer;
-    }
-    .btn:hover{filter:brightness(1.1)}
-    .mini{
-      margin-top:14px;
-      font-size:13px;
-      opacity:.75;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
     .badge{
       display:inline-block;
@@ -100,11 +59,24 @@
       margin-bottom:12px;
       opacity:.9;
     }
+    h1{margin:0 0 10px 0;font-size:30px;font-weight:900}
+    p{margin:0 0 16px 0;opacity:.9;line-height:1.4;font-size:16px}
+    .actions{
+      display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:10px
+    }
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      border-radius:999px;border:1px solid rgba(255,255,255,.22);
+      background:rgba(15,47,79,.85);color:var(--txt);
+      padding:14px 22px;font-weight:900;font-size:15px;text-decoration:none;cursor:pointer;
+      min-width:220px;
+    }
+    .btn:hover{filter:brightness(1.08)}
+    .mini{margin-top:14px;font-size:13px;opacity:.75}
   </style>
 </head>
 
 <body>
-
   <div class="card">
     <div class="badge" id="mode">Carregando...</div>
 
@@ -112,16 +84,14 @@
     <p>Painel do Síndico para acompanhamento do condomínio, alertas, avisos, vídeos e informações em tempo real.</p>
 
     <div class="actions">
-      <!-- mantém Condôminos -->
-      <a class="btn" href="../" target="_self">📣 Condôminos</a>
+      <!-- 1º botão: mantém condôminos -->
+      <a class="btn" href="/comunica-sindico/index.html?ts=1" id="btnCondominos">📣 Condôminos</a>
 
-      <!-- ✅ ALTERAÇÃO: 2º botão agora vai para o painel do SÍNDICO (raiz) -->
-     <a class="btn" id="btnPainelSindico" href="/comunica-sindico/sindico.html?ts=1" target="_self">🏢 Painel do Síndico</a>
+      <!-- 2º botão: AGORA VAI PARA O PAINEL DO SÍNDICO (Apps Script) -->
+      <a class="btn" href="#" id="btnPainelSindico">🛠️ Painel do Síndico</a>
     </div>
 
-    <p class="mini" id="hint">
-      Instale este app pelo menu do navegador (Adicionar à tela inicial).
-    </p>
+    <p class="mini" id="hint">Instale este app pelo menu do navegador (Adicionar à tela inicial).</p>
   </div>
 
   <script>
@@ -134,35 +104,47 @@
       (window.navigator.standalone === true);
 
     mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
-
-    if (hint) {
-      hint.textContent = isStandalone
-        ? "App do Síndico instalado. Funciona como aplicativo independente."
-        : "Instale este app pelo menu do navegador (Adicionar à tela inicial).";
-    }
+    hint.textContent = isStandalone
+      ? "App do Síndico instalado. Use os botões abaixo."
+      : "Instale este app pelo menu do navegador (Adicionar à tela inicial).";
   })();
 
-  // Service Worker GLOBAL
+  // ✅ LINK REAL DO PAINEL DO SÍNDICO (Apps Script)
+  const PAINEL_SINDICO_URL =
+    "https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec";
+
+  // 2º botão: abre certo (no app abre normal; no navegador abre nova aba)
+  (function(){
+    const btn = document.getElementById("btnPainelSindico");
+
+    const isStandalone =
+      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+      (window.navigator.standalone === true);
+
+    btn.addEventListener("click", (e)=>{
+      e.preventDefault();
+      const url = PAINEL_SINDICO_URL + (PAINEL_SINDICO_URL.includes("?") ? "&" : "?") + "ts=" + Date.now();
+
+      if(isStandalone){
+        location.href = url;
+      }else{
+        window.open(url, "_blank", "noopener");
+      }
+    });
+  })();
+
+  // Service Worker GLOBAL (um só para todo o projeto)
   if ("serviceWorker" in navigator) {
     const base = "/comunica-sindico/";
     const swUrl = base + "sw.js";
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register(swUrl, { scope: base }).catch(() => {});
+    window.addEventListener("load", async () => {
+      try{
+        const reg = await navigator.serviceWorker.register(swUrl, { scope: base });
+        // força atualizar SW quando você muda versão
+        if (reg && reg.waiting) reg.waiting.postMessage("SKIP_WAITING");
+      }catch(e){}
     });
   }
-    <script>
-  (function(){
-    const b = document.getElementById("btnPainelSindico");
-    if(!b) return;
-
-    b.addEventListener("click", (e)=>{
-      e.preventDefault();
-      location.href = "/comunica-sindico/sindico.html?ts=" + Date.now();
-    });
-  })();
-</script>
-
   </script>
-
 </body>
 </html>
