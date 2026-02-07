@@ -833,19 +833,29 @@
       }
     }
 
-    /* ✅ FORÇA GRID DO PRINT EM TV MESMO SE @media disparar por zoom (exceto TV em pé) */
-    @media (max-width: 980px){
-      html.isTV:not(.isPortrait) .quadTop{
-        display:grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        grid-template-rows: 1fr 1fr 1fr !important;
-        height:100% !important;
-      }
-      html.isTV:not(.isPortrait), html.isTV:not(.isPortrait) body{ overflow:hidden !important; height:100dvh !important; min-height:100dvh !important; }
-      html.isTV:not(.isPortrait) .wrap{ height:100dvh !important; min-height:100dvh !important; overflow:hidden !important; }
-      html.isTV:not(.isPortrait) .container{ height:100% !important; overflow:hidden !important; }
-      html.isTV:not(.isPortrait) .main{ overflow:hidden !important; }
-    }
+ @media (max-width: 980px){
+  /* ✅ TV landscape: manter 2 colunas × 3 linhas (vídeo 4+6 juntos) */
+  html.isTV:not(.isPortrait) .quadTop{
+    display:grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 1fr 1fr 1fr !important; /* ✅ 3 linhas */
+    height:100% !important;
+  }
+
+  /* ✅ posições no GRID (TV) */
+  html.isTV:not(.isPortrait) #slot1{ grid-column:1 !important; grid-row:1 !important; }
+  html.isTV:not(.isPortrait) #slot2{ grid-column:2 !important; grid-row:1 !important; }
+  html.isTV:not(.isPortrait) #slot3{ grid-column:1 !important; grid-row:2 !important; }
+  html.isTV:not(.isPortrait) #slot5{ grid-column:1 !important; grid-row:3 !important; }
+
+  /* ✅ vídeo “dobrado”: coluna 2, linhas 2 e 3 */
+  html.isTV:not(.isPortrait) #slot4{
+    grid-column:2 !important;
+    grid-row:2 / 4 !important;
+    min-height:0 !important;
+  }
+}
+
 
     @media (min-width: 981px) and (max-width: 1100px){
       .tickerLine1{ flex-wrap:wrap; justify-content:center; }
