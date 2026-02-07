@@ -311,14 +311,21 @@
     /* ✅ Vídeo grande (4 + 6 juntos): coluna 2, linhas 2 e 3 */
     #slot4{ grid-column:2; grid-row:2 / 4; }
 
-    .tile{ min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+    .tile{ min-height:0; 
+          overflow:hidden; 
+          display:flex; 
+          flex-direction:column; }
+   
     .tileBody{
-      padding:12px;
-      min-height:0;
-      flex:1 1 auto;
-      overflow:hidden;
-      display:flex;
-    }
+  padding:12px;
+  min-height:0;
+  flex:1 1 auto;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column; /* ✅ evita vídeo+texto lado a lado */
+  gap:10px;              /* ✅ espaço entre vídeo e label */
+}
+
 
     @keyframes avisoIn{
       from{ opacity:0; transform: translateY(8px) scale(.995); }
@@ -814,18 +821,24 @@
       html.isMobileUA:not(.isTV) #wxIconTop svg{ width:56px; height:56px; }
 
       html.isMobileUA:not(.isTV) #slot4{
-        display:block !important;
-        padding:12px !important;
-        min-height: 220px;
-      }
+  display:block !important;
+}
 
-      html.isMobileUA:not(.isTV) #slot4 .videoWrap{
-        width:100% !important;
-        aspect-ratio: 16 / 9;
-        height:auto !important;
-        min-height: 220px;
-        position:relative;
-      }
+html.isMobileUA:not(.isTV) #slot4 .tileBody{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+  padding:12px !important;
+}
+
+html.isMobileUA:not(.isTV) #slot4 .videoWrap{
+  width:100% !important;
+  aspect-ratio: 16 / 9;
+  height:auto !important;
+  min-height: 220px;
+  position:relative;
+}
+
 
       @media (max-width: 420px){
         html.isMobileUA:not(.isTV) #slot4{ min-height: 200px; }
