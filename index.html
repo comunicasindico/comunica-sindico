@@ -1147,6 +1147,104 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
     }
 
     html.isMobileUA:not(.isTV) .subRight{ display:none !important; }
+
+
+    /* =========================================================
+   FIX DEFINITIVO DO VÍDEO (Opção A: #slot4 é o TILE do grid)
+   Objetivo:
+   - PC/TV: vídeo "2x1" (coluna 2, linhas 2 e 3) => 2cm x 3cm no seu exemplo
+   - Texto do vídeo SEMPRE abaixo
+   - Mobile: vídeo volta a aparecer (não colapsa)
+   ========================================================= */
+
+/* 1) Grid base (PC/TV): 2 colunas x 3 linhas */
+.quadTop{
+  display:grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: 1fr 1fr 1fr !important;
+  gap:10px !important;
+  height:100% !important;
+  min-height:0 !important;
+}
+
+/* 2) Posicionamento dos quadrantes */
+#slot1{ grid-column:1 !important; grid-row:1 !important; }
+#slot2{ grid-column:2 !important; grid-row:1 !important; }
+#slot3{ grid-column:1 !important; grid-row:2 !important; }
+#slot5{ grid-column:1 !important; grid-row:3 !important; }
+
+/* ✅ VÍDEO DOBRADO (coluna 2, linhas 2 e 3) */
+#slot4{
+  grid-column:2 !important;
+  grid-row:2 / 4 !important;
+  min-height:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+}
+
+/* 3) Corrige o layout interno: vídeo em cima (cresce), label embaixo */
+#slot4 .tileBody{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+
+/* O vídeo PRECISA crescer */
+#slot4 .videoWrap{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  height:100% !important;
+  width:100% !important;
+  display:flex !important;
+}
+
+/* Vídeo ocupa todo o wrap */
+#slot4 .videoMain,
+#slot4 .videoBg{
+  width:100% !important;
+  height:100% !important;
+}
+
+/* TV/PC: preencher o espaço do vídeo (sem ficar “miúdo”) */
+html.isTV:not(.isPortrait) #slot4 .videoMain{
+  object-fit:cover !important;
+}
+
+/* 4) MOBILE: garantir que vídeo apareça (não some / não colapse) */
+@media (max-width: 980px){
+  html.isMobileUA:not(.isTV) .quadTop{
+    display:flex !important;
+    flex-direction:column !important;
+    height:auto !important;
+  }
+
+  html.isMobileUA:not(.isTV) #slot4{
+    display:block !important;
+  }
+
+  html.isMobileUA:not(.isTV) #slot4 .tileBody{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:10px !important;
+  }
+
+  html.isMobileUA:not(.isTV) #slot4 .videoWrap{
+    width:100% !important;
+    aspect-ratio: 16 / 9 !important;
+    height:auto !important;
+    min-height:220px !important;
+  }
+
+  html.isMobileUA:not(.isTV) #slot4 .videoMain{
+    object-fit:contain !important; /* no mobile mantém sem cortar */
+  }
+}
+
+
+
+    
   </style>
 </head>
 
