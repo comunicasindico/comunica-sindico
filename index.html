@@ -765,7 +765,8 @@
       flex-direction:column !important;
       gap:10px !important;
     }
-    html.isMobileUA:not(.isTV) #slot4 .videoWrap{
+    html.isMobileUA:not(.isTV) 
+    #slot4 .videoWrap{
       width:100% !important;
       aspect-ratio: 16 / 9 !important;
       height:auto !important;
@@ -853,15 +854,16 @@
     }
 
     #slot4 .videoWrap{
-      width:100%;
-      height:100%;
-      min-height:180px;
-      border-radius:14px;
-      overflow:hidden;
-      position:relative;
-      background:#000;
-      flex:1 1 auto;
-    }
+  width:100%;
+  height:auto;              /* <- TROCOU */
+  aspect-ratio: 16 / 9;     /* <- NOVO */
+  min-height:180px;
+  border-radius:14px;
+  overflow:hidden;
+  position:relative;
+  background:#000;
+  flex:1 1 auto;
+}
 
     html:not(.isMobileUA) #slot4 .videoWrap{ aspect-ratio:auto; }
 
@@ -1652,27 +1654,71 @@
     }
 
     function setVideoSrcPair(vMain, vBg, src){
-      if(!vMain || !vBg) return;
-      const curMain = (vMain.currentSrc || vMain.src || "").split("?")[0];
-      const next = (src || "").split("?")[0];
-      if(curMain !== next){
-        try{ vMain.pause(); }catch(e){}
-        try{ vBg.pause(); }catch(e){}
-        vMain.removeAttribute("src");
-        vBg.removeAttribute("src");
-        try{ vMain.load(); vBg.load(); }catch(e){}
-        vBg.src = src;
-        vMain.src = src;
-        try{ vBg.load(); vMain.load(); }catch(e){}
-      }
-      const playSafe = (v)=>{
-        try{ const p = v.play(); if(p && p.catch) p.catch(()=>{}); }catch(e){}
-      };
-      vBg.onloadedmetadata = () => playSafe(vBg);
-      vMain.onloadedmetadata = () => playSafe(vMain);
-      playSafe(vBg);
-      playSafe(vMain);
-    }
+  if(!vMain || !vBg) return;
+
+  // força autoplay compatível (mobile/TV)
+  [vMain, vBg].forEach(v=>{
+    try{
+      v.muted = true;
+      v.autoplay = true;
+      v.playsInline = true;
+      v.setAttribute("muted", "");
+      v.setAttribute("autoplay", "");
+      v.setAttribute("playsinline", "");
+      v.setAttribute("webkit-playsinline", "");
+      v.setAttribute("preload", "auto");
+      v.controls = false;
+    }catch(e){}
+  });
+
+  const curMain = (vMain.currentSrc || vMain.src || "").split("?")[0];
+  const next = (src || "").split("?")[0];
+
+  if(curMain !== next){
+    try{ vMain.pause(); }catch(e){}
+    try{ vBg.pause(); }catch(e){}
+    try{
+      vMain.removeAttribute("src");
+      vBg.removeAttribute("src");
+      vMain.load(); vBg.load();
+    }catch(e){}
+
+    vBg.src = src;
+    vMain.src = src;
+
+    try{ vBg.load(); vMain.load(); }catch(e){}
+  }
+
+  const playSafe = async (v)=>{
+    try{
+      const p = v.play();
+      if(p && p.catch) await p.catch(()=>{});
+    }catch(e){}
+  };
+
+  // tenta tocar assim que carregar metadata
+  vBg.onloadedmetadata = ()=> playSafe(vBg);
+  vMain.onloadedmetadata = ()=> playSafe(vMain);
+
+  // tenta já
+  playSafe(vBg);
+  playSafe(vMain);
+
+  // fallback: se o browser bloquear autoplay, ao tocar na tela ele inicia
+  const wrap = document.querySelector("#slot4 .videoWrap");
+  if(wrap && !wrap.__tapToPlayBound){
+    wrap.__tapToPlayBound = true;
+    wrap.addEventListener("click", async ()=>{
+      await playSafe(vBg);
+      await playSafe(vMain);
+    }, { passive:true });
+    wrap.addEventListener("touchstart", async ()=>{
+      await playSafe(vBg);
+      await playSafe(vMain);
+    }, { passive:true });
+  }
+}
+
 
     function playMiniAds(list, baseIdx){
       const minis = Array.from(document.querySelectorAll('[data-miniad="1"]'));
