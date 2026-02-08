@@ -2344,38 +2344,46 @@ html.isMobileUA:not(.isTV) #wxIconTop{
     }
 
     function applyUrgentBox(data){
-      try{
-        const u = data?.alertaUrgente;
-        const urgentBox = document.getElementById("urgentBox");
-        const alertBox  = document.getElementById("alertBox");
-        if(!urgentBox || !alertBox) return;
+  try{
+    const u = data?.alertaUrgente;
+    const alertBox  = document.getElementById("alertBox");
+    const urgentBox = document.getElementById("urgentBox"); // vai ficar sempre oculto
 
-        const on = !!(u?.ativar && String(u?.mensagem||"").trim());
-        document.documentElement.classList.toggle("urgentOn", on);
+    if (urgentBox) urgentBox.style.display = "none";
 
-        if(on){
-          const blink = !!u?.piscar;
-          const title = String(u?.titulo || "ALERTA URGENTE");
-          const msg   = String(u?.mensagem || "—");
-          setText("urgentTitle", title);
-          setText("urgentMsg", msg);
-          urgentBox.style.display = "block";
+    const on = !!(u?.ativar && String(u?.mensagem || "").trim());
+    document.documentElement.classList.toggle("urgentOn", on);
 
-          setText("alertTitle", title);
-          setText("alertMsg", msg);
-          alertBox.style.display = "block";
-          alertBox.classList.toggle("blink", blink);
+    if(on){
+      const blink = !!u?.piscar;
+      const title = String(u?.titulo || "ALERTA URGENTE");
+      const msg   = String(u?.mensagem || "—");
 
-          const newsBox = document.getElementById("newsBox");
-          if(newsBox) newsBox.style.display = "none";
-        }else{
-          urgentBox.style.display = "none";
-          alertBox.style.display = "none";
-          alertBox.classList.remove("blink");
-          document.documentElement.classList.remove("urgentOn");
-        }
-      }catch(e){}
+      const alertTitle = document.getElementById("alertTitle");
+      const alertMsg   = document.getElementById("alertMsg");
+
+      if (alertTitle) alertTitle.textContent = title;
+      if (alertMsg)   alertMsg.textContent = msg;
+
+      if (alertBox){
+        alertBox.style.display = "block";
+        alertBox.classList.toggle("blink", blink);
+      }
+
+      // esconde mensagens / news enquanto alerta estiver ativo
+      const newsBox = document.getElementById("newsBox");
+      if(newsBox) newsBox.style.display = "none";
+
+    }else{
+      if (alertBox){
+        alertBox.style.display = "none";
+        alertBox.classList.remove("blink");
+      }
+      document.documentElement.classList.remove("urgentOn");
     }
+  }catch(e){}
+}
+
 
     async function fetchDataJson(){
       const url = "./data.json?ts=" + Date.now();
