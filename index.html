@@ -736,14 +736,16 @@
       padding-bottom:max(12px, env(safe-area-inset-bottom));
     }
 
+    /* ✅ MOBILE: clima fica à ESQUERDA (como você quer) */
     html.isMobileUA:not(.isTV) .rightInfo{
       display:flex !important;
       position:absolute;
       top: 12px;
-      right: 12px;
+      left: 12px;
+      right: auto;
       gap: 0;
       align-items:center;
-      justify-content:flex-end;
+      justify-content:flex-start;
       z-index: 5;
     }
     html.isMobileUA:not(.isTV) .rightInfo .badge[title="Status do painel"]{ display:none !important; }
@@ -759,13 +761,18 @@
     html.isMobileUA:not(.isTV) #wxIconTop{ width:56px; height:56px; transform:none !important; }
     html.isMobileUA:not(.isTV) #wxIconTop svg{ width:56px; height:56px; }
 
+    /* ✅ abre espaço para o ícone à esquerda no mobile */
+    html.isMobileUA:not(.isTV) .brand{
+      padding-left: 72px !important;
+    }
+
     /* ✅ MOBILE: garante altura do vídeo */
     html.isMobileUA:not(.isTV) #slot4{
       display:flex !important;
       flex-direction:column !important;
       gap:10px !important;
     }
-    html.isMobileUA:not(.isTV) 
+    html.isMobileUA:not(.isTV)
     #slot4 .videoWrap{
       width:100% !important;
       aspect-ratio: 16 / 9 !important;
@@ -854,16 +861,16 @@
     }
 
     #slot4 .videoWrap{
-  width:100%;
-  height:auto;              /* <- TROCOU */
-  aspect-ratio: 16 / 9;     /* <- NOVO */
-  min-height:180px;
-  border-radius:14px;
-  overflow:hidden;
-  position:relative;
-  background:#000;
-  flex:1 1 auto;
-}
+      width:100%;
+      height:auto;
+      aspect-ratio: 16 / 9;
+      min-height:180px;
+      border-radius:14px;
+      overflow:hidden;
+      position:relative;
+      background:#000;
+      flex:1 1 auto;
+    }
 
     html:not(.isMobileUA) #slot4 .videoWrap{ aspect-ratio:auto; }
 
@@ -935,38 +942,10 @@
       overflow:hidden !important;
     }
 
-    .urgentBox{
-      border-radius:18px;
-      border:2px solid rgba(255,255,255,.25);
-      background: linear-gradient(180deg, rgba(255,0,0,.92), rgba(140,0,0,.95));
-      color:#fff;
-      padding:18px;
-      box-shadow: 0 18px 44px rgba(0,0,0,.55);
-    }
-
-    .urgentTitle{
-      font-weight: 950;
-      text-transform: uppercase;
-      font-size: clamp(26px, 3vw, 48px);
-      line-height: 1.1;
-    }
-
-    .urgentMsg{
-      margin-top: 12px;
-      font-weight: 900;
-      font-size: clamp(22px, 2.8vw, 42px);
-      line-height: 1.15;
-    }
-
-    .urgentBlink{ animation: urgentBlink 1s steps(1) infinite; }
-
-    @keyframes urgentBlink{
-      0%,49% { filter: brightness(1.1); }
-      50%,100% { filter: brightness(.75); }
-    }
-
-    html.urgentOn #newsBox{ display:none !important; }
-    html.urgentOn .newsBox{ display:none !important; }
+    /* =========================================================
+       ALERTA (apenas 1 caixa) — a outra fica SEMPRE ocultada via JS
+       ========================================================= */
+    .urgentBox{ display:none !important; } /* evita o “2º alerta” */
 
     .alertBox{
       flex:0 0 auto;
@@ -1053,344 +1032,29 @@
     }
 
     html.isMobileUA:not(.isTV) .subRight{ display:none !important; }
- 
-  
-  /* =========================================================
-   AJUSTE FINAL — vídeo SEM corte (conteúdo 100% visível)
-   ========================================================= */
-
-/* vídeo principal e fundo respeitam o conteúdo */
-#slot4 .videoMain,
-#slot4 .videoBg{
-  object-fit: contain !important; /* NÃO corta */
-  background: #000 !important;
-}
-
-  /* =========================================================
-   VÍDEO DE FUNDO FOSCO (quando o contain não cobre tudo)
-   ========================================================= */
-
-/* vídeo de fundo: ocupa tudo, desfocado */
-#slot4 .videoBg{
-  object-fit: cover !important;     /* preenche o espaço */
-  filter: blur(22px) saturate(1.15) brightness(0.85);
-  transform: scale(1.15);           /* evita bordas após blur */
-  opacity: 0.55;
-}
-
-/* vídeo principal: sempre completo, sem corte */
-#slot4 .videoMain{
-  object-fit: contain !important;   /* mostra 100% do conteúdo */
-  z-index: 2;
-}
-
-/* garante empilhamento correto */
-#slot4 .videoWrap{
-  position: relative;
-}
-
-#slot4 .videoBg{
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
-#slot4 .videoMain{
-  position: absolute;
-  inset: 0;
-}
-
-  /* =========================================================
-   MOBILE — Corrigir ícone de clima no cabeçalho
-   ========================================================= */
-
-html.isMobileUA:not(.isTV) .rightInfo{
-  position: absolute !important;
-  left: 12px !important;
-  right: auto !important;
-  top: 12px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-}
-
-html.isMobileUA:not(.isTV) .brand{
-  padding-left: 72px !important; /* abre espaço para a nuvem */
-}
-
-html.isMobileUA:not(.isTV) #wxIconTop{
-  width: 48px !important;
-  height: 48px !important;
-}
-
-html.isMobileUA:not(.isTV) #wxIconTop svg{
-  width: 48px !important;
-  height: 48px !important;
-}
 
     /* =========================================================
-   MOBILE — Versículo em 2 linhas, centralizado
-   ========================================================= */
+       PC/TV — ÍCONE DO CLIMA AO LADO DO TÍTULO (sem duplicar)
+       ========================================================= */
+    .title{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
 
-html.isMobileUA:not(.isTV) #ref{
-  text-align: center !important;
-  line-height: 1.25 !important;
+    .wxTitleIcon{
+      display:none;
+      width:54px;
+      height:54px;
+      flex:0 0 auto;
+      transform: translateY(2px);
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+    }
+    .wxTitleIcon svg{ width:54px; height:54px; display:block; }
 
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  -webkit-line-clamp: 2 !important;
+    html:not(.isMobileUA) .wxTitleIcon{ display:inline-flex; }
+    html:not(.isMobileUA) #wxIconTop{ display:none !important; } /* evita duplicar no PC/TV */
 
-  white-space: normal !important;
-  overflow: hidden !important;
-  word-break: break-word !important;
-  overflow-wrap: anywhere !important;
-
-  padding: 0 10px !important;
-}
-
-/* =========================================================
-   GARANTIR FUNDO DE VÍDEO FOSCO (sempre visível)
-   ========================================================= */
-
-/* container do vídeo */
-#slot4 .videoWrap{
-  position: relative !important;
-  overflow: hidden !important;
-  background: #000 !important;
-}
-
-/* VÍDEO DE FUNDO — sempre cobre tudo */
-#slot4 .videoBg{
-  position: absolute !important;
-  inset: -10% !important;          /* sobra para o blur não “vazar” */
-  width: 120% !important;
-  height: 120% !important;
-  object-fit: cover !important;    /* preenche o campo */
-  filter: blur(28px) saturate(1.2) brightness(0.85) !important;
-  transform: scale(1.15) !important;
-  opacity: 0.6 !important;
-  z-index: 1 !important;
-  display: block !important;
-}
-
-/* VÍDEO PRINCIPAL — sempre por cima */
-#slot4 .videoMain{
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;  /* mostra 100% do vídeo */
-  z-index: 2 !important;
-  display: block !important;
-}
-
-    /* =========================================================
-   MOBILE — Rodapé em 2 linhas horizontais (versículo completo)
-   ========================================================= */
-
-html.isMobileUA:not(.isTV) .tickerLine1{
-  display: flex !important;
-  flex-direction: column !important;   /* quebra em 2 linhas */
-  align-items: center !important;
-  gap: 6px !important;
-}
-
-/* LINHA 1 — versículo completo */
-html.isMobileUA:not(.isTV) #ref{
-  order: 1 !important;
-  width: 100% !important;
-  text-align: center !important;
-  line-height: 1.25 !important;
-
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-
-  display: block !important;           /* NÃO clamp aqui */
-  padding: 0 12px !important;
-}
-
-/* data bíblica fica junto do versículo */
-html.isMobileUA:not(.isTV) #dataBiblica{
-  order: 0 !important;
-}
-
-/* LINHA 2 — clima (cidade / temp / vento) */
-html.isMobileUA:not(.isTV) .wxInline{
-  order: 2 !important;
-  width: 100% !important;
-  justify-content: center !important;
-  margin: 0 !important;
-  text-align: center !important;
-}
-
-   /* =========================================================
-   MOBILE — Rodapé estilo Stories/Instagram + fonte responsiva
-   (só celular; PC/TV não muda)
-   ========================================================= */
-
-/* Rodapé em 2 linhas (Stories) */
-html.isMobileUA:not(.isTV) .tickerLine1{
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  gap: 6px !important;
-}
-
-/* Linha 1: Versículo (centralizado, “clean”, 2 linhas no máx.) */
-html.isMobileUA:not(.isTV) #ref{
-  width:100% !important;
-  text-align:center !important;
-  line-height:1.22 !important;
-  padding: 0 12px !important;
-
-  display:-webkit-box !important;
-  -webkit-box-orient:vertical !important;
-  -webkit-line-clamp:2 !important;     /* 2 linhas estilo Stories */
-  overflow:hidden !important;
-  white-space:normal !important;
-  word-break:break-word !important;
-  overflow-wrap:anywhere !important;
-
-  font-weight: 900 !important;
-  font-size: clamp(13px, 3.2vw, 16px) !important;  /* auto-ajuste */
-}
-
-/* Linha 2: Clima centralizado (Stories) */
-html.isMobileUA:not(.isTV) .wxInline{
-  width:100% !important;
-  justify-content:center !important;
-  margin:0 !important;
-  text-align:center !important;
-  opacity: .92 !important;
-  font-size: clamp(11px, 2.8vw, 14px) !important;  /* auto-ajuste */
-}
-
-/* CELULAR PEQUENO: reduz um pouco mais */
-@media (max-width: 380px){
-  html.isMobileUA:not(.isTV) #ref{
-    font-size: 12.5px !important;
-    -webkit-line-clamp: 2 !important;
-  }
-  html.isMobileUA:not(.isTV) .wxInline{
-    font-size: 11px !important;
-  }
-}
- 
-  /* =========================================================
-   PC/TV — Fundo fosco do vídeo preenchendo as bordas pretas
-   ========================================================= */
-
-/* garante camadas corretas */
-.videoWrap{ position:relative !important; background:#000 !important; }
-.videoBg{
-  z-index: 1 !important;
-  display:block !important;
-  object-fit: cover !important;      /* ✅ preenche tudo */
-  filter: blur(22px) saturate(1.10) brightness(.85) !important;
-  transform: scale(1.20) !important; /* evita bordas depois do blur */
-  opacity: .55 !important;
-}
-.videoMain{
-  z-index: 2 !important;
-  object-fit: contain !important;    /* mantém o conteúdo inteiro */
-  background: transparent !important;
-}
-
-/* fallback visual (se o BG não carregar, ainda fica bonito) */
-.videoWrap::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:0;
-  background: radial-gradient(120% 80% at 50% 40%,
-    rgba(40,90,140,.35), rgba(0,0,0,.95));
-}
-
-/* =========================================================
-   FUNDO FOSCO (estável) — usa o vídeo adVideoBg como background
-   ========================================================= */
-
-#slot4 .videoWrap{
-  position:relative !important;
-  overflow:hidden !important;
-  background:#000 !important;
-}
-
-/* fundo fosco: sempre cobre a área inteira */
-#slot4 .videoBg{
-  position:absolute !important;
-  inset:-12% !important;           /* sobra pro blur não “vazar” */
-  width:124% !important;
-  height:124% !important;
-  z-index:1 !important;
-
-  display:block !important;        /* ✅ NÃO esconder */
-  object-fit:cover !important;     /* ✅ preenche sem barras pretas */
-  filter: blur(26px) saturate(1.15) brightness(.82) !important;
-  transform: scale(1.18) !important;
-  opacity:.62 !important;
-  background:#000 !important;
-}
-
-/* vídeo principal: sempre inteiro (sem corte) */
-#slot4 .videoMain{
-  position:absolute !important;
-  inset:0 !important;
-  width:100% !important;
-  height:100% !important;
-  z-index:2 !important;
-
-  object-fit:contain !important;
-  background:transparent !important;
-}
-
-/* canvas não usado (evita conflito e “preto” quando autoplay falha) */
-#slot4 .videoBlurBg{
-  display:none !important;
-}
-
-/* =========================================================
-   ÍCONE DO CLIMA — PC/TV ao lado do TÍTULO / Celular mantém à esquerda
-   ========================================================= */
-
-/* o título vira “linha” com ícone ao lado */
-.title{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-/* ícone do título (PC/TV) */
-.wxTitleIcon{
-  display:none;                 /* por padrão escondido */
-  width:54px;
-  height:54px;
-  flex:0 0 auto;
-  transform: translateY(2px);
-  filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
-}
-.wxTitleIcon svg{ width:54px; height:54px; display:block; }
-
-/* PC/TV: mostra o ícone no título */
-html:not(.isMobileUA) .wxTitleIcon{
-  display:inline-flex;
-}
-
-/* PC/TV: esconde o ícone antigo no badge “Hora e Clima” (para não duplicar) */
-html:not(.isMobileUA) #wxIconTop{
-  display:none !important;
-}
-
-/* Celular: mantém como você já tinha (ícone à esquerda, grande) */
-html.isMobileUA:not(.isTV) #wxIconTop{
-  display:inline-flex !important;
-}
-
-
-    
-
-    
   </style>
 </head>
 
@@ -1400,11 +1064,10 @@ html.isMobileUA:not(.isTV) #wxIconTop{
 
       <div class="topbar">
         <div class="brand">
-         <div class="title" id="tituloWrap">
-          <span id="titulo">Comunica Síndico - Condôminos</span>
-          <span id="wxIconTitle" class="wxTitleIcon" aria-label="Clima" role="img"></span>
-        </div>
-
+          <div class="title" id="tituloWrap">
+            <span id="titulo">Comunica Síndico - Condôminos</span>
+            <span id="wxIconTitle" class="wxTitleIcon" aria-label="Clima" role="img"></span>
+          </div>
 
           <div class="subMobileLine" id="subMobileLine">
             <span id="statusJsonMini">Carregando...</span>
@@ -1436,16 +1099,14 @@ html.isMobileUA:not(.isTV) #wxIconTop{
 
         <div class="sectionBar">
           <div class="sectionTitle">Avisos</div>
-          <div class="pill" id="refPill" title="Clique para atualizar">Atualizar</div>
+          <div class="pill" id="refPill" title="Super atualização (tipo Ctrl+F5)">Super atualização</div>
         </div>
 
         <div class="quadTop fade-in" id="avisosPane">
-          <!-- ✅ IDs nos PAIS (grid items) -->
           <div class="panel tile" id="tile1"><div class="tileBody" id="slot1"></div></div>
           <div class="panel tile" id="tile2"><div class="tileBody" id="slot2"></div></div>
           <div class="panel tile" id="tile3"><div class="tileBody" id="slot3"></div></div>
 
-          <!-- ✅ Vídeo: pai é tile4 (grid span 2 linhas) -->
           <div class="panel tile" id="tile4">
             <div class="tileBody" id="slot4">
 
@@ -1456,12 +1117,12 @@ html.isMobileUA:not(.isTV) #wxIconTop{
                 <button class="adNav adPrev" type="button" onclick="adPrevBtn()" aria-label="Anterior">⏮</button>
                 <button class="adNav adNext" type="button" onclick="adNextBtn()" aria-label="Próximo">⏭</button>
 
-                <video id="adVideoBg" class="videoBg" 
+                <video id="adVideoBg" class="videoBg"
                   autoplay muted playsinline webkit-playsinline loop
                   preload="auto"
-                  disablepictureinpicture 
+                  disablepictureinpicture
                   controlslist="nofullscreen noremoteplayback nodownload"></video>
-                
+
                 <video id="adVideo" class="videoMain" autoplay muted playsinline webkit-playsinline
                   disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
               </div>
@@ -1473,7 +1134,6 @@ html.isMobileUA:not(.isTV) #wxIconTop{
             </div>
           </div>
 
-          <!-- Mensagens no Brasil -->
           <div class="tile" id="slot5">
             <div class="newsBox" id="newsBox" style="display:none">
               <div class="newsHead">
@@ -1522,7 +1182,7 @@ html.isMobileUA:not(.isTV) #wxIconTop{
   </div>
 
   <!-- =========================================================
-       SCRIPT — APP (o seu original)
+       SCRIPT — APP
        ========================================================= -->
   <script>
     let deferredPrompt = null;
@@ -1555,47 +1215,42 @@ html.isMobileUA:not(.isTV) #wxIconTop{
     }
     function safeText(v){ return (v == null ? "" : String(v)); }
     function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
-   
+
     function pad2(n){ return String(n).padStart(2,"0"); }
-    
+
     function escapeHtml(s){
       return String(s ?? "").replace(/[&<>"']/g, c => ({
         "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
       }[c]));
     }
-/* =========================================================
-   FETCH COM TIMEOUT — compatível com TV/Browser antigo
-   ========================================================= */
-function fetchWithTimeout(url, opts = {}, ms = 12000){
-  // TV/browser antigo: sem AbortController → faz fetch normal
-  if(typeof AbortController === "undefined"){
-    return fetch(url, opts);
-  }
-
-  const controller = new AbortController();
-  const t = setTimeout(() => {
-    try{ controller.abort(); }catch(e){}
-  }, ms);
-
-  return fetch(url, { ...opts, signal: controller.signal })
-    .finally(() => clearTimeout(t));
-}
-
 
     /* =========================================================
-   DEBUG VISÍVEL — se o JS quebrar, mostra no cabeçalho
-   ========================================================= */
-window.addEventListener("error", (ev)=>{
-  try{
-    const msg = (ev && (ev.message || ev.error?.message)) ? String(ev.message || ev.error?.message) : "Erro JS";
-    const s1 = document.getElementById("statusJson");
-    const s2 = document.getElementById("statusJsonMini");
-    if(s1) s1.textContent = "ERRO: " + msg;
-    if(s2) s2.textContent = "ERRO: " + msg;
-    const dot = document.getElementById("dotOnline");
-    if(dot) dot.style.background = "#ff5a5a";
-  }catch(_){}
-});
+       FETCH COM TIMEOUT — compatível com TV/Browser antigo
+       ========================================================= */
+    function fetchWithTimeout(url, opts = {}, ms = 12000){
+      if(typeof AbortController === "undefined"){
+        return fetch(url, opts);
+      }
+      const controller = new AbortController();
+      const t = setTimeout(() => { try{ controller.abort(); }catch(e){} }, ms);
+      return fetch(url, { ...opts, signal: controller.signal })
+        .finally(() => clearTimeout(t));
+    }
+
+    /* =========================================================
+       DEBUG VISÍVEL — se o JS quebrar, mostra no cabeçalho
+       ========================================================= */
+    window.addEventListener("error", (ev)=>{
+      try{
+        const msg = (ev && (ev.message || ev.error?.message)) ? String(ev.message || ev.error?.message) : "Erro JS";
+        const s1 = document.getElementById("statusJson");
+        const s2 = document.getElementById("statusJsonMini");
+        if(s1) s1.textContent = "ERRO: " + msg;
+        if(s2) s2.textContent = "ERRO: " + msg;
+        const dot = document.getElementById("dotOnline");
+        if(dot) dot.style.background = "#ff5a5a";
+      }catch(_){}
+    });
 
     function isMobile(){
       const el = document.documentElement;
@@ -1607,56 +1262,129 @@ window.addEventListener("error", (ev)=>{
       ) || (isTV && isPortrait);
     }
 
-async function refreshNow(){
-  const status = document.getElementById("statusJson");
-  const statusMini = document.getElementById("statusJsonMini");
-  const dot = document.getElementById("dotOnline");
-
-  if(status) status.textContent = "Atualizando…";
-  if(statusMini) statusMini.textContent = "Atualizando…";
-  if(dot) dot.style.background = "#ffb347";
-
-  // 0) SUPER: limpa caches e SW (o que mais bloqueia atualização automática)
-  try{
-    if("serviceWorker" in navigator){
-      const regs = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(regs.map(r => r.unregister().catch(()=>{})));
-    }
-    if(window.caches){
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k).catch(()=>{})));
-    }
-  }catch(e){}
-
-  // 1) (mantido) tenta atualizar SW (se ainda existir) e ativar a versão nova
-  try{
-    if("serviceWorker" in navigator){
-      const reg = await navigator.serviceWorker.getRegistration();
-      if(reg){
-        try{ await reg.update(); }catch(e){}
-        if(reg.waiting){
-          try{ reg.waiting.postMessage("SKIP_WAITING"); }catch(e){}
+    /* =========================================================
+       FUNÇÕES QUE ESTAVAM FALTANDO (isso quebrava o loadAll)
+       ========================================================= */
+    function aplicarImagemTopbar(data){
+      try{
+        const cab = data?.publicidade?.cabecalhoImagem || {};
+        if(cab.ativar && String(cab.url||"").trim()){
+          document.documentElement.style.setProperty("--topbar-bg", `url('${String(cab.url).trim()}')`);
+          return;
         }
+      }catch(e){}
+
+      const cidade = String(data?.clima?.cidade || "").toLowerCase();
+      const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
+      const h = new Date().getHours();
+      const estaNoite = (h >= 18 || h <= 4);
+
+      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+      const longest = Math.max(vw, vh);
+
+      const is2560 = longest >= 2400;
+      const is1920 = longest >= 1700;
+
+      let img = "./img/tubarao01.jpg";
+      if(!isTubarao){
+        img = estaNoite ? "./img/bg_night.jpg" : "./img/bg_day.jpg";
+      }else{
+        if(is2560) img = estaNoite ? "./img/tubarao_night_2560.jpg" : "./img/tubarao_day_2560.jpg";
+        else if(is1920) img = estaNoite ? "./img/tubarao_night_1920.jpg" : "./img/tubarao_day_1920.jpg";
+        else img = estaNoite ? "./img/tubarao_night.jpg" : "./img/tubarao_day.jpg";
       }
+
+      if(isMobile()) img = "./img/tubarao01.jpg";
+      document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
     }
-  }catch(e){}
 
-  // 2) (mantido) tenta atualizar dados antes e recarrega “hard”
-  try{
-    await loadAll();
+    function applyUrgentBox(data){
+      try{
+        const u = data?.alertaUrgente || {};
+        const alertBox  = document.getElementById("alertBox");
+        const urgentBox = document.getElementById("urgentBox"); // fica sempre oculto (evita 2 alertas)
+        if(urgentBox) urgentBox.style.display = "none";
 
-    const u = new URL(location.href);
-    u.searchParams.set("hard", String(Date.now())); // quebra cache de HTML/CSS/JS
-    location.replace(u.toString());
-  }catch(e){
-    const u = new URL(location.href);
-    u.searchParams.set("hard", String(Date.now()));
-    location.replace(u.toString());
-  }
-}
+        const on = !!(u?.ativar && String(u?.mensagem || "").trim());
+        document.documentElement.classList.toggle("urgentOn", on);
 
+        const newsBox = document.getElementById("newsBox");
+        if(on){
+          const blink = !!u?.piscar;
+          const title = String(u?.titulo || "ALERTA URGENTE");
+          const msg   = String(u?.mensagem || "—");
 
+          const alertTitle = document.getElementById("alertTitle");
+          const alertMsg   = document.getElementById("alertMsg");
 
+          if(alertTitle) alertTitle.textContent = title;
+          if(alertMsg)   alertMsg.textContent = msg;
+
+          if(alertBox){
+            alertBox.style.display = "block";
+            alertBox.classList.toggle("blink", blink);
+          }
+          if(newsBox) newsBox.style.display = "none";
+        }else{
+          if(alertBox){
+            alertBox.style.display = "none";
+            alertBox.classList.remove("blink");
+          }
+          document.documentElement.classList.remove("urgentOn");
+          // news volta no próximo carregarMensagensCidade()
+        }
+      }catch(e){}
+    }
+
+    /* =========================================================
+       SUPER ATUALIZAÇÃO (equivalente “efeito Ctrl+F5” em PWA/SW)
+       ========================================================= */
+    async function refreshNow(){
+      const status = document.getElementById("statusJson");
+      const statusMini = document.getElementById("statusJsonMini");
+      const dot = document.getElementById("dotOnline");
+
+      if(status) status.textContent = "Super atualizando…";
+      if(statusMini) statusMini.textContent = "Super atualizando…";
+      if(dot) dot.style.background = "#ffb347";
+
+      // 1) tenta buscar dados agora (sem travar)
+      try{ await loadAll(); }catch(e){}
+
+      // 2) força update do SW + ativa versão nova (se houver)
+      try{
+        if("serviceWorker" in navigator){
+          const reg = await navigator.serviceWorker.getRegistration();
+          if(reg){
+            try{ await reg.update(); }catch(e){}
+            if(reg.waiting){
+              try{ reg.waiting.postMessage("SKIP_WAITING"); }catch(e){}
+            }
+          }
+        }
+      }catch(e){}
+
+      // 3) “hard reload” real para app com SW: remove SW + caches do app e recarrega com parâmetro único
+      try{
+        if("serviceWorker" in navigator){
+          const regs = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(regs.map(r => r.unregister().catch(()=>{})));
+        }
+        if(window.caches){
+          const keys = await caches.keys();
+          // apaga somente caches do Comunica Síndico (prefixo típico)
+          await Promise.all(keys.map(k => {
+            if(/^cs-/.test(k) || /^cs-global-/.test(k)) return caches.delete(k).catch(()=>{});
+            return Promise.resolve();
+          }));
+        }
+      }catch(e){}
+
+      const u = new URL(location.href);
+      u.searchParams.set("hard", String(Date.now()));
+      location.replace(u.toString());
+    }
 
     function tickClock(){
       const d = new Date();
@@ -1930,9 +1658,7 @@ async function refreshNow(){
         if(a1) s2.appendChild(buildAvisoEl(a1));
         if(a2) s3.appendChild(buildAvisoEl(a2));
 
-        requestAnimationFrame(()=>{
-          try{ autoFitAvisosUniform(); }catch(e){}
-        });
+        requestAnimationFrame(()=>{ try{ autoFitAvisosUniform(); }catch(e){} });
       }
 
       paint();
@@ -1963,59 +1689,46 @@ async function refreshNow(){
     }
 
     function wxSvgCloud(){
-  return `
-  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <defs>
-      <!-- brilho/3D -->
-      <radialGradient id="gGlow" cx="30%" cy="25%" r="80%">
-        <stop offset="0%" stop-color="rgba(255,255,255,.95)"/>
-        <stop offset="55%" stop-color="rgba(235,246,255,.92)"/>
-        <stop offset="100%" stop-color="rgba(190,220,245,.92)"/>
-      </radialGradient>
+      return `
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <radialGradient id="gGlow" cx="30%" cy="25%" r="80%">
+            <stop offset="0%" stop-color="rgba(255,255,255,.95)"/>
+            <stop offset="55%" stop-color="rgba(235,246,255,.92)"/>
+            <stop offset="100%" stop-color="rgba(190,220,245,.92)"/>
+          </radialGradient>
+          <radialGradient id="gShade" cx="55%" cy="70%" r="85%">
+            <stop offset="0%" stop-color="rgba(120,170,210,.22)"/>
+            <stop offset="70%" stop-color="rgba(0,0,0,0)"/>
+          </radialGradient>
+          <linearGradient id="gStroke" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,.55)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,.18)"/>
+          </linearGradient>
+          <filter id="fShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="6" stdDeviation="4" flood-color="rgba(0,0,0,.35)"/>
+          </filter>
+          <linearGradient id="gHighlight" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,.75)"/>
+            <stop offset="45%" stop-color="rgba(255,255,255,.10)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </linearGradient>
+        </defs>
 
-      <!-- “sombra” suave interna -->
-      <radialGradient id="gShade" cx="55%" cy="70%" r="85%">
-        <stop offset="0%" stop-color="rgba(120,170,210,.22)"/>
-        <stop offset="70%" stop-color="rgba(0,0,0,0)"/>
-      </radialGradient>
+        <g filter="url(#fShadow)">
+          <path d="M22 46h23a12.5 12.5 0 0 0 0-25 15.8 15.8 0 0 0-30.4-3.5A11.3 11.3 0 0 0 22 46z"
+            fill="url(#gGlow)"/>
+          <path d="M22 46h23a12.5 12.5 0 0 0 0-25 15.8 15.8 0 0 0-30.4-3.5A11.3 11.3 0 0 0 22 46z"
+            fill="url(#gShade)"/>
+          <path d="M22 46h23a12.5 12.5 0 0 0 0-25 15.8 15.8 0 0 0-30.4-3.5A11.3 11.3 0 0 0 22 46z"
+            fill="none" stroke="url(#gStroke)" stroke-width="2" />
+          <path d="M18 26c3-7 12-11 19-8 3 1 6 4 7 7"
+            fill="none" stroke="url(#gHighlight)" stroke-width="6" stroke-linecap="round" opacity=".65"/>
+        </g>
 
-      <!-- contorno elegante -->
-      <linearGradient id="gStroke" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="rgba(255,255,255,.55)"/>
-        <stop offset="100%" stop-color="rgba(255,255,255,.18)"/>
-      </linearGradient>
-
-      <!-- sombra externa -->
-      <filter id="fShadow" x="-30%" y="-30%" width="160%" height="160%">
-        <feDropShadow dx="0" dy="6" stdDeviation="4" flood-color="rgba(0,0,0,.35)"/>
-      </filter>
-
-      <!-- highlight (brilho em cima) -->
-      <linearGradient id="gHighlight" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="rgba(255,255,255,.75)"/>
-        <stop offset="45%" stop-color="rgba(255,255,255,.10)"/>
-        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
-      </linearGradient>
-    </defs>
-
-    <!-- nuvem 3D -->
-    <g filter="url(#fShadow)">
-      <path d="M22 46h23a12.5 12.5 0 0 0 0-25 15.8 15.8 0 0 0-30.4-3.5A11.3 11.3 0 0 0 22 46z"
-        fill="url(#gGlow)"/>
-      <path d="M22 46h23a12.5 12.5 0 0 0 0-25 15.8 15.8 0 0 0-30.4-3.5A11.3 11.3 0 0 0 22 46z"
-        fill="url(#gShade)"/>
-      <path d="M22 46h23a12.5 12.5 0 0 0 0-25 15.8 15.8 0 0 0-30.4-3.5A11.3 11.3 0 0 0 22 46z"
-        fill="none" stroke="url(#gStroke)" stroke-width="2" />
-      <!-- brilho superior -->
-      <path d="M18 26c3-7 12-11 19-8 3 1 6 4 7 7"
-        fill="none" stroke="url(#gHighlight)" stroke-width="6" stroke-linecap="round" opacity=".65"/>
-    </g>
-
-    <!-- detalhe “bolha” -->
-    <circle cx="18" cy="43" r="2.4" fill="rgba(255,255,255,.35)"/>
-  </svg>`;
-}
-
+        <circle cx="18" cy="43" r="2.4" fill="rgba(255,255,255,.35)"/>
+      </svg>`;
+    }
 
     function wxSetIcon(elId, code){
       const el = document.getElementById(elId);
@@ -2049,20 +1762,19 @@ async function refreshNow(){
         wxSetIcon("wxIconInline", cur.weather_code);
         wxSetIcon("wxIconTitle", cur.weather_code);
 
-
         setText("wxCityTemp", `${c.cidade || "—"} ${t}°C`);
         setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
       } catch (e) {
-      const cloud = wxSvgCloud();
-      const top = document.getElementById("wxIconTop");
-      const title = document.getElementById("wxIconTitle");
-      const mini = document.getElementById("wxIconInline");
-      if (top) top.innerHTML = cloud;
-      if (title) title.innerHTML = cloud;
-      if (mini) mini.innerHTML = cloud;
-      setText("wxCityTemp", `${data?.clima?.cidade || "—"} (offline)`);
-      setText("wxWindRain", `Vento — km/h • Chuva — mm`);
-    }
+        const cloud = wxSvgCloud();
+        const top = document.getElementById("wxIconTop");
+        const title = document.getElementById("wxIconTitle");
+        const mini = document.getElementById("wxIconInline");
+        if (top) top.innerHTML = cloud;
+        if (title) title.innerHTML = cloud;
+        if (mini) mini.innerHTML = cloud;
+        setText("wxCityTemp", `${data?.clima?.cidade || "—"} (offline)`);
+        setText("wxWindRain", `Vento — km/h • Chuva — mm`);
+      }
     }
 
     const AD_STATE_KEY = "CS_AD_STATE_V2";
@@ -2114,71 +1826,66 @@ async function refreshNow(){
     }
 
     function setVideoSrcPair(vMain, vBg, src){
-  if(!vMain || !vBg) return;
+      if(!vMain || !vBg) return;
 
-  // força autoplay compatível (mobile/TV)
-  [vMain, vBg].forEach(v=>{
-    try{
-      v.muted = true;
-      v.autoplay = true;
-      v.playsInline = true;
-      v.setAttribute("muted", "");
-      v.setAttribute("autoplay", "");
-      v.setAttribute("playsinline", "");
-      v.setAttribute("webkit-playsinline", "");
-      v.setAttribute("preload", "auto");
-      v.controls = false;
-    }catch(e){}
-  });
+      [vMain, vBg].forEach(v=>{
+        try{
+          v.muted = true;
+          v.autoplay = true;
+          v.playsInline = true;
+          v.setAttribute("muted", "");
+          v.setAttribute("autoplay", "");
+          v.setAttribute("playsinline", "");
+          v.setAttribute("webkit-playsinline", "");
+          v.setAttribute("preload", "auto");
+          v.controls = false;
+        }catch(e){}
+      });
 
-  const curMain = (vMain.currentSrc || vMain.src || "").split("?")[0];
-  const next = (src || "").split("?")[0];
+      const curMain = (vMain.currentSrc || vMain.src || "").split("?")[0];
+      const next = (src || "").split("?")[0];
 
-  if(curMain !== next){
-    try{ vMain.pause(); }catch(e){}
-    try{ vBg.pause(); }catch(e){}
-    try{
-      vMain.removeAttribute("src");
-      vBg.removeAttribute("src");
-      vMain.load(); vBg.load();
-    }catch(e){}
+      if(curMain !== next){
+        try{ vMain.pause(); }catch(e){}
+        try{ vBg.pause(); }catch(e){}
+        try{
+          vMain.removeAttribute("src");
+          vBg.removeAttribute("src");
+          vMain.load(); vBg.load();
+        }catch(e){}
 
-    vBg.src = src;
-    vMain.src = src;
+        vBg.src = src;
+        vMain.src = src;
 
-    try{ vBg.load(); vMain.load(); }catch(e){}
-  }
+        try{ vBg.load(); vMain.load(); }catch(e){}
+      }
 
-  const playSafe = async (v)=>{
-    try{
-      const p = v.play();
-      if(p && p.catch) await p.catch(()=>{});
-    }catch(e){}
-  };
+      const playSafe = async (v)=>{
+        try{
+          const p = v.play();
+          if(p && p.catch) await p.catch(()=>{});
+        }catch(e){}
+      };
 
-  // tenta tocar assim que carregar metadata
-  vBg.onloadedmetadata = ()=> playSafe(vBg);
-  vMain.onloadedmetadata = ()=> playSafe(vMain);
+      vBg.onloadedmetadata = ()=> playSafe(vBg);
+      vMain.onloadedmetadata = ()=> playSafe(vMain);
 
-  // tenta já
-  playSafe(vBg);
-  playSafe(vMain);
+      playSafe(vBg);
+      playSafe(vMain);
 
-  // fallback: se o browser bloquear autoplay, ao tocar na tela ele inicia
-  const wrap = document.querySelector("#slot4 .videoWrap");
-  if(wrap && !wrap.__tapToPlayBound){
-    wrap.__tapToPlayBound = true;
-    wrap.addEventListener("click", async ()=>{
-      await playSafe(vBg);
-      await playSafe(vMain);
-    }, { passive:true });
-    wrap.addEventListener("touchstart", async ()=>{
-      await playSafe(vBg);
-      await playSafe(vMain);
-    }, { passive:true });
-  }
-}
-
+      const wrap = document.querySelector("#slot4 .videoWrap");
+      if(wrap && !wrap.__tapToPlayBound){
+        wrap.__tapToPlayBound = true;
+        wrap.addEventListener("click", async ()=>{
+          await playSafe(vBg);
+          await playSafe(vMain);
+        }, { passive:true });
+        wrap.addEventListener("touchstart", async ()=>{
+          await playSafe(vBg);
+          await playSafe(vMain);
+        }, { passive:true });
+      }
+    }
 
     function playMiniAds(list, baseIdx){
       const minis = Array.from(document.querySelectorAll('[data-miniad="1"]'));
@@ -2316,200 +2023,202 @@ async function refreshNow(){
       return 3;
     }
 
-  async function carregarMensagensCidade(){
-  const newsBox  = document.getElementById("newsBox");
-  const newsBody = document.getElementById("newsBody");
-  if(!newsBox || !newsBody) return;
+    async function carregarMensagensCidade(){
+      const newsBox  = document.getElementById("newsBox");
+      const newsBody = document.getElementById("newsBody");
+      if(!newsBox || !newsBody) return;
 
-  try{
-    const res = await fetchWithTimeout(
-      "./mensagens_cidade.json?ts=" + Date.now(),
-      { cache:"no-store" },
-      12000
-    );
-    if(!res.ok) throw new Error("HTTP " + res.status);
+      try{
+        const res = await fetchWithTimeout(
+          "./mensagens_cidade.json?ts=" + Date.now(),
+          { cache:"no-store" },
+          12000
+        );
+        if(!res.ok) throw new Error("HTTP " + res.status);
 
-    const j = await res.json();
-    const items = Array.isArray(j.items) ? j.items : [];
-    const maxItems = getNewsMaxItems();
+        const j = await res.json();
+        const items = Array.isArray(j.items) ? j.items : [];
+        const maxItems = getNewsMaxItems();
 
-    if(!items.length){
-      newsBody.innerHTML = `
-        <div class="newsItem"><p class="h">Sem mensagens no momento</p></div>
-        <div class="newsSourceLine">Fonte: indisponível</div>
-      `;
-      newsBox.style.display = "flex";
-      return;
+        if(!items.length){
+          newsBody.innerHTML = `
+            <div class="newsItem"><p class="h">Sem mensagens no momento</p></div>
+            <div class="newsSourceLine">Fonte: indisponível</div>
+          `;
+          newsBox.style.display = "flex";
+          return;
+        }
+
+        let html = "";
+        const fontes = new Set();
+
+        items.slice(0, maxItems).forEach(x=>{
+          let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
+          titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
+          titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
+          if(!titulo) titulo = "Mensagem";
+          if(x.fonte) fontes.add(normalizeText_(x.fonte));
+          html += `<div class="newsItem"><p class="h">${titulo.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</p></div>`;
+        });
+
+        let fonteLine = "";
+        if(fontes.size){
+          const joined = Array.from(fontes).join(" • ");
+          fonteLine = `<div class="newsSourceLine">Fonte: ${joined.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</div>`;
+        }
+
+        newsBody.innerHTML = html + fonteLine;
+        newsBox.style.display = "flex";
+      }catch(e){
+        newsBody.innerHTML = `
+          <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
+          <div class="newsSourceLine">Fonte: news.google.com (offline)</div>
+        `;
+        newsBox.style.display = "flex";
+      }
+
+      // se alerta ativo, some news
+      try{
+        const cfg = window.__lastDataForTopbar || {};
+        if(cfg?.alertaUrgente?.ativar){
+          if(newsBox) newsBox.style.display = "none";
+          return;
+        }
+      }catch(e){}
     }
 
-    let html = "";
-    const fontes = new Set();
-
-    items.slice(0, maxItems).forEach(x=>{
-      let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
-      titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
-      titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
-      if(!titulo) titulo = "Mensagem";
-      if(x.fonte) fontes.add(normalizeText_(x.fonte));
-      html += `<div class="newsItem"><p class="h">${titulo.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</p></div>`;
-    });
-
-    let fonteLine = "";
-    if(fontes.size){
-      const joined = Array.from(fontes).join(" • ");
-      fonteLine = `<div class="newsSourceLine">Fonte: ${joined.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</div>`;
+    async function fetchDataJson(){
+      const url = "./data.json?ts=" + Date.now();
+      const res = await fetchWithTimeout(url, { cache:"no-store" }, 12000);
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      return await res.json();
     }
 
-    newsBody.innerHTML = html + fonteLine;
-    newsBox.style.display = "flex";
-  }catch(e){
-    newsBody.innerHTML = `
-      <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
-      <div class="newsSourceLine">Fonte: news.google.com (offline)</div>
-    `;
-    newsBox.style.display = "flex";
-  }
+    function updateStatus(ok, hhmm){
+      const dot = document.getElementById("dotOnline");
+      const s1 = document.getElementById("statusJson");
+      const s2 = document.getElementById("statusJsonMini");
 
-  try{
-    const cfg = window.__lastDataForTopbar || {};
-    if(cfg?.alertaUrgente?.ativar){
-      if(newsBox) newsBox.style.display = "none";
-      return;
-    }
-  }catch(e){}
-}
+      if(dot) dot.style.background = ok ? "#2ecc71" : "#ff5a5a";
 
-
-async function fetchDataJson(){
-  const url = "./data.json?ts=" + Date.now();
-  const res = await fetchWithTimeout(url, { cache:"no-store" }, 12000);
-  if(!res.ok) throw new Error("HTTP " + res.status);
-  return await res.json();
-}
-
-function updateStatus(ok, hhmm){
-  const dot = document.getElementById("dotOnline");
-  const s1 = document.getElementById("statusJson");
-  const s2 = document.getElementById("statusJsonMini");
-
-  if(dot) dot.style.background = ok ? "#2ecc71" : "#ff5a5a";
-
-  const okTxt = hhmm ? `Atualizado ${hhmm}` : "Atualizado";
-  if(s1) s1.textContent = ok ? okTxt : "Offline";
-  if(s2) s2.textContent = ok ? okTxt : "Offline";
-}
-
-async function loadAll(){
-  try{
-    const data = await fetchDataJson();
-    window.__lastDataForTopbar = data || {};
-
-    aplicarImagemTopbar(data);
-    renderAvisos(data);
-    await carregarVersiculo(data);
-    await carregarClima(data);
-    iniciarPublicidade(data);
-
-    applyUrgentBox(data);
-    await carregarMensagensCidade();
-
-    // ✅ sucesso: zera falhas acumuladas
-    window.__failOnce = 0;
-
-    const d = new Date();
-    const hhmm = `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
-    updateStatus(true, hhmm);
-
-    return true;
-  }catch(e){
-    // ✅ evita piscar "Offline" por falha momentânea
-    window.__failOnce = (window.__failOnce || 0) + 1;
-    if(window.__failOnce >= 2){
-      updateStatus(false);
+      const okTxt = hhmm ? `Atualizado ${hhmm}` : "Atualizado";
+      if(s1) s1.textContent = ok ? okTxt : "Offline";
+      if(s2) s2.textContent = ok ? okTxt : "Offline";
     }
 
-    try{ await carregarMensagensCidade(); }catch(_){}
-    return false;
-  }
-}
+    async function loadAll(){
+      try{
+        const data = await fetchDataJson();
+        window.__lastDataForTopbar = data || {};
 
+        aplicarImagemTopbar(data);
+        renderAvisos(data);
+        await carregarVersiculo(data);
+        await carregarClima(data);
+        iniciarPublicidade(data);
 
-let __autoTimer = null;
-let __failCount = 0;
+        applyUrgentBox(data);
+        await carregarMensagensCidade();
+
+        window.__failOnce = 0;
+
+        const d = new Date();
+        const hhmm = `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+        updateStatus(true, hhmm);
+
+        return true;
+      }catch(e){
+        window.__failOnce = (window.__failOnce || 0) + 1;
+        if(window.__failOnce >= 2){
+          updateStatus(false);
+        }
+        try{ await carregarMensagensCidade(); }catch(_){}
+        return false;
+      }
+    }
+
+    let __autoTimer = null;
+    let __failCount = 0;
 
     // Remove o parâmetro hard=... após recarregar (evita URL “crescendo”)
-(function cleanHardParam(){
-  try{
-    const u = new URL(location.href);
-    if(u.searchParams.has("hard")){
-      u.searchParams.delete("hard");
-      history.replaceState(null, "", u.toString());
-    }
-  }catch(e){}
-})();
+    (function cleanHardParam(){
+      try{
+        const u = new URL(location.href);
+        if(u.searchParams.has("hard")){
+          u.searchParams.delete("hard");
+          history.replaceState(null, "", u.toString());
+        }
+      }catch(e){}
+    })();
 
-function scheduleNext(ms){
-  if(__autoTimer) clearTimeout(__autoTimer);
-  __autoTimer = setTimeout(runAutoRefresh, ms);
-}
-
-async function runAutoRefresh(){
-  const ok = await loadAll();
-
-  if(ok){
-    __failCount = 0;
-    scheduleNext(60 * 1000); // normal: 1 min
-  }else{
-    __failCount++;
-    const wait = Math.min(30000, 10000 * __failCount);
-    scheduleNext(wait);
-  }
-}
-
-// ✅ INICIA AGORA
-runAutoRefresh();
-
-
-// ✅ SERVICE WORKER — atualiza e ativa sozinho (sem Ctrl+F5)
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js").then(async (reg)=>{
-    try{ await reg.update(); }catch(e){}
-
-    // se já tem uma versão esperando, ativa ela agora
-    if(reg.waiting){
-      reg.waiting.postMessage("SKIP_WAITING");
+    function scheduleNext(ms){
+      if(__autoTimer) clearTimeout(__autoTimer);
+      __autoTimer = setTimeout(runAutoRefresh, ms);
     }
 
-    // se achar update, força ativar a nova e recarregar
-    reg.addEventListener("updatefound", ()=>{
-      const nw = reg.installing;
-      if(!nw) return;
-      nw.addEventListener("statechange", ()=>{
-        if(nw.state === "installed"){
-          if(navigator.serviceWorker.controller){
-            try{ nw.postMessage("SKIP_WAITING"); }catch(e){}
+    async function runAutoRefresh(){
+      const ok = await loadAll();
+
+      if(ok){
+        __failCount = 0;
+        scheduleNext(60 * 1000);
+      }else{
+        __failCount++;
+        const wait = Math.min(30000, 10000 * __failCount);
+        scheduleNext(wait);
+      }
+    }
+
+    // ✅ INICIA AGORA
+    runAutoRefresh();
+
+    // ✅ SERVICE WORKER — mantém (e força update periódico pra não “travar”)
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.register("./sw.js").then(async (reg)=>{
+        try{ await reg.update(); }catch(e){}
+
+        if(reg.waiting){
+          try{ reg.waiting.postMessage("SKIP_WAITING"); }catch(e){}
+        }
+
+        reg.addEventListener("updatefound", ()=>{
+          const nw = reg.installing;
+          if(!nw) return;
+          nw.addEventListener("statechange", ()=>{
+            if(nw.state === "installed"){
+              if(navigator.serviceWorker.controller){
+                const b = document.getElementById("updateBanner");
+                if(b) b.style.display = "block";
+                setTimeout(()=>location.reload(), 900);
+              }
+            }
+          });
+        });
+
+        // 🔁 a cada 5 min: pede update (resolve “não atualiza sozinho”)
+        setInterval(async ()=>{
+          try{
+            await reg.update();
+            if(reg.waiting){
+              try{ reg.waiting.postMessage("SKIP_WAITING"); }catch(e){}
+              const b = document.getElementById("updateBanner");
+              if(b) b.style.display = "block";
+              setTimeout(()=>location.reload(), 900);
+            }
+          }catch(e){}
+        }, 5 * 60 * 1000);
+      }).catch(()=>{});
+
+      navigator.serviceWorker.addEventListener("message", (event)=>{
+        try{
+          if(event?.data?.type === "NEW_VERSION"){
             const b = document.getElementById("updateBanner");
             if(b) b.style.display = "block";
             setTimeout(()=>location.reload(), 900);
           }
-        }
+        }catch(e){}
       });
-    });
-  }).catch(()=>{});
-
-  navigator.serviceWorker.addEventListener("message", (event)=>{
-    try{
-      if(event?.data?.type === "NEW_VERSION"){
-        const b = document.getElementById("updateBanner");
-        if(b) b.style.display = "block";
-        setTimeout(()=>location.reload(), 900);
-      }
-    }catch(e){}
-  });
-}
-
-
-
+    }
   </script>
 </body>
 </html>
