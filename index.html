@@ -1333,18 +1333,39 @@ function csEnsureToken(promptText){
       }[c]));
     }
 
-    /* =========================================================
-       FETCH COM TIMEOUT — compatível com TV/Browser antigo
-       ========================================================= */
-    function fetchWithTimeout(url, opts = {}, ms = 12000){
-      if(typeof AbortController === "undefined"){
-        return fetch(url, opts);
-      }
-      const controller = new AbortController();
-      const t = setTimeout(() => { try{ controller.abort(); }catch(e){} }, ms);
-      return fetch(url, { ...opts, signal: controller.signal })
-        .finally(() => clearTimeout(t));
-    }
+   function fetchWithTimeout(url, opts = {}, ms = 12000){
+  if(typeof AbortController === "undefined"){
+    // fallback: cria timeout “na mão”
+    return new Promise((resolve, reject)=>{
+      let done = false;
+      const t = setTimeout(()=>{
+        if(done) return;
+        done = true;
+        reject(new Error("timeout"));
+      }, ms);
+
+      fetch(url, opts).then(r=>{
+        if(done) return;
+        done = true;
+        clearTimeout(t);
+        resolve(r);
+      }).catch(err=>{
+        if(done) return;
+        done = true;
+        clearTimeout(t);
+        reject(err);
+      });
+    });
+  }
+
+  const controller = new AbortController();
+  const to = setTimeout(()=>{ try{ controller.abort(); }catch(e){} }, ms);
+
+  return fetch(url, { ...opts, signal: controller.signal })
+    .then(r=>{ clearTimeout(to); return r; })
+    .catch(e=>{ clearTimeout(to); throw e; });
+}
+
 
     /* =========================================================
        DEBUG VISÍVEL — se o JS quebrar, mostra no cabeçalho
@@ -1461,19 +1482,7 @@ function csEnsureToken(promptText){
       // 1) tenta buscar dados agora (sem travar)
       try{ await loadAll(); }catch(e){}
 
-      // 2) força update do SW + ativa versão nova (se houver)
-      try{
-        if("serviceWorker" in navigator){
-          const reg = await navigator.serviceWorker.getRegistration();
-          if(reg){
-            try{ await reg.update(); }catch(e){}
-            if(reg.waiting){
-              try{ reg.waiting.postMessage("SKIP_WAITING"); }catch(e){}
-            }
-          }
-        }
-      }catch(e){}
-
+      
       // 3) “hard reload” real para app com SW: remove SW + caches do app e recarrega com parâmetro único
       try{
         if("serviceWorker" in navigator){
