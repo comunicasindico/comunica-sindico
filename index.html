@@ -1055,6 +1055,55 @@
     html:not(.isMobileUA) .wxTitleIcon{ display:inline-flex; }
     html:not(.isMobileUA) #wxIconTop{ display:none !important; } /* evita duplicar no PC/TV */
 
+
+/* =========================================================
+   MOBILE (VERTICAL) — Rodapé em 2 linhas corretas
+   1ª linha: versículo
+   2ª linha: data bíblica + clima
+   ========================================================= */
+
+html.isMobileUA:not(.isTV).isPortrait .tickerLine1{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+/* ---------- 1ª LINHA — VERSÍCULO ---------- */
+html.isMobileUA:not(.isTV).isPortrait #ref{
+  order: 1 !important;
+  width: 100% !important;
+  text-align: center !important;
+  line-height: 1.25 !important;
+
+  display: block !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+
+  font-weight: 900 !important;
+  font-size: clamp(13px, 3.2vw, 16px) !important;
+  padding: 0 12px !important;
+}
+
+/* ---------- 2ª LINHA — DATA + CLIMA ---------- */
+html.isMobileUA:not(.isTV).isPortrait #dataBiblica{
+  order: 2 !important;
+  margin-top: 2px !important;
+}
+
+html.isMobileUA:not(.isTV).isPortrait .wxInline{
+  order: 3 !important;
+  width: 100% !important;
+  justify-content: center !important;
+  text-align: center !important;
+  margin: 0 !important;
+  font-size: clamp(11px, 2.8vw, 14px) !important;
+}
+
+
+
+    
   </style>
 </head>
 
