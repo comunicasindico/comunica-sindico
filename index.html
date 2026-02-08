@@ -2,11 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
   <title>Comunica Síndico — Condôminos</title>
@@ -15,7 +11,6 @@
        PWA — CONDÔMINOS
        ========================================================= -->
   <link rel="manifest" href="./manifest-condominos.json" />
-
   <meta name="theme-color" content="#0b223a" />
   <meta name="background-color" content="#061726" />
 
@@ -29,7 +24,7 @@
   <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png" />
   <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192.png" />
 
-  <!-- Open Graph (preview / compartilhamento) -->
+  <!-- Open Graph -->
   <meta property="og:title" content="Comunica Síndico — Condôminos" />
   <meta property="og:description" content="Painel informativo do condomínio" />
   <meta property="og:image" content="./icons/icon-512.png" />
@@ -37,13 +32,11 @@
   <!-- =========================================================
        SCRIPT (pré-CSS) — detecta Mobile / TV antes do CSS
        ========================================================= -->
-
   <script>
   (function preClassifyDevice(){
     try{
       const ua = (navigator.userAgent || "").toLowerCase();
 
-      // UAs típicas de TV
       const isTVua =
         ua.includes("smart-tv") || ua.includes("smarttv") ||
         ua.includes("hbbtv") || ua.includes("appletv") ||
@@ -54,35 +47,27 @@
         ua.includes("viera") || ua.includes("roku") ||
         ua.includes("aft") || ua.includes("tv");
 
-      // 1) Força manual: use ?tv=1 na URL (recomendado para SEMP/BrowseHere)
       const qs = new URLSearchParams(location.search);
       const forceTV = (qs.get("tv") === "1");
 
-      // 2) BrowseHere (SEMP): trate como TV
       const isBrowseHere = ua.includes("browsehere") || ua.includes("browse here");
 
-      // 🔒 “tamanho físico” (screen.* não muda com zoom)
       const sw = Number(screen.width || 0);
       const sh = Number(screen.height || 0);
       const maxS = Math.max(sw, sh);
       const minS = Math.min(sw, sh);
 
-      // Heurística forte: telas grandes
       const isPhysBig = (maxS >= 960 && minS >= 540) || (maxS >= 1280 && minS >= 720);
 
-      // viewport grande (fallback)
       const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
       const isViewportBig = (Math.max(vw, vh) >= 1100 && Math.min(vw, vh) >= 650);
 
-      // ✅ TV final: forçado OU BrowseHere OU heurísticas (quando não é mobile UA)
       const looksMobileUA = /mobi|iphone|ipod|ipad|android.*mobile/.test(ua);
       const isTV = !!(forceTV || isBrowseHere || (!looksMobileUA && (isTVua || isPhysBig || isViewportBig)));
 
-      // mobile UA (NÃO pega TV / BrowseHere)
       const isMobileUA = !!(looksMobileUA && !isTV && !isBrowseHere);
 
-      // orientação (para permitir rolagem na TV SOMENTE se estiver vertical)
       function applyOrientation(){
         const w = Math.max(window.innerWidth || 0, document.documentElement.clientWidth || 0);
         const h = Math.max(window.innerHeight || 0, document.documentElement.clientHeight || 0);
@@ -283,7 +268,10 @@
       overflow:hidden;
     }
 
-    /* ✅ GRID do print: 2 colunas x 3 linhas */
+    /* ✅ GRID fixo 2 colunas x 3 linhas
+       Avisos: 1,2,3
+       Mensagens: 5
+       Vídeo: 4 e 6 (tile4 ocupa 2 linhas) */
     .quadTop{
       flex:1 1 auto;
       min-height:0;
@@ -296,14 +284,11 @@
       position:relative;
     }
 
-    /* ✅ POSICIONAMENTO NO GRID (AGORA EM CIMA DOS PAIS .panel.tile) */
     #tile1{ grid-column:1; grid-row:1; }
     #tile2{ grid-column:2; grid-row:1; }
     #tile3{ grid-column:1; grid-row:2; }
     #slot5{ grid-column:1; grid-row:3; }
-
-    /* ✅ Vídeo grande: coluna 2, linhas 2 e 3 */
-    #tile4{ grid-column:2; grid-row:2 / 4; }
+    #tile4{ grid-column:2; grid-row:2 / 4; } /* vídeo em 4 e 6 */
 
     .tile{ min-height:0; overflow:hidden; display:flex; flex-direction:column; }
     .tileBody{
@@ -686,7 +671,7 @@
     }
 
     /* ============================================================
-       ✅ MOBILE real: coluna + rolagem, mas VÍDEO NÃO some
+       ✅ MOBILE real: coluna + rolagem
        ============================================================ */
     html.isMobileUA:not(.isTV), html.isMobileUA:not(.isTV) body{
       height:auto !important;
@@ -736,7 +721,7 @@
       padding-bottom:max(12px, env(safe-area-inset-bottom));
     }
 
-    /* ✅ MOBILE: clima fica à ESQUERDA (como você quer) */
+    /* ✅ MOBILE: clima à esquerda */
     html.isMobileUA:not(.isTV) .rightInfo{
       display:flex !important;
       position:absolute;
@@ -761,19 +746,14 @@
     html.isMobileUA:not(.isTV) #wxIconTop{ width:56px; height:56px; transform:none !important; }
     html.isMobileUA:not(.isTV) #wxIconTop svg{ width:56px; height:56px; }
 
-    /* ✅ abre espaço para o ícone à esquerda no mobile */
-    html.isMobileUA:not(.isTV) .brand{
-      padding-left: 72px !important;
-    }
+    html.isMobileUA:not(.isTV) .brand{ padding-left: 72px !important; }
 
-    /* ✅ MOBILE: garante altura do vídeo */
     html.isMobileUA:not(.isTV) #slot4{
       display:flex !important;
       flex-direction:column !important;
       gap:10px !important;
     }
-    html.isMobileUA:not(.isTV)
-    #slot4 .videoWrap{
+    html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       width:100% !important;
       aspect-ratio: 16 / 9 !important;
       height:auto !important;
@@ -782,7 +762,7 @@
       flex:0 0 auto !important;
     }
 
-    /* ✅ FORÇA 2x2 EM TV MESMO SE @media disparar por zoom (exceto TV em pé) */
+    /* ✅ FORÇA grid em TV mesmo com zoom */
     @media (max-width: 980px){
       html.isTV:not(.isPortrait) .quadTop{
         display:grid !important;
@@ -851,7 +831,6 @@
       .adNav{ width:28px; height:28px; font-size:13px; opacity:.28; }
     }
 
-    /* ✅ slot4 (tileBody) organiza vídeo + texto */
     #slot4{
       display:flex;
       flex-direction:column;
@@ -943,9 +922,9 @@
     }
 
     /* =========================================================
-       ALERTA (apenas 1 caixa) — a outra fica SEMPRE ocultada via JS
+       ALERTA (apenas 1 caixa) — a outra fica ocultada via JS
        ========================================================= */
-    .urgentBox{ display:none !important; } /* evita o “2º alerta” */
+    .urgentBox{ display:none !important; }
 
     .alertBox{
       flex:0 0 auto;
@@ -1053,60 +1032,45 @@
     .wxTitleIcon svg{ width:54px; height:54px; display:block; }
 
     html:not(.isMobileUA) .wxTitleIcon{ display:inline-flex; }
-    html:not(.isMobileUA) #wxIconTop{ display:none !important; } /* evita duplicar no PC/TV */
+    html:not(.isMobileUA) #wxIconTop{ display:none !important; }
 
+    /* MOBILE (VERTICAL) — Rodapé em 2 linhas */
+    html.isMobileUA:not(.isTV).isPortrait .tickerLine1{
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 6px !important;
+    }
 
-/* =========================================================
-   MOBILE (VERTICAL) — Rodapé em 2 linhas corretas
-   1ª linha: versículo
-   2ª linha: data bíblica + clima
-   ========================================================= */
+    html.isMobileUA:not(.isTV).isPortrait #ref{
+      order: 1 !important;
+      width: 100% !important;
+      text-align: center !important;
+      line-height: 1.25 !important;
+      display: block !important;
+      white-space: normal !important;
+      overflow: visible !important;
+      text-overflow: unset !important;
+      font-weight: 900 !important;
+      font-size: clamp(13px, 3.2vw, 16px) !important;
+      padding: 0 12px !important;
+    }
 
-html.isMobileUA:not(.isTV).isPortrait .tickerLine1{
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 6px !important;
-}
+    html.isMobileUA:not(.isTV).isPortrait #dataBiblica{
+      order: 2 !important;
+      margin-top: 2px !important;
+    }
 
-/* ---------- 1ª LINHA — VERSÍCULO ---------- */
-html.isMobileUA:not(.isTV).isPortrait #ref{
-  order: 1 !important;
-  width: 100% !important;
-  text-align: center !important;
-  line-height: 1.25 !important;
-
-  display: block !important;
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: unset !important;
-
-  font-weight: 900 !important;
-  font-size: clamp(13px, 3.2vw, 16px) !important;
-  padding: 0 12px !important;
-}
-
-/* ---------- 2ª LINHA — DATA + CLIMA ---------- */
-html.isMobileUA:not(.isTV).isPortrait #dataBiblica{
-  order: 2 !important;
-  margin-top: 2px !important;
-}
-
-html.isMobileUA:not(.isTV).isPortrait .wxInline{
-  order: 3 !important;
-  width: 100% !important;
-  justify-content: center !important;
-  text-align: center !important;
-  margin: 0 !important;
-  font-size: clamp(11px, 2.8vw, 14px) !important;
-}
-
-
-
-    
+    html.isMobileUA:not(.isTV).isPortrait .wxInline{
+      order: 3 !important;
+      width: 100% !important;
+      justify-content: center !important;
+      text-align: center !important;
+      margin: 0 !important;
+      font-size: clamp(11px, 2.8vw, 14px) !important;
+    }
   </style>
 </head>
-
 <body>
   <div class="wrap">
     <div class="container">
@@ -1161,8 +1125,6 @@ html.isMobileUA:not(.isTV).isPortrait .wxInline{
 
               <div class="videoWrap">
 
-                <canvas class="videoBlurBg"></canvas>
-
                 <button class="adNav adPrev" type="button" onclick="adPrevBtn()" aria-label="Anterior">⏮</button>
                 <button class="adNav adNext" type="button" onclick="adNextBtn()" aria-label="Próximo">⏭</button>
 
@@ -1172,8 +1134,11 @@ html.isMobileUA:not(.isTV).isPortrait .wxInline{
                   disablepictureinpicture
                   controlslist="nofullscreen noremoteplayback nodownload"></video>
 
-                <video id="adVideo" class="videoMain" autoplay muted playsinline webkit-playsinline
-                  disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
+                <video id="adVideo" class="videoMain"
+                  autoplay muted playsinline webkit-playsinline
+                  preload="auto"
+                  disablepictureinpicture
+                  controlslist="nofullscreen noremoteplayback nodownload"></video>
               </div>
 
               <div class="adBelow">
@@ -1229,73 +1194,54 @@ html.isMobileUA:not(.isTV).isPortrait .wxInline{
 
     </div>
   </div>
-
-  <!-- =========================================================
-       SCRIPT — APP
-       ========================================================= -->
   <script>
     let deferredPrompt = null;
 
+    // =========================================================
+    // TOKEN — pede só na 1ª vez (localStorage)
+    // =========================================================
+    const CS_TOKEN_KEY = "CS_TOKEN_V1";
 
-// =========================================================
-// TOKEN — pede só na 1ª vez (localStorage)
-// =========================================================
-const CS_TOKEN_KEY = "CS_TOKEN_V1";
-
-function csGetToken(){
-  try{
-    const t = (localStorage.getItem(CS_TOKEN_KEY) || "").trim();
-    return t || "";
-  }catch(e){ return ""; }
-}
-
-function csSetToken(t){
-  try{
-    const v = String(t || "").trim();
-    if(v) localStorage.setItem(CS_TOKEN_KEY, v);
-  }catch(e){}
-}
-
-function csClearToken(){
-  try{ localStorage.removeItem(CS_TOKEN_KEY); }catch(e){}
-}
-// ✅ só limpa token se você quiser manualmente (debug):
-window.csClearToken = csClearToken;
-
-/**
- * Retorna o token. Se não tiver salvo, pede 1x e salva.
- * promptText: texto que aparece no prompt
- */
-function csEnsureToken(promptText){
-  let t = csGetToken();
-  if(t) return t;
-
-  t = String(prompt(promptText || "Informe o token de acesso:") || "").trim();
-  if(t){
-    csSetToken(t);
-    return t;
-  }
-  return "";
-}
-
-/**
- * PATCH 3 — captura token vindo pela URL (?token=...)
- * Salva no localStorage e LIMPA a URL
- */
-(function csCaptureTokenFromUrl(){
-  try{
-    const u = new URL(location.href);
-    const t = (u.searchParams.get("token") || "").trim();
-    if(t){
-      csSetToken(t);
-      u.searchParams.delete("token");
-      history.replaceState(null, "", u.toString());
+    function csGetToken(){
+      try{
+        const t = (localStorage.getItem(CS_TOKEN_KEY) || "").trim();
+        return t || "";
+      }catch(e){ return ""; }
     }
-  }catch(e){}
-})();
+    function csSetToken(t){
+      try{
+        const v = String(t || "").trim();
+        if(v) localStorage.setItem(CS_TOKEN_KEY, v);
+      }catch(e){}
+    }
+    function csClearToken(){
+      try{ localStorage.removeItem(CS_TOKEN_KEY); }catch(e){}
+    }
+    window.csClearToken = csClearToken;
 
+    function csEnsureToken(promptText){
+      let t = csGetToken();
+      if(t) return t;
+      t = String(prompt(promptText || "Informe o token de acesso:") || "").trim();
+      if(t){
+        csSetToken(t);
+        return t;
+      }
+      return "";
+    }
 
-    
+    (function csCaptureTokenFromUrl(){
+      try{
+        const u = new URL(location.href);
+        const t = (u.searchParams.get("token") || "").trim();
+        if(t){
+          csSetToken(t);
+          u.searchParams.delete("token");
+          history.replaceState(null, "", u.toString());
+        }
+      }catch(e){}
+    })();
+
     function mostrarBotaoInstalar(show){
       const b = document.getElementById("btnInstalarApp");
       if (b) b.style.display = show ? "inline-flex" : "none";
@@ -1333,43 +1279,41 @@ function csEnsureToken(promptText){
       }[c]));
     }
 
-   function fetchWithTimeout(url, opts = {}, ms = 12000){
-  if(typeof AbortController === "undefined"){
-    // fallback: cria timeout “na mão”
-    return new Promise((resolve, reject)=>{
-      let done = false;
-      const t = setTimeout(()=>{
-        if(done) return;
-        done = true;
-        reject(new Error("timeout"));
-      }, ms);
+    function fetchWithTimeout(url, opts = {}, ms = 12000){
+      if(typeof AbortController === "undefined"){
+        return new Promise((resolve, reject)=>{
+          let done = false;
+          const t = setTimeout(()=>{
+            if(done) return;
+            done = true;
+            reject(new Error("timeout"));
+          }, ms);
 
-      fetch(url, opts).then(r=>{
-        if(done) return;
-        done = true;
-        clearTimeout(t);
-        resolve(r);
-      }).catch(err=>{
-        if(done) return;
-        done = true;
-        clearTimeout(t);
-        reject(err);
-      });
-    });
-  }
+          fetch(url, opts).then(r=>{
+            if(done) return;
+            done = true;
+            clearTimeout(t);
+            resolve(r);
+          }).catch(err=>{
+            if(done) return;
+            done = true;
+            clearTimeout(t);
+            reject(err);
+          });
+        });
+      }
 
-  const controller = new AbortController();
-  const to = setTimeout(()=>{ try{ controller.abort(); }catch(e){} }, ms);
+      const controller = new AbortController();
+      const to = setTimeout(()=>{ try{ controller.abort(); }catch(e){} }, ms);
 
-  return fetch(url, { ...opts, signal: controller.signal })
-    .then(r=>{ clearTimeout(to); return r; })
-    .catch(e=>{ clearTimeout(to); throw e; });
-}
+      return fetch(url, { ...opts, signal: controller.signal })
+        .then(r=>{ clearTimeout(to); return r; })
+        .catch(e=>{ clearTimeout(to); throw e; });
+    }
 
-
-    /* =========================================================
-       DEBUG VISÍVEL — se o JS quebrar, mostra no cabeçalho
-       ========================================================= */
+    // =========================================================
+    // DEBUG VISÍVEL — se o JS quebrar, mostra no cabeçalho
+    // =========================================================
     window.addEventListener("error", (ev)=>{
       try{
         const msg = (ev && (ev.message || ev.error?.message)) ? String(ev.message || ev.error?.message) : "Erro JS";
@@ -1386,15 +1330,12 @@ function csEnsureToken(promptText){
       const el = document.documentElement;
       const isTV = el.classList.contains("isTV");
       const isPortrait = el.classList.contains("isPortrait");
-      return (
-        el.classList.contains("isMobileUA") &&
-        !isTV
-      ) || (isTV && isPortrait);
+      return (el.classList.contains("isMobileUA") && !isTV) || (isTV && isPortrait);
     }
 
-    /* =========================================================
-       FUNÇÕES QUE ESTAVAM FALTANDO (isso quebrava o loadAll)
-       ========================================================= */
+    // =========================================================
+    // FUNÇÕES DE SUPORTE (já estavam no seu código)
+    // =========================================================
     function aplicarImagemTopbar(data){
       try{
         const cab = data?.publicidade?.cabecalhoImagem || {};
@@ -1433,7 +1374,7 @@ function csEnsureToken(promptText){
       try{
         const u = data?.alertaUrgente || {};
         const alertBox  = document.getElementById("alertBox");
-        const urgentBox = document.getElementById("urgentBox"); // fica sempre oculto (evita 2 alertas)
+        const urgentBox = document.getElementById("urgentBox");
         if(urgentBox) urgentBox.style.display = "none";
 
         const on = !!(u?.ativar && String(u?.mensagem || "").trim());
@@ -1462,14 +1403,13 @@ function csEnsureToken(promptText){
             alertBox.classList.remove("blink");
           }
           document.documentElement.classList.remove("urgentOn");
-          // news volta no próximo carregarMensagensCidade()
         }
       }catch(e){}
     }
 
-    /* =========================================================
-       SUPER ATUALIZAÇÃO (equivalente “efeito Ctrl+F5” em PWA/SW)
-       ========================================================= */
+    // =========================================================
+    // SUPER ATUALIZAÇÃO (Ctrl+F5)
+    // =========================================================
     async function refreshNow(){
       const status = document.getElementById("statusJson");
       const statusMini = document.getElementById("statusJsonMini");
@@ -1479,11 +1419,8 @@ function csEnsureToken(promptText){
       if(statusMini) statusMini.textContent = "Super atualizando…";
       if(dot) dot.style.background = "#ffb347";
 
-      // 1) tenta buscar dados agora (sem travar)
       try{ await loadAll(); }catch(e){}
 
-      
-      // 3) “hard reload” real para app com SW: remove SW + caches do app e recarrega com parâmetro único
       try{
         if("serviceWorker" in navigator){
           const regs = await navigator.serviceWorker.getRegistrations();
@@ -1491,7 +1428,6 @@ function csEnsureToken(promptText){
         }
         if(window.caches){
           const keys = await caches.keys();
-          // apaga somente caches do Comunica Síndico (prefixo típico)
           await Promise.all(keys.map(k => {
             if(/^cs-/.test(k) || /^cs-global-/.test(k)) return caches.delete(k).catch(()=>{});
             return Promise.resolve();
@@ -1848,7 +1784,7 @@ function csEnsureToken(promptText){
       </svg>`;
     }
 
-    function wxSetIcon(elId, code){
+    function wxSetIcon(elId){
       const el = document.getElementById(elId);
       if(!el) return;
       el.innerHTML = wxSvgCloud();
@@ -1876,25 +1812,24 @@ function csEnsureToken(promptText){
         const w = Math.round(cur.wind_speed_10m);
         const p = cur.precipitation;
 
-        wxSetIcon("wxIconTop", cur.weather_code);
-        wxSetIcon("wxIconInline", cur.weather_code);
-        wxSetIcon("wxIconTitle", cur.weather_code);
+        wxSetIcon("wxIconTop");
+        wxSetIcon("wxIconInline");
+        wxSetIcon("wxIconTitle");
 
         setText("wxCityTemp", `${c.cidade || "—"} ${t}°C`);
         setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
       } catch (e) {
-        const cloud = wxSvgCloud();
-        const top = document.getElementById("wxIconTop");
-        const title = document.getElementById("wxIconTitle");
-        const mini = document.getElementById("wxIconInline");
-        if (top) top.innerHTML = cloud;
-        if (title) title.innerHTML = cloud;
-        if (mini) mini.innerHTML = cloud;
+        wxSetIcon("wxIconTop");
+        wxSetIcon("wxIconInline");
+        wxSetIcon("wxIconTitle");
         setText("wxCityTemp", `${data?.clima?.cidade || "—"} (offline)`);
         setText("wxWindRain", `Vento — km/h • Chuva — mm`);
       }
     }
 
+    // =========================================================
+    // PUBLICIDADE / VÍDEOS
+    // =========================================================
     const AD_STATE_KEY = "CS_AD_STATE_V2";
     const AD_SHUFFLE_KEY = "CS_AD_SHUFFLE_V2";
 
@@ -2147,11 +2082,7 @@ function csEnsureToken(promptText){
       if(!newsBox || !newsBody) return;
 
       try{
-        const res = await fetchWithTimeout(
-          "./mensagens_cidade.json?ts=" + Date.now(),
-          { cache:"no-store" },
-          12000
-        );
+        const res = await fetchWithTimeout("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" }, 12000);
         if(!res.ok) throw new Error("HTTP " + res.status);
 
         const j = await res.json();
@@ -2176,13 +2107,13 @@ function csEnsureToken(promptText){
           titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
           if(!titulo) titulo = "Mensagem";
           if(x.fonte) fontes.add(normalizeText_(x.fonte));
-          html += `<div class="newsItem"><p class="h">${titulo.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</p></div>`;
+          html += `<div class="newsItem"><p class="h">${escapeHtml(titulo)}</p></div>`;
         });
 
         let fonteLine = "";
         if(fontes.size){
           const joined = Array.from(fontes).join(" • ");
-          fonteLine = `<div class="newsSourceLine">Fonte: ${joined.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</div>`;
+          fonteLine = `<div class="newsSourceLine">Fonte: ${escapeHtml(joined)}</div>`;
         }
 
         newsBody.innerHTML = html + fonteLine;
@@ -2195,7 +2126,6 @@ function csEnsureToken(promptText){
         newsBox.style.display = "flex";
       }
 
-      // se alerta ativo, some news
       try{
         const cfg = window.__lastDataForTopbar || {};
         if(cfg?.alertaUrgente?.ativar){
@@ -2258,7 +2188,6 @@ function csEnsureToken(promptText){
     let __autoTimer = null;
     let __failCount = 0;
 
-    // Remove o parâmetro hard=... após recarregar (evita URL “crescendo”)
     (function cleanHardParam(){
       try{
         const u = new URL(location.href);
@@ -2276,7 +2205,6 @@ function csEnsureToken(promptText){
 
     async function runAutoRefresh(){
       const ok = await loadAll();
-
       if(ok){
         __failCount = 0;
         scheduleNext(60 * 1000);
@@ -2290,7 +2218,7 @@ function csEnsureToken(promptText){
     // ✅ INICIA AGORA
     runAutoRefresh();
 
-    // ✅ SERVICE WORKER — mantém (e força update periódico pra não “travar”)
+    // ✅ SERVICE WORKER
     if("serviceWorker" in navigator){
       navigator.serviceWorker.register("./sw.js").then(async (reg)=>{
         try{ await reg.update(); }catch(e){}
@@ -2313,7 +2241,6 @@ function csEnsureToken(promptText){
           });
         });
 
-        // 🔁 a cada 5 min: pede update (resolve “não atualiza sozinho”)
         setInterval(async ()=>{
           try{
             await reg.update();
@@ -2338,70 +2265,60 @@ function csEnsureToken(promptText){
       });
     }
 
-    <script>
-/* =========================================================
-   FIX TV — BLOQUEIA VÍDEO EM TELA CHEIA (Fully Kiosk / Android TV)
-   - NÃO afeta PC
-   - NÃO afeta celular
-   ========================================================= */
-(function fixVideoFullscreenOnTV(){
-  try{
-    // detecta TV (usa suas flags já existentes)
-    const el = document.documentElement;
-    const isTV =
-      el.classList.contains("isTV") ||
-      navigator.userAgent.toLowerCase().includes("android") &&
-      navigator.userAgent.toLowerCase().includes("tv");
+    /* =========================================================
+       ✅ FIX TV — BLOQUEIA VÍDEO EM TELA CHEIA
+       Corrige seu ERRO: antes tinha <script> dentro de <script>
+       ========================================================= */
+    (function fixVideoFullscreenOnTV(){
+      try{
+        const el = document.documentElement;
+        const ua = (navigator.userAgent || "").toLowerCase();
+        const isTV =
+          el.classList.contains("isTV") ||
+          ua.includes("android tv") ||
+          ua.includes("smart-tv") ||
+          ua.includes("browsehere");
 
-    if(!isTV) return;
+        if(!isTV) return;
 
-    function lockVideo(v){
-      if(!v) return;
+        function lockVideo(v){
+          if(!v) return;
 
-      // força inline (Android / iOS / WebView)
-      v.setAttribute("playsinline", "");
-      v.setAttribute("webkit-playsinline", "");
+          v.setAttribute("playsinline", "");
+          v.setAttribute("webkit-playsinline", "");
+          v.controls = false;
 
-      // remove controles (evita fullscreen por interação)
-      v.controls = false;
+          v.requestFullscreen = () => {};
+          v.webkitRequestFullscreen = () => {};
+          v.webkitEnterFullscreen = () => {};
+          v.mozRequestFullScreen = () => {};
+          v.msRequestFullscreen = () => {};
 
-      // bloqueia APIs de fullscreen
-      v.requestFullscreen = () => {};
-      v.webkitRequestFullscreen = () => {};
-      v.webkitEnterFullscreen = () => {};
-      v.mozRequestFullScreen = () => {};
-      v.msRequestFullscreen = () => {};
+          v.addEventListener("fullscreenchange", () => {
+            try{
+              if(document.fullscreenElement){
+                document.exitFullscreen().catch(()=>{});
+              }
+            }catch(e){}
+          });
 
-      // se tentar fullscreen, cancela
-      v.addEventListener("fullscreenchange", () => {
-        if(document.fullscreenElement){
-          document.exitFullscreen().catch(()=>{});
+          v.addEventListener("webkitfullscreenchange", () => {
+            try{
+              if(document.webkitFullscreenElement){
+                document.webkitExitFullscreen?.();
+              }
+            }catch(e){}
+          });
         }
-      });
 
-      v.addEventListener("webkitfullscreenchange", () => {
-        if(document.webkitFullscreenElement){
-          document.webkitExitFullscreen?.();
+        function apply(){
+          document.querySelectorAll("video").forEach(lockVideo);
         }
-      });
-    }
 
-    function apply(){
-      document
-        .querySelectorAll("video")
-        .forEach(lockVideo);
-    }
-
-    // aplica agora e sempre que trocar vídeo
-    apply();
-    setInterval(apply, 2000);
-
-  }catch(e){}
-})();
-
-
-
-  
+        apply();
+        setInterval(apply, 2000);
+      }catch(e){}
+    })();
   </script>
 </body>
 </html>
