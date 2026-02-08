@@ -2328,6 +2328,71 @@ function csEnsureToken(promptText){
         }catch(e){}
       });
     }
+
+    <script>
+/* =========================================================
+   FIX TV — BLOQUEIA VÍDEO EM TELA CHEIA (Fully Kiosk / Android TV)
+   - NÃO afeta PC
+   - NÃO afeta celular
+   ========================================================= */
+(function fixVideoFullscreenOnTV(){
+  try{
+    // detecta TV (usa suas flags já existentes)
+    const el = document.documentElement;
+    const isTV =
+      el.classList.contains("isTV") ||
+      navigator.userAgent.toLowerCase().includes("android") &&
+      navigator.userAgent.toLowerCase().includes("tv");
+
+    if(!isTV) return;
+
+    function lockVideo(v){
+      if(!v) return;
+
+      // força inline (Android / iOS / WebView)
+      v.setAttribute("playsinline", "");
+      v.setAttribute("webkit-playsinline", "");
+
+      // remove controles (evita fullscreen por interação)
+      v.controls = false;
+
+      // bloqueia APIs de fullscreen
+      v.requestFullscreen = () => {};
+      v.webkitRequestFullscreen = () => {};
+      v.webkitEnterFullscreen = () => {};
+      v.mozRequestFullScreen = () => {};
+      v.msRequestFullscreen = () => {};
+
+      // se tentar fullscreen, cancela
+      v.addEventListener("fullscreenchange", () => {
+        if(document.fullscreenElement){
+          document.exitFullscreen().catch(()=>{});
+        }
+      });
+
+      v.addEventListener("webkitfullscreenchange", () => {
+        if(document.webkitFullscreenElement){
+          document.webkitExitFullscreen?.();
+        }
+      });
+    }
+
+    function apply(){
+      document
+        .querySelectorAll("video")
+        .forEach(lockVideo);
+    }
+
+    // aplica agora e sempre que trocar vídeo
+    apply();
+    setInterval(apply, 2000);
+
+  }catch(e){}
+})();
+</script>
+
+
+  
   </script>
 </body>
 </html>
