@@ -1564,21 +1564,23 @@ html.isMobileUA:not(.isTV) #wxIconTop{
       }[c]));
     }
 /* =========================================================
-   FETCH COM TIMEOUT — evita travar atualização automática
+   FETCH COM TIMEOUT — compatível com TV/Browser antigo
    ========================================================= */
-async function fetchWithTimeout(url, opts = {}, ms = 12000){
-  const controller = new AbortController();
-  const t = setTimeout(() => controller.abort(), ms);
-
-  try{
-    return await fetch(url, {
-      ...opts,
-      signal: controller.signal
-    });
-  } finally {
-    clearTimeout(t);
+function fetchWithTimeout(url, opts = {}, ms = 12000){
+  // TV/browser antigo: sem AbortController → faz fetch normal
+  if(typeof AbortController === "undefined"){
+    return fetch(url, opts);
   }
+
+  const controller = new AbortController();
+  const t = setTimeout(() => {
+    try{ controller.abort(); }catch(e){}
+  }, ms);
+
+  return fetch(url, { ...opts, signal: controller.signal })
+    .finally(() => clearTimeout(t));
 }
+
     function isMobile(){
       const el = document.documentElement;
       const isTV = el.classList.contains("isTV");
@@ -2385,17 +2387,26 @@ async function loadAll(){
     applyUrgentBox(data);
     await carregarMensagensCidade();
 
+    // ✅ sucesso: zera falhas acumuladas
+    window.__failOnce = 0;
+
     const d = new Date();
     const hhmm = `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
     updateStatus(true, hhmm);
 
     return true;
   }catch(e){
-    updateStatus(false);
+    // ✅ evita piscar "Offline" por falha momentânea
+    window.__failOnce = (window.__failOnce || 0) + 1;
+    if(window.__failOnce >= 2){
+      updateStatus(false);
+    }
+
     try{ await carregarMensagensCidade(); }catch(_){}
     return false;
   }
 }
+
 
 let __autoTimer = null;
 let __failCount = 0;
