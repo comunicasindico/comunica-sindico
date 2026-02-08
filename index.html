@@ -1589,7 +1589,7 @@ async function fetchWithTimeout(url, opts = {}, ms = 12000){
       ) || (isTV && isPortrait);
     }
 
-    async function refreshNow(){
+ async function refreshNow(){
   const status = document.getElementById("statusJson");
   const statusMini = document.getElementById("statusJsonMini");
   const dot = document.getElementById("dotOnline");
@@ -1598,29 +1598,36 @@ async function fetchWithTimeout(url, opts = {}, ms = 12000){
   if(statusMini) statusMini.textContent = "Atualizando…";
   if(dot) dot.style.background = "#ffb347";
 
+  // 1) Força o SW a buscar update e ativar a versão nova AGORA
   try{
-    // pede para o SW buscar update e ativar já
-    if(navigator.serviceWorker){
+    if("serviceWorker" in navigator){
       const reg = await navigator.serviceWorker.getRegistration();
       if(reg){
         try{ await reg.update(); }catch(e){}
         if(reg.waiting){
-          reg.waiting.postMessage("SKIP_WAITING");
+          try{ reg.waiting.postMessage("SKIP_WAITING"); }catch(e){}
         }
       }
     }
+  }catch(e){}
 
-    // força o loadAll e depois força um reload leve (pega HTML/JS novo se houver)
-    await loadAll();
-    updateStatus(true, "agora");
-    setTimeout(()=>location.reload(), 800);
+  // 2) Força o browser a “rebaixar” caches e recarregar tudo (efeito Ctrl+F5)
+  //    - acrescenta um parâmetro único na URL para quebrar cache
+  //    - faz reload duro após um loadAll()
+  try{
+    await loadAll(); // tenta atualizar dados antes de recarregar
 
+    const u = new URL(location.href);
+    u.searchParams.set("hard", String(Date.now())); // quebra cache de HTML/CSS/JS
+    location.replace(u.toString());                  // troca URL sem voltar histórico
   }catch(e){
-    updateStatus(false);
-    // fallback: reload completo
-    location.reload();
+    // fallback: reload direto
+    const u = new URL(location.href);
+    u.searchParams.set("hard", String(Date.now()));
+    location.replace(u.toString());
   }
 }
+
 
 
     function tickClock(){
