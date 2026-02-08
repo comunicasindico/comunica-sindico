@@ -2400,6 +2400,17 @@ async function loadAll(){
 let __autoTimer = null;
 let __failCount = 0;
 
+    // Remove o parâmetro hard=... após recarregar (evita URL “crescendo”)
+(function cleanHardParam(){
+  try{
+    const u = new URL(location.href);
+    if(u.searchParams.has("hard")){
+      u.searchParams.delete("hard");
+      history.replaceState(null, "", u.toString());
+    }
+  }catch(e){}
+})();
+
 function scheduleNext(ms){
   if(__autoTimer) clearTimeout(__autoTimer);
   __autoTimer = setTimeout(runAutoRefresh, ms);
