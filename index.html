@@ -1581,6 +1581,22 @@ function fetchWithTimeout(url, opts = {}, ms = 12000){
     .finally(() => clearTimeout(t));
 }
 
+
+    /* =========================================================
+   DEBUG VISÍVEL — se o JS quebrar, mostra no cabeçalho
+   ========================================================= */
+window.addEventListener("error", (ev)=>{
+  try{
+    const msg = (ev && (ev.message || ev.error?.message)) ? String(ev.message || ev.error?.message) : "Erro JS";
+    const s1 = document.getElementById("statusJson");
+    const s2 = document.getElementById("statusJsonMini");
+    if(s1) s1.textContent = "ERRO: " + msg;
+    if(s2) s2.textContent = "ERRO: " + msg;
+    const dot = document.getElementById("dotOnline");
+    if(dot) dot.style.background = "#ff5a5a";
+  }catch(_){}
+});
+
     function isMobile(){
       const el = document.documentElement;
       const isTV = el.classList.contains("isTV");
@@ -1591,7 +1607,7 @@ function fetchWithTimeout(url, opts = {}, ms = 12000){
       ) || (isTV && isPortrait);
     }
 
- async function refreshNow(){
+async function refreshNow(){
   const status = document.getElementById("statusJson");
   const statusMini = document.getElementById("statusJsonMini");
   const dot = document.getElementById("dotOnline");
@@ -1600,7 +1616,19 @@ function fetchWithTimeout(url, opts = {}, ms = 12000){
   if(statusMini) statusMini.textContent = "Atualizando…";
   if(dot) dot.style.background = "#ffb347";
 
-  // 1) Força o SW a buscar update e ativar a versão nova AGORA
+  // 0) SUPER: limpa caches e SW (o que mais bloqueia atualização automática)
+  try{
+    if("serviceWorker" in navigator){
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister().catch(()=>{})));
+    }
+    if(window.caches){
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k).catch(()=>{})));
+    }
+  }catch(e){}
+
+  // 1) (mantido) tenta atualizar SW (se ainda existir) e ativar a versão nova
   try{
     if("serviceWorker" in navigator){
       const reg = await navigator.serviceWorker.getRegistration();
@@ -1613,22 +1641,20 @@ function fetchWithTimeout(url, opts = {}, ms = 12000){
     }
   }catch(e){}
 
-  // 2) Força o browser a “rebaixar” caches e recarregar tudo (efeito Ctrl+F5)
-  //    - acrescenta um parâmetro único na URL para quebrar cache
-  //    - faz reload duro após um loadAll()
+  // 2) (mantido) tenta atualizar dados antes e recarrega “hard”
   try{
-    await loadAll(); // tenta atualizar dados antes de recarregar
+    await loadAll();
 
     const u = new URL(location.href);
     u.searchParams.set("hard", String(Date.now())); // quebra cache de HTML/CSS/JS
-    location.replace(u.toString());                  // troca URL sem voltar histórico
+    location.replace(u.toString());
   }catch(e){
-    // fallback: reload direto
     const u = new URL(location.href);
     u.searchParams.set("hard", String(Date.now()));
     location.replace(u.toString());
   }
 }
+
 
 
 
