@@ -3,12 +3,12 @@
    - Escopo: /comunica-sindico/
    - Condôminos + Síndico + Admin
    - HTML: network-first + fallback offline por área
-   - JSON crítico: network-first + fallback (resolve ?ts=)
+   - JSON DINÂMICO: network-only (sempre tenta rede) + fallback cache
    - Vídeos/Range: não cachear
    - Não interfere em cross-domain (script.google.com etc.)
    ========================================================== */
 
-const CACHE_VERSION = "v14";
+const CACHE_VERSION = "v15"; // ✅ bump para forçar atualização
 const CACHE_PREFIX  = "cs-global-";
 const CACHE_NAME    = `${CACHE_PREFIX}${CACHE_VERSION}`;
 
@@ -65,29 +65,30 @@ const OFFLINE_SINDICO = `<!doctype html>
 function sameOrigin(url){
   return url.origin === self.location.origin;
 }
-
 function isNavigation(req){
   return req.mode === "navigate";
 }
-
 function isVideoRequest(req, url){
   const p = url.pathname.toLowerCase();
   return p.endsWith(".mp4") || p.endsWith(".webm") || req.destination === "video";
 }
-
 function hasRangeHeader(req){
   return req.headers && req.headers.has("range");
 }
 
-function isCriticalJson(url){
+// ✅ JSON dinâmico (não pode “grudar” cache velho)
+function isDynamicJson(url){
   const p = url.pathname.toLowerCase();
-  return p.endsWith("/data.json") || p.endsWith("/versiculos.json");
+  return (
+    p.endsWith("/data.json") ||
+    p.endsWith("/versiculos.json") ||
+    p.endsWith("/mensagens_cidade.json")
+  );
 }
 
 function isAnyJson(url){
   return url.pathname.toLowerCase().endsWith(".json");
 }
-
 function isSindicoPath(url){
   return url.pathname.includes("/sindico/");
 }
@@ -162,6 +163,30 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // ✅ JSON DINÂMICO — NETWORK-ONLY + fallback cache (resolve “não atualiza”)
+  // Regra: sempre tenta rede primeiro; se falhar, usa cache; NÃO deixa “grudar” versão antiga.
+  if (isDynamicJson(url)) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const rel = toRelativePath(url); // "./data.json" etc.
+
+      try{
+        const fresh = await fetch(req, { cache:"no-store" });
+        if (fresh && fresh.ok) {
+          // salva somente a versão "boa"
+          await cache.put(rel, fresh.clone());
+        }
+        return fresh;
+      }catch(e){
+        // fallback: tenta o relativo (sem query), depois ignoreSearch
+        return (await cache.match(rel)) ||
+               (await cache.match(req, { ignoreSearch: true })) ||
+               new Response("{}", { headers: { "Content-Type":"application/json; charset=utf-8" }});
+      }
+    })());
+    return;
+  }
+
   // NAVEGAÇÃO (HTML) — network-first + fallback (sem duplicar por query)
   if (isNavigation(req)) {
     event.respondWith((async () => {
@@ -197,22 +222,21 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // JSON (data/versiculos e outros) — network-first + fallback que resolve query (?ts=)
-  if (isCriticalJson(url) || isAnyJson(url)) {
+  // OUTROS JSON (não-dinâmicos) — network-first + fallback (resolve query)
+  if (isAnyJson(url)) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
-      const rel = toRelativePath(url); // "./data.json" etc
+      const rel = toRelativePath(url);
 
       try{
         const fresh = await fetch(req, { cache:"no-store" });
         if (fresh && fresh.ok) {
-          await cache.put(req, fresh.clone());
           await cache.put(rel, fresh.clone());
         }
         return fresh;
       }catch(e){
-        return (await cache.match(req)) ||
-               (await cache.match(rel)) ||
+        return (await cache.match(rel)) ||
+               (await cache.match(req, { ignoreSearch: true })) ||
                new Response("{}", { headers: { "Content-Type":"application/json; charset=utf-8" }});
       }
     })());
