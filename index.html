@@ -100,7 +100,7 @@
   </script>
 
   <!-- =========================================================
-       STYLE / CSS (enxuto, sem patches duplicados)
+       STYLE / CSS
        ========================================================= -->
   <style>
     :root{
@@ -115,12 +115,10 @@
       --news-shadow: 0 18px 44px rgba(0,0,0,.30);
       --font-soft: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
 
-      /* escalas padrão */
       --ui: 1;
       --ui2: 1;
       --tv-safe-bottom: 0px;
 
-      /* safe-area */
       --sat: env(safe-area-inset-top, 0px);
       --sar: env(safe-area-inset-right, 0px);
       --sab: env(safe-area-inset-bottom, 0px);
@@ -135,7 +133,7 @@
       height:100%;
       width:100%;
       margin:0;
-      overflow:hidden; /* mobile libera em media query */
+      overflow:hidden;
       background: radial-gradient(1200px 800px at 30% 10%, rgba(70,120,180,.20), transparent 60%),
                   linear-gradient(180deg, var(--bg1), var(--bg2));
       color:#fff;
@@ -285,48 +283,36 @@
       overflow:hidden;
     }
 
-    /* =========================================================
-       ✅ GRID IGUAL AO SEU PRINT (2 colunas × 3 linhas)
-       Linha 1: slot1 | slot2
-       Linha 2: slot3 | slot4 (vídeo começa)
-       Linha 3: slot5 | slot4 (vídeo continua)  ==> 4 + 6 juntos
-       ========================================================= */
+    /* ✅ GRID do print: 2 colunas x 3 linhas */
     .quadTop{
-  flex:1 1 auto;
-  min-height:0;
-  display:grid;
-  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
-  grid-template-rows: repeat(3, minmax(0,1fr));
-  gap:10px;
-  width:100%;
-  height:100%;
-  position:relative;
-}
-    
-#slot1{ grid-column:1; grid-row:1; }
-#slot2{ grid-column:2; grid-row:1; }
-#slot3{ grid-column:1; grid-row:2; }
-#slot5{ grid-column:1; grid-row:3; }
+      flex:1 1 auto;
+      min-height:0;
+      display:grid;
+      grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+      grid-template-rows: repeat(3, minmax(0,1fr));
+      gap:10px;
+      width:100%;
+      height:100%;
+      position:relative;
+    }
 
-/* ✅ vídeo “2cm x 3cm”: coluna 2, linhas 2 e 3 */
-#slot4{ grid-column:2; grid-row:2 / 4; }
+    /* ✅ POSICIONAMENTO NO GRID (AGORA EM CIMA DOS PAIS .panel.tile) */
+    #tile1{ grid-column:1; grid-row:1; }
+    #tile2{ grid-column:2; grid-row:1; }
+    #tile3{ grid-column:1; grid-row:2; }
+    #slot5{ grid-column:1; grid-row:3; }
 
+    /* ✅ Vídeo grande: coluna 2, linhas 2 e 3 */
+    #tile4{ grid-column:2; grid-row:2 / 4; }
 
-    .tile{ min-height:0; 
-          overflow:hidden; 
-          display:flex; 
-          flex-direction:column; }
-   
+    .tile{ min-height:0; overflow:hidden; display:flex; flex-direction:column; }
     .tileBody{
-  padding:12px;
-  min-height:0;
-  flex:1 1 auto;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column; /* ✅ evita vídeo+texto lado a lado */
-  gap:10px;              /* ✅ espaço entre vídeo e label */
-}
-
+      padding:12px;
+      min-height:0;
+      flex:1 1 auto;
+      overflow:hidden;
+      display:flex;
+    }
 
     @keyframes avisoIn{
       from{ opacity:0; transform: translateY(8px) scale(.995); }
@@ -484,14 +470,11 @@
       inset:0;
       width:100%;
       height:100%;
-      object-fit:contain; /* sem cortar ✅ preenche o bloco inteiro (TV/PC) */
+      object-fit:contain;
       background:transparent;
     }
 
-    /* Em celular, pode preferir contain (não corta), mantemos no bloco mobile abaixo */
-    html.isMobileUA:not(.isTV) .videoMain{
-      object-fit: contain;
-    }
+    html.isTV:not(.isPortrait) .videoMain{ object-fit: cover; }
 
     video::-webkit-media-controls{ display:none !important; }
     video::-webkit-media-controls-panel{ display:none !important; }
@@ -511,7 +494,7 @@
       min-height:0;
     }
 
-    /* ===== Slot 5 (Mensagens) dentro do grid, SEM bordas (como você pediu) ===== */
+    /* Slot 5 sem bordas */
     #slot5 .newsBox{
       background: transparent !important;
       border: none !important;
@@ -536,7 +519,7 @@
       padding: 6px 0 !important;
     }
     #slot5 .newsItem .h{
-      font-size: clamp(11px, 1.25dvh, 16px) !important;
+      font-size: clamp(11px, 1.15dvh, 14px) !important;
       font-weight: 900 !important;
     }
     #slot5 .newsSourceLine{ display:none !important; }
@@ -703,173 +686,107 @@
     }
 
     /* ============================================================
-       ✅ REGRAS MOBILE: SOMENTE se (isMobileUA E NÃO TV)
+       ✅ MOBILE real: coluna + rolagem, mas VÍDEO NÃO some
        ============================================================ */
-
-    html.isMobileUA:not(.isTV) .main{
-        display:flex !important;
-        flex-direction:column !important;
-      }
-   
-
-    @media (max-width: 980px){
-      html.isMobileUA:not(.isTV){
-        --ui: clamp(1, calc(100vmin / 900), 2.10);
-        --ui2: clamp(1, calc(100vmin / 850), 2.70);
-        --tv-safe-bottom: 0px;
-      }
-
-      html.isMobileUA:not(.isTV), html.isMobileUA:not(.isTV) body{
-        height:auto !important;
-        min-height:100svh !important;
-        overflow:auto !important;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      html.isMobileUA:not(.isTV) body{ padding:0 !important; }
-
-      html.isMobileUA:not(.isTV) .wrap{
-        min-height:100svh !important;
-        height:auto !important;
-        overflow:visible !important;
-        padding:
-          calc(14px + var(--sat))
-          calc(14px + var(--sar))
-          calc(14px + var(--sab))
-          calc(14px + var(--sal));
-      }
-
-      html.isMobileUA:not(.isTV) .container{
-        min-height:auto !important;
-        height:auto !important;
-        overflow:visible !important;
-        gap:10px;
-      }
-
-      html.isMobileUA:not(.isTV) .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
-      html.isMobileUA:not(.isTV) .brand{ width:100%; align-items:center; text-align:center; }
-      html.isMobileUA:not(.isTV) .subMobileLine{ display:flex; width:100%; }
-
-      html.isMobileUA:not(.isTV) .sectionBar{ justify-content:space-between; }
-
-      html.isMobileUA:not(.isTV) .quadTop{
-        display:flex;
-        flex-direction:column;
-        height:auto;
-        gap:10px;
-      }
-
-      html.isMobileUA:not(.isTV) .tileBody{ padding:12px; }
-
-      html.isMobileUA:not(.isTV) .ticker{
-        position:relative !important;
-        bottom:auto !important;
-        z-index:10;
-        margin:0;
-        padding-bottom:max(12px, env(safe-area-inset-bottom));
-      }
-
-      html.isMobileUA:not(.isTV) .tickerLine1{
-        flex-wrap:wrap !important;
-        justify-content:space-between;
-        row-gap:6px;
-      }
-      html.isMobileUA:not(.isTV) .tickerIcon{ order:1; }
-      html.isMobileUA:not(.isTV) #dataBiblica{ order:2; }
-
-      html.isMobileUA:not(.isTV) #ref{
-        order:3;
-        flex: 1 1 100% !important;
-        min-width: 0 !important;
-        margin:0 !important;
-        text-align:left !important;
-        white-space:normal !important;
-        overflow:visible !important;
-        text-overflow:unset !important;
-        overflow-wrap:anywhere;
-        word-break:break-word;
-      }
-
-      html.isMobileUA:not(.isTV) #wxInline{
-        order:4;
-        width:100% !important;
-        justify-content:flex-end !important;
-        margin-left:0 !important;
-      }
-
-      html.isMobileUA:not(.isTV) .rightInfo{
-        display:flex !important;
-        position:absolute;
-        top: 12px;
-        right: 12px;
-        gap: 0;
-        align-items:center;
-        justify-content:flex-end;
-        z-index: 5;
-      }
-      html.isMobileUA:not(.isTV) .rightInfo .badge[title="Status do painel"]{ display:none !important; }
-      html.isMobileUA:not(.isTV) #clock{ display:none !important; }
-      html.isMobileUA:not(.isTV) #btnInstalarApp{ display:none !important; }
-      html.isMobileUA:not(.isTV) .rightInfo .badge[title="Hora e Clima"]{
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        gap: 0 !important;
-      }
-      html.isMobileUA:not(.isTV) #wxIconTop{ width:56px; height:56px; transform:none !important; }
-      html.isMobileUA:not(.isTV) #wxIconTop svg{ width:56px; height:56px; }
-
-      html.isMobileUA:not(.isTV) #slot4{
-  display:block !important;
-}
-
-html.isMobileUA:not(.isTV) #slot4 .tileBody{
-  display:flex !important;
-  flex-direction:column !important;
-  gap:10px !important;
-  padding:12px !important;
-}
-
-html.isMobileUA:not(.isTV) #slot4 .videoWrap{
-  width:100% !important;
-  aspect-ratio: 16 / 9;
-  height:auto !important;
-  min-height: 220px;
-  position:relative;
-}
-
-
-      @media (max-width: 420px){
-        html.isMobileUA:not(.isTV) #slot4{ min-height: 200px; }
-        html.isMobileUA:not(.isTV) #slot4 .videoWrap{ min-height: 200px; }
-      }
+    html.isMobileUA:not(.isTV), html.isMobileUA:not(.isTV) body{
+      height:auto !important;
+      min-height:100svh !important;
+      overflow:auto !important;
+      -webkit-overflow-scrolling: touch;
     }
 
- @media (max-width: 980px){
-  /* ✅ TV landscape: manter 2 colunas × 3 linhas (vídeo 4+6 juntos) */
-  html.isTV:not(.isPortrait) 
-   .quadTop{
-    display:grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    grid-template-rows: 1fr 1fr 1fr !important; /* ✅ 3 linhas */
-    height:100% !important;
-  }
+    html.isMobileUA:not(.isTV) body{ padding:0 !important; }
 
-  /* ✅ posições no GRID (TV) */
-  html.isTV:not(.isPortrait) #slot1{ grid-column:1 !important; grid-row:1 !important; }
-  html.isTV:not(.isPortrait) #slot2{ grid-column:2 !important; grid-row:1 !important; }
-  html.isTV:not(.isPortrait) #slot3{ grid-column:1 !important; grid-row:2 !important; }
-  html.isTV:not(.isPortrait) #slot5{ grid-column:1 !important; grid-row:3 !important; }
+    html.isMobileUA:not(.isTV) .wrap{
+      min-height:100svh !important;
+      height:auto !important;
+      overflow:visible !important;
+      padding:
+        calc(14px + var(--sat))
+        calc(14px + var(--sar))
+        calc(14px + var(--sab))
+        calc(14px + var(--sal));
+    }
 
-  /* ✅ vídeo “dobrado”: coluna 2, linhas 2 e 3 */
-  html.isTV:not(.isPortrait) #slot4{
-    grid-column:2 !important;
-    grid-row:2 / 4 !important;
-    min-height:0 !important;
-  }
-}
+    html.isMobileUA:not(.isTV) .container{
+      min-height:auto !important;
+      height:auto !important;
+      overflow:visible !important;
+      gap:10px;
+    }
 
+    html.isMobileUA:not(.isTV) .topbar{ flex-wrap:wrap; justify-content:center; text-align:center; }
+    html.isMobileUA:not(.isTV) .brand{ width:100%; align-items:center; text-align:center; }
+    html.isMobileUA:not(.isTV) .subMobileLine{ display:flex; width:100%; }
+
+    html.isMobileUA:not(.isTV) .quadTop{
+      display:flex !important;
+      flex-direction:column !important;
+      height:auto !important;
+      gap:10px !important;
+    }
+
+    html.isMobileUA:not(.isTV) .tileBody{ padding:12px; }
+
+    html.isMobileUA:not(.isTV) .ticker{
+      position:relative !important;
+      bottom:auto !important;
+      z-index:10;
+      margin:0;
+      padding-bottom:max(12px, env(safe-area-inset-bottom));
+    }
+
+    html.isMobileUA:not(.isTV) .rightInfo{
+      display:flex !important;
+      position:absolute;
+      top: 12px;
+      right: 12px;
+      gap: 0;
+      align-items:center;
+      justify-content:flex-end;
+      z-index: 5;
+    }
+    html.isMobileUA:not(.isTV) .rightInfo .badge[title="Status do painel"]{ display:none !important; }
+    html.isMobileUA:not(.isTV) #clock{ display:none !important; }
+    html.isMobileUA:not(.isTV) #btnInstalarApp{ display:none !important; }
+    html.isMobileUA:not(.isTV) .rightInfo .badge[title="Hora e Clima"]{
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      gap: 0 !important;
+    }
+    html.isMobileUA:not(.isTV) #wxIconTop{ width:56px; height:56px; transform:none !important; }
+    html.isMobileUA:not(.isTV) #wxIconTop svg{ width:56px; height:56px; }
+
+    /* ✅ MOBILE: garante altura do vídeo */
+    html.isMobileUA:not(.isTV) #slot4{
+      display:flex !important;
+      flex-direction:column !important;
+      gap:10px !important;
+    }
+    html.isMobileUA:not(.isTV) #slot4 .videoWrap{
+      width:100% !important;
+      aspect-ratio: 16 / 9 !important;
+      height:auto !important;
+      min-height: 220px !important;
+      position:relative;
+      flex:0 0 auto !important;
+    }
+
+    /* ✅ FORÇA 2x2 EM TV MESMO SE @media disparar por zoom (exceto TV em pé) */
+    @media (max-width: 980px){
+      html.isTV:not(.isPortrait) .quadTop{
+        display:grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-rows: 1fr 1fr !important;
+        height:100% !important;
+      }
+      html.isTV:not(.isPortrait), html.isTV:not(.isPortrait) body{ overflow:hidden !important; height:100dvh !important; min-height:100dvh !important; }
+      html.isTV:not(.isPortrait) .wrap{ height:100dvh !important; min-height:100dvh !important; overflow:hidden !important; }
+      html.isTV:not(.isPortrait) .container{ height:100% !important; overflow:hidden !important; }
+      html.isTV:not(.isPortrait) .main{ overflow:hidden !important; }
+    }
 
     @media (min-width: 981px) and (max-width: 1100px){
       .tickerLine1{ flex-wrap:wrap; justify-content:center; }
@@ -926,17 +843,19 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       .adNav{ width:28px; height:28px; font-size:13px; opacity:.28; }
     }
 
-    /* garante que o vídeo apareça com altura e o texto fique embaixo */
+    /* ✅ slot4 (tileBody) organiza vídeo + texto */
     #slot4{
       display:flex;
       flex-direction:column;
       gap:10px;
+      min-height:0;
+      width:100%;
     }
 
     #slot4 .videoWrap{
       width:100%;
       height:100%;
-      min-height:0;
+      min-height:180px;
       border-radius:14px;
       overflow:hidden;
       position:relative;
@@ -944,9 +863,7 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       flex:1 1 auto;
     }
 
-    html:not(.isMobileUA) #slot4 .videoWrap{
-      aspect-ratio: auto;
-    }
+    html:not(.isMobileUA) #slot4 .videoWrap{ aspect-ratio:auto; }
 
     .adBelow{
       width:100%;
@@ -955,6 +872,7 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       border:1px solid rgba(255,255,255,.12);
       background:rgba(8,28,46,.55);
       box-shadow: 0 14px 34px rgba(0,0,0,.35);
+      flex:0 0 auto;
     }
     .adBelowText{
       font-weight:950;
@@ -969,22 +887,13 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       word-break:break-word;
     }
 
-    /* ============================================================
-       ✅ TV EM PÉ (VERTICAL): libera rolagem igual celular
-       ============================================================ */
     html.isTV.isPortrait, html.isTV.isPortrait body{
       height:auto !important;
       min-height:100svh !important;
       overflow:auto !important;
       -webkit-overflow-scrolling: touch;
     }
-    html.isTV.isPortrait body{
-      position: static !important;
-      inset: auto !important;
-    }
     html.isTV.isPortrait .wrap{
-      position: relative !important;
-      inset: auto !important;
       height:auto !important;
       min-height:100svh !important;
       overflow:visible !important;
@@ -999,9 +908,7 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       min-height:auto !important;
       overflow:visible !important;
     }
-    html.isTV.isPortrait .main{
-      overflow:visible !important;
-    }
+    html.isTV.isPortrait .main{ overflow:visible !important; }
     html.isTV.isPortrait .quadTop{
       display:flex !important;
       flex-direction:column !important;
@@ -1014,10 +921,12 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       width:100vw !important;
       overflow:hidden !important;
     }
+
     html.isTV:not(.isPortrait) body{
       position: fixed !important;
       inset: 0 !important;
     }
+
     html.isTV:not(.isPortrait) .wrap{
       position: fixed !important;
       inset: 0 !important;
@@ -1047,9 +956,7 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       line-height: 1.15;
     }
 
-    .urgentBlink{
-      animation: urgentBlink 1s steps(1) infinite;
-    }
+    .urgentBlink{ animation: urgentBlink 1s steps(1) infinite; }
 
     @keyframes urgentBlink{
       0%,49% { filter: brightness(1.1); }
@@ -1088,9 +995,7 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       line-height:1.1;
     }
 
-    .alertBody{
-      padding:14px 16px 16px;
-    }
+    .alertBody{ padding:14px 16px 16px; }
 
     .alertMsg{
       margin:0;
@@ -1107,9 +1012,7 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       0%,100%{ filter:brightness(1); }
       50%{ filter:brightness(1.25); }
     }
-    .alertBox.blink{
-      animation: alertBlink .9s ease-in-out infinite;
-    }
+    .alertBox.blink{ animation: alertBlink .9s ease-in-out infinite; }
 
     html:not(.isMobileUA) .topbar{ gap: 14px; }
     html:not(.isMobileUA) .topbar .brand{ flex: 1 1 auto; min-width: 0; }
@@ -1148,159 +1051,6 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
     }
 
     html.isMobileUA:not(.isTV) .subRight{ display:none !important; }
-
-
-    /* =========================================================
-   FIX DEFINITIVO DO VÍDEO (Opção A: #slot4 é o TILE do grid)
-   Objetivo:
-   - PC/TV: vídeo "2x1" (coluna 2, linhas 2 e 3) => 2cm x 3cm no seu exemplo
-   - Texto do vídeo SEMPRE abaixo
-   - Mobile: vídeo volta a aparecer (não colapsa)
-   ========================================================= */
-
-/* 1) Grid base (PC/TV): 2 colunas x 3 linhas */
-.quadTop{
-  display:grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  grid-template-rows: 1fr 1fr 1fr !important;
-  gap:10px !important;
-  height:100% !important;
-  min-height:0 !important;
-}
-
-/* 2) Posicionamento dos quadrantes */
-#slot1{ grid-column:1 !important; grid-row:1 !important; }
-#slot2{ grid-column:2 !important; grid-row:1 !important; }
-#slot3{ grid-column:1 !important; grid-row:2 !important; }
-#slot5{ grid-column:1 !important; grid-row:3 !important; }
-
-/* ✅ VÍDEO DOBRADO (coluna 2, linhas 2 e 3) */
-#slot4{
-  grid-column:2 !important;
-  grid-row:2 / 4 !important;
-  min-height:0 !important;
-  display:flex !important;
-  flex-direction:column !important;
-}
-
-/* 3) Corrige o layout interno: vídeo em cima (cresce), label embaixo */
-#slot4 .tileBody{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  display:flex !important;
-  flex-direction:column !important;
-  gap:10px !important;
-}
-
-/* O vídeo PRECISA crescer */
-#slot4 .videoWrap{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  height:100% !important;
-  width:100% !important;
-  display:flex !important;
-}
-
-/* Vídeo ocupa todo o wrap */
-#slot4 .videoMain,
-#slot4 .videoBg{
-  width:100% !important;
-  height:100% !important;
-}
-
-/* TV/PC: preencher o espaço do vídeo (sem ficar “miúdo”) */
-html.isTV:not(.isPortrait) #slot4 .videoMain{
-  object-fit:cover !important;
-}
-
-/* 4) MOBILE: garantir que vídeo apareça (não some / não colapse) */
-
-  html.isMobileUA:not(.isTV) .quadTop{
-    display:flex !important;
-    flex-direction:column !important;
-    height:auto !important;
-  }
-
-  html.isMobileUA:not(.isTV) #slot4{
-    display:block !important;
-  }
-
-  html.isMobileUA:not(.isTV) #slot4 .tileBody{
-    display:flex !important;
-    flex-direction:column !important;
-    gap:10px !important;
-  }
-
-  html.isMobileUA:not(.isTV) #slot4 .videoWrap{
-    width:100% !important;
-    aspect-ratio: 16 / 9 !important;
-    height:auto !important;
-    min-height:220px !important;
-  }
-
-  html.isMobileUA:not(.isTV) #slot4 .videoMain{
-    object-fit:contain !important; /* no mobile mantém sem cortar */
-  }
-}
-
-/* ✅ Mobile: garantir altura do vídeo e não sumir */
-html.isMobileUA:not(.isTV) #slot4 .videoWrap{
-  width:100% !important;
-  aspect-ratio: 16 / 9 !important;
-  height:auto !important;
-  min-height: 220px !important;
-}
-
-html.isMobileUA:not(.isTV) #adVideo,
-html.isMobileUA:not(.isTV) #adVideoBg{
-  display:block !important;
-  width:100% !important;
-  height:100% !important;
-}
-
-/* =========================================================
-   FIX DEFINITIVO — vídeo ocupar 2 linhas no PC e aparecer no mobile
-   ========================================================= */
-
-/* 1) O TILE do vídeo precisa aceitar altura */
-#slot4{
-  min-height:0 !important;
-  display:flex !important;
-  flex-direction:column !important;
-}
-
-/* 2) O corpo do tile precisa crescer */
-#slot4 .tileBody{
-  flex:1 1 auto !important;
-  min-height:0 !important;
-  display:flex !important;
-  flex-direction:column !important;
-}
-
-/* 3) O wrapper do vídeo PRECISA ocupar o espaço */
-#slot4 .videoWrap{
-  flex:1 1 auto !important;
-  min-height:180px !important;   /* impede colapso */
-  height:auto !important;
-  width:100% !important;
-  display:flex !important;
-}
-
-/* 4) O vídeo em si */
-#slot4 video,
-#slot4 iframe{
-  width:100% !important;
-  height:100% !important;
-  object-fit:contain !important;
-}
-
-/* 5) MOBILE: mantém layout com rolagem, mas garante vídeo visível */
-html.isMobileUA:not(.isTV) #slot4 .videoWrap{
-  aspect-ratio:16/9 !important;
-  min-height:220px !important;
-}
-
-    
   </style>
 </head>
 
@@ -1345,15 +1095,15 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
           <div class="pill" id="refPill" title="Clique para atualizar">Atualizar</div>
         </div>
 
-       <div class="quadTop fade-in" id="avisosPane">
-        <div class="panel tile" id="tile1"><div class="tileBody" id="slot1"></div></div>
-        <div class="panel tile" id="tile2"><div class="tileBody" id="slot2"></div></div>
-        <div class="panel tile" id="tile3"><div class="tileBody" id="slot3"></div></div>
+        <div class="quadTop fade-in" id="avisosPane">
+          <!-- ✅ IDs nos PAIS (grid items) -->
+          <div class="panel tile" id="tile1"><div class="tileBody" id="slot1"></div></div>
+          <div class="panel tile" id="tile2"><div class="tileBody" id="slot2"></div></div>
+          <div class="panel tile" id="tile3"><div class="tileBody" id="slot3"></div></div>
 
-        <!-- Vídeo (bloco único grande) -->
-        <div class="panel tile" id="tile4">
-          <div class="tileBody">
-
+          <!-- ✅ Vídeo: pai é tile4 (grid span 2 linhas) -->
+          <div class="panel tile" id="tile4">
+            <div class="tileBody" id="slot4">
 
               <div class="videoWrap">
                 <button class="adNav adPrev" type="button" onclick="adPrevBtn()" aria-label="Anterior">⏮</button>
@@ -1372,7 +1122,7 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
             </div>
           </div>
 
-          <!-- slot5 (Mensagens no Brasil — à esquerda sempre, sem bordas) -->
+          <!-- Mensagens no Brasil -->
           <div class="tile" id="slot5">
             <div class="newsBox" id="newsBox" style="display:none">
               <div class="newsHead">
@@ -1382,7 +1132,6 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
               <div id="newsBody"></div>
             </div>
           </div>
-
         </div>
 
         <div class="urgentBox" id="urgentBox" style="display:none">
@@ -1421,6 +1170,9 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
     </div>
   </div>
 
+  <!-- =========================================================
+       SCRIPT — APP (o seu original)
+       ========================================================= -->
   <script>
     let deferredPrompt = null;
 
@@ -1464,7 +1216,6 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       const isTV = el.classList.contains("isTV");
       const isPortrait = el.classList.contains("isPortrait");
       return (
-        window.matchMedia("(max-width: 980px)").matches &&
         el.classList.contains("isMobileUA") &&
         !isTV
       ) || (isTV && isPortrait);
@@ -2056,29 +1807,7 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
 
     function getNewsMaxItems(){
       if (isMobile()) return 8;
-      return 3; // ✅ como você pediu (PC/TV: 3 mensagens)
-    }
-
-    /* ✅ filtro anti-crime: deixa as mensagens mais “alegres” */
-    function isTooNegative_(t){
-      const s = String(t||"").toLowerCase();
-      const bad = [
-        "assassin", "homic", "morte", "morre", "matou", "tiro", "balead",
-        "roub", "furto", "sequest", "violênc", "crime", "criminos",
-        "estupro", "feminic", "latroc", "tráfico", "drog", "polícia mata",
-        "prisão", "preso", "armad", "facção"
-      ];
-      return bad.some(k => s.includes(k));
-    }
-
-    function upbeatFallback_(){
-      return [
-        "🌟 Dica do dia: um sorriso muda o clima do condomínio.",
-        "🤝 Gentileza gera gentileza: bom dia para todos!",
-        "🏡 Comunidade forte: respeite o próximo e cuide dos espaços comuns.",
-        "✅ Pequenas atitudes fazem um grande condomínio.",
-        "💙 Paz e harmonia: vamos construir um ambiente leve juntos."
-      ];
+      return 3;
     }
 
     async function carregarMensagensCidade(){
@@ -2091,23 +1820,14 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
         if(!res.ok) throw new Error("HTTP " + res.status);
 
         const j = await res.json();
-        const itemsRaw = Array.isArray(j.items) ? j.items : [];
+        const items = Array.isArray(j.items) ? j.items : [];
         const maxItems = getNewsMaxItems();
 
-        // ✅ remove notícias “pesadas”
-        let items = itemsRaw.filter(x=>{
-          const titulo = normalizeText_(x.titulo || x.title || "");
-          return !isTooNegative_(titulo);
-        });
-
-        // se ficou sem itens, usa fallback alegre
         if(!items.length){
-          const fb = upbeatFallback_().slice(0, maxItems);
-          let htmlFb = "";
-          fb.forEach(msg=>{
-            htmlFb += `<div class="newsItem"><p class="h">${escapeHtml(msg)}</p></div>`;
-          });
-          newsBody.innerHTML = htmlFb;
+          newsBody.innerHTML = `
+            <div class="newsItem"><p class="h">Sem mensagens no momento</p></div>
+            <div class="newsSourceLine">Fonte: indisponível</div>
+          `;
           newsBox.style.display = "flex";
           return;
         }
@@ -2121,25 +1841,22 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
           titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
           if(!titulo) titulo = "Mensagem";
           if(x.fonte) fontes.add(normalizeText_(x.fonte));
-          html += `<div class="newsItem"><p class="h">${escapeHtml(titulo)}</p></div>`;
+          html += `<div class="newsItem"><p class="h">${titulo.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</p></div>`;
         });
 
         let fonteLine = "";
         if(fontes.size){
           const joined = Array.from(fontes).join(" • ");
-          fonteLine = `<div class="newsSourceLine">Fonte: ${escapeHtml(joined)}</div>`;
+          fonteLine = `<div class="newsSourceLine">Fonte: ${joined.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</div>`;
         }
 
         newsBody.innerHTML = html + fonteLine;
         newsBox.style.display = "flex";
       }catch(e){
-        // fallback alegre offline
-        const fb = upbeatFallback_().slice(0, getNewsMaxItems());
-        let htmlFb = "";
-        fb.forEach(msg=>{
-          htmlFb += `<div class="newsItem"><p class="h">${escapeHtml(msg)}</p></div>`;
-        });
-        newsBody.innerHTML = htmlFb;
+        newsBody.innerHTML = `
+          <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
+          <div class="newsSourceLine">Fonte: news.google.com (offline)</div>
+        `;
         newsBox.style.display = "flex";
       }
 
@@ -2181,7 +1898,6 @@ html.isMobileUA:not(.isTV) #slot4 .videoWrap{
       }
 
       if(isMob) img = "./img/tubarao01.jpg";
-
       document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
     }
 
