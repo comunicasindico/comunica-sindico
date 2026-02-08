@@ -1308,41 +1308,48 @@ html.isMobileUA:not(.isTV) .wxInline{
 }
 
 /* =========================================================
-   FUNDO FOSCO VIA CANVAS (browser-safe)
+   FUNDO FOSCO (estável) — usa o vídeo adVideoBg como background
    ========================================================= */
 
-.videoWrap{
+#slot4 .videoWrap{
   position:relative !important;
   overflow:hidden !important;
   background:#000 !important;
 }
 
-/* canvas do blur */
-.videoBlurBg{
-  position:absolute;
-  inset:-10%;
-  width:120%;
-  height:120%;
-  z-index:1;
-  filter: blur(26px) saturate(1.2) brightness(.85);
-  transform: scale(1.15);
-  opacity:.65;
+/* fundo fosco: sempre cobre a área inteira */
+#slot4 .videoBg{
+  position:absolute !important;
+  inset:-12% !important;           /* sobra pro blur não “vazar” */
+  width:124% !important;
+  height:124% !important;
+  z-index:1 !important;
+
+  display:block !important;        /* ✅ NÃO esconder */
+  object-fit:cover !important;     /* ✅ preenche sem barras pretas */
+  filter: blur(26px) saturate(1.15) brightness(.82) !important;
+  transform: scale(1.18) !important;
+  opacity:.62 !important;
+  background:#000 !important;
 }
 
-/* vídeo principal */
-.videoMain{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  z-index:3;
-  object-fit: contain !important;
+/* vídeo principal: sempre inteiro (sem corte) */
+#slot4 .videoMain{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  z-index:2 !important;
+
+  object-fit:contain !important;
+  background:transparent !important;
 }
 
-/* esconde o videoBg real (não precisamos mais dele visível) */
-.videoBg{
+/* canvas não usado (evita conflito e “preto” quando autoplay falha) */
+#slot4 .videoBlurBg{
   display:none !important;
 }
+
 
 
     
@@ -1407,8 +1414,12 @@ html.isMobileUA:not(.isTV) .wxInline{
                 <button class="adNav adPrev" type="button" onclick="adPrevBtn()" aria-label="Anterior">⏮</button>
                 <button class="adNav adNext" type="button" onclick="adNextBtn()" aria-label="Próximo">⏭</button>
 
-                <video id="adVideoBg" class="videoBg" autoplay muted playsinline webkit-playsinline loop
-                  disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
+                <video id="adVideoBg" class="videoBg" 
+                  autoplay muted playsinline webkit-playsinline loop
+                  preload="auto"
+                  disablepictureinpicture 
+                  controlslist="nofullscreen noremoteplayback nodownload"></video>
+                
                 <video id="adVideo" class="videoMain" autoplay muted playsinline webkit-playsinline
                   disablepictureinpicture controlslist="nofullscreen noremoteplayback nodownload"></video>
               </div>
@@ -2328,38 +2339,7 @@ html.isMobileUA:not(.isTV) .wxInline{
         }catch(e){}
       });
     }
-/* =========================================================
-   Renderiza o vídeo no canvas para fundo fosco
-   ========================================================= */
-(function(){
-  const drawBlur = ()=>{
-    const v = document.getElementById("adVideo");
-    const c = document.querySelector("#slot4 .videoBlurBg");
-    if(!v || !c) return;
 
-    const ctx = c.getContext("2d");
-    const resize = ()=>{
-      c.width = v.videoWidth || 640;
-      c.height = v.videoHeight || 360;
-    };
-
-    v.addEventListener("loadedmetadata", resize);
-    resize();
-
-    const loop = ()=>{
-      if(!v.paused && !v.ended){
-        try{
-          ctx.drawImage(v, 0, 0, c.width, c.height);
-        }catch(e){}
-      }
-      requestAnimationFrame(loop);
-    };
-    loop();
-  };
-
-  if(document.readyState === "complete") drawBlur();
-  else window.addEventListener("load", drawBlur);
-})();
 
   </script>
 </body>
