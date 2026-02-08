@@ -1148,7 +1148,43 @@ html.isMobileUA:not(.isTV) #ref{
   padding: 0 10px !important;
 }
 
+/* =========================================================
+   GARANTIR FUNDO DE VÍDEO FOSCO (sempre visível)
+   ========================================================= */
 
+/* container do vídeo */
+#slot4 .videoWrap{
+  position: relative !important;
+  overflow: hidden !important;
+  background: #000 !important;
+}
+
+/* VÍDEO DE FUNDO — sempre cobre tudo */
+#slot4 .videoBg{
+  position: absolute !important;
+  inset: -10% !important;          /* sobra para o blur não “vazar” */
+  width: 120% !important;
+  height: 120% !important;
+  object-fit: cover !important;    /* preenche o campo */
+  filter: blur(28px) saturate(1.2) brightness(0.85) !important;
+  transform: scale(1.15) !important;
+  opacity: 0.6 !important;
+  z-index: 1 !important;
+  display: block !important;
+}
+
+/* VÍDEO PRINCIPAL — sempre por cima */
+#slot4 .videoMain{
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;  /* mostra 100% do vídeo */
+  z-index: 2 !important;
+  display: block !important;
+}
+
+    
     
   
   </style>
