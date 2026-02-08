@@ -1184,7 +1184,46 @@ html.isMobileUA:not(.isTV) #ref{
   display: block !important;
 }
 
-    
+    /* =========================================================
+   MOBILE — Rodapé em 2 linhas horizontais (versículo completo)
+   ========================================================= */
+
+html.isMobileUA:not(.isTV) .tickerLine1{
+  display: flex !important;
+  flex-direction: column !important;   /* quebra em 2 linhas */
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+/* LINHA 1 — versículo completo */
+html.isMobileUA:not(.isTV) #ref{
+  order: 1 !important;
+  width: 100% !important;
+  text-align: center !important;
+  line-height: 1.25 !important;
+
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+
+  display: block !important;           /* NÃO clamp aqui */
+  padding: 0 12px !important;
+}
+
+/* data bíblica fica junto do versículo */
+html.isMobileUA:not(.isTV) #dataBiblica{
+  order: 0 !important;
+}
+
+/* LINHA 2 — clima (cidade / temp / vento) */
+html.isMobileUA:not(.isTV) .wxInline{
+  order: 2 !important;
+  width: 100% !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  text-align: center !important;
+}
+
     
   
   </style>
