@@ -1100,7 +1100,56 @@
   inset: 0;
 }
 
-  
+  /* =========================================================
+   MOBILE — Corrigir ícone de clima no cabeçalho
+   ========================================================= */
+
+html.isMobileUA:not(.isTV) .rightInfo{
+  position: absolute !important;
+  left: 12px !important;
+  right: auto !important;
+  top: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+html.isMobileUA:not(.isTV) .brand{
+  padding-left: 72px !important; /* abre espaço para a nuvem */
+}
+
+html.isMobileUA:not(.isTV) #wxIconTop{
+  width: 48px !important;
+  height: 48px !important;
+}
+
+html.isMobileUA:not(.isTV) #wxIconTop svg{
+  width: 48px !important;
+  height: 48px !important;
+}
+
+    /* =========================================================
+   MOBILE — Versículo em 2 linhas, centralizado
+   ========================================================= */
+
+html.isMobileUA:not(.isTV) #ref{
+  text-align: center !important;
+  line-height: 1.25 !important;
+
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+
+  white-space: normal !important;
+  overflow: hidden !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+
+  padding: 0 10px !important;
+}
+
+
+    
   
   </style>
 </head>
