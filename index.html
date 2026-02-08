@@ -1066,7 +1066,40 @@
   background: #000 !important;
 }
 
-  
+  /* =========================================================
+   VÍDEO DE FUNDO FOSCO (quando o contain não cobre tudo)
+   ========================================================= */
+
+/* vídeo de fundo: ocupa tudo, desfocado */
+#slot4 .videoBg{
+  object-fit: cover !important;     /* preenche o espaço */
+  filter: blur(22px) saturate(1.15) brightness(0.85);
+  transform: scale(1.15);           /* evita bordas após blur */
+  opacity: 0.55;
+}
+
+/* vídeo principal: sempre completo, sem corte */
+#slot4 .videoMain{
+  object-fit: contain !important;   /* mostra 100% do conteúdo */
+  z-index: 2;
+}
+
+/* garante empilhamento correto */
+#slot4 .videoWrap{
+  position: relative;
+}
+
+#slot4 .videoBg{
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+#slot4 .videoMain{
+  position: absolute;
+  inset: 0;
+}
+
   
   
   </style>
