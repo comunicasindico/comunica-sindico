@@ -1187,6 +1187,66 @@
   <script>
     let deferredPrompt = null;
 
+
+// =========================================================
+// TOKEN — pede só na 1ª vez (localStorage)
+// =========================================================
+const CS_TOKEN_KEY = "CS_TOKEN_V1";
+
+function csGetToken(){
+  try{
+    const t = (localStorage.getItem(CS_TOKEN_KEY) || "").trim();
+    return t || "";
+  }catch(e){ return ""; }
+}
+
+function csSetToken(t){
+  try{
+    const v = String(t || "").trim();
+    if(v) localStorage.setItem(CS_TOKEN_KEY, v);
+  }catch(e){}
+}
+
+function csClearToken(){
+  try{ localStorage.removeItem(CS_TOKEN_KEY); }catch(e){}
+}
+// ✅ só limpa token se você quiser manualmente (debug):
+window.csClearToken = csClearToken;
+
+/**
+ * Retorna o token. Se não tiver salvo, pede 1x e salva.
+ * promptText: texto que aparece no prompt
+ */
+function csEnsureToken(promptText){
+  let t = csGetToken();
+  if(t) return t;
+
+  t = String(prompt(promptText || "Informe o token de acesso:") || "").trim();
+  if(t){
+    csSetToken(t);
+    return t;
+  }
+  return "";
+}
+
+/**
+ * PATCH 3 — captura token vindo pela URL (?token=...)
+ * Salva no localStorage e LIMPA a URL
+ */
+(function csCaptureTokenFromUrl(){
+  try{
+    const u = new URL(location.href);
+    const t = (u.searchParams.get("token") || "").trim();
+    if(t){
+      csSetToken(t);
+      u.searchParams.delete("token");
+      history.replaceState(null, "", u.toString());
+    }
+  }catch(e){}
+})();
+
+
+    
     function mostrarBotaoInstalar(show){
       const b = document.getElementById("btnInstalarApp");
       if (b) b.style.display = show ? "inline-flex" : "none";
