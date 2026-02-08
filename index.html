@@ -1350,7 +1350,45 @@ html.isMobileUA:not(.isTV) .wxInline{
   display:none !important;
 }
 
+/* =========================================================
+   ÍCONE DO CLIMA — PC/TV ao lado do TÍTULO / Celular mantém à esquerda
+   ========================================================= */
 
+/* o título vira “linha” com ícone ao lado */
+.title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+/* ícone do título (PC/TV) */
+.wxTitleIcon{
+  display:none;                 /* por padrão escondido */
+  width:54px;
+  height:54px;
+  flex:0 0 auto;
+  transform: translateY(2px);
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+}
+.wxTitleIcon svg{ width:54px; height:54px; display:block; }
+
+/* PC/TV: mostra o ícone no título */
+html:not(.isMobileUA) .wxTitleIcon{
+  display:inline-flex;
+}
+
+/* PC/TV: esconde o ícone antigo no badge “Hora e Clima” (para não duplicar) */
+html:not(.isMobileUA) #wxIconTop{
+  display:none !important;
+}
+
+/* Celular: mantém como você já tinha (ícone à esquerda, grande) */
+html.isMobileUA:not(.isTV) #wxIconTop{
+  display:inline-flex !important;
+}
+
+
+    
 
     
   </style>
@@ -1362,7 +1400,11 @@ html.isMobileUA:not(.isTV) .wxInline{
 
       <div class="topbar">
         <div class="brand">
-          <div class="title" id="titulo">Comunica Síndico - Condôminos</div>
+         <div class="title" id="tituloWrap">
+          <span id="titulo">Comunica Síndico - Condôminos</span>
+          <span id="wxIconTitle" class="wxTitleIcon" aria-label="Clima" role="img"></span>
+        </div>
+
 
           <div class="subMobileLine" id="subMobileLine">
             <span id="statusJsonMini">Carregando...</span>
@@ -1857,16 +1899,59 @@ html.isMobileUA:not(.isTV) .wxInline{
     }
 
     function wxSvgCloud(){
-      return `
-      <svg class="wxsvg" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g class="cloud">
-          <path d="M22 44h22a12 12 0 0 0 0-24 15 15 0 0 0-29-3A11 11 0 0 0 22 44z"
-            fill="rgba(235,245,255,.92)"/>
-          <path d="M22 44h22a12 12 0 0 0 0-24 15 15 0 0 0-29-3A11 11 0 0 0 22 44z"
-            fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
-        </g>
-      </svg>`;
-    }
+  return `
+  <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <!-- brilho/3D -->
+      <radialGradient id="gGlow" cx="30%" cy="25%" r="80%">
+        <stop offset="0%" stop-color="rgba(255,255,255,.95)"/>
+        <stop offset="55%" stop-color="rgba(235,246,255,.92)"/>
+        <stop offset="100%" stop-color="rgba(190,220,245,.92)"/>
+      </radialGradient>
+
+      <!-- “sombra” suave interna -->
+      <radialGradient id="gShade" cx="55%" cy="70%" r="85%">
+        <stop offset="0%" stop-color="rgba(120,170,210,.22)"/>
+        <stop offset="70%" stop-color="rgba(0,0,0,0)"/>
+      </radialGradient>
+
+      <!-- contorno elegante -->
+      <linearGradient id="gStroke" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="rgba(255,255,255,.55)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,.18)"/>
+      </linearGradient>
+
+      <!-- sombra externa -->
+      <filter id="fShadow" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="0" dy="6" stdDeviation="4" flood-color="rgba(0,0,0,.35)"/>
+      </filter>
+
+      <!-- highlight (brilho em cima) -->
+      <linearGradient id="gHighlight" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="rgba(255,255,255,.75)"/>
+        <stop offset="45%" stop-color="rgba(255,255,255,.10)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </linearGradient>
+    </defs>
+
+    <!-- nuvem 3D -->
+    <g filter="url(#fShadow)">
+      <path d="M22 46h23a12.5 12.5 0 0 0 0-25 15.8 15.8 0 0 0-30.4-3.5A11.3 11.3 0 0 0 22 46z"
+        fill="url(#gGlow)"/>
+      <path d="M22 46h23a12.5 12.5 0 0 0 0-25 15.8 15.8 0 0 0-30.4-3.5A11.3 11.3 0 0 0 22 46z"
+        fill="url(#gShade)"/>
+      <path d="M22 46h23a12.5 12.5 0 0 0 0-25 15.8 15.8 0 0 0-30.4-3.5A11.3 11.3 0 0 0 22 46z"
+        fill="none" stroke="url(#gStroke)" stroke-width="2" />
+      <!-- brilho superior -->
+      <path d="M18 26c3-7 12-11 19-8 3 1 6 4 7 7"
+        fill="none" stroke="url(#gHighlight)" stroke-width="6" stroke-linecap="round" opacity=".65"/>
+    </g>
+
+    <!-- detalhe “bolha” -->
+    <circle cx="18" cy="43" r="2.4" fill="rgba(255,255,255,.35)"/>
+  </svg>`;
+}
+
 
     function wxSetIcon(elId, code){
       const el = document.getElementById(elId);
@@ -1898,18 +1983,22 @@ html.isMobileUA:not(.isTV) .wxInline{
 
         wxSetIcon("wxIconTop", cur.weather_code);
         wxSetIcon("wxIconInline", cur.weather_code);
+        wxSetIcon("wxIconTitle", cur.weather_code);
+
 
         setText("wxCityTemp", `${c.cidade || "—"} ${t}°C`);
         setText("wxWindRain", `Vento ${w} km/h • Chuva ${p} mm`);
       } catch (e) {
-        const cloud = wxSvgCloud();
-        const top = document.getElementById("wxIconTop");
-        const mini = document.getElementById("wxIconInline");
-        if (top) top.innerHTML = cloud;
-        if (mini) mini.innerHTML = cloud;
-        setText("wxCityTemp", `${data?.clima?.cidade || "—"} (offline)`);
-        setText("wxWindRain", `Vento — km/h • Chuva — mm`);
-      }
+      const cloud = wxSvgCloud();
+      const top = document.getElementById("wxIconTop");
+      const title = document.getElementById("wxIconTitle");
+      const mini = document.getElementById("wxIconInline");
+      if (top) top.innerHTML = cloud;
+      if (title) title.innerHTML = cloud;
+      if (mini) mini.innerHTML = cloud;
+      setText("wxCityTemp", `${data?.clima?.cidade || "—"} (offline)`);
+      setText("wxWindRain", `Vento — km/h • Chuva — mm`);
+    }
     }
 
     const AD_STATE_KEY = "CS_AD_STATE_V2";
