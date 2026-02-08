@@ -1277,7 +1277,39 @@ html.isMobileUA:not(.isTV) .wxInline{
   }
 }
  
-  
+  /* =========================================================
+   PC/TV — Fundo fosco do vídeo preenchendo as bordas pretas
+   ========================================================= */
+
+/* garante camadas corretas */
+.videoWrap{ position:relative !important; background:#000 !important; }
+.videoBg{
+  z-index: 1 !important;
+  display:block !important;
+  object-fit: cover !important;      /* ✅ preenche tudo */
+  filter: blur(22px) saturate(1.10) brightness(.85) !important;
+  transform: scale(1.20) !important; /* evita bordas depois do blur */
+  opacity: .55 !important;
+}
+.videoMain{
+  z-index: 2 !important;
+  object-fit: contain !important;    /* mantém o conteúdo inteiro */
+  background: transparent !important;
+}
+
+/* fallback visual (se o BG não carregar, ainda fica bonito) */
+.videoWrap::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background: radial-gradient(120% 80% at 50% 40%,
+    rgba(40,90,140,.35), rgba(0,0,0,.95));
+}
+
+
+
+    
   </style>
 </head>
 
