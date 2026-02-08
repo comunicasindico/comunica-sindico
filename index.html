@@ -1053,6 +1053,22 @@
     }
 
     html.isMobileUA:not(.isTV) .subRight{ display:none !important; }
+ 
+  
+  /* =========================================================
+   AJUSTE FINAL — vídeo SEM corte (conteúdo 100% visível)
+   ========================================================= */
+
+/* vídeo principal e fundo respeitam o conteúdo */
+#slot4 .videoMain,
+#slot4 .videoBg{
+  object-fit: contain !important; /* NÃO corta */
+  background: #000 !important;
+}
+
+  
+  
+  
   </style>
 </head>
 
