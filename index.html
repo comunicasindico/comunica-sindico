@@ -1555,13 +1555,30 @@ html.isMobileUA:not(.isTV) #wxIconTop{
     }
     function safeText(v){ return (v == null ? "" : String(v)); }
     function setText(id, v){ const el = document.getElementById(id); if(el) el.textContent = v; }
+   
     function pad2(n){ return String(n).padStart(2,"0"); }
+    
     function escapeHtml(s){
       return String(s ?? "").replace(/[&<>"']/g, c => ({
         "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
       }[c]));
     }
+/* =========================================================
+   FETCH COM TIMEOUT — evita travar atualização automática
+   ========================================================= */
+async function fetchWithTimeout(url, opts = {}, ms = 12000){
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), ms);
 
+  try{
+    return await fetch(url, {
+      ...opts,
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(t);
+  }
+}
     function isMobile(){
       const el = document.documentElement;
       const isTV = el.classList.contains("isTV");
@@ -1573,26 +1590,38 @@ html.isMobileUA:not(.isTV) #wxIconTop{
     }
 
     async function refreshNow(){
-      const status = document.getElementById("statusJson");
-      const statusMini = document.getElementById("statusJsonMini");
-      const dot = document.getElementById("dotOnline");
-      if(status) status.textContent = "Atualizando…";
-      if(statusMini) statusMini.textContent = "Atualizando…";
-      if(dot) dot.style.background = "#ffb347";
+  const status = document.getElementById("statusJson");
+  const statusMini = document.getElementById("statusJsonMini");
+  const dot = document.getElementById("dotOnline");
 
-      try{
-        if(navigator.serviceWorker){
-          const regs = await navigator.serviceWorker.getRegistrations();
-          regs.forEach(r => { try{ r.update(); }catch(e){} });
+  if(status) status.textContent = "Atualizando…";
+  if(statusMini) statusMini.textContent = "Atualizando…";
+  if(dot) dot.style.background = "#ffb347";
+
+  try{
+    // pede para o SW buscar update e ativar já
+    if(navigator.serviceWorker){
+      const reg = await navigator.serviceWorker.getRegistration();
+      if(reg){
+        try{ await reg.update(); }catch(e){}
+        if(reg.waiting){
+          reg.waiting.postMessage("SKIP_WAITING");
         }
-      }catch(e){}
-
-      try{
-        await loadAll();
-      }catch(e){
-        location.reload();
       }
     }
+
+    // força o loadAll e depois força um reload leve (pega HTML/JS novo se houver)
+    await loadAll();
+    updateStatus(true, "agora");
+    setTimeout(()=>location.reload(), 800);
+
+  }catch(e){
+    updateStatus(false);
+    // fallback: reload completo
+    location.reload();
+  }
+}
+
 
     function tickClock(){
       const d = new Date();
@@ -2252,190 +2281,178 @@ html.isMobileUA:not(.isTV) #wxIconTop{
       return 3;
     }
 
-    async function carregarMensagensCidade(){
-      const newsBox  = document.getElementById("newsBox");
-      const newsBody = document.getElementById("newsBody");
-      if(!newsBox || !newsBody) return;
+  async function carregarMensagensCidade(){
+  const newsBox  = document.getElementById("newsBox");
+  const newsBody = document.getElementById("newsBody");
+  if(!newsBox || !newsBody) return;
 
-      try{
-        const res = await fetch("./mensagens_cidade.json?ts=" + Date.now(), { cache:"no-store" });
-        if(!res.ok) throw new Error("HTTP " + res.status);
-
-        const j = await res.json();
-        const items = Array.isArray(j.items) ? j.items : [];
-        const maxItems = getNewsMaxItems();
-
-        if(!items.length){
-          newsBody.innerHTML = `
-            <div class="newsItem"><p class="h">Sem mensagens no momento</p></div>
-            <div class="newsSourceLine">Fonte: indisponível</div>
-          `;
-          newsBox.style.display = "flex";
-          return;
-        }
-
-        let html = "";
-        const fontes = new Set();
-
-        items.slice(0, maxItems).forEach(x=>{
-          let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
-          titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
-          titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
-          if(!titulo) titulo = "Mensagem";
-          if(x.fonte) fontes.add(normalizeText_(x.fonte));
-          html += `<div class="newsItem"><p class="h">${titulo.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</p></div>`;
-        });
-
-        let fonteLine = "";
-        if(fontes.size){
-          const joined = Array.from(fontes).join(" • ");
-          fonteLine = `<div class="newsSourceLine">Fonte: ${joined.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</div>`;
-        }
-
-        newsBody.innerHTML = html + fonteLine;
-        newsBox.style.display = "flex";
-      }catch(e){
-        newsBody.innerHTML = `
-          <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
-          <div class="newsSourceLine">Fonte: news.google.com (offline)</div>
-        `;
-        newsBox.style.display = "flex";
-      }
-
-      try{
-        const cfg = window.__lastDataForTopbar || {};
-        if(cfg?.alertaUrgente?.ativar){
-          if(newsBox) newsBox.style.display = "none";
-          return;
-        }
-      }catch(e){}
-    }
-
-    function aplicarImagemTopbar(data){
-      try{
-        const cab = data?.publicidade?.cabecalhoImagem || {};
-        if(cab.ativar && String(cab.url||"").trim()) return;
-      }catch(e){}
-      const cidade = String(data?.clima?.cidade || "").toLowerCase();
-      const isTubarao = cidade.includes("tubarão") || cidade.includes("tubarao");
-
-      const h = new Date().getHours();
-      const estaNoite = (h >= 18 || h <= 4);
-
-      const isMob = isMobile();
-      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-      const longest = Math.max(vw, vh);
-
-      const is2560 = longest >= 2400;
-      const is1920 = longest >= 1700;
-
-      let img = "./img/tubarao01.jpg";
-      if(!isTubarao){
-        img = estaNoite ? "./img/bg_night.jpg" : "./img/bg_day.jpg";
-      }else{
-        if(is2560) img = estaNoite ? "./img/tubarao_night_2560.jpg" : "./img/tubarao_day_2560.jpg";
-        else if(is1920) img = estaNoite ? "./img/tubarao_night_1920.jpg" : "./img/tubarao_day_1920.jpg";
-        else img = estaNoite ? "./img/tubarao_night.jpg" : "./img/tubarao_day.jpg";
-      }
-
-      if(isMob) img = "./img/tubarao01.jpg";
-      document.documentElement.style.setProperty("--topbar-bg", `url('${img}')`);
-    }
-
-    function applyUrgentBox(data){
   try{
-    const u = data?.alertaUrgente;
-    const alertBox  = document.getElementById("alertBox");
-    const urgentBox = document.getElementById("urgentBox"); // vai ficar sempre oculto
+    const res = await fetchWithTimeout(
+      "./mensagens_cidade.json?ts=" + Date.now(),
+      { cache:"no-store" },
+      12000
+    );
+    if(!res.ok) throw new Error("HTTP " + res.status);
 
-    if (urgentBox) urgentBox.style.display = "none";
+    const j = await res.json();
+    const items = Array.isArray(j.items) ? j.items : [];
+    const maxItems = getNewsMaxItems();
 
-    const on = !!(u?.ativar && String(u?.mensagem || "").trim());
-    document.documentElement.classList.toggle("urgentOn", on);
+    if(!items.length){
+      newsBody.innerHTML = `
+        <div class="newsItem"><p class="h">Sem mensagens no momento</p></div>
+        <div class="newsSourceLine">Fonte: indisponível</div>
+      `;
+      newsBox.style.display = "flex";
+      return;
+    }
 
-    if(on){
-      const blink = !!u?.piscar;
-      const title = String(u?.titulo || "ALERTA URGENTE");
-      const msg   = String(u?.mensagem || "—");
+    let html = "";
+    const fontes = new Set();
 
-      const alertTitle = document.getElementById("alertTitle");
-      const alertMsg   = document.getElementById("alertMsg");
+    items.slice(0, maxItems).forEach(x=>{
+      let titulo = normalizeText_(x.titulo || x.title || "Mensagem");
+      titulo = titulo.replace(/\s+–\s+Google\s+News$/i, "").trim();
+      titulo = titulo.replace(/\s+\|\s+.*$/i, "").trim();
+      if(!titulo) titulo = "Mensagem";
+      if(x.fonte) fontes.add(normalizeText_(x.fonte));
+      html += `<div class="newsItem"><p class="h">${titulo.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</p></div>`;
+    });
 
-      if (alertTitle) alertTitle.textContent = title;
-      if (alertMsg)   alertMsg.textContent = msg;
+    let fonteLine = "";
+    if(fontes.size){
+      const joined = Array.from(fontes).join(" • ");
+      fonteLine = `<div class="newsSourceLine">Fonte: ${joined.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]))}</div>`;
+    }
 
-      if (alertBox){
-        alertBox.style.display = "block";
-        alertBox.classList.toggle("blink", blink);
-      }
+    newsBody.innerHTML = html + fonteLine;
+    newsBox.style.display = "flex";
+  }catch(e){
+    newsBody.innerHTML = `
+      <div class="newsItem"><p class="h">Mensagens indisponíveis</p></div>
+      <div class="newsSourceLine">Fonte: news.google.com (offline)</div>
+    `;
+    newsBox.style.display = "flex";
+  }
 
-      // esconde mensagens / news enquanto alerta estiver ativo
-      const newsBox = document.getElementById("newsBox");
+  try{
+    const cfg = window.__lastDataForTopbar || {};
+    if(cfg?.alertaUrgente?.ativar){
       if(newsBox) newsBox.style.display = "none";
-
-    }else{
-      if (alertBox){
-        alertBox.style.display = "none";
-        alertBox.classList.remove("blink");
-      }
-      document.documentElement.classList.remove("urgentOn");
+      return;
     }
   }catch(e){}
 }
 
 
-    async function fetchDataJson(){
-      const url = "./data.json?ts=" + Date.now();
-      const res = await fetch(url, { cache:"no-store" });
-      if(!res.ok) throw new Error("HTTP " + res.status);
-      return await res.json();
+async function fetchDataJson(){
+  const url = "./data.json?ts=" + Date.now();
+  const res = await fetchWithTimeout(url, { cache:"no-store" }, 12000);
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  return await res.json();
+}
+
+function updateStatus(ok, hhmm){
+  const dot = document.getElementById("dotOnline");
+  const s1 = document.getElementById("statusJson");
+  const s2 = document.getElementById("statusJsonMini");
+
+  if(dot) dot.style.background = ok ? "#2ecc71" : "#ff5a5a";
+
+  const okTxt = hhmm ? `Atualizado ${hhmm}` : "Atualizado";
+  if(s1) s1.textContent = ok ? okTxt : "Offline";
+  if(s2) s2.textContent = ok ? okTxt : "Offline";
+}
+
+async function loadAll(){
+  try{
+    const data = await fetchDataJson();
+    window.__lastDataForTopbar = data || {};
+
+    aplicarImagemTopbar(data);
+    renderAvisos(data);
+    await carregarVersiculo(data);
+    await carregarClima(data);
+    iniciarPublicidade(data);
+
+    applyUrgentBox(data);
+    await carregarMensagensCidade();
+
+    const d = new Date();
+    const hhmm = `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+    updateStatus(true, hhmm);
+
+    return true;
+  }catch(e){
+    updateStatus(false);
+    try{ await carregarMensagensCidade(); }catch(_){}
+    return false;
+  }
+}
+
+let __autoTimer = null;
+let __failCount = 0;
+
+function scheduleNext(ms){
+  if(__autoTimer) clearTimeout(__autoTimer);
+  __autoTimer = setTimeout(runAutoRefresh, ms);
+}
+
+async function runAutoRefresh(){
+  const ok = await loadAll();
+
+  if(ok){
+    __failCount = 0;
+    scheduleNext(60 * 1000); // normal: 1 min
+  }else{
+    __failCount++;
+    const wait = Math.min(30000, 10000 * __failCount);
+    scheduleNext(wait);
+  }
+}
+
+// ✅ INICIA AGORA
+runAutoRefresh();
+
+
+// ✅ SERVICE WORKER — atualiza e ativa sozinho (sem Ctrl+F5)
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("./sw.js").then(async (reg)=>{
+    try{ await reg.update(); }catch(e){}
+
+    // se já tem uma versão esperando, ativa ela agora
+    if(reg.waiting){
+      reg.waiting.postMessage("SKIP_WAITING");
     }
 
-    function updateStatus(ok){
-      const dot = document.getElementById("dotOnline");
-      const s1 = document.getElementById("statusJson");
-      const s2 = document.getElementById("statusJsonMini");
-      if(dot) dot.style.background = ok ? "#2ecc71" : "#ff5a5a";
-      if(s1) s1.textContent = ok ? "Atualizado automaticamente" : "Offline";
-      if(s2) s2.textContent = ok ? "Atualizado automaticamente" : "Offline";
-    }
-
-    async function loadAll(){
-      try{
-        const data = await fetchDataJson();
-        window.__lastDataForTopbar = data || {};
-        updateStatus(true);
-
-        aplicarImagemTopbar(data);
-        renderAvisos(data);
-        await carregarVersiculo(data);
-        await carregarClima(data);
-        iniciarPublicidade(data);
-
-        applyUrgentBox(data);
-        await carregarMensagensCidade();
-      }catch(e){
-        updateStatus(false);
-        try{ await carregarMensagensCidade(); }catch(_){}
-      }
-    }
-
-    loadAll();
-    setInterval(()=>{ loadAll(); }, 60 * 1000);
-
-    if("serviceWorker" in navigator){
-      navigator.serviceWorker.register("./sw.js").catch(()=>{});
-      navigator.serviceWorker.addEventListener("message", (event)=>{
-        try{
-          if(event?.data?.type === "NEW_VERSION"){
+    // se achar update, força ativar a nova e recarregar
+    reg.addEventListener("updatefound", ()=>{
+      const nw = reg.installing;
+      if(!nw) return;
+      nw.addEventListener("statechange", ()=>{
+        if(nw.state === "installed"){
+          if(navigator.serviceWorker.controller){
+            try{ nw.postMessage("SKIP_WAITING"); }catch(e){}
             const b = document.getElementById("updateBanner");
             if(b) b.style.display = "block";
-            setTimeout(()=>location.reload(), 1200);
+            setTimeout(()=>location.reload(), 900);
           }
-        }catch(e){}
+        }
       });
-    }
+    });
+  }).catch(()=>{});
+
+  navigator.serviceWorker.addEventListener("message", (event)=>{
+    try{
+      if(event?.data?.type === "NEW_VERSION"){
+        const b = document.getElementById("updateBanner");
+        if(b) b.style.display = "block";
+        setTimeout(()=>location.reload(), 900);
+      }
+    }catch(e){}
+  });
+}
+
 
 
   </script>
