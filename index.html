@@ -1228,7 +1228,13 @@ function csEnsureToken(promptText){
   }
   return "";
 }
-
+// garante token carregado uma única vez ao iniciar o app
+(function initTokenOnce(){
+  const t = csEnsureToken("Informe o token de acesso (será solicitado apenas uma vez):");
+  if(!t){
+    throw new Error("Token não informado");
+  }
+})();
 /**
  * PATCH 3 — captura token vindo pela URL (?token=...)
  * Salva no localStorage e LIMPA a URL
