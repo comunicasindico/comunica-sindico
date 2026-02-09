@@ -1118,8 +1118,46 @@
   z-index: 4;
 }
 
+/* ====== MOLDE TV (overlay real) ====== */
+/* parent do overlay: o container que contém os 2 vídeos */
+.videoMain{
+  position: relative; /* garante contexto p/ z-index do vídeo */
+  z-index: 1;
+}
 
-    
+/* IMPORTANTE: o overlay precisa de um "pai" com position:relative.
+   Como nem sempre dá pra confiar no vídeo, setamos isso no PAI direto:
+   o elemento que contém os vídeos deve receber esta classe abaixo.
+   Se o seu container já tem classe, use o seletor dele (veja PATCH 2B). */
+.tvOverlay{
+  position: absolute;
+  inset: 0;                 /* ocupa exatamente o mesmo campo */
+  border: 4px solid #000;   /* PRETA */
+  border-radius: 12px;
+  box-shadow: 0 14px 34px rgba(0,0,0,.7), inset 0 0 10px rgba(255,255,255,.05);
+  pointer-events: none;
+  z-index: 5;               /* acima do vídeo */
+}
+
+    /* ====== MOLDE TV (overlay) ====== */
+.videoWrap{
+  position: relative; /* NECESSÁRIO pro overlay */
+}
+
+/* Moldura preta por cima do vídeo, sem alterar o campo */
+.videoWrap .tvOverlay{
+  position: absolute;
+  inset: 0;                 /* ocupa exatamente o mesmo retângulo do vídeo */
+  border: 4px solid #000;   /* PRETA */
+  border-radius: 12px;
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 50;              /* acima do vídeo e dos controles */
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.7),
+    inset 0 0 10px rgba(255,255,255,.05);
+}
+
 
     
   </style>
@@ -1176,23 +1214,24 @@
           <div class="panel tile" id="tile4">
             <div class="tileBody" id="slot4">
 
-              <div class="videoWrap">
+       <div class="videoWrap">
 
                 <button class="adNav adPrev" type="button" onclick="adPrevBtn()" aria-label="Anterior">⏮</button>
                 <button class="adNav adNext" type="button" onclick="adNextBtn()" aria-label="Próximo">⏭</button>
 
-           <video id="adVideoBg" class="videoBg"
-  autoplay muted playsinline webkit-playsinline loop
-  preload="auto"
-  disablepictureinpicture
-  controlslist="nofullscreen noremoteplayback nodownload"></video>
+          <video id="adVideoBg" class="videoBg"
+          autoplay muted playsinline webkit-playsinline loop
+          preload="auto"
+          disablepictureinpicture
+          controlslist="nofullscreen noremoteplayback nodownload"></video>
 
-<video id="adVideo" class="videoMain"
-  autoplay muted playsinline webkit-playsinline
-  preload="auto"
-  disablepictureinpicture
-  controlslist="nofullscreen noremoteplayback nodownload"></video>
-
+          <video id="adVideo" class="videoMain"
+          autoplay muted playsinline webkit-playsinline
+          preload="auto"
+          disablepictureinpicture
+          controlslist="nofullscreen noremoteplayback nodownload"></video>
+         
+          <div class="tvOverlay" aria-hidden="true"></div>
 
               </div>
 
