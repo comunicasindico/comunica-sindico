@@ -49,6 +49,10 @@
       {
         "arquivo": "./ads/03_larissa.mp4",
         "anunciante": "Larissa em seu primeiro aninho."
+      },
+      {
+        "arquivo": "./ads/novo.mp4",
+        "anunciante": "larissa"
       }
     ],
     "cabecalhoImagem": {
