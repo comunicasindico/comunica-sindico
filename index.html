@@ -1069,6 +1069,75 @@
       margin: 0 !important;
       font-size: clamp(11px, 2.8vw, 14px) !important;
     }
+
+
+
+    /* =========================
+   TV PEQUENA (CASCA DO VÍDEO)
+   ========================= */
+.tvShell{
+  width: 100%;
+  height: 100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap: 6px;
+}
+
+/* Moldura */
+.tvFrame{
+  width: min(420px, 92%);
+  aspect-ratio: 16 / 9;
+  position: relative;
+  background:#000;
+  border-radius: 12px;
+  border: 4px solid rgba(230,230,230,.95);
+  box-shadow: 0 10px 28px rgba(0,0,0,.55), inset 0 0 18px rgba(255,255,255,.08);
+  overflow:hidden;
+}
+
+/* IMPORTANTE: seus vídeos já têm classes videoBg e videoMain.
+   Aqui garantimos que eles se encaixem dentro da moldura. */
+.tvFrame .videoBg,
+.tvFrame .videoMain{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit: cover;
+}
+
+/* Pés */
+.tvLegs{
+  width: 170px;
+  display:flex;
+  justify-content:space-between;
+}
+.tvLegs span{
+  width: 12px;
+  height: 28px;
+  border-radius: 3px;
+  background: linear-gradient(#666, #222);
+  transform: rotate(10deg);
+}
+.tvLegs span:last-child{
+  transform: rotate(-10deg);
+}
+
+/* Ajuste automático */
+@media (max-width: 600px){
+  .tvFrame{ width: min(320px, 92%); }
+  .tvLegs{ width: 140px; }
+}
+@media (min-width: 1200px){
+  .tvFrame{ width: min(520px, 92%); }
+  .tvLegs{ width: 200px; }
+}
+
+
+
+    
   </style>
 </head>
 <body>
@@ -1128,17 +1197,26 @@
                 <button class="adNav adPrev" type="button" onclick="adPrevBtn()" aria-label="Anterior">⏮</button>
                 <button class="adNav adNext" type="button" onclick="adNextBtn()" aria-label="Próximo">⏭</button>
 
-                <video id="adVideoBg" class="videoBg"
-                  autoplay muted playsinline webkit-playsinline loop
-                  preload="auto"
-                  disablepictureinpicture
-                  controlslist="nofullscreen noremoteplayback nodownload"></video>
+               <div class="tvShell">
+  <div class="tvFrame">
+    <video id="adVideoBg" class="videoBg"
+      autoplay muted playsinline webkit-playsinline loop
+      preload="auto"
+      disablepictureinpicture
+      controlslist="nofullscreen noremoteplayback nodownload"></video>
 
-                <video id="adVideo" class="videoMain"
-                  autoplay muted playsinline webkit-playsinline
-                  preload="auto"
-                  disablepictureinpicture
-                  controlslist="nofullscreen noremoteplayback nodownload"></video>
+    <video id="adVideo" class="videoMain"
+      autoplay muted playsinline webkit-playsinline
+      preload="auto"
+      disablepictureinpicture
+      controlslist="nofullscreen noremoteplayback nodownload"></video>
+  </div>
+
+  <div class="tvLegs" aria-hidden="true">
+    <span></span><span></span>
+  </div>
+</div>
+
               </div>
 
               <div class="adBelow">
