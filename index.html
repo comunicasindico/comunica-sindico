@@ -1223,6 +1223,37 @@
   box-shadow: none !important;
 }
 
+
+    /* ====== VIDEO (tile4): remover glow azul e deixar PRETO ====== */
+
+/* força apenas no tile do vídeo */
+#tile4{
+  box-shadow: none !important;
+}
+
+/* se o glow azul vier do painel interno */
+#tile4 .panel,
+#tile4 .tileBody{
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* cria o mesmo “peso visual”, mas PRETO */
+#tile4{
+  box-shadow:
+    0 0 0 2px #000,
+    0 0 0 6px #000,
+    0 10px 28px rgba(0,0,0,.65) !important;
+}
+/* mata qualquer pseudo-elemento azul do tile do vídeo */
+#tile4::before,
+#tile4::after,
+#tile4 .panel::before,
+#tile4 .panel::after{
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
     
 
     
