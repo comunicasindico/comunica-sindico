@@ -1181,10 +1181,16 @@
 }
 /* ====== OCULTAR MARCA CS NO CELULAR ====== */
 @media (max-width: 600px){
+  /* volta a borda para fina e uniforme */
+  .videoWrap .tvOverlay{
+    border-bottom-width: 4px;   /* mesma espessura das outras bordas */
+  }
+  /* remove a marca CS no celular */
   .videoWrap .tvOverlay::after{
     display: none;
   }
 }
+  
 
 
     
