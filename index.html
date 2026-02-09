@@ -1203,6 +1203,27 @@
   border-color: #000 !important;
 }
 
+    /* ====== BORDA EXTERNA DOS QUADRANTES (PRETA) ====== */
+
+/* os 4 quadrantes do topo */
+#tile1, #tile2, #tile3, #tile4,
+.panel.tile{
+  border: 2px solid #000 !important; /* troca a cor e garante a borda */
+}
+
+/* se existir uma “moldura” interna no conteúdo do quadrante */
+#tile1 .tileBody, #tile2 .tileBody, #tile3 .tileBody, #tile4 .tileBody,
+.panel.tile .tileBody{
+  border-color: #000 !important;
+}
+/* reforço: remove glow/azul e deixa preto */
+#tile1, #tile2, #tile3, #tile4,
+.panel.tile{
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+    
 
     
   </style>
