@@ -2347,9 +2347,9 @@
 
       if(dot) dot.style.background = ok ? "#2ecc71" : "#ff5a5a";
 
-      const okTxt = hhmm ? `Atualizado ${hhmm}` : "Atualizado";
-      if(s1) s1.textContent = ok ? okTxt : "Offline";
-      if(s2) s2.textContent = ok ? okTxt : "Offline";
+      if(s1) s1.textContent = ok ? "" : "Offline";
+      if(s2) s2.textContent = ok ? "" : "Offline";
+
     }
 
     async function loadAll(){
