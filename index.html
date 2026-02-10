@@ -943,11 +943,47 @@ html.isTV:not(.isPortrait) .wrap{
       inset: 0 !important;
     }
 
-    html.isTV:not(.isPortrait) .wrap{
-      position: fixed !important;
-      inset: 0 !important;
-      overflow:hidden !important;
-    }
+    /* =========================================================
+   TV 55" — CANVAS SEGURO (ANTI-OVERSCAN)
+   ========================================================= */
+html.isTV:not(.isPortrait) .wrap{
+  position: fixed !important;
+
+  /* reduz canvas lógico */
+  width: 92vw !important;
+  height: 92vh !important;
+
+  /* centraliza */
+  top: 50% !important;
+  left: 50% !important;
+  transform-origin: top left;
+  transform: translate(-50%, -50%) scale(0.80);
+
+  overflow: hidden !important;
+}
+
+    /* TVs muito grandes (4K / 55"+) */
+@media (min-width: 1900px){
+  html.isTV:not(.isPortrait) .wrap{
+    width: 90vw !important;
+    height: 90vh !important;
+    transform: translate(-50%, -50%) scale(0.78);
+  }
+}
+
+/* TVs menores */
+@media (max-width: 1600px){
+  html.isTV:not(.isPortrait) .wrap{
+    width: 94vw !important;
+    height: 94vh !important;
+    transform: translate(-50%, -50%) scale(0.82);
+  }
+}
+
+    html.isTV:not(.isPortrait) .ticker{
+  margin-bottom: 8px !important;
+}
+
 
     /* =========================================================
        ALERTA (apenas 1 caixa) — a outra fica ocultada via JS
