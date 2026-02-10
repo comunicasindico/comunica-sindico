@@ -787,12 +787,40 @@
       :root{ --tv-safe-bottom: 44px; }
     }
 
-    html.isTV{
-      --ui:  clamp(1, calc(100dvh / 980), 1.70);
-      --ui2: clamp(1, calc(100dvh / 920), 2.05);
-      --tv-safe-bottom: 44px;
-    }
+    /* =========================================================
+   TV = MESMA ESCALA DO PC (SEM AUTO-REESCALA)
+   ========================================================= */
+html.isTV{
+  --ui: 1;
+  --ui2: 1;
+  --tv-safe-bottom: 44px;
+}
 
+/* =========================================================
+   ZOOM VISUAL DA TV (equivale a 77% / 150%)
+   ========================================================= */
+html.isTV:not(.isPortrait) .wrap{
+  transform-origin: top center;
+  transform: scale(0.77);
+}
+
+/* TVs 4K */
+@media (min-width: 2400px){
+  html.isTV:not(.isPortrait) .wrap{
+    transform: scale(0.70);
+  }
+}
+
+/* TVs menores */
+@media (max-width: 1400px){
+  html.isTV:not(.isPortrait) .wrap{
+    transform: scale(0.85);
+  }
+}
+
+
+
+    
     html.isTV:not(.isPortrait) .wrap{
       height:100dvh !important;
       min-height:100dvh !important;
@@ -1350,7 +1378,17 @@
   }
 }
 
-    
+    /* =========================================================
+   TV NUNCA HERDA MOBILE
+   ========================================================= */
+html.isTV:not(.isPortrait) .quadTop{
+  display: grid !important;
+}
+
+html.isTV:not(.isPortrait){
+  overflow: hidden !important;
+}
+
 
     
   </style>
