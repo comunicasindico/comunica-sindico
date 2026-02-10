@@ -415,7 +415,19 @@
           <div class="panel" id="tVideos">
             <div class="field">
               <label>Vídeos (Publicidades)</label>
-              <div class="btnRow">
+
+              <!-- ✅ NOVO: UPLOAD DIRETO PARA /ads -->
+              <div class="hint" style="margin-top:6px">
+                ⬆️ Envie um vídeo direto para <b>/ads</b> no GitHub e já copie/cole no campo <b>arquivo</b>.<br/>
+                (Funciona melhor para vídeos menores; vídeos muito grandes podem falhar pela limitação da API.)
+              </div>
+              <div class="row">
+                <input id="adUploadFile" type="file" accept="video/*" />
+                <button class="btn warn" id="btnUploadToAds">⬆️ Enviar para /ads</button>
+              </div>
+              <div class="mini" id="uploadStatus" style="margin-top:6px;opacity:.95">—</div>
+
+              <div class="btnRow" style="margin-top:10px">
                 <button class="btn ghost" id="btnAddVideo">➕ Incluir vídeo</button>
                 <button class="btn ghost" id="btnShuffleToggle">🔀 Alternar Shuffle</button>
               </div>
@@ -592,6 +604,9 @@ const GITHUB_PATH   = "data.json";
 const GITHUB_CAB_PATH = "assets/cidade-header.jpg";
 const CAB_PUBLIC_URL  = "../assets/cidade-header.jpg";
 
+/* ✅ Upload de vídeos (ads/) */
+const GITHUB_ADS_DIR = "ads";
+
 /* ============================
    ESTADO
    ============================ */
@@ -625,9 +640,11 @@ function prettyJson(obj){ return JSON.stringify(obj, null, 2); }
 
 /* ============================
    LOGIN (senha local)
+   ✅ CORRIGIDO: não pedir senha toda hora
+   - auth ok agora persiste em localStorage
    ============================ */
 const PASS_KEY = "CS_ADMIN_PASS_HASH";
-const AUTH_KEY = "CS_ADMIN_AUTH_OK";
+const AUTH_KEY = "CS_ADMIN_AUTH_OK"; // persistente
 
 async function sha256Hex(str){
   const data = new TextEncoder().encode(str);
@@ -643,12 +660,12 @@ function setPassHash(v){
 }
 function setAuth(ok){
   try{
-    if(ok) sessionStorage.setItem(AUTH_KEY,"1");
-    else sessionStorage.removeItem(AUTH_KEY);
+    if(ok) localStorage.setItem(AUTH_KEY,"1");
+    else localStorage.removeItem(AUTH_KEY);
   }catch(e){}
 }
 function isAuthed(){
-  try{ return sessionStorage.getItem(AUTH_KEY)==="1"; }catch(e){ return false; }
+  try{ return localStorage.getItem(AUTH_KEY)==="1"; }catch(e){ return false; }
 }
 function showLogin(){
   const ov = $("loginOverlay");
@@ -730,6 +747,7 @@ function logout(){
 
 /* ============================
    TOKEN (sessão + lembrar)
+   ✅ CORRIGIDO: lembrar de verdade + não “sumir” ao usar
    ============================ */
 const GH_TOKEN_SESSION_KEY = "CS_GH_TOKEN_SESSION";
 const GH_TOKEN_LOCAL_KEY   = "CS_GH_TOKEN_LOCAL";
@@ -755,13 +773,12 @@ function saveToken(){
   const remember = !!$("rememberToken")?.checked;
 
   try{
-    if(remember){
-      localStorage.setItem(GH_TOKEN_LOCAL_KEY, v);
-      sessionStorage.removeItem(GH_TOKEN_SESSION_KEY);
-    }else{
-      sessionStorage.setItem(GH_TOKEN_SESSION_KEY, v);
-      localStorage.removeItem(GH_TOKEN_LOCAL_KEY);
-    }
+    // sempre salva em session (uso imediato)
+    sessionStorage.setItem(GH_TOKEN_SESSION_KEY, v);
+
+    // se marcou “lembrar”, também salva em localStorage
+    if(remember) localStorage.setItem(GH_TOKEN_LOCAL_KEY, v);
+    else localStorage.removeItem(GH_TOKEN_LOCAL_KEY);
   }catch(e){}
 
   $("token").value = "";
@@ -1492,6 +1509,71 @@ async function uploadCabImage(){
 }
 
 /* ============================
+   ✅ UPLOAD VÍDEO PARA /ads
+   ============================ */
+function setUploadStatus(msg, type){
+  const el = $("uploadStatus");
+  if(!el) return;
+  el.textContent = msg || "—";
+  el.style.color =
+    type==="ok" ? "rgba(68,208,122,.95)" :
+    type==="warn" ? "rgba(255,179,71,.95)" :
+    type==="bad" ? "rgba(255,90,90,.95)" :
+    "rgba(234,242,255,.78)";
+}
+
+async function uploadVideoToAds(){
+  const token = getToken();
+  if(!token){ alert("Cole seu token e clique em 'Salvar token'."); return; }
+
+  const fi = $("adUploadFile");
+  const file = fi?.files?.[0];
+  if(!file){ alert("Selecione um vídeo primeiro."); return; }
+
+  try{
+    setUploadStatus("Enviando para /ads…", "warn");
+    setStatus("Enviando vídeo…","");
+
+    const safeName = String(file.name || "video.mp4").replace(/[^\w.\-()+ ]+/g, "_").replace(/\s+/g, "_");
+    const path = `${GITHUB_ADS_DIR}/${safeName}`;
+
+    const b64 = await fileToBase64Plain(file);
+    const sha = await ghGetShaForPath(token, path);
+
+    await ghPutFileRaw(
+      token,
+      path,
+      b64,
+      sha,
+      `Upload vídeo (ads): ${safeName}`
+    );
+
+    // aplica no JSON: usa caminho relativo do site
+    ensureBaseShape();
+    const rel = `./ads/${safeName}`;
+    const raw = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/ads/${encodeURIComponent(safeName)}`;
+
+    // adiciona (ou atualiza último)
+    DATA.publicidade.videos.push({ arquivo: rel, anunciante: "Novo vídeo" });
+
+    renderVideos();
+    rebuildJsonView();
+
+    setStatus("Vídeo enviado","ok");
+    setUploadStatus(`✅ Enviado: ${rel}  |  RAW: ${raw}`, "ok");
+
+    // limpa input para permitir reenviar o mesmo arquivo se quiser
+    fi.value = "";
+    alert("✅ Vídeo enviado para /ads.\n\nUse no campo 'arquivo':\n" + rel);
+  }catch(e){
+    console.error(e);
+    setStatus("Erro","bad");
+    setUploadStatus("❌ Falha no upload: " + String(e.message || e), "bad");
+    alert("❌ Falha ao enviar vídeo.\n\n" + String(e.message || e));
+  }
+}
+
+/* ============================
    ALERTA: BOTÕES RÁPIDOS
    ============================ */
 function alertOn(){
@@ -1544,6 +1626,8 @@ function bind(){
   $("btnAddVideo").onclick = addVideo;
   $("btnShuffleToggle").onclick = toggleShuffle;
 
+  $("btnUploadToAds").onclick = uploadVideoToAds;
+
   $("btnAlertOn").onclick = alertOn;
   $("btnAlertOff").onclick = alertOff;
 
@@ -1578,7 +1662,9 @@ initTokenUI();
 applyAutoCarregarUI();
 setStatus("Offline","bad");
 setAutoBadge(false);
+setUploadStatus("—", "");
 
+// ✅ se já estiver autenticado (persistente), não pede senha
 if(!isAuthed()){
   showLogin();
 }else{
