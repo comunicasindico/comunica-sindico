@@ -640,11 +640,10 @@ function prettyJson(obj){ return JSON.stringify(obj, null, 2); }
 
 /* ============================
    LOGIN (senha local)
-   ✅ CORRIGIDO: não pedir senha toda hora
-   - auth ok agora persiste em localStorage
+   ✅ AJUSTE: sempre pedir senha ao abrir (sessão não persiste)
    ============================ */
 const PASS_KEY = "CS_ADMIN_PASS_HASH";
-const AUTH_KEY = "CS_ADMIN_AUTH_OK"; // persistente
+const AUTH_KEY = "CS_ADMIN_AUTH_OK"; // sessão (não persiste) + vamos limpar no init
 
 async function sha256Hex(str){
   const data = new TextEncoder().encode(str);
@@ -660,12 +659,12 @@ function setPassHash(v){
 }
 function setAuth(ok){
   try{
-    if(ok) localStorage.setItem(AUTH_KEY,"1");
-    else localStorage.removeItem(AUTH_KEY);
+    if(ok) sessionStorage.setItem(AUTH_KEY,"1");
+    else sessionStorage.removeItem(AUTH_KEY);
   }catch(e){}
 }
 function isAuthed(){
-  try{ return localStorage.getItem(AUTH_KEY)==="1"; }catch(e){ return false; }
+  try{ return sessionStorage.getItem(AUTH_KEY)==="1"; }catch(e){ return false; }
 }
 function showLogin(){
   const ov = $("loginOverlay");
@@ -747,7 +746,7 @@ function logout(){
 
 /* ============================
    TOKEN (sessão + lembrar)
-   ✅ CORRIGIDO: lembrar de verdade + não “sumir” ao usar
+   ✅ mantém token para não pedir toda hora
    ============================ */
 const GH_TOKEN_SESSION_KEY = "CS_GH_TOKEN_SESSION";
 const GH_TOKEN_LOCAL_KEY   = "CS_GH_TOKEN_LOCAL";
@@ -755,6 +754,7 @@ const GH_TOKEN_LOCAL_KEY   = "CS_GH_TOKEN_LOCAL";
 function getToken(){
   const v = ($("token").value || "").trim();
   if(v) return v;
+
   try{
     return (
       (sessionStorage.getItem(GH_TOKEN_SESSION_KEY)||"").trim() ||
@@ -770,19 +770,21 @@ function saveToken(){
   const v = ($("token").value || "").trim();
   if(!v){ alert("Cole seu token primeiro."); return; }
 
-  const remember = !!$("rememberToken")?.checked;
+  // ✅ FORÇAR lembrar sempre neste navegador (para não pedir token toda hora)
+  const remember = true;
+  if($("rememberToken")) $("rememberToken").checked = true;
 
   try{
     // sempre salva em session (uso imediato)
     sessionStorage.setItem(GH_TOKEN_SESSION_KEY, v);
 
-    // se marcou “lembrar”, também salva em localStorage
+    // e também em localStorage (persistente)
     if(remember) localStorage.setItem(GH_TOKEN_LOCAL_KEY, v);
     else localStorage.removeItem(GH_TOKEN_LOCAL_KEY);
   }catch(e){}
 
   $("token").value = "";
-  alert(remember ? "Token salvo neste navegador (lembrado)." : "Token salvo apenas nesta sessão.");
+  alert("✅ Token salvo neste navegador (não será solicitado novamente aqui).");
 }
 
 function clearToken(){
@@ -1403,7 +1405,6 @@ async function ghPutFileRaw(token, path, contentBase64, sha, message){
     body: JSON.stringify(body)
   });
 
-  // ✅ se falhar, captura JSON do GitHub (com a causa real)
   if(!res.ok){
     let payload = "";
     try{
@@ -1417,7 +1418,6 @@ async function ghPutFileRaw(token, path, contentBase64, sha, message){
 
   return await res.json();
 }
-
 
 async function publishToGitHub(){
   if(!DATA){ alert("Carregue o data.json primeiro."); return; }
@@ -1531,7 +1531,8 @@ function setUploadStatus(msg, type){
     "rgba(234,242,255,.78)";
 }
 
-aasync function uploadVideoToAds(){
+// ✅ CORRIGIDO: era "aasync"
+async function uploadVideoToAds(){
   const token = getToken();
   if(!token){ alert("Cole seu token e clique em 'Salvar token'."); return; }
 
@@ -1539,7 +1540,6 @@ aasync function uploadVideoToAds(){
   const file = fi?.files?.[0];
   if(!file){ alert("Selecione um vídeo primeiro."); return; }
 
-  // ✅ LIMITE PRÁTICO do endpoint /contents: ~50MB (recomendado)
   const maxBytes = 50 * 1024 * 1024;
   if (file.size > maxBytes){
     alert("Esse vídeo parece grande demais para enviar pelo botão (API do GitHub).\n\n" +
@@ -1553,13 +1553,11 @@ aasync function uploadVideoToAds(){
     setUploadStatus("Lendo arquivo…", "warn");
     setStatus("Enviando vídeo…","");
 
-    // ✅ FORÇA o nome exato no repositório:
     const safeName = "novo.mp4";
     const path = `${GITHUB_ADS_DIR}/${safeName}`;
 
     const b64 = await fileToBase64Plain(file);
 
-    // mostra tamanho base64 aproximado (debug)
     const approxB64MB = Math.round((b64.length * 3/4) / 1024 / 1024);
     setUploadStatus(`Enviando (aprox ${approxB64MB} MB)…`, "warn");
 
@@ -1576,7 +1574,6 @@ aasync function uploadVideoToAds(){
     ensureBaseShape();
     const rel = `./ads/${safeName}`;
 
-    // atualiza/insere no JSON: se já existir “./ads/novo.mp4”, só mantém
     const exists = DATA.publicidade.videos.some(v => String(v?.arquivo||"") === rel);
     if(!exists){
       DATA.publicidade.videos.push({ arquivo: rel, anunciante: "Novo vídeo" });
@@ -1597,7 +1594,6 @@ aasync function uploadVideoToAds(){
     alert("❌ Falha ao enviar vídeo.\n\n" + String(e.message || e));
   }
 }
-
 
 /* ============================
    ALERTA: BOTÕES RÁPIDOS
@@ -1690,13 +1686,9 @@ setStatus("Offline","bad");
 setAutoBadge(false);
 setUploadStatus("—", "");
 
-// ✅ se já estiver autenticado (persistente), não pede senha
-if(!isAuthed()){
-  showLogin();
-}else{
-  maybeAutoCarregar();
-  setTab("tAlerta");
-}
+// ✅ IMPORTANTE: com o AUTH em sessionStorage, VAI PEDIR SENHA sempre que abrir de novo
+showLogin(); // sempre pede ao abrir
+setTab("tAlerta"); // pode deixar já na aba, mas ainda bloqueado pelo overlay
 
 /* ============================
    SERVICE WORKER GLOBAL
@@ -1709,5 +1701,4 @@ if ("serviceWorker" in navigator) {
   });
 }
 </script>
-</body>
-</html>
+
