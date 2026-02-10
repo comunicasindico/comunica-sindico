@@ -1403,12 +1403,21 @@ async function ghPutFileRaw(token, path, contentBase64, sha, message){
     body: JSON.stringify(body)
   });
 
+  // ✅ se falhar, captura JSON do GitHub (com a causa real)
   if(!res.ok){
-    const txt = await res.text().catch(()=> "");
-    throw new Error("GitHub PUT falhou: " + res.status + " " + txt);
+    let payload = "";
+    try{
+      const j = await res.json();
+      payload = JSON.stringify(j, null, 2);
+    }catch(_){
+      payload = await res.text().catch(()=> "");
+    }
+    throw new Error("GitHub PUT falhou: " + res.status + "\n" + payload);
   }
+
   return await res.json();
 }
+
 
 async function publishToGitHub(){
   if(!DATA){ alert("Carregue o data.json primeiro."); return; }
@@ -1522,7 +1531,7 @@ function setUploadStatus(msg, type){
     "rgba(234,242,255,.78)";
 }
 
-async function uploadVideoToAds(){
+aasync function uploadVideoToAds(){
   const token = getToken();
   if(!token){ alert("Cole seu token e clique em 'Salvar token'."); return; }
 
@@ -1530,14 +1539,30 @@ async function uploadVideoToAds(){
   const file = fi?.files?.[0];
   if(!file){ alert("Selecione um vídeo primeiro."); return; }
 
+  // ✅ LIMITE PRÁTICO do endpoint /contents: ~50MB (recomendado)
+  const maxBytes = 50 * 1024 * 1024;
+  if (file.size > maxBytes){
+    alert("Esse vídeo parece grande demais para enviar pelo botão (API do GitHub).\n\n" +
+          "Tamanho: " + Math.round(file.size/1024/1024) + " MB\n" +
+          "Limite recomendado: até 50 MB.\n\n" +
+          "Solução: enviar manualmente pelo site do GitHub (Add file → Upload) ou reduzir o vídeo.");
+    return;
+  }
+
   try{
-    setUploadStatus("Enviando para /ads…", "warn");
+    setUploadStatus("Lendo arquivo…", "warn");
     setStatus("Enviando vídeo…","");
 
-    const safeName = String(file.name || "video.mp4").replace(/[^\w.\-()+ ]+/g, "_").replace(/\s+/g, "_");
+    // ✅ FORÇA o nome exato no repositório:
+    const safeName = "novo.mp4";
     const path = `${GITHUB_ADS_DIR}/${safeName}`;
 
     const b64 = await fileToBase64Plain(file);
+
+    // mostra tamanho base64 aproximado (debug)
+    const approxB64MB = Math.round((b64.length * 3/4) / 1024 / 1024);
+    setUploadStatus(`Enviando (aprox ${approxB64MB} MB)…`, "warn");
+
     const sha = await ghGetShaForPath(token, path);
 
     await ghPutFileRaw(
@@ -1548,23 +1573,23 @@ async function uploadVideoToAds(){
       `Upload vídeo (ads): ${safeName}`
     );
 
-    // aplica no JSON: usa caminho relativo do site
     ensureBaseShape();
     const rel = `./ads/${safeName}`;
-    const raw = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/ads/${encodeURIComponent(safeName)}`;
 
-    // adiciona (ou atualiza último)
-    DATA.publicidade.videos.push({ arquivo: rel, anunciante: "Novo vídeo" });
+    // atualiza/insere no JSON: se já existir “./ads/novo.mp4”, só mantém
+    const exists = DATA.publicidade.videos.some(v => String(v?.arquivo||"") === rel);
+    if(!exists){
+      DATA.publicidade.videos.push({ arquivo: rel, anunciante: "Novo vídeo" });
+    }
 
     renderVideos();
     rebuildJsonView();
 
     setStatus("Vídeo enviado","ok");
-    setUploadStatus(`✅ Enviado: ${rel}  |  RAW: ${raw}`, "ok");
+    setUploadStatus(`✅ Enviado: ${rel}`, "ok");
 
-    // limpa input para permitir reenviar o mesmo arquivo se quiser
     fi.value = "";
-    alert("✅ Vídeo enviado para /ads.\n\nUse no campo 'arquivo':\n" + rel);
+    alert("✅ Vídeo enviado para /ads como: " + safeName + "\n\nUse no campo 'arquivo':\n" + rel);
   }catch(e){
     console.error(e);
     setStatus("Erro","bad");
@@ -1572,6 +1597,7 @@ async function uploadVideoToAds(){
     alert("❌ Falha ao enviar vídeo.\n\n" + String(e.message || e));
   }
 }
+
 
 /* ============================
    ALERTA: BOTÕES RÁPIDOS
