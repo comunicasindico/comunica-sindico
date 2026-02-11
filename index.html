@@ -767,7 +767,7 @@
       html.isTV:not(.isPortrait) .quadTop{
         display:grid !important;
         grid-template-columns: 1fr 1fr !important;
-        grid-template-rows: 1fr 1fr !important;
+        grid-template-rows: repeat(3, 1fr) !important;
         height:100% !important;
       }
       html.isTV:not(.isPortrait), html.isTV:not(.isPortrait) body{ overflow:hidden !important; height:100dvh !important; min-height:100dvh !important; }
@@ -801,7 +801,7 @@ html.isTV{
    ========================================================= */
 html.isTV:not(.isPortrait) .wrap{
   transform-origin: top center;
-  transform: scale(0.77);
+  transform: scale(0.90);
 }
 
 /* TVs 4K */
