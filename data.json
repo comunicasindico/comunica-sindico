@@ -13,14 +13,42 @@
     "ativar": true,
     "shuffle": true,
     "videos": [
-      { "arquivo": "./ads/calibram.mp4" },
-      { "arquivo": "./ads/comunica_sindico_logo.mp4" },
-      { "arquivo": "./ads/googlemaps2.mp4" },
-      { "arquivo": "./ads/cslogo.mp4" },
-      { "arquivo": "./ads/luisa.mp4" },
-      { "arquivo": "./ads/03larissa.mp4" },
-      { "arquivo": "./ads/googlemaps.mp4" }
-    ]
+  {
+    "arquivo": "./ads/calibram.mp4",
+    "anunciante": "Calibra Ltda – (48) 3628-1414 – BR-101, Km 336",
+    "descricao": "Especialistas em rodocalibrador interno e serviços de alta precisão para veículos pesados."
+  },
+  {
+    "arquivo": "./ads/comunica_sindico_logo.mp4",
+    "anunciante": "Comunica Síndico",
+    "descricao": "A solução digital completa para comunicação moderna e eficiente do seu condomínio."
+  },
+  {
+    "arquivo": "./ads/googlemaps2.mp4",
+    "anunciante": "Google Maps Business",
+    "descricao": "Coloque sua empresa no mapa e seja encontrado por clientes em toda a região."
+  },
+  {
+    "arquivo": "./ads/cslogo.mp4",
+    "anunciante": "Comunica Síndico",
+    "descricao": "Tecnologia, transparência e responsabilidade social para condomínios inteligentes."
+  },
+  {
+    "arquivo": "./ads/luisa.mp4",
+    "anunciante": "Momento Família",
+    "descricao": "Luísa visitando o papai no trabalho. Um momento especial que marca para sempre."
+  },
+  {
+    "arquivo": "./ads/03larissa.mp4",
+    "anunciante": "Memórias Especiais",
+    "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o coração."
+  },
+  {
+    "arquivo": "./ads/googlemaps.mp4",
+    "anunciante": "Marketing Digital Estratégico",
+    "descricao": "O poder da publicidade digital para impulsionar sua marca e alcançar novos clientes."
+  }
+]
   },
 
   "avisos": [
