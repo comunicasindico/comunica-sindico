@@ -1,434 +1,123 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Comunica Síndico — TV</title>
 
-<title>Comunica Síndico — Condôminos</title>
+<link rel="manifest" href="./manifest-condominos.json">
+<meta name="theme-color" content="#000000">
 
-<!-- =====================================================
-     PWA / META
-===================================================== -->
-<link rel="manifest" href="./manifest-condominos.json" />
-<meta name="theme-color" content="#0b223a" />
-<meta name="background-color" content="#061726" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="Condôminos" />
-
-<link rel="icon" sizes="192x192" href="./icons/icon-192.png" />
-<link rel="icon" sizes="512x512" href="./icons/icon-512.png" />
-<link rel="apple-touch-icon" href="./icons/icon-192.png" />
-
-<!-- =====================================================
-     DETECÇÃO DE DISPOSITIVO (ANTES DO CSS)
-===================================================== -->
 <script>
 (function(){
-  try{
-    const ua = (navigator.userAgent||"").toLowerCase();
-    const qs = new URLSearchParams(location.search);
-
-    const looksMobile = /mobi|iphone|ipod|ipad|android.*mobile/.test(ua);
-    const isTVua =
-      ua.includes("smart-tv") || ua.includes("android tv") ||
-      ua.includes("browsehere") || ua.includes("tizen") ||
-      ua.includes("webos") || ua.includes("roku") ||
-      ua.includes("bravia") || ua.includes("tv");
-
-    const forceTV = qs.get("tv")==="1";
-    const isTV = forceTV || (!looksMobile && isTVua);
-    const isMobile = looksMobile && !isTV;
-
-    const w = Math.max(innerWidth, document.documentElement.clientWidth);
-    const h = Math.max(innerHeight, document.documentElement.clientHeight);
-    const isPortrait = h > w;
-
-    const root = document.documentElement;
-    root.classList.toggle("isTV", isTV);
-    root.classList.toggle("isMobileUA", isMobile);
-    root.classList.toggle("isPortrait", isPortrait);
-
-    addEventListener("resize", ()=>root.classList.toggle("isPortrait", innerHeight>innerWidth), {passive:true});
-  }catch(e){}
+  document.documentElement.classList.add("isTV");
 })();
 </script>
 
-<!-- =====================================================
-     STYLE / CSS
-     (BASE + PC + TV + MOBILE)
-===================================================== -->
 <style>
-
-/* =======================
-   VARIÁVEIS GLOBAIS
-======================= */
-:root{
-  --bg1:#061726;
-  --bg2:#0b1f33;
-  --line:rgba(255,255,255,.14);
-  --radius:18px;
-  --shadow:0 18px 44px rgba(0,0,0,.35);
-  --ui:1;
-  --ui2:1;
-  --tv-scale:.9;
-}
-
-/* =======================
-   RESET / BASE
-======================= */
-*{box-sizing:border-box}
 html,body{
   margin:0;
   height:100%;
-  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  background:#000;
   color:#fff;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  font-family:system-ui,Segoe UI,Arial;
   overflow:hidden;
 }
 
-.wrap{height:100dvh;padding:10px}
-.container{height:100%;display:flex;flex-direction:column;gap:10px}
-.main{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px}
+.wrap{
+  position:fixed;
+  inset:4vh 4vw;
+}
 
-/* =======================
-   GRID FIXO PC / TV
-======================= */
+.container{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.main{flex:1;min-height:0}
+
 .quadTop{
-  flex:1;
+  height:100%;
   display:grid;
   grid-template-columns:1fr 1fr;
   grid-template-rows:repeat(3,1fr);
   gap:10px;
 }
+
 #tile1{grid-column:1;grid-row:1}
 #tile2{grid-column:2;grid-row:1}
 #tile3{grid-column:1;grid-row:2}
 #slot5{grid-column:1;grid-row:3}
 #tile4{grid-column:2;grid-row:2/4}
 
-/* =======================
-   MOBILE — COLUNA + ROLAGEM
-======================= */
-html.isMobileUA:not(.isTV),
-html.isMobileUA:not(.isTV) body{
-  overflow:auto;
-  height:auto;
-}
-html.isMobileUA:not(.isTV) .quadTop{
-  display:flex;
-  flex-direction:column;
-}
-html.isMobileUA:not(.isTV) .wrap{
-  height:auto;
+.panel{
+  background:#000;
+  border:3px solid #000;
+  border-radius:14px;
+  padding:6px;
 }
 
-/* =======================
-   TV — FORMATO PC + ANTIOVERSCAN
-======================= */
-html.isTV:not(.isPortrait){
-  overflow:hidden;
-}
-html.isTV:not(.isPortrait) .wrap{
-  position:fixed;
-  width:92vw;
-  height:92vh;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%) scale(var(--tv-scale));
-}
-html.isTV:not(.isPortrait) .quadTop{
-  display:grid!important;
+.videoWrap{position:relative;height:100%}
+.videoWrap video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-/* =======================
-   VÍDEO — MOLDURA TV
-======================= */
-.videoWrap{position:relative}
-.videoWrap .tvOverlay{
+.videoWrap::after{
+  content:"";
   position:absolute;
   inset:0;
   border:4px solid #000;
-  border-bottom-width:18px;
-  border-radius:12px;
   pointer-events:none;
-  z-index:50;
 }
-.videoWrap .tvOverlay::after{
-  content:"CS";
-  position:absolute;
-  bottom:4px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.22em;
-}
-
-/* MOBILE remove bezel */
-@media(max-width:600px){
-  .videoWrap .tvOverlay{border-bottom-width:4px}
-  .videoWrap .tvOverlay::after{display:none}
-}
-
 </style>
 </head>
+
 <body>
-
 <div class="wrap">
-  <div class="container">
+<div class="container">
 
-    <!-- =======================
-         TOPO
-    ======================= -->
-    <div class="topbar">
-      <div class="brand">
-        <div class="title">
-          <span id="titulo">Comunica Síndico - Condôminos</span>
-          <span id="wxIconTitle" class="wxTitleIcon"></span>
-        </div>
+<div class="main">
+  <div class="quadTop">
+    <div class="panel" id="tile1"><div id="slot1"></div></div>
+    <div class="panel" id="tile2"><div id="slot2"></div></div>
+    <div class="panel" id="tile3"><div id="slot3"></div></div>
 
-        <div class="subMobileLine">
-          <span id="statusJsonMini">Carregando...</span>
-          <span class="sep">•</span>
-          <span id="clockMini">--:--</span>
-        </div>
-      </div>
-
-      <div class="rightInfo">
-        <div class="badge">
-          <span class="dot" id="dotOnline"></span>
-          <span id="statusJson">Carregando...</span>
-        </div>
-
-        <div class="badge">
-          <span id="wxIconTop"></span>
-          <span id="clock">--:--</span>
-        </div>
-
-        <div class="subRight" id="subtitulo">Painel informativo</div>
-        <button id="btnInstalarApp" class="btnInstall" style="display:none">⬇️ Instalar App</button>
+    <div class="panel" id="tile4">
+      <div class="videoWrap">
+        <video id="adVideoBg" muted autoplay loop playsinline></video>
+        <video id="adVideo" muted autoplay playsinline></video>
       </div>
     </div>
 
-    <div id="updateBanner" class="updateBanner" style="display:none">
-      ⬇️ Nova versão disponível. Atualizando…
+    <div class="panel" id="slot5">
+      <div id="newsBody"></div>
     </div>
-
-    <!-- =======================
-         CONTEÚDO PRINCIPAL
-    ======================= -->
-    <div class="main">
-
-      <div class="sectionBar">
-        <div class="sectionTitle">Avisos</div>
-        <div class="pill" id="refPill">Super atualização</div>
-      </div>
-
-      <!-- =======================
-           GRID 2x3 FIXO
-      ======================= -->
-      <div class="quadTop" id="avisosPane">
-
-        <div class="panel tile" id="tile1">
-          <div class="tileBody" id="slot1"></div>
-        </div>
-
-        <div class="panel tile" id="tile2">
-          <div class="tileBody" id="slot2"></div>
-        </div>
-
-        <div class="panel tile" id="tile3">
-          <div class="tileBody" id="slot3"></div>
-        </div>
-
-        <!-- ===== VÍDEO ===== -->
-        <div class="panel tile" id="tile4">
-          <div class="tileBody" id="slot4">
-
-            <div class="videoWrap">
-
-              <button class="adNav adPrev" onclick="adPrevBtn()">⏮</button>
-              <button class="adNav adNext" onclick="adNextBtn()">⏭</button>
-
-              <video id="adVideoBg" class="videoBg" autoplay muted loop playsinline></video>
-              <video id="adVideo" class="videoMain" autoplay muted playsinline></video>
-
-              <div class="tvOverlay"></div>
-            </div>
-
-            <div class="adBelow">
-              <div class="adBelowText" id="adLabelBelow">—</div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ===== MENSAGENS ===== -->
-        <div class="tile" id="slot5">
-          <div class="newsBox" id="newsBox" style="display:none">
-            <div class="newsHead">
-              <div class="newsTitle">📰 Mensagens no Brasil</div>
-            </div>
-            <div id="newsBody"></div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ALERTA URGENTE -->
-      <div class="alertBox" id="alertBox" style="display:none">
-        <div class="alertHead">
-          <div class="alertTitle" id="alertTitle">ALERTA URGENTE</div>
-          <div class="pill" id="alertOffBtn">Desligar</div>
-        </div>
-        <div class="alertBody">
-          <p class="alertMsg" id="alertMsg">—</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- =======================
-         RODAPÉ / TICKER
-    ======================= -->
-    <div class="ticker">
-      <div class="tickerLine1">
-        <span class="tickerIcon">📖</span>
-        <span id="dataBiblica">—</span>
-        <span id="ref">—</span>
-
-        <div class="wxInline">
-          <span id="wxIconInline"></span>
-          <span id="wxCityTemp">—</span>
-          <span id="wxWindRain">—</span>
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
 
+</div>
+</div>
+
 <script>
+document.querySelectorAll("video").forEach(v=>{
+  v.requestFullscreen=()=>{};
+  v.webkitEnterFullscreen=()=>{};
+});
 
-/* =======================
-   TOKEN / PWA
-======================= */
-const CS_TOKEN_KEY="CS_TOKEN_V1";
-const csGetToken=()=>localStorage.getItem(CS_TOKEN_KEY)||"";
-const csSetToken=t=>t&&localStorage.setItem(CS_TOKEN_KEY,t);
-
-/* =======================
-   RELÓGIO
-======================= */
-function pad(n){return String(n).padStart(2,"0")}
-function tickClock(){
-  const d=new Date();
-  const h=`${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  clock.textContent=h;
-  clockMini.textContent=h;
-}
-setInterval(tickClock,1000);
-tickClock();
-
-/* =======================
-   AVISOS
-======================= */
-function renderAvisos(data){
-  const s1=slot1,s2=slot2,s3=slot3;
-  s1.innerHTML="";s2.innerHTML="";s3.innerHTML="";
-  (data.avisos||[]).slice(0,3).forEach((a,i)=>{
-    const el=document.createElement("div");
-    el.className="aviso "+(a.prioridade||"baixa");
-    el.innerHTML=`<p class="t">${a.titulo}</p><p class="d">${a.descricao||""}</p>`;
-    [s1,s2,s3][i].appendChild(el);
-  });
-}
-
-/* =======================
-   CLIMA (placeholder)
-======================= */
-function carregarClima(data){
-  wxCityTemp.textContent=(data.clima?.cidade||"—")+" "+(data.clima?.temp||"")+"°C";
-}
-
-/* =======================
-   MENSAGENS
-======================= */
-async function carregarMensagensCidade(){
-  try{
-    const r=await fetch("mensagens_cidade.json?ts="+Date.now());
-    const j=await r.json();
-    newsBody.innerHTML=j.items.map(i=>`<div class="newsItem">${i.titulo}</div>`).join("");
-    newsBox.style.display="flex";
-  }catch(e){}
-}
-
-/* =======================
-   PUBLICIDADE
-======================= */
-function adPlayByState(videos){
-  if(!videos?.length)return;
-  const v=videos[0];
-  adVideo.src=v.arquivo;
-  adVideoBg.src=v.arquivo;
-  adLabelBelow.textContent=v.anunciante||"—";
-}
-function adNextBtn(){}
-function adPrevBtn(){}
-
-/* =======================
-   LOAD GERAL
-======================= */
 async function loadAll(){
   try{
     const r=await fetch("data.json?ts="+Date.now());
     const d=await r.json();
-    renderAvisos(d);
-    carregarClima(d);
-    carregarMensagensCidade();
-    adPlayByState(d.publicidade?.videos||[]);
-    dotOnline.style.background="#2ecc71";
-  }catch(e){
-    dotOnline.style.background="#ff5a5a";
-  }
+    adVideo.src=d.publicidade?.videos?.[0]?.arquivo||"";
+    adVideoBg.src=adVideo.src;
+  }catch(e){}
 }
 loadAll();
-
 </script>
-
-<script>
-/* =======================
-   FIX TV — BLOQUEIA FULLSCREEN
-======================= */
-(function(){
-  if(!document.documentElement.classList.contains("isTV"))return;
-  document.querySelectorAll("video").forEach(v=>{
-    v.requestFullscreen=()=>{};
-    v.webkitEnterFullscreen=()=>{};
-  });
-})();
-</script>
-
-<script>
-/* =======================
-   TV SCALE AJUSTÁVEL
-======================= */
-(function(){
-  const root=document.documentElement;
-  if(!root.classList.contains("isTV"))return;
-  let s=parseFloat(localStorage.getItem("TV_SCALE"))||0.9;
-  root.style.setProperty("--tv-scale",s);
-  document.addEventListener("keydown",e=>{
-    if(e.key==="+")s=Math.min(1,s+.01);
-    if(e.key==="-")s=Math.max(.75,s-.01);
-    root.style.setProperty("--tv-scale",s);
-    localStorage.setItem("TV_SCALE",s);
-  });
-})();
-</script>
-
 </body>
 </html>
-
