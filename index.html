@@ -79,17 +79,14 @@ html,body{
   box-shadow:0 8px 30px rgba(0,0,0,0.5);
   transition:.3s ease;
 }
-
 .prioridade-alta{
   border-color:#ff4d4d;
   box-shadow:0 0 20px rgba(255,0,0,0.6);
 }
-
 .prioridade-media{
   border-color:#ffc107;
   box-shadow:0 0 18px rgba(255,193,7,0.6);
 }
-
 .prioridade-baixa{
   border-color:#4caf50;
   box-shadow:0 0 18px rgba(76,175,80,0.6);
@@ -110,12 +107,13 @@ html,body{
 }
 
 .aviso-footer{
-  margin-top:16px;
+  margin-top:12px;
+  font-size:11px;      /* <<< menor */
   display:flex;
-  gap:22px;
-  font-size:26px;
-  font-weight:900;   /* ← apenas isso foi acrescentado */
-  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  opacity:.9;
+  font-weight:600;
 }
 
 .badge-prioridade{
@@ -255,13 +253,20 @@ let videosGlobais=[];
 
 /* RENDER AVISOS */
 function renderAvisos(){
+
   const container=document.getElementById("avisosContainer");
   container.innerHTML="";
   if(!avisosGlobais.length) return;
 
   for(let i=0;i<3;i++){
+
     const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
-    const prioridade=(a.prioridade||"media").toLowerCase();
+
+    /* 🔥 REMOVE ACENTO AUTOMATICAMENTE */
+    const prioridade = (a.prioridade || "media")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g,"");
 
     const div=document.createElement("div");
     div.className="aviso-card prioridade-"+prioridade;
@@ -271,8 +276,12 @@ function renderAvisos(){
         <div class="aviso-header">
           ⚠ ${a.titulo||""}
         </div>
-        <div class="aviso-body">${a.descricao||""}</div>
+
+        <div class="aviso-body">
+          ${a.descricao||""}
+        </div>
       </div>
+
       <div class="aviso-footer">
         <span>📍 ${a.local||""}</span>
         <span>🏷 ${a.tipo||""}</span>
@@ -287,6 +296,7 @@ function renderAvisos(){
 
   avisoIndex=(avisoIndex+1)%avisosGlobais.length;
 }
+
 
 /* ROTACIONAR VÍDEO */
 function trocarVideo(){
