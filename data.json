@@ -1,98 +1,142 @@
 {
-  "condominio": "Comunica Síndico",
   "titulo": "Comunica Síndico — Condôminos",
   "subtitulo": "Painel Informativo",
-
+  "referencia": "",
+  "temaDoDia": {
+    "modo": "automatico",
+    "temasPorDiaSemana": {}
+  },
+  "rotacao": {
+    "ativar": false,
+    "intervaloSeg": 12,
+    "quantidadePorTela": 1,
+    "pausarNoMouse": true,
+    "mostrarProgresso": true
+  },
+  "emergencia": {
+    "ativar": true,
+    "intervaloSeg": 4,
+    "piscar": true,
+    "somenteAlta": true
+  },
+  "publicidade": {
+    "ativar": true,
+    "shuffle": true,
+    "videos": [
+      {
+        "arquivo": "./ads/calibram.mp4",
+        "anunciante": "Calibra Ltda – (48) 3628-1414 – BR-101, Km 336",
+        "descricao": "Especialistas em rodocalibrador interno e serviços de alta precisão para veículos pesados."
+      },
+      {
+        "arquivo": "./ads/comunica_sindico_logo.mp4",
+        "anunciante": "Comunica Síndico",
+        "descricao": "A solução digital completa para comunicação moderna e eficiente do seu condomínio."
+      },
+      {
+        "arquivo": "./ads/googlemaps2.mp4",
+        "anunciante": "Google Maps Business",
+        "descricao": "Coloque sua empresa no mapa e seja encontrado por clientes em toda a região."
+      },
+      {
+        "arquivo": "./ads/cslogo.mp4",
+        "anunciante": "Comunica Síndico",
+        "descricao": "Tecnologia, transparência e responsabilidade social para condomínios inteligentes."
+      },
+      {
+        "arquivo": "./ads/luisa.mp4",
+        "anunciante": "Momento Família",
+        "descricao": "Luísa visitando o papai no trabalho. Um momento especial que marca para sempre."
+      },
+      {
+        "arquivo": "./ads/03larissa.mp4",
+        "anunciante": "Memórias Especiais",
+        "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o coração."
+      },
+      {
+        "arquivo": "./ads/googlemaps.mp4",
+        "anunciante": "Marketing Digital Estratégico",
+        "descricao": "O poder da publicidade digital para impulsionar sua marca e alcançar novos clientes."
+      }
+    ],
+    "mensagens": [
+      {
+        "titulo": "📰 Notícias",
+        "texto": "Sem notícias no momento. (verifique RSS)"
+      }
+    ]
+  },
   "clima": {
     "cidade": "Tubarão",
     "latitude": -28.4667,
     "longitude": -49.0069
   },
-
-  "publicidade": {
-    "ativar": true,
-    "shuffle": true,
-    "videos": [
-  {
-    "arquivo": "./ads/calibram.mp4",
-    "anunciante": "Calibra Ltda – (48) 3628-1414 – BR-101, Km 336",
-    "descricao": "Especialistas em rodocalibrador interno e serviços de alta precisão para veículos pesados."
-  },
-  {
-    "arquivo": "./ads/comunica_sindico_logo.mp4",
-    "anunciante": "Comunica Síndico",
-    "descricao": "A solução digital completa para comunicação moderna e eficiente do seu condomínio."
-  },
-  {
-    "arquivo": "./ads/googlemaps2.mp4",
-    "anunciante": "Google Maps Business",
-    "descricao": "Coloque sua empresa no mapa e seja encontrado por clientes em toda a região."
-  },
-  {
-    "arquivo": "./ads/cslogo.mp4",
-    "anunciante": "Comunica Síndico",
-    "descricao": "Tecnologia, transparência e responsabilidade social para condomínios inteligentes."
-  },
-  {
-    "arquivo": "./ads/luisa.mp4",
-    "anunciante": "Momento Família",
-    "descricao": "Luísa visitando o papai no trabalho. Um momento especial que marca para sempre."
-  },
-  {
-    "arquivo": "./ads/03larissa.mp4",
-    "anunciante": "Memórias Especiais",
-    "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o coração."
-  },
-  {
-    "arquivo": "./ads/googlemaps.mp4",
-    "anunciante": "Marketing Digital Estratégico",
-    "descricao": "O poder da publicidade digital para impulsionar sua marca e alcançar novos clientes."
-  }
-]
-  },
-
   "avisos": [
     {
-      "titulo": "Piscina",
-      "descricao": "Evite nadar sozinho. Previna acidentes!",
-      "prioridade": "Média",
-      "local": "Piscina",
-      "ativo": true
-    },
-    {
-      "titulo": "Limpeza",
-      "descricao": "Utilizem sacolas reforçadas próprias para lixo.",
-      "prioridade": "Baixa",
-      "local": "Lixeira",
-      "ativo": true
-    },
-    {
+      "id": "001",
       "titulo": "Alarme no Hall",
       "descricao": "Não informe a ninguém o código do alarme.",
       "prioridade": "Alta",
+      "tipo": "",
       "local": "Hall de Entrada",
-      "ativo": true
+      "inicio": "",
+      "fim": "",
+      "emergencia": false
     },
     {
+      "id": "002",
       "titulo": "Carrinho interno",
       "descricao": "Evite excesso de peso nas sacolas.",
       "prioridade": "Alta",
+      "tipo": "",
       "local": "Lixeira",
-      "ativo": true
+      "inicio": "",
+      "fim": "",
+      "emergencia": false
     },
     {
+      "id": "003",
+      "titulo": "Piscina",
+      "descricao": "Evite nadar sozinho. Previna acidentes!",
+      "prioridade": "Média",
+      "tipo": "",
+      "local": "Piscina",
+      "inicio": "",
+      "fim": "",
+      "emergencia": false
+    },
+    {
+      "id": "004",
       "titulo": "Sacolas maiores",
       "descricao": "Sacos grandes devem ir direto à lixeira externa.",
       "prioridade": "Média",
+      "tipo": "",
       "local": "Garagem",
-      "ativo": true
+      "inicio": "",
+      "fim": "",
+      "emergencia": false
+    },
+    {
+      "id": "005",
+      "titulo": "Limpeza",
+      "descricao": "Utilizem sacolas reforçadas próprias para lixo.",
+      "prioridade": "Baixa",
+      "tipo": "",
+      "local": "Lixeira",
+      "inicio": "",
+      "fim": "",
+      "emergencia": false
+    },
+    {
+      "id": "006",
+      "titulo": "Segurança",
+      "descricao": ". Teste de Estanqueidade na Canalização de GLP/GN:\n• O teste foi realizado de acordo com as normas técnicas vigentes e os\nprocedimentos estabelecidos. Nenhum vazamento",
+      "prioridade": "Baixa",
+      "tipo": "Informativo",
+      "local": "Hall",
+      "inicio": "11/02/26 - 16:38",
+      "fim": "28/02/26 - 16:38",
+      "emergencia": false
     }
-  ],
-
-  "mensagens": [
-    "Comunicação oficial do condomínio.",
-    "Respeite as normas internas.",
-    "Emergências ligue 190 PM ou 193 Bombeiros.",
-    "Síndico(a) sempre à disposição."
   ]
 }
