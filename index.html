@@ -168,6 +168,62 @@ body.clima-nublado{background:linear-gradient(#78909c,#b0bec5);}
   height:16px;
   background:#fff;
 }
+
+
+  /* ===== MARCADOR NUMÉRICO FLUTUANTE ===== */
+.temp-value{
+  position:absolute;
+  top:-26px;
+  transform:translateX(-50%);
+  background:#000;
+  color:#fff;
+  font-size:12px;
+  padding:2px 6px;
+  border-radius:6px;
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+/* ===== ARCO-ÍRIS ===== */
+.rainbow{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:80%;
+  height:120px;
+  background:
+    radial-gradient(circle at 50% 100%,
+      red 0%, orange 15%, yellow 30%,
+      green 45%, blue 60%, indigo 75%, violet 90%, transparent 91%);
+  border-radius:50%;
+  opacity:.6;
+  animation:fadeRainbow 6s ease forwards;
+}
+
+@keyframes fadeRainbow{
+  0%{opacity:0;}
+  30%{opacity:.8;}
+  100%{opacity:0;}
+}
+
+/* ===== RELÂMPAGO ===== */
+.lightning{
+  position:absolute;
+  inset:0;
+  background:white;
+  opacity:0;
+  animation:flash 2s infinite;
+}
+
+@keyframes flash{
+  0%,95%,100%{opacity:0;}
+  96%{opacity:.8;}
+  97%{opacity:0;}
+  98%{opacity:.6;}
+  99%{opacity:0;}
+}
+
 </style>
 </head>
 
@@ -202,9 +258,11 @@ body.clima-nublado{background:linear-gradient(#78909c,#b0bec5);}
 <div class="footer">
   <div id="clima"></div>
   <div class="temp-bar">
-    <div id="tempBarFill" class="temp-bar-fill"></div>
-    <div id="tempMarker" class="temp-marker"></div>
-  </div>
+  <div id="tempBarFill" class="temp-bar-fill"></div>
+  <div id="tempMarker" class="temp-marker"></div>
+  <div id="tempValue" class="temp-value">--°C</div>
+</div>
+
 </div>
 
 </div>
@@ -272,7 +330,8 @@ loadData();
 
 /* CLIMA */
 async function carregarClima(){
-  const rJson=await fetch("./data.json");
+
+  const rJson=await fetch("./data.json?ts="+Date.now());
   const json=await rJson.json();
 
   const lat=json.clima?.latitude||-28.4667;
@@ -281,29 +340,65 @@ async function carregarClima(){
   const r=await fetch(
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
   );
+
   const d=await r.json();
   const w=d.current_weather;
 
   const temp=w.temperature;
+  const codigo=w.weathercode;
   const cidade=json.clima?.cidade||"Tubarão";
 
   document.getElementById("clima").textContent=
     `${cidade} • ${temp}°C`;
 
+  /* BARRA */
   const percent=Math.min(100,(temp/40)*100);
-  document.getElementById("tempBarFill").style.width=percent+"%";
-  document.getElementById("tempMarker").style.left=percent+"%";
 
+  const fill=document.getElementById("tempBarFill");
+  const marker=document.getElementById("tempMarker");
+  const value=document.getElementById("tempValue");
+
+  fill.style.width=percent+"%";
+  marker.style.left=percent+"%";
+  value.style.left=percent+"%";
+  value.textContent=temp+"°C";
+
+  /* LIMPAR EFEITOS */
   const effects=document.getElementById("weatherEffects");
+  effects.innerHTML="";
   effects.className="";
 
-  if(w.weathercode>60){
-    document.body.className="clima-chuva";
+  document.body.className="";
+
+  /* ===== CLIMA DINÂMICO ===== */
+
+  if(codigo>=95){
+    /* TEMPESTADE */
+    document.body.classList.add("clima-tempestade");
+
+    const lightning=document.createElement("div");
+    lightning.className="lightning";
+    effects.appendChild(lightning);
+  }
+  else if(codigo>=61){
+    /* CHUVA */
+    document.body.classList.add("clima-chuva");
     effects.classList.add("rain");
-  }else{
-    document.body.className="clima-sol";
+  }
+  else if(codigo<=3){
+    /* SOL */
+    document.body.classList.add("clima-sol");
+
+    /* SE ANTES ESTAVA CHOVENDO → MOSTRA ARCO-ÍRIS */
+    const rainbow=document.createElement("div");
+    rainbow.className="rainbow";
+    effects.appendChild(rainbow);
+  }
+  else{
+    document.body.classList.add("clima-nublado");
   }
 }
+
 carregarClima();
 setInterval(carregarClima,600000);
 
