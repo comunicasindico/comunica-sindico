@@ -9,7 +9,7 @@
 :root{
   --bg:#061726;
   --card:#0e2d4a;
-  --line:#123c60;
+  --line:#163d60;
   --radius:18px;
 }
 
@@ -67,30 +67,56 @@ html,body{
 .avisos{
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:12px;
   min-height:0;
 }
 
 .aviso-card{
   flex:1;
-  background:linear-gradient(180deg,#133d63,#0e2f4d);
+  position:relative;
+  background:linear-gradient(180deg,#183f63,#0f2f4d);
   border-radius:20px;
-  padding:18px;
+  padding:18px 20px 14px 26px;
   border:1px solid var(--line);
   display:flex;
   flex-direction:column;
-  justify-content:center;
+  justify-content:space-between;
   overflow:hidden;
 }
 
-.aviso-card h2{
-  margin:0 0 8px;
-  font-weight:900;
+/* Barra lateral */
+.aviso-card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:6px;
+  border-radius:20px 0 0 20px;
+  background:#ffb300;
 }
 
-.aviso-card p{
-  margin:0;
-  line-height:1.25;
+.prioridade-alta::before{ background:#ff5252; }
+.prioridade-media::before{ background:#ffb300; }
+.prioridade-baixa::before{ background:#4caf50; }
+
+.aviso-header{
+  font-weight:900;
+  margin-bottom:8px;
+}
+
+.aviso-body{
+  flex:1;
+  overflow:hidden;
+}
+
+.aviso-footer{
+  margin-top:10px;
+  font-size:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  opacity:.85;
 }
 
 /* COLUNA DIREITA */
@@ -109,15 +135,7 @@ html,body{
   flex-direction:column;
 }
 
-.publicidade-header{
-  display:flex;
-  justify-content:space-between;
-  font-weight:800;
-  margin-bottom:8px;
-}
-
 .videoWrap{
-  position:relative;
   flex:1;
   background:#000;
   border-radius:14px;
@@ -130,7 +148,6 @@ html,body{
   object-fit:contain;
 }
 
-/* MENSAGENS */
 .mensagens{
   background:var(--card);
   border-radius:20px;
@@ -139,15 +156,10 @@ html,body{
   overflow:auto;
 }
 
-.mensagens h3{
-  margin:0 0 6px;
-  font-size:14px;
-}
-
 .mensagem-item{
+  font-size:10px;
   padding:6px;
   border-bottom:1px solid var(--line);
-  font-size:10px;
 }
 
 /* FOOTER */
@@ -163,15 +175,12 @@ html,body{
 
 .footer-line{
   display:flex;
-  justify-content:center;
-  text-align:center;
+  justify-content:space-between;
   font-size:14px;
 }
 
-.footer-weather{
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
+.footer-line:first-child{
+  justify-content:flex-start;
 }
 
 /* MOBILE */
@@ -197,17 +206,12 @@ html,body{
 
     <div class="right-col">
       <div class="publicidade">
-        <div class="publicidade-header">
-          <span>Publicidade</span>
-          <span style="color:#00ff7a;">● No ar</span>
-        </div>
         <div class="videoWrap">
           <video id="adVideo" autoplay muted loop playsinline></video>
         </div>
       </div>
 
       <div class="mensagens">
-        <h3>Mensagens no Brasil</h3>
         <div id="mensagensContainer"></div>
       </div>
     </div>
@@ -216,8 +220,8 @@ html,body{
 
   <div class="footer">
     <div class="footer-line" id="versiculo"></div>
-    <div class="footer-weather">
-      <div id="cidade"></div>
+    <div class="footer-line">
+      <div></div>
       <div id="clima"></div>
     </div>
   </div>
@@ -230,19 +234,18 @@ function tick(){
   document.getElementById("clock").textContent=
     d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
-setInterval(tick,1000); tick();
+setInterval(tick,1000);tick();
 
-/* AUTO FIT TEXTO */
-function autoFitText(el){
-  let size=40;
+/* AUTO FIT INDIVIDUAL */
+function autoFit(el){
+  let size=32;
   el.style.fontSize=size+"px";
-  while(el.scrollHeight>el.clientHeight && size>12){
+  while(el.scrollHeight>el.clientHeight && size>14){
     size--;
     el.style.fontSize=size+"px";
   }
 }
 
-/* AVISOS CICLICOS */
 let avisoIndex=0;
 let avisosGlobais=[];
 
@@ -250,46 +253,59 @@ function renderAvisos(){
   const container=document.getElementById("avisosContainer");
   container.innerHTML="";
   const subset=avisosGlobais.slice(avisoIndex,avisoIndex+3);
+
   subset.forEach(a=>{
     const div=document.createElement("div");
-    div.className="aviso-card";
-    div.innerHTML=`<h2>${a.titulo}</h2><p>${a.descricao}</p>`;
+    div.className="aviso-card prioridade-"+(a.prioridade||"media");
+
+    div.innerHTML=`
+      <div>
+        <div class="aviso-header">${a.titulo}</div>
+        <div class="aviso-body">${a.descricao}</div>
+      </div>
+      <div class="aviso-footer">
+        <span>${a.local||""}</span>
+        <span>${a.categoria||""}</span>
+        <span>${(a.prioridade||"").toUpperCase()}</span>
+        <span>${a.data||""}</span>
+      </div>
+    `;
+
     container.appendChild(div);
-    autoFitText(div.querySelector("p"));
+    autoFit(div.querySelector(".aviso-body"));
   });
+
   avisoIndex=(avisoIndex+3)%avisosGlobais.length;
 }
 
-/* VERSICULOS */
 async function carregarVersiculo(){
-  const r=await fetch("https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json?ts="+Date.now());
+  const r=await fetch("https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json");
   const dados=await r.json();
-  const hoje=new Date();
-  const index=hoje.getDate()%dados.length;
-  document.getElementById("versiculo").textContent=dados[index].texto;
+  const hoje=new Date().getDate()%dados.length;
+  document.getElementById("versiculo").textContent=dados[hoje].texto;
 }
 
-/* CLIMA */
 async function carregarClima(){
   const cidade="Tubarão";
   const lat=-28.4667;
   const lon=-49.0069;
-
   const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
   const d=await r.json();
   const w=d.current_weather;
-  document.getElementById("cidade").textContent=cidade;
   document.getElementById("clima").textContent=
-    `${w.temperature}°C | Vento ${w.windspeed} km/h`;
+    `${cidade} • ${w.temperature}°C • Vento ${w.windspeed} km/h`;
 }
 
-/* DATA */
 async function loadData(){
   const r=await fetch("./data.json?ts="+Date.now());
   const d=await r.json();
 
   avisosGlobais=d.avisos||[];
   renderAvisos();
+
+  if(d.publicidade?.videos?.length){
+    document.getElementById("adVideo").src=d.publicidade.videos[0].arquivo;
+  }
 
   const mensagensContainer=document.getElementById("mensagensContainer");
   mensagensContainer.innerHTML="";
@@ -299,10 +315,6 @@ async function loadData(){
     item.textContent=m;
     mensagensContainer.appendChild(item);
   });
-
-  if(d.publicidade?.videos?.length){
-    document.getElementById("adVideo").src=d.publicidade.videos[0].arquivo;
-  }
 }
 
 loadData();
