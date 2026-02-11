@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Comunica Síndico - Condôminos</title>
 
 <style>
@@ -24,7 +24,7 @@ html,body{
   overflow:hidden;
 }
 
-/* CONTAINER */
+/* WRAPPER */
 .wrapper{
   height:100%;
   padding:14px;
@@ -45,27 +45,21 @@ html,body{
 
 .header h1{
   margin:0;
-  font-size:32px;
+  font-size:30px;
   font-weight:900;
-}
-
-.header .status{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  font-weight:700;
 }
 
 .badge{
   padding:8px 14px;
   border-radius:999px;
   background:#0f3e63;
+  font-weight:700;
 }
 
-/* MAIN GRID */
+/* MAIN */
 .main{
   display:grid;
-  grid-template-columns:2fr 1fr;
+  grid-template-columns:1.6fr 1.4fr;
   gap:14px;
   min-height:0;
 }
@@ -74,37 +68,37 @@ html,body{
 .avisos{
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:10px;
   min-height:0;
 }
 
 .aviso-card{
-  flex:1;
   background:linear-gradient(180deg,#133d63,#0e2f4d);
   border-radius:20px;
-  padding:20px;
+  padding:14px;
   border:1px solid var(--line);
   display:flex;
   flex-direction:column;
   justify-content:center;
+  height:70%;
 }
 
 .aviso-card h2{
-  margin:0 0 10px;
-  font-size:22px;
+  margin:0 0 6px;
+  font-size:18px;
   font-weight:900;
 }
 
 .aviso-card p{
   margin:0;
-  font-size:20px;
-  line-height:1.35;
+  font-size:16px;
+  line-height:1.3;
 }
 
 /* COLUNA DIREITA */
 .right-col{
   display:grid;
-  grid-template-rows:auto 1fr;
+  grid-template-rows:1.3fr 0.7fr;
   gap:12px;
   min-height:0;
 }
@@ -122,7 +116,6 @@ html,body{
 .publicidade-header{
   display:flex;
   justify-content:space-between;
-  align-items:center;
   font-weight:800;
   margin-bottom:8px;
 }
@@ -145,31 +138,37 @@ html,body{
 .mensagens{
   background:var(--card);
   border-radius:20px;
-  padding:16px;
+  padding:12px;
   border:1px solid var(--line);
   overflow:auto;
 }
 
 .mensagens h3{
-  margin-top:0;
-  font-size:18px;
+  margin:0 0 6px;
+  font-size:16px;
 }
 
 .mensagem-item{
-  padding:10px;
+  padding:6px;
   border-bottom:1px solid var(--line);
-  font-size:15px;
+  font-size:8px;
+  line-height:1.2;
 }
 
 /* FOOTER */
 .footer{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
+  flex-direction:column;
+  gap:4px;
   padding:14px 20px;
   border-radius:20px;
   background:#0c2a46;
   font-weight:700;
+}
+
+.footer-line{
+  display:flex;
+  justify-content:space-between;
 }
 
 /* MOBILE */
@@ -177,9 +176,6 @@ html,body{
   html,body{overflow:auto}
   .main{
     grid-template-columns:1fr;
-  }
-  .right-col{
-    grid-template-rows:auto auto;
   }
 }
 </style>
@@ -191,10 +187,7 @@ html,body{
 
   <div class="header">
     <h1>Comunica Síndico - Condôminos</h1>
-    <div class="status">
-      <span class="badge" id="clock">--:--</span>
-      <span class="badge" id="clima">--°C</span>
-    </div>
+    <span class="badge" id="clock">--:--</span>
   </div>
 
   <div class="main">
@@ -221,8 +214,13 @@ html,body{
   </div>
 
   <div class="footer">
-    <div id="versiculo">—</div>
-    <div id="climaRodape">—</div>
+    <div class="footer-line">
+      <div id="versiculo">—</div>
+    </div>
+    <div class="footer-line">
+      <div id="climaCidade">—</div>
+      <div id="climaInfo">—</div>
+    </div>
   </div>
 
 </div>
@@ -235,21 +233,29 @@ function tick(){
 }
 setInterval(tick,1000);tick();
 
+let avisoIndex=0;
+let avisosGlobais=[];
+
+function renderAvisos(){
+  const container=document.getElementById("avisosContainer");
+  container.innerHTML="";
+  const subset=avisosGlobais.slice(avisoIndex,avisoIndex+3);
+  subset.forEach(a=>{
+    const div=document.createElement("div");
+    div.className="aviso-card";
+    div.innerHTML=`<h2>${a.titulo}</h2><p>${a.descricao}</p>`;
+    container.appendChild(div);
+  });
+  avisoIndex=(avisoIndex+3)%avisosGlobais.length;
+}
+
 async function loadData(){
   const r=await fetch("./data.json?ts="+Date.now());
   const d=await r.json();
 
-  /* AVISOS */
-  const avisosContainer=document.getElementById("avisosContainer");
-  avisosContainer.innerHTML="";
-  (d.avisos||[]).forEach(a=>{
-    const div=document.createElement("div");
-    div.className="aviso-card";
-    div.innerHTML=`<h2>${a.titulo}</h2><p>${a.descricao}</p>`;
-    avisosContainer.appendChild(div);
-  });
+  avisosGlobais=d.avisos||[];
+  renderAvisos();
 
-  /* MENSAGENS */
   const mensagensContainer=document.getElementById("mensagensContainer");
   mensagensContainer.innerHTML="";
   (d.mensagens||[]).forEach(m=>{
@@ -259,19 +265,24 @@ async function loadData(){
     mensagensContainer.appendChild(item);
   });
 
-  /* VÍDEO */
   if(d.publicidade?.videos?.length){
     document.getElementById("adVideo").src=
       d.publicidade.videos[0].arquivo;
   }
 
-  /* VERSÍCULO */
   if(d.versiculo?.texto){
     document.getElementById("versiculo").textContent=d.versiculo.texto;
+  }
+
+  if(d.clima){
+    document.getElementById("climaCidade").textContent=d.clima.cidade||"";
+    document.getElementById("climaInfo").textContent=
+      (d.clima.temp||"")+"°C - "+(d.clima.vento||"")+" km/h";
   }
 }
 
 loadData();
+setInterval(renderAvisos,8000);
 setInterval(loadData,60000);
 </script>
 
