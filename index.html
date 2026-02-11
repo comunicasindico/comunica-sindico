@@ -165,25 +165,30 @@ html,body{
   overflow:auto;
 }
 
-/* FOOTER */
 .footer{
   background:#15385c;
-  padding:16px;
+  padding:22px 28px;
   border-radius:20px;
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:8px;
 }
-
-.footer-top{
-  font-weight:600;
-}
-
-.footer-bottom{
+/* Linha do versículo */
+.footer-versiculo{
   display:flex;
-  justify-content:space-between;
-  font-size:14px;
+  justify-content:flex-start;
+  font-size:18px;
+  font-weight:700;
 }
+/* Linha do clima */
+.footer-clima{
+  display:flex;
+  justify-content:flex-end;
+  font-size:16px;
+  font-weight:600;
+  opacity:.9;
+}
+
 
 /* RESPONSIVO */
 @media(max-width:900px){
@@ -220,14 +225,17 @@ html,body{
 </div>
 
 <div class="footer">
-  <div class="footer-top" id="versiculo"></div>
-  <div class="footer-bottom">
-    <div id="clima"></div>
-    <div>Comunica Síndico</div>
+  <!-- LINHA 1 – VERSÍCULO -->
+  <div class="footer-line footer-versiculo">
+    <span id="versiculo"></span>
   </div>
-</div>
+  <!-- LINHA 2 – CLIMA -->
+  <div class="footer-line footer-clima">
+    <span id="clima"></span>
+  </div>
 
 </div>
+
 
 <script>
 
