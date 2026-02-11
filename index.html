@@ -84,13 +84,13 @@ html,body{
 
 /* CORES REAIS */
 .prioridade-alta{
-  background:linear-gradient(180deg,#7a1f1f,#b71c1c);
+  background:linear-gradient(180deg,#7a1f1f,#c62828);
 }
 .prioridade-media{
-  background:linear-gradient(180deg,#8a6d00,#ffb300);
+  background:linear-gradient(180deg,#1565c0,#42a5f5);
 }
 .prioridade-baixa{
-  background:linear-gradient(180deg,#1b5e20,#2e7d32);
+  background:linear-gradient(180deg,#1b5e20,#43a047);
 }
 
 .aviso-header{
@@ -193,8 +193,11 @@ html,body{
 <div class="wrapper">
 
 <div class="header">
-<h1>Comunica Síndico - Condôminos</h1>
-<span class="badge" id="clock">--:--</span>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <h1 style="margin:0;">Comunica Síndico - Condôminos</h1>
+    <div id="weatherIcon" style="font-size:28px;">☁️</div>
+  </div>
+  <span class="badge" id="clock">--:--</span>
 </div>
 
 <div class="main">
@@ -299,13 +302,37 @@ async function carregarClima(){
     const cidade="Tubarão";
     const lat=-28.4667;
     const lon=-49.0069;
+
     const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
     const d=await r.json();
     const w=d.current_weather;
+
     document.getElementById("clima").textContent=
       `${cidade} • ${w.temperature}°C • Vento ${w.windspeed} km/h`;
+
+    const icon=document.getElementById("weatherIcon");
+
+    if(!icon) return;
+
+    if(w.weathercode === 0){
+      icon.textContent="☀️";
+    }
+    else if(w.weathercode < 3){
+      icon.textContent="🌤️";
+    }
+    else if(w.weathercode < 60){
+      icon.textContent="☁️";
+    }
+    else if(w.weathercode < 70){
+      icon.textContent="🌧️";
+    }
+    else{
+      icon.textContent="⛈️";
+    }
+
   }catch{}
 }
+
 
 /* LOAD DATA */
 async function loadData(){
