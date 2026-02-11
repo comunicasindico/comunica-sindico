@@ -76,7 +76,7 @@ html,body{
   position:relative;
   background:linear-gradient(180deg,#183f63,#0f2f4d);
   border-radius:20px;
-  padding:18px 20px 14px 26px;
+  padding:22px 26px 18px 32px;
   border:2px solid #000;
   display:flex;
   flex-direction:column;
@@ -107,11 +107,14 @@ html,body{
 .aviso-body{
   flex:1;
   overflow:hidden;
+  line-height:1.25;
+  font-size:clamp(18px, 2.4vw, 36px);
+  max-height:100%;
 }
 
 .aviso-footer{
   margin-top:10px;
-  font-size:12px;
+  font-size:13px;
   display:flex;
   flex-wrap:wrap;
   gap:12px;
@@ -264,25 +267,26 @@ function tick(){
 setInterval(tick,1000); tick();
 
 function fitText(container){
-  const header = container.querySelector(".aviso-header");
   const body   = container.querySelector(".aviso-body");
+  const header = container.querySelector(".aviso-header");
+  const footer = container.querySelector(".aviso-footer");
 
-  let headerSize = 24;
-  let bodySize   = 34;
+  const maxBodyHeight =
+      container.clientHeight
+      - header.offsetHeight
+      - footer.offsetHeight
+      - 40; // margem interna segura
 
-  header.style.fontSize = headerSize+"px";
-  body.style.fontSize   = bodySize+"px";
+  let size = 36; // limite máximo
+  body.style.fontSize = size + "px";
 
-  while(container.scrollHeight > container.clientHeight && bodySize > 14){
-      bodySize--;
-      body.style.fontSize = bodySize+"px";
-  }
-
-  while(container.scrollHeight > container.clientHeight && headerSize > 14){
-      headerSize--;
-      header.style.fontSize = headerSize+"px";
+  while(body.scrollHeight > maxBodyHeight && size > 18){
+      size--;
+      body.style.fontSize = size + "px";
   }
 }
+
+
 
 let avisoIndex=0;
 let avisosGlobais=[];
