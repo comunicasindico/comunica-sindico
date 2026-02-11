@@ -128,12 +128,11 @@ body{
   font-weight:900;
 }
 
-.aviso-body{
+..aviso-body{
   margin-top:16px;
- font-size: clamp(24px, 2.2vw, 42px);
-  line-height:1.25;
-  transition:font-size .2s ease;
-  word-break:break-word;
+  font-size: clamp(28px, 3vw, 42px);
+  line-height:1.3;
+  font-weight:500;
 }
 
 .aviso-footer{
@@ -431,30 +430,27 @@ let avisosGlobais=[];
 let videoIndex=0;
 let videosGlobais=[];
 
-function ajustarFonteParaCabimento(card, prioridade){
+function ajustarFonteParaCabimento(card){
 
   const body = card.querySelector(".aviso-body");
   if(!body) return;
 
-  let tamanhoBase = 36;
+  const prioridade = card.className.includes("prioridade-alta");
 
-  if(prioridade === "alta"){
-    tamanhoBase = 48;
-  }
+  let tamanhoBase = prioridade ? 42 : 36;
+  let tamanhoMin  = prioridade ? 32 : 26;
 
   body.style.fontSize = tamanhoBase + "px";
 
-  while(
-    body.scrollHeight > body.clientHeight &&
-    tamanhoBase > 24
-  ){
-    tamanhoBase -= 2;
-    body.style.fontSize = tamanhoBase + "px";
+  const maxAltura = card.clientHeight - 120; // margem header/footer
+
+  if(body.scrollHeight <= maxAltura){
+    return; // NÃO reduz se couber
   }
 
-  // 🔥 Alta curta mantém destaque maior
-  if(prioridade === "alta" && body.textContent.length < 120){
-    body.style.fontSize = "clamp(42px, 3vw, 60px)";
+  while(body.scrollHeight > maxAltura && tamanhoBase > tamanhoMin){
+    tamanhoBase -= 2;
+    body.style.fontSize = tamanhoBase + "px";
   }
 }
 
