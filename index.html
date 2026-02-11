@@ -46,6 +46,28 @@ html,body{
   font-size:24px;
   font-weight:900;
 }
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.weather-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* animação suave da nuvem */
+#cloudGroup{
+  animation:cloudSpin 18s linear infinite;
+  transform-origin:50% 50%;
+}
+
+@keyframes cloudSpin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
 
 .badge{
   background:#0f2f4d;
@@ -220,9 +242,33 @@ html,body{
 <div class="wrapper">
 
 <div class="header">
-  <h1>Comunica Síndico - Condôminos</h1>
+
+  <div class="header-left">
+    <h1>Comunica Síndico - Condôminos</h1>
+
+    <div class="weather-icon">
+      <svg viewBox="0 0 100 100" width="34" height="34">
+        <defs>
+          <radialGradient id="cloudGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#b3e5fc"/>
+          </radialGradient>
+        </defs>
+
+        <g id="cloudGroup">
+          <ellipse cx="50" cy="55" rx="30" ry="18" fill="url(#cloudGrad)"/>
+          <ellipse cx="35" cy="45" rx="18" ry="14" fill="url(#cloudGrad)"/>
+          <ellipse cx="65" cy="45" rx="18" ry="14" fill="url(#cloudGrad)"/>
+        </g>
+      </svg>
+    </div>
+
+  </div>
+
   <span class="badge" id="clock">--:--</span>
+
 </div>
+
 
 <div class="main">
 
