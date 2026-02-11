@@ -1,28 +1,70 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <title>Comunica Síndico — Condôminos</title>
 
+<link rel="manifest" href="./manifest-condominos.json" />
+<meta name="theme-color" content="#0b223a" />
+<meta name="background-color" content="#061726" />
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Condôminos" />
+
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png" />
+<link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192.png" />
+
+<script>
+(function(){
+  try{
+    const ua=(navigator.userAgent||"").toLowerCase();
+    const looksMobile=/mobi|iphone|ipod|ipad|android.*mobile/.test(ua);
+    const isTV=/smart-tv|android tv|browsehere|tizen|webos|hbbtv|roku/.test(ua);
+    const qs=new URLSearchParams(location.search);
+    const forceTV=qs.get("tv")==="1";
+    const tv=forceTV||(!looksMobile&&isTV);
+    const root=document.documentElement;
+    root.classList.toggle("isTV",tv);
+    root.classList.toggle("isMobileUA",!tv&&looksMobile);
+    const apply=()=>{
+      const w=innerWidth,h=innerHeight;
+      root.classList.toggle("isPortrait",h>w);
+    };
+    apply();
+    addEventListener("resize",apply,{passive:true});
+    addEventListener("orientationchange",apply,{passive:true});
+  }catch(e){}
+})();
+</script>
+
 <style>
+:root{
+  --bg1:#061726;
+  --bg2:#0b1f33;
+  --line:rgba(255,255,255,.14);
+  --radius:18px;
+  --shadow:0 18px 44px rgba(0,0,0,.35);
+  --font:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+}
+*{box-sizing:border-box}
 html,body{
   margin:0;
   width:100%;
   height:100%;
-  background:#061726;
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
   color:#fff;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  font-family:var(--font);
   overflow:hidden;
 }
-
 .wrap{
   width:100%;
-  height:100%;
-  padding:12px;
-  box-sizing:border-box;
+  height:100dvh;
+  padding:10px;
 }
-
 .container{
   width:100%;
   height:100%;
@@ -30,133 +72,258 @@ html,body{
   flex-direction:column;
   gap:10px;
 }
-
 .topbar{
   display:flex;
   justify-content:space-between;
   align-items:center;
   padding:12px 16px;
-  border-radius:14px;
-  background:rgba(0,0,0,.45);
-  font-size:28px;
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  background:rgba(0,0,0,.35);
+}
+.title{
+  font-weight:900;
+  font-size:clamp(22px,3vw,46px);
+}
+.rightInfo{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:6px;
+}
+.badge{
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.35);
   font-weight:900;
 }
-
 .main{
   flex:1;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  grid-template-rows:1fr 1fr 1fr;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
   gap:10px;
 }
-
-.tile{
-  background:rgba(10,35,60,.85);
-  border-radius:16px;
-  border:2px solid #000;
-  padding:14px;
-  box-sizing:border-box;
-  overflow:hidden;
+.sectionBar{
+  padding:10px 14px;
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.35);
+  font-weight:900;
 }
-
+.quadTop{
+  flex:1;
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-rows:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
 #tile1{grid-column:1;grid-row:1}
 #tile2{grid-column:2;grid-row:1}
 #tile3{grid-column:1;grid-row:2}
-#tile5{grid-column:1;grid-row:3}
-#tile4{grid-column:2;grid-row:2/4;padding:0}
+#slot5{grid-column:1;grid-row:3}
+#tile4{grid-column:2;grid-row:2/4}
 
-.aviso-title{
-  font-size:22px;
+.panel.tile{
+  border-radius:var(--radius);
+  border:2px solid #000;
+  background:rgba(10,35,60,.85);
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  overflow:hidden;
+}
+.tileBody{
+  flex:1 1 auto;
+  min-height:0;
+  padding:14px;
+  display:flex;
+  overflow:hidden;
+}
+
+/* AVISOS — CORRIGIDO */
+#slot1,#slot2,#slot3{
+  display:flex;
+  flex:1 1 auto;
+  min-height:0;
+}
+.aviso{
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:16px;
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(20,60,95,.9),rgba(10,30,50,.9));
+}
+.aviso .t{
   font-weight:900;
-  margin-bottom:6px;
+  font-size:clamp(18px,1.6vw,34px);
+}
+.aviso .d{
+  flex:1;
+  font-size:clamp(14px,1.2vw,26px);
 }
 
-.aviso-body{
-  font-size:18px;
-  line-height:1.3;
-}
-
+/* VÍDEO */
 .videoWrap{
+  position:relative;
   width:100%;
   height:100%;
   background:#000;
 }
-
-.videoWrap video{
+.videoBg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:blur(18px);
+  opacity:.55;
+}
+.videoMain{
+  position:absolute;
+  inset:0;
   width:100%;
   height:100%;
   object-fit:contain;
 }
+.tvOverlay{
+  position:absolute;
+  inset:0;
+  border:4px solid #000;
+  border-bottom-width:18px;
+  border-radius:12px;
+  pointer-events:none;
+  z-index:10;
+}
+.tvOverlay::after{
+  content:"CS";
+  position:absolute;
+  left:50%;
+  bottom:4px;
+  transform:translateX(-50%);
+  font-weight:900;
+  letter-spacing:.3em;
+}
 
+/* MENSAGENS — VISÍVEIS */
+#slot5{
+  display:flex;
+  flex-direction:column;
+}
+.newsItem .h{
+  font-weight:900;
+  color:#eaf2ff;
+}
+
+/* TICKER */
+.ticker{
+  padding:10px 14px;
+  border-radius:var(--radius);
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.35);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-weight:900;
+}
+
+/* MOBILE */
 @media(max-width:900px){
   html,body{overflow:auto}
-  .main{display:flex;flex-direction:column}
-  .tile{min-height:220px}
+  .quadTop{display:flex;flex-direction:column}
 }
 </style>
 </head>
 
 <body>
 <div class="wrap">
-  <div class="container">
+<div class="container">
 
-    <div class="topbar">
-      <div>Comunica Síndico — Condôminos</div>
-      <div id="clock">--:--</div>
-    </div>
+<div class="topbar">
+  <div class="title">Comunica Síndico — Condôminos</div>
+  <div class="rightInfo">
+    <div class="badge"><span id="clock">--:--</span></div>
+    <div class="badge"><span id="wxCityTemp">—</span></div>
+  </div>
+</div>
 
-    <div class="main">
-      <div class="tile" id="tile1"></div>
-      <div class="tile" id="tile2"></div>
-      <div class="tile" id="tile3"></div>
+<div class="main">
+  <div class="sectionBar">Avisos</div>
 
-      <div class="tile" id="tile4">
+  <div class="quadTop" id="avisosPane">
+    <div class="panel tile" id="tile1"><div class="tileBody" id="slot1"></div></div>
+    <div class="panel tile" id="tile2"><div class="tileBody" id="slot2"></div></div>
+    <div class="panel tile" id="tile3"><div class="tileBody" id="slot3"></div></div>
+
+    <div class="panel tile" id="tile4">
+      <div class="tileBody" id="slot4">
         <div class="videoWrap">
-          <video id="adVideo" autoplay muted loop playsinline></video>
+          <video id="adVideoBg" class="videoBg" muted autoplay loop playsinline></video>
+          <video id="adVideo" class="videoMain" muted autoplay playsinline></video>
+          <div class="tvOverlay"></div>
         </div>
       </div>
+    </div>
 
-      <div class="tile" id="tile5"></div>
+    <div class="panel tile" id="slot5">
+      <div class="tileBody">
+        <div id="newsBody"></div>
+      </div>
     </div>
   </div>
 </div>
 
+<div class="ticker">
+  <span id="dataBiblica">—</span>
+  <span id="ref">—</span>
+</div>
+
+</div>
+</div>
+
 <script>
+function pad(n){return String(n).padStart(2,"0")}
 function tick(){
   const d=new Date();
-  clock.textContent=d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+  document.getElementById("clock").textContent=
+    pad(d.getHours())+":"+pad(d.getMinutes());
 }
-setInterval(tick,1000); tick();
+setInterval(tick,1000);tick();
 
-async function loadData(){
-  const res = await fetch("./data.json?ts="+Date.now());
-  const data = await res.json();
-
-  const avisos = data.avisos || [];
-
-  const slots = ["tile1","tile2","tile3"];
-  slots.forEach((id,i)=>{
+async function loadAll(){
+  const r=await fetch("./data.json?ts="+Date.now());
+  const d=await r.json();
+  const avisos=(d.avisos||[]).filter(a=>a.ativo!==false);
+  ["slot1","slot2","slot3"].forEach((id,i)=>{
     const el=document.getElementById(id);
     const a=avisos[i];
-    if(!a){ el.innerHTML="—"; return; }
-    el.innerHTML=`
-      <div class="aviso-title">${a.titulo||"Aviso"}</div>
-      <div class="aviso-body">${a.descricao||""}</div>
-    `;
+    el.innerHTML=a?`
+      <div class="aviso">
+        <div class="t">${a.titulo||"Aviso"}</div>
+        <div class="d">${a.descricao||""}</div>
+      </div>`:"";
   });
-
-  document.getElementById("tile5").innerHTML =
-    `<div class="aviso-title">Mensagens no Brasil</div>` +
-    (data.mensagens?.join("<br>") || "—");
-
-  const vids = data.publicidade?.videos || [];
-  if(vids.length){
-    document.getElementById("adVideo").src = vids[0].arquivo;
+  document.getElementById("newsBody").innerHTML=
+    (d.mensagens||[]).map(m=>`<div class="newsItem"><div class="h">${m}</div></div>`).join("");
+  const vids=(d.publicidade?.videos||[]).filter(v=>/\.mp4$/i.test(v.arquivo||""));
+  if(vids[0]){
+    adVideo.src=vids[0].arquivo;
+    adVideoBg.src=vids[0].arquivo;
   }
 }
+loadAll();
+setInterval(loadAll,60000);
 
-loadData();
-setInterval(loadData,60000);
+/* bloqueia fullscreen em TV */
+document.querySelectorAll("video").forEach(v=>{
+  v.requestFullscreen=()=>{};
+  v.webkitEnterFullscreen=()=>{};
+});
 </script>
 </body>
 </html>
