@@ -126,8 +126,10 @@ html,body{
 
 .aviso-body{
   margin-top:16px;
-  font-size:36px;
-  line-height:1.35;
+ font-size: clamp(24px, 2.2vw, 42px);
+  line-height:1.25;
+  transition:font-size .2s ease;
+  word-break:break-word;
 }
 
 .aviso-footer{
@@ -397,6 +399,21 @@ let videoIndex=0;
 let videosGlobais=[];
 
 /* RENDER AVISOS */
+function ajustarFonteParaCabimento(card){
+
+  const body = card.querySelector(".aviso-body");
+  if(!body) return;
+
+  let tamanho = 38; // tamanho inicial grande
+  body.style.fontSize = tamanho + "px";
+
+  while(body.scrollHeight > body.clientHeight && tamanho > 16){
+    tamanho -= 1;
+    body.style.fontSize = tamanho + "px";
+  }
+}
+
+
 function renderAvisos(){
 
   const container = document.getElementById("avisosContainer");
@@ -437,25 +454,32 @@ function renderAvisos(){
       </div>
     `;
 
-    // adiciona temporariamente para medir
     container.appendChild(div);
 
-    // mede altura real
-    const alturaReal = div.offsetHeight;
-    const alturaBloco = container.clientHeight / 3;
+    let ocupa = 1;
 
-    let ocupa = Math.ceil(alturaReal / alturaBloco);
+    // 🔴 PRIORIDADE ALTA SEMPRE OCUPA 3
+    if(prioridade === "alta"){
+      ocupa = 3;
+    }
+    else{
+      const alturaReal = div.offsetHeight;
+      const alturaBloco = container.clientHeight / 3;
+      ocupa = Math.ceil(alturaReal / alturaBloco);
 
-    if(ocupa < 1) ocupa = 1;
-    if(ocupa > 3) ocupa = 3;
+      if(ocupa < 1) ocupa = 1;
+      if(ocupa > 3) ocupa = 3;
+    }
 
-    // se estourar o espaço disponível, remove e para
     if(blocosUsados + ocupa > 3){
       container.removeChild(div);
       break;
     }
 
     div.style.gridRow = "span " + ocupa;
+
+    // 🔠 Ajuste dinâmico de fonte
+    ajustarFonteParaCabimento(div);
 
     blocosUsados += ocupa;
     i++;
