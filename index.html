@@ -1,109 +1,194 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>Comunica Síndico — Condôminos</title>
 
-<link rel="manifest" href="./manifest-condominos.json">
-<meta name="theme-color" content="#0b223a">
-
-<script>
-(function(){
-  const ua=(navigator.userAgent||"").toLowerCase();
-  const looksMobile=/mobi|iphone|ipod|ipad|android.*mobile/.test(ua);
-  const root=document.documentElement;
-  root.classList.toggle("isMobile",looksMobile);
-})();
-</script>
-
 <style>
+/* ======================================================
+   BASE
+====================================================== */
 html,body{
   margin:0;
+  width:100%;
   height:100%;
-  background:linear-gradient(180deg,#061726,#0b1f33);
+  background:#061726;
   color:#fff;
-  font-family:system-ui,Segoe UI,Arial;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
   overflow:hidden;
 }
-.wrap{height:100dvh;padding:10px}
-.container{height:100%;display:flex;flex-direction:column;gap:10px}
-.main{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px}
 
-.topbar{display:flex;justify-content:space-between;align-items:center}
-.rightInfo{text-align:right}
+/* ======================================================
+   CONTAINER
+====================================================== */
+.wrap{
+  width:100%;
+  height:100%;
+  padding:12px;
+  box-sizing:border-box;
+}
 
-.quadTop{
-  flex:1;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  grid-template-rows:repeat(3,1fr);
+.container{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
   gap:10px;
 }
+
+/* ======================================================
+   TOPO
+====================================================== */
+.topbar{
+  flex:0 0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 14px;
+  border-radius:14px;
+  background:rgba(0,0,0,.35);
+}
+
+.title{
+  font-size:28px;
+  font-weight:900;
+}
+
+/* ======================================================
+   GRID PRINCIPAL — OPÇÃO C
+   2 COLUNAS × 3 LINHAS
+====================================================== */
+.main{
+  flex:1 1 auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr 1fr 1fr;
+  gap:10px;
+  min-height:0;
+}
+
+/* POSIÇÃO FIXA */
 #tile1{grid-column:1;grid-row:1}
 #tile2{grid-column:2;grid-row:1}
 #tile3{grid-column:1;grid-row:2}
-#slot5{grid-column:1;grid-row:3}
+#tile5{grid-column:1;grid-row:3}
 #tile4{grid-column:2;grid-row:2/4}
 
-.panel{background:#0003;border-radius:14px;padding:8px}
-.videoWrap{position:relative;height:100%}
-.videoWrap video{width:100%;height:100%;object-fit:cover}
+/* ======================================================
+   QUADRANTES
+====================================================== */
+.tile{
+  border-radius:14px;
+  background:rgba(0,0,0,.35);
+  border:2px solid #000;
+  overflow:hidden;
+  display:flex;
+}
 
-html.isMobile body{overflow:auto}
-html.isMobile .quadTop{display:flex;flex-direction:column}
+.tileBody{
+  flex:1;
+  padding:14px;
+  overflow:hidden;
+}
+
+/* ======================================================
+   AVISOS
+====================================================== */
+.aviso{
+  width:100%;
+  height:100%;
+  background:rgba(20,60,95,.9);
+  border-radius:12px;
+  padding:14px;
+  box-sizing:border-box;
+}
+
+/* ======================================================
+   VÍDEO
+====================================================== */
+.videoWrap{
+  width:100%;
+  height:100%;
+  position:relative;
+  background:#000;
+}
+
+.videoWrap video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+/* ======================================================
+   MOBILE — COLUNA COM ROLAGEM
+====================================================== */
+@media (max-width:900px){
+  html,body{overflow:auto}
+
+  .main{
+    display:flex;
+    flex-direction:column;
+    height:auto;
+  }
+
+  .tile{
+    min-height:220px;
+  }
+}
 </style>
 </head>
 
 <body>
 <div class="wrap">
-<div class="container">
+  <div class="container">
 
-<div class="topbar">
-  <div>Comunica Síndico</div>
-  <div class="rightInfo"><span id="clock">--:--</span></div>
-</div>
-
-<div class="main">
-  <div class="quadTop">
-    <div class="panel" id="tile1"><div id="slot1"></div></div>
-    <div class="panel" id="tile2"><div id="slot2"></div></div>
-    <div class="panel" id="tile3"><div id="slot3"></div></div>
-
-    <div class="panel" id="tile4">
-      <div class="videoWrap">
-        <video id="adVideoBg" muted autoplay loop playsinline></video>
-        <video id="adVideo" muted autoplay playsinline></video>
-      </div>
+    <div class="topbar">
+      <div class="title">Comunica Síndico — Condôminos</div>
+      <div id="clock">--:--</div>
     </div>
 
-    <div class="panel" id="slot5">
-      <div id="newsBody"></div>
+    <div class="main">
+
+      <div class="tile" id="tile1"><div class="tileBody"><div class="aviso">Aviso 1</div></div></div>
+      <div class="tile" id="tile2"><div class="tileBody"><div class="aviso">Aviso 2</div></div></div>
+      <div class="tile" id="tile3"><div class="tileBody"><div class="aviso">Aviso 3</div></div></div>
+
+      <div class="tile" id="tile4">
+        <div class="videoWrap">
+          <video autoplay muted loop playsinline>
+            <source src="./videos/demo.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <div class="tile" id="tile5">
+        <div class="tileBody">
+          Mensagens no Brasil
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
-</div>
-</div>
-
 <script>
-function pad(n){return String(n).padStart(2,"0")}
 function tick(){
   const d=new Date();
-  clock.textContent=pad(d.getHours())+":"+pad(d.getMinutes());
+  document.getElementById("clock").textContent=
+    d.getHours().toString().padStart(2,"0")+":"+
+    d.getMinutes().toString().padStart(2,"0");
 }
-setInterval(tick,1000);tick();
+tick();
+setInterval(tick,1000);
 
-async function loadAll(){
-  try{
-    const r=await fetch("data.json?ts="+Date.now());
-    const d=await r.json();
-    adVideo.src=d.publicidade?.videos?.[0]?.arquivo||"";
-    adVideoBg.src=adVideo.src;
-  }catch(e){}
-}
-loadAll();
+/* TV: bloqueia fullscreen */
+document.querySelectorAll("video").forEach(v=>{
+  v.requestFullscreen=()=>{};
+  v.webkitEnterFullscreen=()=>{};
+});
 </script>
 </body>
 </html>
