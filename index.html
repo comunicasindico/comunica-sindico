@@ -273,36 +273,41 @@ let avisoIndex=0;
 let avisosGlobais=[];
 
 function renderAvisos(){
-  const container=document.getElementById("avisosContainer");
-  container.innerHTML="";
-  if(!avisosGlobais.length) return;
+  const container = document.getElementById("avisosContainer");
+  container.innerHTML = "";
 
-  const subset=[];
-  for(let i=0;i<3;i++){
-    subset.push(avisosGlobais[(avisoIndex+i)%avisosGlobais.length]);
-  }
+  if(!avisosGlobais || avisosGlobais.length === 0) return;
 
-  subset.forEach(a=>{
-    const div=document.createElement("div");
-    div.className="aviso-card prioridade-"+(a.prioridade||"media");
-    div.innerHTML=`
+  const total = avisosGlobais.length;
+
+  for(let i = 0; i < 3; i++){
+
+    const index = (avisoIndex + i) % total;
+    const a = avisosGlobais[index];
+
+    const div = document.createElement("div");
+    div.className = "aviso-card prioridade-" + (a.prioridade || "media");
+
+    div.innerHTML = `
       <div>
-        <div class="aviso-header">${a.titulo||""}</div>
-        <div class="aviso-body">${a.descricao||""}</div>
+        <div class="aviso-header">${a.titulo || ""}</div>
+        <div class="aviso-body">${a.descricao || ""}</div>
       </div>
       <div class="aviso-footer">
-        <span>📍 ${a.local||""}</span>
-        <span>🏷 ${a.categoria||""}</span>
-        <span>⚡ ${(a.prioridade||"").toUpperCase()}</span>
-        <span>🗓 ${a.data||""}</span>
+        <span>📍 ${a.local || ""}</span>
+        <span>🏷 ${a.categoria || ""}</span>
+        <span>⚡ ${(a.prioridade || "").toUpperCase()}</span>
+        <span>📅 ${a.data || ""}</span>
       </div>
     `;
+
     container.appendChild(div);
     fitText(div);
-  });
+  }
 
-  avisoIndex=(avisoIndex+1)%avisosGlobais.length;
+  avisoIndex = (avisoIndex + 1) % total;
 }
+
 
 async function carregarVersiculo(){
   try{
@@ -338,14 +343,31 @@ async function loadData(){
   try{
     const r=await fetch("./data.json?ts="+Date.now());
     const d=await r.json();
-    avisosGlobais=d.avisos||[];
+    avisosGlobais = (d.avisos || []).filter(a => a && a.ativo !== false);
     renderAvisos();
 
     if(d.publicidade?.videos?.length){
-      const src=d.publicidade.videos[0].arquivo;
-      document.getElementById("adVideo").src=src;
-      document.getElementById("adVideoBg").src=src;
-    }
+
+  const src = d.publicidade.videos[0].arquivo + "?ts=" + Date.now();
+
+  const video = document.getElementById("adVideo");
+  const videoBg = document.getElementById("adVideoBg");
+
+  if(video){
+    video.pause();
+    video.src = src;
+    video.load();
+    video.play().catch(()=>{});
+  }
+
+  if(videoBg){
+    videoBg.pause();
+    videoBg.src = src;
+    videoBg.load();
+    videoBg.play().catch(()=>{});
+  }
+}
+
 
     const mensagensContainer=document.getElementById("mensagensContainer");
     mensagensContainer.innerHTML="";
