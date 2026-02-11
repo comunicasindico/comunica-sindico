@@ -7,8 +7,8 @@
 
 <style>
 :root{
-  --bg:#0b2b45;
-  --card:#143d63;
+  --bg:#0e1c2f;
+  --card:#13263f;
   --radius:18px;
 }
 
@@ -16,18 +16,18 @@
 
 html,body{
   margin:0;
+  min-height:100vh;
   font-family:system-ui,-apple-system,Segoe UI,Roboto;
-  background:linear-gradient(180deg,#5fa0d4,#9ec3df);
+  background:linear-gradient(180deg,#1e5799,#7db9e8);
   color:#fff;
 }
 
-/* LAYOUT PRINCIPAL */
+/* LAYOUT */
 .wrapper{
-  min-height:100vh;
-  padding:14px;
+  padding:16px;
   display:grid;
   grid-template-rows:auto 1fr auto;
-  gap:12px;
+  gap:16px;
 }
 
 /* HEADER */
@@ -35,176 +35,158 @@ html,body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:#0f3558;
-  padding:18px 22px;
-  border-radius:22px;
-}
-
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:14px;
+  background:#15385c;
+  padding:16px 24px;
+  border-radius:20px;
 }
 
 .header h1{
   margin:0;
-  font-size:26px;
+  font-size:24px;
   font-weight:900;
 }
 
-/* NUVEM */
-.cloud{
-  width:38px;
-  height:38px;
-  animation:spin 20s linear infinite;
-}
-@keyframes spin{
-  from{transform:rotate(0deg)}
-  to{transform:rotate(360deg)}
-}
-
 .badge{
-  background:#08263f;
+  background:#0f2f4d;
   padding:8px 14px;
   border-radius:999px;
   font-weight:700;
 }
 
-/* MAIN */
+/* MAIN GRID */
 .main{
   display:grid;
-  grid-template-columns:1.3fr 1.7fr;
-  gap:14px;
+  grid-template-columns:1.2fr 1.8fr;
+  gap:16px;
 }
 
-/* AVISOS */
+/* ===== AVISOS PREMIUM ===== */
+
 .avisos{
   display:grid;
   grid-template-rows:repeat(3,1fr);
-  gap:12px;
+  gap:16px;
 }
 
 .aviso-card{
-  padding:18px;
+  background:linear-gradient(145deg,#1b2e4a,#13263f);
+  padding:24px;
   border-radius:20px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  border:2px solid transparent;
+  box-shadow:0 8px 30px rgba(0,0,0,0.5);
+  transition:.3s ease;
 }
 
 .prioridade-alta{
-  background:#e53935;
+  border-color:#ff4d4d;
+  box-shadow:0 0 20px rgba(255,0,0,0.6);
 }
+
 .prioridade-media{
-  background:#fbc02d;
-  color:#000;
+  border-color:#ffc107;
+  box-shadow:0 0 18px rgba(255,193,7,0.6);
 }
+
 .prioridade-baixa{
-  background:#43a047;
+  border-color:#4caf50;
+  box-shadow:0 0 18px rgba(76,175,80,0.6);
 }
 
 .aviso-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
   font-size:20px;
   font-weight:900;
 }
 
 .aviso-body{
+  margin-top:12px;
   font-size:18px;
-  margin-top:8px;
+  line-height:1.4;
 }
 
 .aviso-footer{
-  margin-top:10px;
-  font-size:13px;
+  margin-top:14px;
   display:flex;
-  gap:14px;
-  flex-wrap:wrap;
+  gap:16px;
+  font-size:14px;
+  align-items:center;
 }
+
+.badge-prioridade{
+  padding:4px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.badge-alta{ background:#ff4d4d; }
+.badge-media{ background:#ffc107; color:#000; }
+.badge-baixa{ background:#4caf50; }
 
 /* DIREITA */
 .right-col{
   display:grid;
-  grid-template-rows:1.4fr auto 1fr;
-  gap:12px;
+  grid-template-rows:1.6fr auto auto;
+  gap:16px;
 }
 
 .videoWrap{
-  background:#000;
-  border-radius:18px;
-  overflow:hidden;
   position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  background:#000;
 }
 
-video{
+.videoWrap video{
   width:100%;
   height:100%;
-  object-fit:cover;
+  object-fit:contain;
 }
 
-.video-desc{
-  background:#123a5e;
-  padding:10px 14px;
-  border-radius:12px;
+.videoDescricao{
+  background:#14324f;
+  padding:14px;
+  border-radius:16px;
   font-size:14px;
 }
 
 .mensagens{
-  background:#143d63;
-  padding:12px;
-  border-radius:18px;
+  background:#14324f;
+  padding:14px;
+  border-radius:16px;
+  font-size:14px;
+  max-height:200px;
   overflow:auto;
-}
-
-.mensagem-item{
-  padding:6px;
-  border-bottom:1px solid rgba(255,255,255,0.1);
-  font-size:13px;
 }
 
 /* FOOTER */
 .footer{
-  background:#0f3558;
-  padding:14px 20px;
+  background:#15385c;
+  padding:16px;
   border-radius:20px;
   display:flex;
   flex-direction:column;
   gap:6px;
 }
 
-.footer-line{
+.footer-top{
+  font-weight:600;
+}
+
+.footer-bottom{
   display:flex;
   justify-content:space-between;
   font-size:14px;
 }
 
-/* BARRA TEMP */
-.temp-bar{
-  height:6px;
-  background:#08263f;
-  border-radius:6px;
-  overflow:hidden;
-  margin-top:6px;
-  position:relative;
-}
-
-.temp-fill{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#00c6ff,#ff9800,#e53935);
-}
-
-.temp-value{
-  position:absolute;
-  top:-22px;
-  transform:translateX(-50%);
-  background:#000;
-  padding:2px 6px;
-  border-radius:6px;
-  font-size:11px;
-}
-
+/* RESPONSIVO */
 @media(max-width:900px){
-  .main{grid-template-columns:1fr}
+  .main{ grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -213,143 +195,133 @@ video{
 
 <div class="wrapper">
 
-<!-- HEADER -->
 <div class="header">
-  <div class="header-left">
-    <h1>Comunica Síndico - Condôminos</h1>
-    <svg class="cloud" viewBox="0 0 100 100">
-      <ellipse cx="50" cy="55" rx="30" ry="18" fill="#fff"/>
-      <ellipse cx="35" cy="45" rx="18" ry="14" fill="#fff"/>
-      <ellipse cx="65" cy="45" rx="18" ry="14" fill="#fff"/>
-    </svg>
-  </div>
+  <h1>Comunica Síndico - Condôminos</h1>
   <span class="badge" id="clock">--:--</span>
 </div>
 
-<!-- MAIN -->
 <div class="main">
 
-<div class="avisos" id="avisosContainer"></div>
+  <div class="avisos" id="avisosContainer"></div>
 
-<div class="right-col">
+  <div class="right-col">
 
-  <div class="videoWrap">
-    <video id="adVideo" autoplay muted loop playsinline></video>
+    <div class="videoWrap">
+      <video id="adVideo" autoplay muted loop playsinline></video>
+    </div>
+
+    <div class="videoDescricao" id="videoDescricao"></div>
+
+    <div class="mensagens" id="mensagensContainer"></div>
+
   </div>
 
-  <div class="video-desc" id="videoDesc"></div>
-
-  <div class="mensagens" id="mensagensContainer"></div>
-
-</div>
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
-  <div class="footer-line" id="versiculo"></div>
-
-  <div class="footer-line">
-    <div></div>
-    <div>
-      <div id="clima"></div>
-      <div class="temp-bar">
-        <div class="temp-fill" id="tempFill"></div>
-        <div class="temp-value" id="tempValue">--°C</div>
-      </div>
-    </div>
+  <div class="footer-top" id="versiculo"></div>
+  <div class="footer-bottom">
+    <div id="clima"></div>
+    <div>Comunica Síndico</div>
   </div>
 </div>
 
 </div>
 
 <script>
+
 /* RELÓGIO */
 function tick(){
   const d=new Date();
   document.getElementById("clock").textContent=
-  d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+    d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
 setInterval(tick,1000); tick();
 
-/* CARREGAR DADOS */
-async function loadData(){
-  const r=await fetch("./data.json?ts="+Date.now());
-  const d=await r.json();
+/* VARIÁVEIS */
+let avisoIndex=0;
+let avisosGlobais=[];
+let videoIndex=0;
+let videosGlobais=[];
 
-  /* AVISOS */
-  const avisos=d.avisos||[];
-  const cont=document.getElementById("avisosContainer");
-  cont.innerHTML="";
-  avisos.slice(0,3).forEach(a=>{
+/* RENDER AVISOS */
+function renderAvisos(){
+  const container=document.getElementById("avisosContainer");
+  container.innerHTML="";
+  if(!avisosGlobais.length) return;
+
+  for(let i=0;i<3;i++){
+    const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
+    const prioridade=(a.prioridade||"media").toLowerCase();
+
     const div=document.createElement("div");
-    div.className="aviso-card prioridade-"+a.prioridade.toLowerCase();
+    div.className="aviso-card prioridade-"+prioridade;
+
     div.innerHTML=`
       <div>
-        <div class="aviso-header">${a.titulo}</div>
-        <div class="aviso-body">${a.descricao}</div>
+        <div class="aviso-header">
+          ⚠ ${a.titulo||""}
+        </div>
+        <div class="aviso-body">${a.descricao||""}</div>
       </div>
       <div class="aviso-footer">
-        <span>📍 ${a.local}</span>
-        <span>⚡ ${a.prioridade}</span>
+        <span>📍 ${a.local||""}</span>
+        <span>🏷 ${a.tipo||""}</span>
+        <span class="badge-prioridade badge-${prioridade}">
+          ${(a.prioridade||"").toUpperCase()}
+        </span>
       </div>
     `;
-    cont.appendChild(div);
-  });
 
-  /* VÍDEO */
-  if(d.publicidade?.videos?.length){
-    const video=d.publicidade.videos[0];
-    const v=document.getElementById("adVideo");
-    v.src=video.arquivo;
-    document.getElementById("videoDesc").textContent=video.anunciante;
+    container.appendChild(div);
   }
 
-  /* MENSAGENS */
-  const msgCont=document.getElementById("mensagensContainer");
-  msgCont.innerHTML="";
-  (d.mensagens||[]).forEach(m=>{
-    const div=document.createElement("div");
-    div.className="mensagem-item";
-    div.textContent=m;
-    msgCont.appendChild(div);
-  });
+  avisoIndex=(avisoIndex+1)%avisosGlobais.length;
 }
 
-/* CLIMA */
-async function carregarClima(){
-  const rJson=await fetch("./data.json?ts="+Date.now());
-  const json=await rJson.json();
+/* ROTACIONAR VÍDEO */
+function trocarVideo(){
+  if(!videosGlobais.length) return;
 
-  const lat=json.clima.latitude;
-  const lon=json.clima.longitude;
-  const cidade=json.clima.cidade;
+  const v=videosGlobais[videoIndex];
+  const video=document.getElementById("adVideo");
+  video.src=v.arquivo;
+  document.getElementById("videoDescricao").textContent=v.anunciante||"";
 
-  const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-  const d=await r.json();
-  const temp=d.current_weather.temperature;
-
-  document.getElementById("clima").textContent=
-    `${cidade} • ${temp}°C`;
-
-  const percent=(temp/40)*100;
-  document.getElementById("tempFill").style.width=percent+"%";
-  document.getElementById("tempValue").style.left=percent+"%";
-  document.getElementById("tempValue").textContent=temp+"°C";
+  videoIndex=(videoIndex+1)%videosGlobais.length;
 }
 
-/* VERSÍCULO */
-async function carregarVersiculo(){
-  const r=await fetch("https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json");
-  const dados=await r.json();
-  const hoje=new Date();
-  const chave=String(hoje.getMonth()+1).padStart(2,"0")+"-"+String(hoje.getDate()).padStart(2,"0");
-  document.getElementById("versiculo").textContent=dados.versos[chave]||"";
+/* LOAD DATA */
+async function loadData(){
+  try{
+    const r=await fetch("./data.json?ts="+Date.now());
+    const d=await r.json();
+
+    avisosGlobais=d.avisos||[];
+    videosGlobais=d.publicidade?.videos||[];
+
+    renderAvisos();
+    trocarVideo();
+
+    const mc=document.getElementById("mensagensContainer");
+    mc.innerHTML="";
+    (d.mensagens||[]).forEach(m=>{
+      const div=document.createElement("div");
+      div.textContent=m;
+      mc.appendChild(div);
+    });
+
+    document.getElementById("versiculo").textContent="\"O Senhor reina; regozije-se a terra.\"";
+    document.getElementById("clima").textContent="Tubarão • 32°C";
+
+  }catch(e){ console.error(e); }
 }
 
 loadData();
-carregarClima();
-carregarVersiculo();
-setInterval(carregarClima,600000);
+setInterval(renderAvisos,8000);
+setInterval(trocarVideo,12000);
+setInterval(loadData,60000);
+
 </script>
 
 </body>
