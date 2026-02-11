@@ -211,6 +211,31 @@ html,body{
   background:linear-gradient(90deg,#00c6ff,#0072ff,#ff9800,#e53935);
   transition:width .8s ease;
 }
+/* ===== FUNDO DINÂMICO ===== */
+
+body.clima-sol{
+  background:linear-gradient(180deg,#64b5f6,#bbdefb);
+}
+
+body.clima-parcial{
+  background:linear-gradient(180deg,#4fc3f7,#81d4fa);
+}
+
+body.clima-nublado{
+  background:linear-gradient(180deg,#78909c,#b0bec5);
+}
+
+body.clima-chuva{
+  background:linear-gradient(180deg,#1e3c72,#2a5298);
+}
+
+body.clima-tempestade{
+  background:linear-gradient(180deg,#232526,#414345);
+}
+
+body.clima-noite{
+  background:linear-gradient(180deg,#0f2027,#203a43,#2c5364);
+}
 
   
 </style>
@@ -354,45 +379,81 @@ async function carregarClima(){
     const lat = json.clima?.latitude || -28.4667;
     const lon = json.clima?.longitude || -49.0069;
 
-    const r=await fetch(
+    const r = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
     );
 
-    const d=await r.json();
-    const w=d.current_weather;
+    const d = await r.json();
+    const w = d.current_weather;
 
     const temp = w.temperature;
     const vento = w.windspeed;
-
+    const codigo = w.weathercode;
     /* Sensação térmica aproximada */
     const sensacao = Math.round(
       13.12 + 0.6215*temp - 11.37*Math.pow(vento,0.16) +
       0.3965*temp*Math.pow(vento,0.16)
     );
-
-    document.getElementById("clima").textContent=
+    document.getElementById("clima").textContent =
       `${cidade} • ${temp}°C (Sensação ${sensacao}°C) • Vento ${vento} km/h`;
-
     /* Barra temperatura */
-    const min=0;
-    const max=40;
-    const percentual = Math.min(100,Math.max(0,((temp-min)/(max-min))*100));
-    document.getElementById("tempBarFill").style.width=percentual+"%";
+    const min = 0;
+    const max = 40;
+    const percentual = Math.min(100,
+      Math.max(0, ((temp-min)/(max-min))*100)
+    );
+    const barra = document.getElementById("tempBarFill");
+    if(barra) barra.style.width = percentual + "%";
 
-    /* Trocar cor da nuvem conforme temperatura */
-    const cloud=document.getElementById("cloudGroup");
+    /* Cor da nuvem conforme temperatura */
+    const cloud = document.getElementById("cloudGroup");
+    if(cloud){
+      if(temp <= 10){
+        cloud.style.filter="hue-rotate(180deg)";
+      }
+      else if(temp <= 20){
+        cloud.style.filter="hue-rotate(90deg)";
+      }
+      else if(temp <= 30){
+        cloud.style.filter="hue-rotate(0deg)";
+      }
+      else{
+        cloud.style.filter="hue-rotate(-40deg)";
+      }
+    }
+    /* ==============================
+       FUNDO DINÂMICO CONFORME CLIMA
+       ============================== */
+    const hora = new Date().getHours();
+    document.body.classList.remove(
+      "clima-sol",
+      "clima-parcial",
+      "clima-nublado",
+      "clima-chuva",
+      "clima-tempestade",
+      "clima-noite"
+    );
 
-    if(temp <= 10){
-      cloud.style.filter="hue-rotate(180deg)";
-    }
-    else if(temp <= 20){
-      cloud.style.filter="hue-rotate(90deg)";
-    }
-    else if(temp <= 30){
-      cloud.style.filter="hue-rotate(0deg)";
+    /* Noite */
+    if(hora >= 18 || hora <= 5){
+      document.body.classList.add("clima-noite");
     }
     else{
-      cloud.style.filter="hue-rotate(-40deg)";
+      if(codigo === 0){
+        document.body.classList.add("clima-sol");
+      }
+      else if(codigo <= 3){
+        document.body.classList.add("clima-parcial");
+      }
+      else if(codigo < 60){
+        document.body.classList.add("clima-nublado");
+      }
+      else if(codigo < 80){
+        document.body.classList.add("clima-chuva");
+      }
+      else{
+        document.body.classList.add("clima-tempestade");
+      }
     }
 
   }catch(e){
