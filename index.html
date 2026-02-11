@@ -174,20 +174,18 @@ html,body{
   background:#14324f;
   padding:16px 20px;
   border-radius:16px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  min-height:60px;
-  justify-content:center;
+  text-align:center;
 }
+
 .videoAnunciante{
-  font-size:17px;
+  font-size:18px;
   font-weight:900;
-  text-transform:uppercase;
+  margin-bottom:6px;
 }
+
 .videoTexto{
-  font-size:13px;
-  font-weight:500;
+  font-size:14px;
+  font-weight:400;
   opacity:.9;
 }
 
@@ -341,20 +339,23 @@ html,body{
 
   <div class="videoWrap">
 
+  <!-- Fundo desfocado -->
   <video id="adVideoBg" autoplay muted loop playsinline></video>
+
+  <!-- Vídeo principal -->
   <video id="adVideo" autoplay muted loop playsinline></video>
 
-  <!-- BOTÕES DISCRETOS -->
   <button class="videoNav prev" onclick="videoAnterior()">‹</button>
   <button class="videoNav next" onclick="videoProximo()">›</button>
 
 </div>
 
-  <!-- DESCRIÇÃO AQUI -->
-  <div class="videoDescricao">
+<!-- BLOCO DESCRIÇÃO -->
+<div class="videoDescricao" id="videoDescricao">
   <div class="videoAnunciante" id="videoAnunciante"></div>
   <div class="videoTexto" id="videoTexto"></div>
 </div>
+
 
     <div class="mensagens" id="mensagensContainer"></div>
 </div>
@@ -443,7 +444,9 @@ function trocarVideo(){
 
   const video = document.getElementById("adVideo");
   const videoBg = document.getElementById("adVideoBg");
-  const desc  = document.getElementById("videoDescricao");
+
+  const anuncianteEl = document.getElementById("videoAnunciante");
+  const textoEl = document.getElementById("videoTexto");
 
   const src = videoData.arquivo + "?ts=" + Date.now();
 
@@ -459,12 +462,9 @@ function trocarVideo(){
   video.play().catch(()=>{});
   videoBg.play().catch(()=>{});
 
-  desc.innerHTML = `
-    <strong>${videoData.anunciante || ""}</strong><br>
-    <span style="font-size:13px;font-weight:400;">
-      ${videoData.descricao || ""}
-    </span>
-  `;
+  // 🔥 NÃO REMOVE NADA
+  anuncianteEl.textContent = videoData.anunciante || "";
+  textoEl.textContent = videoData.descricao || "";
 
   videoIndex = (videoIndex + 1) % videosGlobais.length;
 }
