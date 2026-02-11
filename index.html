@@ -399,38 +399,49 @@ function trocarVideo(){
 
   videoIndex = (videoIndex + 1) % videosGlobais.length;
 }
-
-/* LOAD DATA */
+/* =========================
+   LOAD DATA PRINCIPAL
+   ========================= */
 async function loadData(){
   try{
-    const r=await fetch("./data.json?ts="+Date.now());
-    const d=await r.json();
+    const r = await fetch("./data.json?ts=" + Date.now());
+    const d = await r.json();
 
-    avisosGlobais=d.avisos||[];
-    videosGlobais=d.publicidade?.videos||[];
-
+    /* AVISOS */
+    avisosGlobais = d.avisos || [];
+    avisoIndex = 0;
     renderAvisos();
+
+    /* VÍDEOS */
+    videosGlobais = d.publicidade?.videos || [];
+    videoIndex = 0;
     trocarVideo();
 
-    const mc=document.getElementById("mensagensContainer");
-    mc.innerHTML="";
-    (d.mensagens||[]).forEach(m=>{
-      const div=document.createElement("div");
-      div.textContent=m;
+    /* MENSAGENS */
+    const mc = document.getElementById("mensagensContainer");
+    mc.innerHTML = "";
+
+    (d.mensagens || []).forEach(m => {
+      const div = document.createElement("div");
+      div.className = "mensagem-item";
+      div.textContent = m;
       mc.appendChild(div);
     });
 
-    }catch(e){ console.error(e); }
+  }catch(e){
+    console.error("Erro loadData:", e);
+  }
 }
 
-loadData();
-setInterval(renderAvisos,8000);
-setInterval(trocarVideo,12000);
-setInterval(loadData,60000);
-
-  async function carregarVersiculo(){
+/* =========================
+   VERSÍCULO DINÂMICO
+   ========================= */
+async function carregarVersiculo(){
   try{
-    const r = await fetch("https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json?ts="+Date.now());
+    const r = await fetch(
+      "https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json?ts=" + Date.now()
+    );
+
     const dados = await r.json();
 
     const hoje = new Date();
@@ -442,15 +453,24 @@ setInterval(loadData,60000);
     const versiculo = dados.versos?.[chave] || "—";
 
     document.getElementById("versiculo").textContent = versiculo;
-
   }catch(e){
-    console.error("Erro versículo:",e);
+    console.error("Erro versículo:", e);
   }
 }
-
-  
+/* =========================
+   INICIALIZAÇÃO
+   ========================= */
+loadData();
 carregarVersiculo();
-setInterval(carregarVersiculo, 3600000); // atualiza a cada hora
+
+/* ROTACIONAR */
+setInterval(renderAvisos, 8000);
+setInterval(trocarVideo, 12000);
+
+/* ATUALIZAÇÕES */
+setInterval(loadData, 60000);           // Atualiza dados
+setInterval(carregarVersiculo, 3600000); // Atualiza versículo a cada hora
+
 
 </script>
 
