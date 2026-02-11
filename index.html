@@ -165,13 +165,33 @@ html,body{
   position:relative;
   border-radius:20px;
   overflow:hidden;
- }
+  background:#000;
+  min-height:260px;
+}
 
+/* DESKTOP mantém normal */
 .videoWrap video{
   width:100%;
   height:100%;
   object-fit:contain;
 }
+
+/* 🔥 MOBILE FIXO */
+@media(max-width:900px){
+
+  .videoWrap{
+    aspect-ratio:16/9;   /* Mantém proporção estável */
+    height:auto;
+  }
+
+  .videoWrap video{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+  }
+
+}
+
 
 .videoDescricao{
   background:#14324f;
@@ -398,21 +418,32 @@ let avisosGlobais=[];
 let videoIndex=0;
 let videosGlobais=[];
 
-/* RENDER AVISOS */
-function ajustarFonteParaCabimento(card){
+function ajustarFonteParaCabimento(card, prioridade){
 
   const body = card.querySelector(".aviso-body");
   if(!body) return;
 
-  let tamanho = 38; // tamanho inicial grande
-  body.style.fontSize = tamanho + "px";
+  let tamanhoBase = 36;
 
-  while(body.scrollHeight > body.clientHeight && tamanho > 16){
-    tamanho -= 1;
-    body.style.fontSize = tamanho + "px";
+  if(prioridade === "alta"){
+    tamanhoBase = 48;
+  }
+
+  body.style.fontSize = tamanhoBase + "px";
+
+  while(
+    body.scrollHeight > body.clientHeight &&
+    tamanhoBase > 24
+  ){
+    tamanhoBase -= 2;
+    body.style.fontSize = tamanhoBase + "px";
+  }
+
+  // 🔥 Alta curta mantém destaque maior
+  if(prioridade === "alta" && body.textContent.length < 120){
+    body.style.fontSize = "clamp(42px, 3vw, 60px)";
   }
 }
-
 
 function renderAvisos(){
 
@@ -456,19 +487,37 @@ function renderAvisos(){
 
     container.appendChild(div);
 
+    /* =========================
+       LÓGICA PROFISSIONAL DE OCUPAÇÃO
+       ========================= */
+
     let ocupa = 1;
+    const tamanhoTexto = (a.descricao || "").length;
 
-    // 🔴 PRIORIDADE ALTA SEMPRE OCUPA 3
     if(prioridade === "alta"){
-      ocupa = 3;
-    }
-    else{
-      const alturaReal = div.offsetHeight;
-      const alturaBloco = container.clientHeight / 3;
-      ocupa = Math.ceil(alturaReal / alturaBloco);
 
-      if(ocupa < 1) ocupa = 1;
-      if(ocupa > 3) ocupa = 3;
+      if(tamanhoTexto > 220){
+        ocupa = 3;
+      }
+      else if(tamanhoTexto > 120){
+        ocupa = 2;
+      }
+      else{
+        ocupa = 1; // 🔥 Alta curta = 1 campo
+      }
+
+    }else{
+
+      if(tamanhoTexto > 260){
+        ocupa = 3;
+      }
+      else if(tamanhoTexto > 160){
+        ocupa = 2;
+      }
+      else{
+        ocupa = 1;
+      }
+
     }
 
     if(blocosUsados + ocupa > 3){
@@ -478,8 +527,7 @@ function renderAvisos(){
 
     div.style.gridRow = "span " + ocupa;
 
-    // 🔠 Ajuste dinâmico de fonte
-    ajustarFonteParaCabimento(div);
+    ajustarFonteParaCabimento(div, prioridade);
 
     blocosUsados += ocupa;
     i++;
@@ -487,6 +535,7 @@ function renderAvisos(){
 
   avisoIndex = (avisoIndex + 1) % avisosGlobais.length;
 }
+
 
 function trocarVideo(){
 
