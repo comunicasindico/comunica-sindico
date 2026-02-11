@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Comunica Síndico — Condôminos</title>
 
 <style>
-/* ======================================================
-   BASE
-====================================================== */
 html,body{
   margin:0;
   width:100%;
@@ -19,9 +16,6 @@ html,body{
   overflow:hidden;
 }
 
-/* ======================================================
-   CONTAINER
-====================================================== */
 .wrap{
   width:100%;
   height:100%;
@@ -37,106 +31,67 @@ html,body{
   gap:10px;
 }
 
-/* ======================================================
-   TOPO
-====================================================== */
 .topbar{
-  flex:0 0 auto;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:10px 14px;
+  padding:12px 16px;
   border-radius:14px;
-  background:rgba(0,0,0,.35);
-}
-
-.title{
+  background:rgba(0,0,0,.45);
   font-size:28px;
   font-weight:900;
 }
 
-/* ======================================================
-   GRID PRINCIPAL — OPÇÃO C
-   2 COLUNAS × 3 LINHAS
-====================================================== */
 .main{
-  flex:1 1 auto;
+  flex:1;
   display:grid;
   grid-template-columns:1fr 1fr;
   grid-template-rows:1fr 1fr 1fr;
   gap:10px;
-  min-height:0;
 }
 
-/* POSIÇÃO FIXA */
+.tile{
+  background:rgba(10,35,60,.85);
+  border-radius:16px;
+  border:2px solid #000;
+  padding:14px;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+
 #tile1{grid-column:1;grid-row:1}
 #tile2{grid-column:2;grid-row:1}
 #tile3{grid-column:1;grid-row:2}
 #tile5{grid-column:1;grid-row:3}
-#tile4{grid-column:2;grid-row:2/4}
+#tile4{grid-column:2;grid-row:2/4;padding:0}
 
-/* ======================================================
-   QUADRANTES
-====================================================== */
-.tile{
-  border-radius:14px;
-  background:rgba(0,0,0,.35);
-  border:2px solid #000;
-  overflow:hidden;
-  display:flex;
+.aviso-title{
+  font-size:22px;
+  font-weight:900;
+  margin-bottom:6px;
 }
 
-.tileBody{
-  flex:1;
-  padding:14px;
-  overflow:hidden;
+.aviso-body{
+  font-size:18px;
+  line-height:1.3;
 }
 
-/* ======================================================
-   AVISOS
-====================================================== */
-.aviso{
-  width:100%;
-  height:100%;
-  background:rgba(20,60,95,.9);
-  border-radius:12px;
-  padding:14px;
-  box-sizing:border-box;
-}
-
-/* ======================================================
-   VÍDEO
-====================================================== */
 .videoWrap{
   width:100%;
   height:100%;
-  position:relative;
   background:#000;
 }
 
 .videoWrap video{
-  position:absolute;
-  inset:0;
   width:100%;
   height:100%;
   object-fit:contain;
 }
 
-/* ======================================================
-   MOBILE — COLUNA COM ROLAGEM
-====================================================== */
-@media (max-width:900px){
+@media(max-width:900px){
   html,body{overflow:auto}
-
-  .main{
-    display:flex;
-    flex-direction:column;
-    height:auto;
-  }
-
-  .tile{
-    min-height:220px;
-  }
+  .main{display:flex;flex-direction:column}
+  .tile{min-height:220px}
 }
 </style>
 </head>
@@ -146,30 +101,22 @@ html,body{
   <div class="container">
 
     <div class="topbar">
-      <div class="title">Comunica Síndico — Condôminos</div>
+      <div>Comunica Síndico — Condôminos</div>
       <div id="clock">--:--</div>
     </div>
 
     <div class="main">
-
-      <div class="tile" id="tile1"><div class="tileBody"><div class="aviso">Aviso 1</div></div></div>
-      <div class="tile" id="tile2"><div class="tileBody"><div class="aviso">Aviso 2</div></div></div>
-      <div class="tile" id="tile3"><div class="tileBody"><div class="aviso">Aviso 3</div></div></div>
+      <div class="tile" id="tile1"></div>
+      <div class="tile" id="tile2"></div>
+      <div class="tile" id="tile3"></div>
 
       <div class="tile" id="tile4">
         <div class="videoWrap">
-          <video autoplay muted loop playsinline>
-            <source src="./videos/demo.mp4" type="video/mp4">
-          </video>
+          <video id="adVideo" autoplay muted loop playsinline></video>
         </div>
       </div>
 
-      <div class="tile" id="tile5">
-        <div class="tileBody">
-          Mensagens no Brasil
-        </div>
-      </div>
-
+      <div class="tile" id="tile5"></div>
     </div>
   </div>
 </div>
@@ -177,18 +124,39 @@ html,body{
 <script>
 function tick(){
   const d=new Date();
-  document.getElementById("clock").textContent=
-    d.getHours().toString().padStart(2,"0")+":"+
-    d.getMinutes().toString().padStart(2,"0");
+  clock.textContent=d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
-tick();
-setInterval(tick,1000);
+setInterval(tick,1000); tick();
 
-/* TV: bloqueia fullscreen */
-document.querySelectorAll("video").forEach(v=>{
-  v.requestFullscreen=()=>{};
-  v.webkitEnterFullscreen=()=>{};
-});
+async function loadData(){
+  const res = await fetch("./data.json?ts="+Date.now());
+  const data = await res.json();
+
+  const avisos = data.avisos || [];
+
+  const slots = ["tile1","tile2","tile3"];
+  slots.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    const a=avisos[i];
+    if(!a){ el.innerHTML="—"; return; }
+    el.innerHTML=`
+      <div class="aviso-title">${a.titulo||"Aviso"}</div>
+      <div class="aviso-body">${a.descricao||""}</div>
+    `;
+  });
+
+  document.getElementById("tile5").innerHTML =
+    `<div class="aviso-title">Mensagens no Brasil</div>` +
+    (data.mensagens?.join("<br>") || "—");
+
+  const vids = data.publicidade?.videos || [];
+  if(vids.length){
+    document.getElementById("adVideo").src = vids[0].arquivo;
+  }
+}
+
+loadData();
+setInterval(loadData,60000);
 </script>
 </body>
 </html>
