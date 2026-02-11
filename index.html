@@ -174,9 +174,23 @@ html,body{
 
 .videoDescricao{
   background:#14324f;
-  padding:14px;
+  padding:16px 20px;
   border-radius:16px;
-  font-size:14px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-height:60px;
+  justify-content:center;
+}
+.videoAnunciante{
+  font-size:17px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.videoTexto{
+  font-size:13px;
+  font-weight:500;
+  opacity:.9;
 }
 
 .mensagens{
@@ -281,12 +295,13 @@ html,body{
   </div>
 
   <!-- DESCRIÇÃO AQUI -->
-  <div class="videoDescricao" id="videoDescricao"></div>
-
-  <div class="mensagens" id="mensagensContainer"></div>
-
+  <div class="videoDescricao">
+  <div class="videoAnunciante" id="videoAnunciante"></div>
+  <div class="videoTexto" id="videoTexto"></div>
 </div>
 
+    <div class="mensagens" id="mensagensContainer"></div>
+</div>
 
 </div>
 
@@ -371,15 +386,16 @@ function trocarVideo(){
   const videoData = videosGlobais[videoIndex];
 
   const video = document.getElementById("adVideo");
-  const desc  = document.getElementById("videoDescricao");
+  const anunciante = document.getElementById("videoAnunciante");
+  const texto = document.getElementById("videoTexto");
 
   video.pause();
   video.src = videoData.arquivo + "?ts=" + Date.now();
   video.load();
   video.play().catch(()=>{});
 
-  /* 🔹 NOVO: usar campo descricao */
-  desc.textContent = videoData.descricao || videoData.anunciante || "";
+  anunciante.textContent = videoData.anunciante || "";
+  texto.textContent = videoData.descricao || "";
 
   videoIndex = (videoIndex + 1) % videosGlobais.length;
 }
