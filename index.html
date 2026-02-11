@@ -192,6 +192,23 @@ html,body{
 @media(max-width:900px){
   .main{ grid-template-columns:1fr; }
 }
+
+
+  .videoDescricao{
+  background:#14324f;
+  padding:14px 18px;
+  border-radius:16px;
+  font-size:15px;
+  font-weight:600;
+  text-align:center;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+
+  
 </style>
 </head>
 
@@ -210,15 +227,17 @@ html,body{
 
   <div class="right-col">
 
-    <div class="videoWrap">
-      <video id="adVideo" autoplay muted loop playsinline></video>
-    </div>
-
-    <div class="videoDescricao" id="videoDescricao"></div>
-
-    <div class="mensagens" id="mensagensContainer"></div>
-
+  <div class="videoWrap">
+    <video id="adVideo" autoplay muted loop playsinline></video>
   </div>
+
+  <!-- DESCRIÇÃO AQUI -->
+  <div class="videoDescricao" id="videoDescricao"></div>
+
+  <div class="mensagens" id="mensagensContainer"></div>
+
+</div>
+
 
 </div>
 
@@ -293,22 +312,33 @@ function renderAvisos(){
 
     container.appendChild(div);
   }
-
   avisoIndex=(avisoIndex+1)%avisosGlobais.length;
 }
 
 
 /* ROTACIONAR VÍDEO */
+let videoIndex = 0;
+let videosGlobais = [];
+
 function trocarVideo(){
+
   if(!videosGlobais.length) return;
 
-  const v=videosGlobais[videoIndex];
-  const video=document.getElementById("adVideo");
-  video.src=v.arquivo;
-  document.getElementById("videoDescricao").textContent=v.anunciante||"";
+  const videoData = videosGlobais[videoIndex];
 
-  videoIndex=(videoIndex+1)%videosGlobais.length;
+  const video = document.getElementById("adVideo");
+  const desc  = document.getElementById("videoDescricao");
+
+  video.pause();
+  video.src = videoData.arquivo + "?ts=" + Date.now();
+  video.load();
+  video.play().catch(()=>{});
+
+  desc.textContent = videoData.anunciante || "";
+
+  videoIndex = (videoIndex + 1) % videosGlobais.length;
 }
+
 
 /* LOAD DATA */
 async function loadData(){
