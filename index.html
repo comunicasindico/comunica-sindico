@@ -100,16 +100,17 @@ html,body{
 .prioridade-baixa::before{ background:#4caf50; }
 
 .aviso-header{
+  font-size:20px;
   font-weight:900;
-  margin-bottom:8px;
+  margin-bottom:12px;
 }
 
 .aviso-body{
   flex:1;
-  overflow:hidden;
-  line-height:1.25;
-  font-size:clamp(18px, 2.4vw, 36px);
-  max-height:100%;
+  line-height:1.35;
+  font-size: clamp(22px, 2vw, 30px);
+  display:flex;
+  align-items:center;
 }
 
 .aviso-footer{
@@ -265,26 +266,6 @@ function tick(){
     d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
 setInterval(tick,1000); tick();
-
-function fitText(container){
-  const body   = container.querySelector(".aviso-body");
-  const header = container.querySelector(".aviso-header");
-  const footer = container.querySelector(".aviso-footer");
-
-  const maxBodyHeight =
-      container.clientHeight
-      - header.offsetHeight
-      - footer.offsetHeight
-      - 40; // margem interna segura
-
-  let size = 36; // limite máximo
-  body.style.fontSize = size + "px";
-
-  while(body.scrollHeight > maxBodyHeight && size > 18){
-      size--;
-      body.style.fontSize = size + "px";
-  }
-}
 
 
 
