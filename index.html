@@ -163,7 +163,6 @@ html,body{
   border-radius:20px;
   overflow:hidden;
   background:#000;
-  height:100%;
 }
 
 .videoWrap video{
@@ -246,6 +245,57 @@ html,body{
   justify-content:center;
 }
 
+/* vídeo principal */
+#adVideo{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  z-index:2;
+}
+
+/* vídeo fosco de fundo */
+#adVideoBg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:blur(20px);
+  transform:scale(1.1);
+  opacity:.5;
+  z-index:1;
+}
+
+/* BOTÕES */
+.videoNav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:38px;
+  height:70px;
+  border:none;
+  border-radius:10px;
+  background:rgba(0,0,0,0.25);
+  backdrop-filter:blur(6px);
+  color:#fff;
+  font-size:28px;
+  font-weight:300;
+  cursor:pointer;
+  opacity:.25;
+  transition:.3s ease;
+  z-index:3;
+}
+
+.videoNav:hover{
+  opacity:.7;
+  background:rgba(0,0,0,0.4);
+}
+
+.videoNav.prev{ left:8px; }
+.videoNav.next{ right:8px; }
+
 
   
 </style>
@@ -291,8 +341,15 @@ html,body{
   <div class="right-col">
 
   <div class="videoWrap">
-    <video id="adVideo" autoplay muted loop playsinline></video>
-  </div>
+
+  <video id="adVideoBg" autoplay muted loop playsinline></video>
+  <video id="adVideo" autoplay muted loop playsinline></video>
+
+  <!-- BOTÕES DISCRETOS -->
+  <button class="videoNav prev" onclick="videoAnterior()">‹</button>
+  <button class="videoNav next" onclick="videoProximo()">›</button>
+
+</div>
 
   <!-- DESCRIÇÃO AQUI -->
   <div class="videoDescricao">
@@ -399,6 +456,18 @@ function trocarVideo(){
 
   videoIndex = (videoIndex + 1) % videosGlobais.length;
 }
+  function videoProximo(){
+  if(!videosGlobais.length) return;
+  videoIndex = (videoIndex + 1) % videosGlobais.length;
+  trocarVideo();
+}
+
+function videoAnterior(){
+  if(!videosGlobais.length) return;
+  videoIndex = (videoIndex - 1 + videosGlobais.length) % videosGlobais.length;
+  trocarVideo();
+}
+
 /* =========================
    LOAD DATA PRINCIPAL
    ========================= */
