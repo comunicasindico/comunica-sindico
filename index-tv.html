@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Comunica Síndico — TV</title>
+
+<link rel="manifest" href="./manifest-condominos.json">
+<meta name="theme-color" content="#000000">
+
+<script>
+(function(){
+  document.documentElement.classList.add("isTV");
+})();
+</script>
+
+<style>
+html,body{
+  margin:0;
+  height:100%;
+  background:#000;
+  color:#fff;
+  font-family:system-ui,Segoe UI,Arial;
+  overflow:hidden;
+}
+
+.wrap{
+  position:fixed;
+  inset:4vh 4vw;
+}
+
+.container{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.main{flex:1;min-height:0}
+
+.quadTop{
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:repeat(3,1fr);
+  gap:10px;
+}
+
+#tile1{grid-column:1;grid-row:1}
+#tile2{grid-column:2;grid-row:1}
+#tile3{grid-column:1;grid-row:2}
+#slot5{grid-column:1;grid-row:3}
+#tile4{grid-column:2;grid-row:2/4}
+
+.panel{
+  background:#000;
+  border:3px solid #000;
+  border-radius:14px;
+  padding:6px;
+}
+
+.videoWrap{position:relative;height:100%}
+.videoWrap video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.videoWrap::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border:4px solid #000;
+  pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="container">
+
+<div class="main">
+  <div class="quadTop">
+    <div class="panel" id="tile1"><div id="slot1"></div></div>
+    <div class="panel" id="tile2"><div id="slot2"></div></div>
+    <div class="panel" id="tile3"><div id="slot3"></div></div>
+
+    <div class="panel" id="tile4">
+      <div class="videoWrap">
+        <video id="adVideoBg" muted autoplay loop playsinline></video>
+        <video id="adVideo" muted autoplay playsinline></video>
+      </div>
+    </div>
+
+    <div class="panel" id="slot5">
+      <div id="newsBody"></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+document.querySelectorAll("video").forEach(v=>{
+  v.requestFullscreen=()=>{};
+  v.webkitEnterFullscreen=()=>{};
+});
+
+async function loadAll(){
+  try{
+    const r=await fetch("data.json?ts="+Date.now());
+    const d=await r.json();
+    adVideo.src=d.publicidade?.videos?.[0]?.arquivo||"";
+    adVideoBg.src=adVideo.src;
+  }catch(e){}
+}
+loadAll();
+</script>
+</body>
+</html>
