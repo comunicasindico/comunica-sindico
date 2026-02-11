@@ -9,7 +9,7 @@
 :root{
   --bg:#061726;
   --card:#0e2d4a;
-  --line:#163d60;
+  --line:#000;
   --radius:18px;
 }
 
@@ -58,7 +58,7 @@ html,body{
 /* MAIN */
 .main{
   display:grid;
-  grid-template-columns:1.6fr 1.4fr;
+  grid-template-columns:1.4fr 1.6fr;
   gap:14px;
   min-height:0;
 }
@@ -77,14 +77,13 @@ html,body{
   background:linear-gradient(180deg,#183f63,#0f2f4d);
   border-radius:20px;
   padding:18px 20px 14px 26px;
-  border:1px solid var(--line);
+  border:2px solid #000;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
   overflow:hidden;
 }
 
-/* Barra lateral */
 .aviso-card::before{
   content:"";
   position:absolute;
@@ -122,7 +121,7 @@ html,body{
 /* COLUNA DIREITA */
 .right-col{
   display:grid;
-  grid-template-rows:1.3fr 0.7fr;
+  grid-template-rows:1.6fr 0.4fr;
   gap:12px;
 }
 
@@ -130,7 +129,7 @@ html,body{
   background:var(--card);
   border-radius:20px;
   padding:12px;
-  border:1px solid var(--line);
+  border:2px solid #000;
   display:flex;
   flex-direction:column;
 }
@@ -140,26 +139,52 @@ html,body{
   background:#000;
   border-radius:14px;
   overflow:hidden;
+  position:relative;
 }
 
 .videoWrap video{
+  position:absolute;
+  inset:0;
   width:100%;
   height:100%;
+}
+
+.videoBg{
+  object-fit:cover;
+  filter:blur(18px);
+  transform:scale(1.1);
+  opacity:.6;
+}
+
+.videoMain{
   object-fit:contain;
 }
 
+.videoWrap::after{
+  content:"CS";
+  position:absolute;
+  bottom:4px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.2em;
+  color:#fff;
+}
+
+/* MENSAGENS */
 .mensagens{
   background:var(--card);
   border-radius:20px;
   padding:12px;
-  border:1px solid var(--line);
+  border:2px solid #000;
   overflow:auto;
 }
 
 .mensagem-item{
-  font-size:10px;
+  font-size:8px;
   padding:6px;
-  border-bottom:1px solid var(--line);
+  border-bottom:1px solid #123;
 }
 
 /* FOOTER */
@@ -171,6 +196,7 @@ html,body{
   border-radius:20px;
   background:#0c2a46;
   font-weight:700;
+  border:2px solid #000;
 }
 
 .footer-line{
@@ -207,7 +233,8 @@ html,body{
     <div class="right-col">
       <div class="publicidade">
         <div class="videoWrap">
-          <video id="adVideo" autoplay muted loop playsinline></video>
+          <video id="adVideoBg" class="videoBg" autoplay muted loop playsinline></video>
+          <video id="adVideo" class="videoMain" autoplay muted loop playsinline></video>
         </div>
       </div>
 
@@ -229,9 +256,6 @@ html,body{
 </div>
 
 <script>
-/* ============================
-   RELÓGIO
-============================ */
 function tick(){
   const d=new Date();
   document.getElementById("clock").textContent=
@@ -239,16 +263,12 @@ function tick(){
 }
 setInterval(tick,1000); tick();
 
-
-/* ============================
-   AUTO FIT INDIVIDUAL REAL
-============================ */
 function fitText(container){
   const header = container.querySelector(".aviso-header");
   const body   = container.querySelector(".aviso-body");
 
-  let headerSize = 22;
-  let bodySize   = 32;
+  let headerSize = 24;
+  let bodySize   = 34;
 
   header.style.fontSize = headerSize+"px";
   body.style.fontSize   = bodySize+"px";
@@ -264,17 +284,12 @@ function fitText(container){
   }
 }
 
-
-/* ============================
-   AVISOS CÍCLICOS
-============================ */
 let avisoIndex=0;
 let avisosGlobais=[];
 
 function renderAvisos(){
   const container=document.getElementById("avisosContainer");
   container.innerHTML="";
-
   if(!avisosGlobais.length) return;
 
   const subset=[];
@@ -285,20 +300,18 @@ function renderAvisos(){
   subset.forEach(a=>{
     const div=document.createElement("div");
     div.className="aviso-card prioridade-"+(a.prioridade||"media");
-
     div.innerHTML=`
       <div>
         <div class="aviso-header">${a.titulo||""}</div>
         <div class="aviso-body">${a.descricao||""}</div>
       </div>
       <div class="aviso-footer">
-        <span>${a.local||""}</span>
-        <span>${a.categoria||""}</span>
-        <span>${(a.prioridade||"").toUpperCase()}</span>
-        <span>${a.data||""}</span>
+        <span>📍 ${a.local||""}</span>
+        <span>🏷 ${a.categoria||""}</span>
+        <span>⚡ ${(a.prioridade||"").toUpperCase()}</span>
+        <span>🗓 ${a.data||""}</span>
       </div>
     `;
-
     container.appendChild(div);
     fitText(div);
   });
@@ -306,64 +319,47 @@ function renderAvisos(){
   avisoIndex=(avisoIndex+1)%avisosGlobais.length;
 }
 
-
-/* ============================
-   VERSÍCULO (CORRIGIDO)
-============================ */
 async function carregarVersiculo(){
   try{
     const r=await fetch("https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json");
     const dados=await r.json();
-
     const hoje=new Date();
     const mm=String(hoje.getMonth()+1).padStart(2,"0");
     const dd=String(hoje.getDate()).padStart(2,"0");
     const chave=`${mm}-${dd}`;
-
     const texto=dados.versos?.[chave] || "—";
     document.getElementById("versiculo").textContent=texto;
-
   }catch(e){
     document.getElementById("versiculo").textContent="Versículo indisponível";
   }
 }
 
-
-/* ============================
-   CLIMA (LINHA 2 DIREITA)
-============================ */
 async function carregarClima(){
   try{
     const cidade="Tubarão";
     const lat=-28.4667;
     const lon=-49.0069;
-
     const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
     const d=await r.json();
     const w=d.current_weather;
-
     document.getElementById("clima").textContent=
       `${cidade} • ${w.temperature}°C • Vento ${w.windspeed} km/h`;
-
   }catch(e){
     document.getElementById("clima").textContent="Clima indisponível";
   }
 }
 
-
-/* ============================
-   DATA.JSON
-============================ */
 async function loadData(){
   try{
     const r=await fetch("./data.json?ts="+Date.now());
     const d=await r.json();
-
     avisosGlobais=d.avisos||[];
     renderAvisos();
 
     if(d.publicidade?.videos?.length){
-      document.getElementById("adVideo").src=d.publicidade.videos[0].arquivo;
+      const src=d.publicidade.videos[0].arquivo;
+      document.getElementById("adVideo").src=src;
+      document.getElementById("adVideoBg").src=src;
     }
 
     const mensagensContainer=document.getElementById("mensagensContainer");
@@ -378,10 +374,6 @@ async function loadData(){
   }catch(e){}
 }
 
-
-/* ============================
-   INICIALIZAÇÃO
-============================ */
 loadData();
 carregarVersiculo();
 carregarClima();
@@ -391,7 +383,6 @@ setInterval(loadData,60000);
 setInterval(carregarClima,600000);
 setInterval(carregarVersiculo,3600000);
 </script>
-
 
 </body>
 </html>
