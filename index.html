@@ -83,7 +83,6 @@ html,body{
   overflow:hidden;
 }
 
-
 .aviso-card::before{
   content:"";
   position:absolute;
@@ -102,15 +101,15 @@ html,body{
 .aviso-header{
   font-size:20px;
   font-weight:900;
-  margin-bottom:12px;
+  margin-bottom:10px;
 }
 
 .aviso-body{
   flex:1;
   line-height:1.35;
-  font-size: clamp(22px, 2vw, 30px);
   display:flex;
   align-items:center;
+  font-size:28px;
 }
 
 .aviso-footer{
@@ -186,7 +185,7 @@ html,body{
 }
 
 .mensagem-item{
-  font-size:8px;
+  font-size:12px;
   padding:6px;
   border-bottom:1px solid #123;
 }
@@ -267,47 +266,44 @@ function tick(){
 }
 setInterval(tick,1000); tick();
 
-
-
 let avisoIndex=0;
 let avisosGlobais=[];
+let rotacaoTimer=null;
 
 function renderAvisos(){
-  const container = document.getElementById("avisosContainer");
-  container.innerHTML = "";
+  const container=document.getElementById("avisosContainer");
+  container.innerHTML="";
+  if(!avisosGlobais.length) return;
 
-  if(!avisosGlobais || avisosGlobais.length === 0) return;
+  for(let i=0;i<3;i++){
+    const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
 
-  const total = avisosGlobais.length;
+    const div=document.createElement("div");
+    div.className="aviso-card prioridade-"+(a.prioridade||"media");
 
-  for(let i = 0; i < 3; i++){
-
-    const index = (avisoIndex + i) % total;
-    const a = avisosGlobais[index];
-
-    const div = document.createElement("div");
-    div.className = "aviso-card prioridade-" + (a.prioridade || "media");
-
-    div.innerHTML = `
+    div.innerHTML=`
       <div>
-        <div class="aviso-header">${a.titulo || ""}</div>
-        <div class="aviso-body">${a.descricao || ""}</div>
+        <div class="aviso-header">${a.titulo||""}</div>
+        <div class="aviso-body">${a.descricao||""}</div>
       </div>
       <div class="aviso-footer">
-        <span>📍 ${a.local || ""}</span>
-        <span>🏷 ${a.categoria || ""}</span>
-        <span>⚡ ${(a.prioridade || "").toUpperCase()}</span>
-        <span>📅 ${a.data || ""}</span>
+        <span>📍 ${a.local||""}</span>
+        <span>🏷 ${a.categoria||""}</span>
+        <span>⚡ ${(a.prioridade||"").toUpperCase()}</span>
+        <span>📅 ${a.data||""}</span>
       </div>
     `;
 
     container.appendChild(div);
-    fitText(div);
   }
 
-  avisoIndex = (avisoIndex + 1) % total;
+  avisoIndex=(avisoIndex+1)%avisosGlobais.length;
 }
 
+function iniciarRotacao(){
+  if(rotacaoTimer) clearInterval(rotacaoTimer);
+  rotacaoTimer=setInterval(renderAvisos,8000);
+}
 
 async function carregarVersiculo(){
   try{
@@ -317,9 +313,9 @@ async function carregarVersiculo(){
     const mm=String(hoje.getMonth()+1).padStart(2,"0");
     const dd=String(hoje.getDate()).padStart(2,"0");
     const chave=`${mm}-${dd}`;
-    const texto=dados.versos?.[chave] || "—";
-    document.getElementById("versiculo").textContent=texto;
-  }catch(e){
+    document.getElementById("versiculo").textContent=
+      dados.versos?.[chave]||"—";
+  }catch{
     document.getElementById("versiculo").textContent="Versículo indisponível";
   }
 }
@@ -334,7 +330,7 @@ async function carregarClima(){
     const w=d.current_weather;
     document.getElementById("clima").textContent=
       `${cidade} • ${w.temperature}°C • Vento ${w.windspeed} km/h`;
-  }catch(e){
+  }catch{
     document.getElementById("clima").textContent="Clima indisponível";
   }
 }
@@ -343,50 +339,36 @@ async function loadData(){
   try{
     const r=await fetch("./data.json?ts="+Date.now());
     const d=await r.json();
-    avisosGlobais = (d.avisos || []).filter(a => a && a.ativo !== false);
-    avisoIndex = 0;
+
+    avisosGlobais=d.avisos||[];
+    avisoIndex=0;
     renderAvisos();
+    iniciarRotacao();
 
     if(d.publicidade?.videos?.length){
+      const src=d.publicidade.videos[0].arquivo+"?ts="+Date.now();
+      const v=document.getElementById("adVideo");
+      const bg=document.getElementById("adVideoBg");
+      v.src=src; bg.src=src;
+      v.play().catch(()=>{}); bg.play().catch(()=>{});
+    }
 
-  const src = d.publicidade.videos[0].arquivo + "?ts=" + Date.now();
-
-  const video = document.getElementById("adVideo");
-  const videoBg = document.getElementById("adVideoBg");
-
-  if(video){
-    video.pause();
-    video.src = src;
-    video.load();
-    video.play().catch(()=>{});
-  }
-
-  if(videoBg){
-    videoBg.pause();
-    videoBg.src = src;
-    videoBg.load();
-    videoBg.play().catch(()=>{});
-  }
-}
-
-
-    const mensagensContainer=document.getElementById("mensagensContainer");
-    mensagensContainer.innerHTML="";
+    const mc=document.getElementById("mensagensContainer");
+    mc.innerHTML="";
     (d.mensagens||[]).forEach(m=>{
-      const item=document.createElement("div");
-      item.className="mensagem-item";
-      item.textContent=m;
-      mensagensContainer.appendChild(item);
+      const div=document.createElement("div");
+      div.className="mensagem-item";
+      div.textContent=m;
+      mc.appendChild(div);
     });
 
-  }catch(e){}
+  }catch{}
 }
 
 loadData();
 carregarVersiculo();
 carregarClima();
 
-setInterval(renderAvisos,8000);
 setInterval(loadData,60000);
 setInterval(carregarClima,600000);
 setInterval(carregarVersiculo,3600000);
