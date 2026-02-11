@@ -229,30 +229,58 @@ html,body{
 </div>
 
 <script>
+/* ============================
+   RELÓGIO
+============================ */
 function tick(){
   const d=new Date();
   document.getElementById("clock").textContent=
     d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
-setInterval(tick,1000);tick();
+setInterval(tick,1000); tick();
 
-/* AUTO FIT INDIVIDUAL */
-function autoFit(el){
-  let size=32;
-  el.style.fontSize=size+"px";
-  while(el.scrollHeight>el.clientHeight && size>14){
-    size--;
-    el.style.fontSize=size+"px";
+
+/* ============================
+   AUTO FIT INDIVIDUAL REAL
+============================ */
+function fitText(container){
+  const header = container.querySelector(".aviso-header");
+  const body   = container.querySelector(".aviso-body");
+
+  let headerSize = 22;
+  let bodySize   = 32;
+
+  header.style.fontSize = headerSize+"px";
+  body.style.fontSize   = bodySize+"px";
+
+  while(container.scrollHeight > container.clientHeight && bodySize > 14){
+      bodySize--;
+      body.style.fontSize = bodySize+"px";
+  }
+
+  while(container.scrollHeight > container.clientHeight && headerSize > 14){
+      headerSize--;
+      header.style.fontSize = headerSize+"px";
   }
 }
 
+
+/* ============================
+   AVISOS CÍCLICOS
+============================ */
 let avisoIndex=0;
 let avisosGlobais=[];
 
 function renderAvisos(){
   const container=document.getElementById("avisosContainer");
   container.innerHTML="";
-  const subset=avisosGlobais.slice(avisoIndex,avisoIndex+3);
+
+  if(!avisosGlobais.length) return;
+
+  const subset=[];
+  for(let i=0;i<3;i++){
+    subset.push(avisosGlobais[(avisoIndex+i)%avisosGlobais.length]);
+  }
 
   subset.forEach(a=>{
     const div=document.createElement("div");
@@ -260,8 +288,8 @@ function renderAvisos(){
 
     div.innerHTML=`
       <div>
-        <div class="aviso-header">${a.titulo}</div>
-        <div class="aviso-body">${a.descricao}</div>
+        <div class="aviso-header">${a.titulo||""}</div>
+        <div class="aviso-body">${a.descricao||""}</div>
       </div>
       <div class="aviso-footer">
         <span>${a.local||""}</span>
@@ -272,51 +300,88 @@ function renderAvisos(){
     `;
 
     container.appendChild(div);
-    autoFit(div.querySelector(".aviso-body"));
+    fitText(div);
   });
 
-  avisoIndex=(avisoIndex+3)%avisosGlobais.length;
+  avisoIndex=(avisoIndex+1)%avisosGlobais.length;
 }
 
+
+/* ============================
+   VERSÍCULO (CORRIGIDO)
+============================ */
 async function carregarVersiculo(){
-  const r=await fetch("https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json");
-  const dados=await r.json();
-  const hoje=new Date().getDate()%dados.length;
-  document.getElementById("versiculo").textContent=dados[hoje].texto;
-}
+  try{
+    const r=await fetch("https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json");
+    const dados=await r.json();
 
-async function carregarClima(){
-  const cidade="Tubarão";
-  const lat=-28.4667;
-  const lon=-49.0069;
-  const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-  const d=await r.json();
-  const w=d.current_weather;
-  document.getElementById("clima").textContent=
-    `${cidade} • ${w.temperature}°C • Vento ${w.windspeed} km/h`;
-}
+    const hoje=new Date();
+    const mm=String(hoje.getMonth()+1).padStart(2,"0");
+    const dd=String(hoje.getDate()).padStart(2,"0");
+    const chave=`${mm}-${dd}`;
 
-async function loadData(){
-  const r=await fetch("./data.json?ts="+Date.now());
-  const d=await r.json();
+    const texto=dados.versos?.[chave] || "—";
+    document.getElementById("versiculo").textContent=texto;
 
-  avisosGlobais=d.avisos||[];
-  renderAvisos();
-
-  if(d.publicidade?.videos?.length){
-    document.getElementById("adVideo").src=d.publicidade.videos[0].arquivo;
+  }catch(e){
+    document.getElementById("versiculo").textContent="Versículo indisponível";
   }
-
-  const mensagensContainer=document.getElementById("mensagensContainer");
-  mensagensContainer.innerHTML="";
-  (d.mensagens||[]).forEach(m=>{
-    const item=document.createElement("div");
-    item.className="mensagem-item";
-    item.textContent=m;
-    mensagensContainer.appendChild(item);
-  });
 }
 
+
+/* ============================
+   CLIMA (LINHA 2 DIREITA)
+============================ */
+async function carregarClima(){
+  try{
+    const cidade="Tubarão";
+    const lat=-28.4667;
+    const lon=-49.0069;
+
+    const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+    const d=await r.json();
+    const w=d.current_weather;
+
+    document.getElementById("clima").textContent=
+      `${cidade} • ${w.temperature}°C • Vento ${w.windspeed} km/h`;
+
+  }catch(e){
+    document.getElementById("clima").textContent="Clima indisponível";
+  }
+}
+
+
+/* ============================
+   DATA.JSON
+============================ */
+async function loadData(){
+  try{
+    const r=await fetch("./data.json?ts="+Date.now());
+    const d=await r.json();
+
+    avisosGlobais=d.avisos||[];
+    renderAvisos();
+
+    if(d.publicidade?.videos?.length){
+      document.getElementById("adVideo").src=d.publicidade.videos[0].arquivo;
+    }
+
+    const mensagensContainer=document.getElementById("mensagensContainer");
+    mensagensContainer.innerHTML="";
+    (d.mensagens||[]).forEach(m=>{
+      const item=document.createElement("div");
+      item.className="mensagem-item";
+      item.textContent=m;
+      mensagensContainer.appendChild(item);
+    });
+
+  }catch(e){}
+}
+
+
+/* ============================
+   INICIALIZAÇÃO
+============================ */
 loadData();
 carregarVersiculo();
 carregarClima();
@@ -324,7 +389,9 @@ carregarClima();
 setInterval(renderAvisos,8000);
 setInterval(loadData,60000);
 setInterval(carregarClima,600000);
+setInterval(carregarVersiculo,3600000);
 </script>
+
 
 </body>
 </html>
