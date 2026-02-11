@@ -332,11 +332,11 @@ function trocarVideo(){
   video.load();
   video.play().catch(()=>{});
 
-  desc.textContent = videoData.anunciante || "";
+  /* 🔹 NOVO: usar campo descricao */
+  desc.textContent = videoData.descricao || videoData.anunciante || "";
 
   videoIndex = (videoIndex + 1) % videosGlobais.length;
 }
-
 
 /* LOAD DATA */
 async function loadData(){
