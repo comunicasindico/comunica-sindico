@@ -4,14 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Comunica Síndico — TV</title>
+<title>Comunica Síndico — Condôminos</title>
 
 <link rel="manifest" href="./manifest-condominos.json">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#0b223a">
 
 <script>
 (function(){
-  document.documentElement.classList.add("isTV");
+  const ua=(navigator.userAgent||"").toLowerCase();
+  const looksMobile=/mobi|iphone|ipod|ipad|android.*mobile/.test(ua);
+  const root=document.documentElement;
+  root.classList.toggle("isMobile",looksMobile);
 })();
 </script>
 
@@ -19,67 +22,48 @@
 html,body{
   margin:0;
   height:100%;
-  background:#000;
+  background:linear-gradient(180deg,#061726,#0b1f33);
   color:#fff;
   font-family:system-ui,Segoe UI,Arial;
   overflow:hidden;
 }
+.wrap{height:100dvh;padding:10px}
+.container{height:100%;display:flex;flex-direction:column;gap:10px}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px}
 
-.wrap{
-  position:fixed;
-  inset:4vh 4vw;
-}
-
-.container{
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-
-.main{flex:1;min-height:0}
+.topbar{display:flex;justify-content:space-between;align-items:center}
+.rightInfo{text-align:right}
 
 .quadTop{
-  height:100%;
+  flex:1;
   display:grid;
   grid-template-columns:1fr 1fr;
   grid-template-rows:repeat(3,1fr);
   gap:10px;
 }
-
 #tile1{grid-column:1;grid-row:1}
 #tile2{grid-column:2;grid-row:1}
 #tile3{grid-column:1;grid-row:2}
 #slot5{grid-column:1;grid-row:3}
 #tile4{grid-column:2;grid-row:2/4}
 
-.panel{
-  background:#000;
-  border:3px solid #000;
-  border-radius:14px;
-  padding:6px;
-}
-
+.panel{background:#0003;border-radius:14px;padding:8px}
 .videoWrap{position:relative;height:100%}
-.videoWrap video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+.videoWrap video{width:100%;height:100%;object-fit:cover}
 
-.videoWrap::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border:4px solid #000;
-  pointer-events:none;
-}
+html.isMobile body{overflow:auto}
+html.isMobile .quadTop{display:flex;flex-direction:column}
 </style>
 </head>
 
 <body>
 <div class="wrap">
 <div class="container">
+
+<div class="topbar">
+  <div>Comunica Síndico</div>
+  <div class="rightInfo"><span id="clock">--:--</span></div>
+</div>
 
 <div class="main">
   <div class="quadTop">
@@ -104,10 +88,12 @@ html,body{
 </div>
 
 <script>
-document.querySelectorAll("video").forEach(v=>{
-  v.requestFullscreen=()=>{};
-  v.webkitEnterFullscreen=()=>{};
-});
+function pad(n){return String(n).padStart(2,"0")}
+function tick(){
+  const d=new Date();
+  clock.textContent=pad(d.getHours())+":"+pad(d.getMinutes());
+}
+setInterval(tick,1000);tick();
 
 async function loadAll(){
   try{
