@@ -89,6 +89,7 @@ html,body{
   display:grid;
   grid-template-rows:repeat(3,1fr);
   gap:16px;
+  height:100%;
 }
 
 .aviso-card{
@@ -415,39 +416,18 @@ function renderAvisos(){
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g,"");
 
-    const texto = a.descricao || "";
-    const tamanho = texto.length;
-
-    let ocupa = 1;
-
-    if(tamanho > 420){
-      ocupa = 3;
-    }else if(tamanho > 220){
-      ocupa = 2;
-    }
-
-    // se já não houver espaço suficiente, para
-    if(blocosUsados + ocupa > 3) break;
-
     const div = document.createElement("div");
     div.className = "aviso-card prioridade-" + prioridade;
-
-    // faz o card ocupar 2 ou 3 linhas se necessário
-    if(ocupa > 1){
-      div.style.gridRow = "span " + ocupa;
-    }
 
     div.innerHTML = `
       <div>
         <div class="aviso-header">
           ⚠ ${a.titulo || ""}
         </div>
-
         <div class="aviso-body">
-          ${texto}
+          ${a.descricao || ""}
         </div>
       </div>
-
       <div class="aviso-footer">
         <span>📍 ${a.local || ""}</span>
         <span>🏷 ${a.tipo || ""}</span>
@@ -457,7 +437,25 @@ function renderAvisos(){
       </div>
     `;
 
+    // adiciona temporariamente para medir
     container.appendChild(div);
+
+    // mede altura real
+    const alturaReal = div.offsetHeight;
+    const alturaBloco = container.clientHeight / 3;
+
+    let ocupa = Math.ceil(alturaReal / alturaBloco);
+
+    if(ocupa < 1) ocupa = 1;
+    if(ocupa > 3) ocupa = 3;
+
+    // se estourar o espaço disponível, remove e para
+    if(blocosUsados + ocupa > 3){
+      container.removeChild(div);
+      break;
+    }
+
+    div.style.gridRow = "span " + ocupa;
 
     blocosUsados += ocupa;
     i++;
@@ -465,7 +463,6 @@ function renderAvisos(){
 
   avisoIndex = (avisoIndex + 1) % avisosGlobais.length;
 }
-
 
 function trocarVideo(){
 
