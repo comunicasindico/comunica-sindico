@@ -79,19 +79,19 @@
       "prioridade": "Alta",
       "tipo": "",
       "local": "Hall de Entrada",
-      "inicio": "",
-      "fim": "",
+      "inicio": "11/02/26 - 16:38",
+      "fim": "28/03/26 - 16:38",
       "emergencia": false
     },
     {
       "id": "002",
-      "titulo": "Carrinho interno",
-      "descricao": "Evite excesso de peso nas sacolas.",
+      "titulo": "Salão de Festas",
+      "descricao": "A regra apenas registra a locação.🔹 Não impede dias consecutivos.🔹 O locatário deve entregar a área limpa.🔹 A chave será entregue diretamente pela síndica ao responsável.",
       "prioridade": "Alta",
       "tipo": "",
-      "local": "Lixeira",
-      "inicio": "",
-      "fim": "",
+      "local": "Salão de Festas",
+        "inicio": "11/02/26 - 16:38",
+      "fim": "28/04/26 - 16:38",
       "emergencia": false
     },
     {
@@ -101,8 +101,8 @@
       "prioridade": "Média",
       "tipo": "",
       "local": "Piscina",
-      "inicio": "",
-      "fim": "",
+        "inicio": "11/02/26 - 16:38",
+      "fim": "28/05/26 - 16:38",
       "emergencia": false
     },
     {
@@ -110,10 +110,10 @@
       "titulo": "Sacolas maiores",
       "descricao": "Sacos grandes devem ir direto à lixeira externa.",
       "prioridade": "Média",
-      "tipo": "",
+      "tipo": "Reforço",
       "local": "Garagem",
-      "inicio": "",
-      "fim": "",
+        "inicio": "11/02/26 - 16:38",
+      "fim": "28/06/26 - 16:38",
       "emergencia": false
     },
     {
@@ -121,10 +121,10 @@
       "titulo": "Limpeza",
       "descricao": "Utilizem sacolas reforçadas próprias para lixo.",
       "prioridade": "Baixa",
-      "tipo": "",
+      "tipo": "Sacolas próprias",
       "local": "Lixeira",
-      "inicio": "",
-      "fim": "",
+         "inicio": "11/02/26 - 16:38",
+      "fim": "28/07/26 - 16:38",
       "emergencia": false
     },
     {
@@ -135,7 +135,7 @@
       "tipo": "Informativo",
       "local": "Hall",
       "inicio": "11/02/26 - 16:38",
-      "fim": "28/02/26 - 16:38",
+      "fim": "28/03/26 - 16:38",
       "emergencia": false
     }
   ]
