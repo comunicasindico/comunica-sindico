@@ -457,20 +457,58 @@ async function carregarVersiculo(){
     console.error("Erro versículo:", e);
   }
 }
+
+  async function carregarClima(){
+  try{
+
+    const rJson = await fetch("./data.json?ts=" + Date.now());
+    const json = await rJson.json();
+
+    const cidade = json.clima?.cidade || "Tubarão";
+    const lat = json.clima?.latitude || -28.4667;
+    const lon = json.clima?.longitude || -49.0069;
+
+    const r = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+    );
+
+    const d = await r.json();
+    const w = d.current_weather;
+
+    const temp = w.temperature;
+    const vento = w.windspeed;
+
+    const sensacao = Math.round(
+      13.12 + 0.6215*temp - 11.37*Math.pow(vento,0.16) +
+      0.3965*temp*Math.pow(vento,0.16)
+    );
+
+    const climaEl = document.getElementById("clima");
+
+    if(climaEl){
+      climaEl.textContent =
+        `${cidade} • ${temp}°C (Sensação ${sensacao}°C) • Vento ${vento} km/h`;
+    }
+
+  }catch(e){
+    console.error("Erro clima:", e);
+  }
+}
+
 /* =========================
    INICIALIZAÇÃO
    ========================= */
 loadData();
 carregarVersiculo();
+carregarClima();
 
 /* ROTACIONAR */
 setInterval(renderAvisos, 8000);
 setInterval(trocarVideo, 12000);
-
+setInterval(carregarClima, 600000);
 /* ATUALIZAÇÕES */
 setInterval(loadData, 60000);           // Atualiza dados
 setInterval(carregarVersiculo, 3600000); // Atualiza versículo a cada hora
-
 
 </script>
 
