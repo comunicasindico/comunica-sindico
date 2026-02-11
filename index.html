@@ -221,7 +221,7 @@ html,body{
 .footer-clima{
   display:flex;
   justify-content:flex-end;
-  font-size:16px;
+  font-size:15px;
   font-weight:600;
   opacity:.9;
 }
@@ -420,16 +420,37 @@ async function loadData(){
       mc.appendChild(div);
     });
 
-    document.getElementById("versiculo").textContent="\"O Senhor reina; regozije-se a terra.\"";
-    document.getElementById("clima").textContent="Tubarão • 32°C";
-
-  }catch(e){ console.error(e); }
+    }catch(e){ console.error(e); }
 }
 
 loadData();
 setInterval(renderAvisos,8000);
 setInterval(trocarVideo,12000);
 setInterval(loadData,60000);
+
+  async function carregarVersiculo(){
+  try{
+    const r = await fetch("https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json?ts="+Date.now());
+    const dados = await r.json();
+
+    const hoje = new Date();
+    const chave =
+      String(hoje.getMonth()+1).padStart(2,"0") +
+      "-" +
+      String(hoje.getDate()).padStart(2,"0");
+
+    const versiculo = dados.versos?.[chave] || "—";
+
+    document.getElementById("versiculo").textContent = versiculo;
+
+  }catch(e){
+    console.error("Erro versículo:",e);
+  }
+}
+
+  
+carregarVersiculo();
+setInterval(carregarVersiculo, 3600000); // atualiza a cada hora
 
 </script>
 
