@@ -2,139 +2,69 @@
   "condominio": "Comunica Síndico",
   "titulo": "Comunica Síndico — Condôminos",
   "subtitulo": "Painel Informativo",
-  "referencia": "Atualizado automaticamente",
-  "temaDoDia": {
-    "modo": "biblico-anual",
-    "arquivo": "./versiculos.json",
-    "fallback": "Você tem valor. Valorize o que você tem."
-  },
-  "rotacao": {
-    "ativar": true,
-    "intervaloSeg": 8,
-    "quantidadePorTela": 3,
-    "mostrarProgresso": true,
-    "pausarNoMouse": false
-  },
+
   "clima": {
     "cidade": "Tubarão",
-    "latitude": -23.5505,
-    "longitude": -46.6333,
-    "timezone": "America/Sao_Paulo"
+    "latitude": -28.4667,
+    "longitude": -49.0069
   },
-  "cabecalhoImagem": {
-    "ativar": false,
-    "url": ""
-  },
+
   "publicidade": {
     "ativar": true,
     "shuffle": true,
-    "cidadeTitulo": "Mensagens no Brasil",
     "videos": [
-      {
-        "arquivo": "./ads/calibram.mp4",
-        "anunciante": "Calibra Ltda – (48) 3628-1414 – BR-101, Km 336"
-      },
-      {
-        "arquivo": "./ads/comunica_sindico_logo.mp4",
-        "anunciante": "Acabe de vez com os problemas de comunicação."
-      },
-      {
-        "arquivo": "./ads/googlemaps2.mp4",
-        "anunciante": "Alcance o mundo"
-      },
-      {
-        "arquivo": "./ads/cslogo.mp4",
-        "anunciante": "Tecnologia e responsabilidade social e ambiental."
-      },
-      {
-        "arquivo": "./ads/luisa.mp4",
-        "anunciante": "Luisa visitando papai no trabalho. 1 aninho"
-      },
-      {
-        "arquivo": "./ads/03larissa.mp4",
-        "anunciante": "Larissa em seu primeiro aninho."
-      },
-      {
-        "arquivo": "./ads/googlemaps.mp4",
-        "anunciante": "O PODER da Propaganda/Publicidade"
-      }
-    ],
-    "cabecalhoImagem": {
-      "ativar": false,
-      "url": ""
-    }
+      { "arquivo": "./ads/calibram.mp4" },
+      { "arquivo": "./ads/comunica_sindico_logo.mp4" },
+      { "arquivo": "./ads/googlemaps2.mp4" },
+      { "arquivo": "./ads/cslogo.mp4" },
+      { "arquivo": "./ads/luisa.mp4" },
+      { "arquivo": "./ads/03larissa.mp4" },
+      { "arquivo": "./ads/googlemaps.mp4" }
+    ]
   },
+
   "avisos": [
     {
       "titulo": "Piscina",
-      "descricao": "Evite nadar sozinho, qualquer anormalidade sempre uma pessoa próxima poderá auxiliar. Previna Acidente!",
+      "descricao": "Evite nadar sozinho. Previna acidentes!",
       "prioridade": "Média",
-      "tipo": "Informativo",
       "local": "Piscina",
-      "inicio": "29/01/26 - 12:57",
-      "fim": "10/02/26 - 12:57",
-      "id": "a_43f314ada7b288_1770242054695",
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-04T21:54:14.695Z"
+      "ativo": true
     },
     {
       "titulo": "Limpeza",
-      "descricao": "Utilizem, por favor, sacolas reforçadas, próprias para lixo, e evitem sacolas finas de mercado, pois elas rasgam com facilidade.",
+      "descricao": "Utilizem sacolas reforçadas próprias para lixo.",
       "prioridade": "Baixa",
-      "tipo": "Serviços",
       "local": "Lixeira",
-      "inicio": "29/01/26 - 17:35",
-      "fim": "10/02/26 - 17:35",
-      "id": "a_2f6455f1e543e_1770242054695",
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-04T21:54:14.695Z"
+      "ativo": true
     },
     {
       "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme. É sua segurança e de sua família. Seja sábio e cuide de seu lar.",
+      "descricao": "Não informe a ninguém o código do alarme.",
       "prioridade": "Alta",
-      "tipo": "Segurança",
       "local": "Hall de Entrada",
-      "inicio": "29/01/26 - 17:35",
-      "fim": "15/02/26 - 17:35",
-      "id": "a_6288821c3fea_1770242054695",
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-04T21:54:14.695Z"
+      "ativo": true
     },
     {
       "titulo": "Carrinho interno",
-      "descricao": "O excesso de peso acaba rasgando as sacolas dentro do carrinho, dificultando bastante o manuseio pela prestadora de serviços e os sacos maiores \"trancam\" ali dentro ocupando muito mais espaço do que um descarte do dia a dia.",
+      "descricao": "Evite excesso de peso nas sacolas.",
       "prioridade": "Alta",
-      "tipo": "Serviços",
       "local": "Lixeira",
-      "inicio": "29/01/26 - 17:35",
-      "fim": "18/02/26 - 17:35",
-      "id": "a_f5ed75700308e_1770242054695",
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-04T21:54:14.695Z"
+      "ativo": true
     },
     {
       "titulo": "Sacolas maiores",
-      "descricao": "Caso optem por colocar várias sacolas menores dentro de um saco grande de lixo, pedimos que levem esse saco diretamente até a lixeira externa, e não ao carrinho que fica dentro do prédio (ele é exclusivo para sacolas menores).",
+      "descricao": "Sacos grandes devem ir direto à lixeira externa.",
       "prioridade": "Média",
-      "tipo": "Serviços",
       "local": "Garagem",
-      "inicio": "29/01/26 - 17:35",
-      "fim": "19/02/26 - 17:35",
-      "id": "a_7b1edbd8f6ce7_1770242054695",
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-04T21:54:14.695Z"
+      "ativo": true
     }
   ],
-  "alertaUrgente": {
-    "ativar": false,
-    "titulo": "ALERTA URGENTE",
-    "mensagem": "ATENÇÃO! COMUNICA SÍNDICO está chegando, o melhor aplicativo digital para seu condomínio.",
-    "piscar": true
-  }
+
+  "mensagens": [
+    "Comunicação oficial do condomínio.",
+    "Respeite as normas internas.",
+    "Emergências ligue 190 PM ou 193 Bombeiros.",
+    "Síndico(a) sempre à disposição."
+  ]
 }
