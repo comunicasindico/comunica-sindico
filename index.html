@@ -186,6 +186,33 @@ html,body{
 @media(max-width:900px){
   .main{grid-template-columns:1fr}
 }
+#cloudGroup{
+  animation:cloudSpin 18s linear infinite;
+  transform-origin:50% 50%;
+}
+
+@keyframes cloudSpin{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+
+/* Barra temperatura */
+.temp-bar{
+  height:6px;
+  background:#0c2a46;
+  border-radius:6px;
+  overflow:hidden;
+  margin-top:6px;
+}
+
+.temp-bar-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#00c6ff,#0072ff,#ff9800,#e53935);
+  transition:width .8s ease;
+}
+
+  
 </style>
 </head>
 
@@ -193,12 +220,30 @@ html,body{
 <div class="wrapper">
 
 <div class="header">
-  <div style="display:flex;align-items:center;gap:14px;">
+  <div style="display:flex;align-items:center;gap:16px;">
     <h1 style="margin:0;">Comunica Síndico - Condôminos</h1>
-    <div id="weatherIcon" style="font-size:28px;">☁️</div>
+
+    <div id="weatherIconWrapper" style="width:46px;height:46px;">
+      <svg id="weatherIcon" viewBox="0 0 100 100" width="46" height="46">
+        <defs>
+          <radialGradient id="cloudGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#b3e5fc"/>
+          </radialGradient>
+        </defs>
+        <g id="cloudGroup">
+          <ellipse cx="50" cy="55" rx="30" ry="18" fill="url(#cloudGrad)"/>
+          <ellipse cx="35" cy="45" rx="18" ry="14" fill="url(#cloudGrad)"/>
+          <ellipse cx="65" cy="45" rx="18" ry="14" fill="url(#cloudGrad)"/>
+        </g>
+      </svg>
+    </div>
+
   </div>
+
   <span class="badge" id="clock">--:--</span>
 </div>
+
 
 <div class="main">
 <div class="avisos" id="avisosContainer"></div>
@@ -220,12 +265,15 @@ html,body{
 <div class="footer">
 <div class="footer-line" id="versiculo"></div>
 <div class="footer-line">
-<div></div>
-<div id="clima"></div>
-</div>
+  <div></div>
+  <div style="text-align:right;">
+    <div id="clima"></div>
+    <div class="temp-bar">
+      <div id="tempBarFill" class="temp-bar-fill"></div>
+    </div>
+  </div>
 </div>
 
-</div>
 
 <script>
 /* RELÓGIO */
@@ -299,38 +347,57 @@ async function carregarVersiculo(){
 /* CLIMA */
 async function carregarClima(){
   try{
-    const cidade="Tubarão";
-    const lat=-28.4667;
-    const lon=-49.0069;
+    const rJson = await fetch("./data.json?ts="+Date.now());
+    const json = await rJson.json();
 
-    const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+    const cidade = json.clima?.cidade || "Tubarão";
+    const lat = json.clima?.latitude || -28.4667;
+    const lon = json.clima?.longitude || -49.0069;
+
+    const r=await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+    );
+
     const d=await r.json();
     const w=d.current_weather;
 
+    const temp = w.temperature;
+    const vento = w.windspeed;
+
+    /* Sensação térmica aproximada */
+    const sensacao = Math.round(
+      13.12 + 0.6215*temp - 11.37*Math.pow(vento,0.16) +
+      0.3965*temp*Math.pow(vento,0.16)
+    );
+
     document.getElementById("clima").textContent=
-      `${cidade} • ${w.temperature}°C • Vento ${w.windspeed} km/h`;
+      `${cidade} • ${temp}°C (Sensação ${sensacao}°C) • Vento ${vento} km/h`;
 
-    const icon=document.getElementById("weatherIcon");
+    /* Barra temperatura */
+    const min=0;
+    const max=40;
+    const percentual = Math.min(100,Math.max(0,((temp-min)/(max-min))*100));
+    document.getElementById("tempBarFill").style.width=percentual+"%";
 
-    if(!icon) return;
+    /* Trocar cor da nuvem conforme temperatura */
+    const cloud=document.getElementById("cloudGroup");
 
-    if(w.weathercode === 0){
-      icon.textContent="☀️";
+    if(temp <= 10){
+      cloud.style.filter="hue-rotate(180deg)";
     }
-    else if(w.weathercode < 3){
-      icon.textContent="🌤️";
+    else if(temp <= 20){
+      cloud.style.filter="hue-rotate(90deg)";
     }
-    else if(w.weathercode < 60){
-      icon.textContent="☁️";
-    }
-    else if(w.weathercode < 70){
-      icon.textContent="🌧️";
+    else if(temp <= 30){
+      cloud.style.filter="hue-rotate(0deg)";
     }
     else{
-      icon.textContent="⛈️";
+      cloud.style.filter="hue-rotate(-40deg)";
     }
 
-  }catch{}
+  }catch(e){
+    console.error("Erro clima:",e);
+  }
 }
 
 
