@@ -24,6 +24,7 @@ html,body{
 
 /* LAYOUT */
 .wrapper{
+  min-height:100vh;
   padding:16px;
   display:grid;
   grid-template-rows:auto 1fr auto;
@@ -58,8 +59,8 @@ html,body{
   display:grid;
   grid-template-columns:1.2fr 1.8fr;
   gap:16px;
+  min-height:0;
 }
-
 /* ===== AVISOS PREMIUM ===== */
 
 .avisos{
@@ -130,8 +131,9 @@ html,body{
 /* DIREITA */
 .right-col{
   display:grid;
-  grid-template-rows:1.6fr auto auto;
+  grid-template-rows:1fr auto auto;
   gap:16px;
+  min-height:0;
 }
 
 .videoWrap{
@@ -139,6 +141,7 @@ html,body{
   border-radius:20px;
   overflow:hidden;
   background:#000;
+  height:100%;
 }
 
 .videoWrap video{
@@ -314,11 +317,6 @@ function renderAvisos(){
   }
   avisoIndex=(avisoIndex+1)%avisosGlobais.length;
 }
-
-
-/* ROTACIONAR VÍDEO */
-let videoIndex = 0;
-let videosGlobais = [];
 
 function trocarVideo(){
 
