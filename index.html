@@ -797,12 +797,17 @@ html.isTV{
 }
 
 /* =========================================================
-   ZOOM VISUAL DA TV (equivale a 77% / 150%)
+   TV — ESCALA CONTROLADA
    ========================================================= */
+html.isTV:not(.isPortrait){
+  --tv-scale: 0.90; /* valor inicial */
+}
+
 html.isTV:not(.isPortrait) .wrap{
   transform-origin: top center;
-  transform: scale(0.90);
+  transform: scale(var(--tv-scale));
 }
+
 
 /* TVs 4K */
 @media (min-width: 2400px){
@@ -2697,6 +2702,48 @@ html.isTV:not(.isPortrait) #tile4{ grid-column:2; grid-row:2 / 4; }
         setInterval(apply, 2000);
       }catch(e){}
     })();
-  </script>
+
+<script>
+/* =========================================================
+   AJUSTE FINO DE ESCALA (SOMENTE TV)
+   ========================================================= */
+(function tvScaleTuner(){
+  const root = document.documentElement;
+  if(!root.classList.contains("isTV")) return;
+
+  const STEP = 0.01;
+  const MIN  = 0.75;
+  const MAX  = 1.00;
+
+  let scale = parseFloat(
+    localStorage.getItem("TV_SCALE") ||
+    getComputedStyle(root).getPropertyValue("--tv-scale") ||
+    0.90
+  );
+
+  function apply(){
+    scale = Math.min(MAX, Math.max(MIN, scale));
+    root.style.setProperty("--tv-scale", scale.toFixed(2));
+    localStorage.setItem("TV_SCALE", scale.toFixed(2));
+    console.log("TV scale:", scale.toFixed(2));
+  }
+
+  apply();
+
+  document.addEventListener("keydown", e=>{
+    if(e.key === "+" || e.key === "="){
+      scale += STEP;
+      apply();
+    }
+    if(e.key === "-" || e.key === "_"){
+      scale -= STEP;
+      apply();
+    }
+  });
+})();
+</script>
+
+  
+</script>
 </body>
 </html>
