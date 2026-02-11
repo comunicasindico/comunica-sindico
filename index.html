@@ -2703,47 +2703,29 @@ html.isTV:not(.isPortrait) #tile4{ grid-column:2; grid-row:2 / 4; }
       }catch(e){}
     })();
 
+ 
+</script>
+
 <script>
-/* =========================================================
-   AJUSTE FINO DE ESCALA (SOMENTE TV)
-   ========================================================= */
-(function tvScaleTuner(){
+(function(){
   const root = document.documentElement;
   if(!root.classList.contains("isTV")) return;
 
-  const STEP = 0.01;
-  const MIN  = 0.75;
-  const MAX  = 1.00;
+  let scale = parseFloat(localStorage.getItem("TV_SCALE")) || 0.90;
+  root.style.setProperty("--tv-scale", scale);
 
-  let scale = parseFloat(
-    localStorage.getItem("TV_SCALE") ||
-    getComputedStyle(root).getPropertyValue("--tv-scale") ||
-    0.90
-  );
-
-  function apply(){
-    scale = Math.min(MAX, Math.max(MIN, scale));
-    root.style.setProperty("--tv-scale", scale.toFixed(2));
-    localStorage.setItem("TV_SCALE", scale.toFixed(2));
-    console.log("TV scale:", scale.toFixed(2));
-  }
-
-  apply();
-
-  document.addEventListener("keydown", e=>{
+  document.addEventListener("keydown", function(e){
     if(e.key === "+" || e.key === "="){
-      scale += STEP;
-      apply();
+      scale = Math.min(1.0, scale + 0.01);
     }
     if(e.key === "-" || e.key === "_"){
-      scale -= STEP;
-      apply();
+      scale = Math.max(0.75, scale - 0.01);
     }
+    root.style.setProperty("--tv-scale", scale.toFixed(2));
+    localStorage.setItem("TV_SCALE", scale.toFixed(2));
   });
 })();
 </script>
 
-  
-</script>
 </body>
 </html>
