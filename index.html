@@ -9,20 +9,18 @@
 :root{
   --bg:#061726;
   --card:#0e2d4a;
-  --radius:18px;
 }
 
 *{box-sizing:border-box}
-
 html,body{
   margin:0;
   min-height:100vh;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+  font-family:system-ui;
   background:var(--bg);
   color:#fff;
 }
 
-/* CAMADA DE EFEITOS */
+/* CAMADA CLIMA */
 #weatherEffects{
   position:fixed;
   inset:0;
@@ -30,70 +28,29 @@ html,body{
   z-index:0;
 }
 
-/* ===== FUNDO DINÂMICO ===== */
+body.clima-noite{background:linear-gradient(#0f2027,#203a43,#2c5364);}
+body.clima-sol{background:linear-gradient(#64b5f6,#bbdefb);}
+body.clima-chuva{background:linear-gradient(#1e3c72,#2a5298);}
+body.clima-nublado{background:linear-gradient(#78909c,#b0bec5);}
 
-body.clima-sol{ background:linear-gradient(180deg,#64b5f6,#bbdefb); }
-body.clima-parcial{ background:linear-gradient(180deg,#4fc3f7,#81d4fa); }
-body.clima-nublado{ background:linear-gradient(180deg,#78909c,#b0bec5); }
-body.clima-chuva{ background:linear-gradient(180deg,#1e3c72,#2a5298); }
-body.clima-tempestade{ background:linear-gradient(180deg,#232526,#414345); }
-body.clima-noite{ background:linear-gradient(180deg,#0f2027,#203a43,#2c5364); }
-
-/* CHUVA */
 .rain{
-  background-image:repeating-linear-gradient(
+  background:repeating-linear-gradient(
     to bottom,
-    rgba(255,255,255,0.35) 0px,
-    rgba(255,255,255,0.35) 2px,
+    rgba(255,255,255,.3) 0px,
+    rgba(255,255,255,.3) 2px,
     transparent 2px,
     transparent 8px
   );
-  animation:rainFall .6s linear infinite;
+  animation:rain .6s linear infinite;
 }
-@keyframes rainFall{
+@keyframes rain{
   from{background-position:0 0;}
-  to{background-position:0 25px;}
-}
-
-/* ESTRELAS */
-.stars{
-  background:radial-gradient(white 1px, transparent 1px);
-  background-size:40px 40px;
-  animation:twinkle 3s infinite alternate;
-}
-@keyframes twinkle{
-  from{opacity:0.4;}
-  to{opacity:0.9;}
-}
-
-/* SOL */
-.sunGlow{
-  background:radial-gradient(circle at 80% 20%,
-    rgba(255,255,0,0.6),
-    transparent 60%);
-}
-
-/* NEBLINA */
-.fog{
-  backdrop-filter:blur(6px);
-  background:rgba(255,255,255,0.06);
-}
-
-/* CONTRASTE AUTOMÁTICO */
-body.clima-sol .aviso-card,
-body.clima-parcial .aviso-card{
-  color:#000;
-}
-body.clima-noite .aviso-card,
-body.clima-chuva .aviso-card,
-body.clima-tempestade .aviso-card{
-  color:#fff;
+  to{background-position:0 20px;}
 }
 
 .wrapper{
   position:relative;
   z-index:2;
-  min-height:100vh;
   padding:14px;
   display:grid;
   grid-template-rows:auto 1fr auto;
@@ -105,60 +62,112 @@ body.clima-tempestade .aviso-card{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:linear-gradient(90deg,#0b223a,#10375d);
-  padding:18px 22px;
-  border-radius:22px;
+  background:#10375d;
+  padding:16px;
+  border-radius:20px;
 }
 
-.header h1{
-  margin:0;
-  font-size:28px;
-  font-weight:900;
+/* MAIN */
+.main{
+  display:grid;
+  grid-template-columns:1.4fr 1.6fr;
+  gap:12px;
 }
 
-.badge{
-  padding:8px 14px;
-  border-radius:999px;
-  background:#0f3e63;
-  font-weight:700;
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
 }
 
 /* AVISOS */
 .avisos{
   display:grid;
-  grid-template-rows:repeat(3, 1fr);
-  gap:12px;
+  grid-template-rows:repeat(3,1fr);
+  gap:10px;
 }
 
 .aviso-card{
-  border-radius:20px;
-  padding:18px 20px;
+  border-radius:16px;
+  padding:16px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  animation:fade .6s ease;
 }
 
-@keyframes fade{
-  from{opacity:0; transform:translateY(8px);}
-  to{opacity:1; transform:translateY(0);}
+.prioridade-alta{background:#e53935;}
+.prioridade-media{background:#ffeb3b;color:#000;}
+.prioridade-baixa{background:#43a047;}
+
+.aviso-header{font-weight:bold}
+.aviso-body{flex:1;margin-top:6px}
+
+/* VIDEO */
+.videoWrap{
+  position:relative;
+  height:260px;
+  background:#000;
+  border-radius:16px;
+  overflow:hidden;
+}
+.videoWrap video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+.videoBg{
+  object-fit:cover;
+  filter:blur(18px);
+  transform:scale(1.1);
+  opacity:.6;
+}
+.videoMain{object-fit:contain}
+
+#videoDescricao{
+  margin-top:8px;
+  text-align:center;
+  font-size:13px;
+  font-weight:600;
 }
 
-/* CORES */
-.prioridade-alta{
-  background:linear-gradient(180deg,#b71c1c,#e53935);
-}
-.prioridade-media{
-  background:linear-gradient(180deg,#f9a825,#ffeb3b);
-  color:#000;
-}
-.prioridade-baixa{
-  background:linear-gradient(180deg,#2e7d32,#66bb6a);
+/* MENSAGENS */
+.mensagens{
+  margin-top:10px;
+  background:#0e2d4a;
+  padding:10px;
+  border-radius:16px;
+  max-height:180px;
+  overflow-y:auto;
 }
 
-/* RESTANTE DO SEU LAYOUT PERMANECE IGUAL */
-/* ... mantive simplificado para foco nos efeitos ... */
+/* FOOTER */
+.footer{
+  background:#0c2a46;
+  padding:12px;
+  border-radius:16px;
+}
 
+/* BARRA TEMP */
+.temp-bar{
+  height:8px;
+  background:#1c3d5a;
+  border-radius:6px;
+  margin-top:6px;
+  position:relative;
+}
+
+.temp-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,#00c6ff,#ff9800,#e53935);
+  width:0%;
+}
+
+.temp-marker{
+  position:absolute;
+  top:-4px;
+  width:2px;
+  height:16px;
+  background:#fff;
+}
 </style>
 </head>
 
@@ -169,85 +178,135 @@ body.clima-tempestade .aviso-card{
 <div class="wrapper">
 
 <div class="header">
-  <div style="display:flex;align-items:center;gap:16px;">
-    <h1>Comunica Síndico - Condôminos</h1>
-  </div>
-  <span class="badge" id="clock">--:--</span>
+  <div>Comunica Síndico - Condôminos</div>
+  <div id="clock"></div>
 </div>
 
+<div class="main">
+
 <div class="avisos" id="avisosContainer"></div>
+
+<div>
+  <div class="videoWrap">
+    <video id="adVideoBg" class="videoBg" autoplay muted loop></video>
+    <video id="adVideo" class="videoMain" autoplay muted loop></video>
+  </div>
+
+  <div id="videoDescricao"></div>
+
+  <div class="mensagens" id="mensagensContainer"></div>
+</div>
+
+</div>
+
+<div class="footer">
+  <div id="clima"></div>
+  <div class="temp-bar">
+    <div id="tempBarFill" class="temp-bar-fill"></div>
+    <div id="tempMarker" class="temp-marker"></div>
+  </div>
+</div>
 
 </div>
 
 <script>
+
 /* RELÓGIO */
-function tick(){
-  const d=new Date();
-  document.getElementById("clock").textContent=
-    d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+setInterval(()=>{
+  document.getElementById("clock").textContent =
+    new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+},1000);
+
+/* VIDEO ROTATIVO */
+let videoIndex=0;
+
+async function loadData(){
+  const r=await fetch("./data.json?ts="+Date.now());
+  const d=await r.json();
+
+  /* AVISOS */
+  const avisos=d.avisos||[];
+  const container=document.getElementById("avisosContainer");
+  container.innerHTML="";
+  avisos.slice(0,3).forEach(a=>{
+    const div=document.createElement("div");
+    div.className="aviso-card prioridade-"+(a.prioridade||"media").toLowerCase();
+    div.innerHTML=`
+      <div class="aviso-header">${a.titulo}</div>
+      <div class="aviso-body">${a.descricao}</div>
+    `;
+    container.appendChild(div);
+  });
+
+  /* VIDEO */
+  if(d.publicidade?.videos?.length){
+    const video=d.publicidade.videos[videoIndex];
+    const src=video.arquivo+"?ts="+Date.now();
+
+    const v=document.getElementById("adVideo");
+    const bg=document.getElementById("adVideoBg");
+
+    v.src=src;
+    bg.src=src;
+    v.play().catch(()=>{});
+    bg.play().catch(()=>{});
+
+    document.getElementById("videoDescricao").textContent =
+      video.anunciante || "";
+
+    videoIndex=(videoIndex+1)%d.publicidade.videos.length;
+  }
+
+  /* MENSAGENS */
+  const mc=document.getElementById("mensagensContainer");
+  mc.innerHTML="";
+  (d.mensagens||[]).forEach(m=>{
+    const div=document.createElement("div");
+    div.textContent=m;
+    mc.appendChild(div);
+  });
+
 }
-setInterval(tick,1000); tick();
+setInterval(loadData,15000);
+loadData();
 
-/* CLIMA COM EFEITOS */
+/* CLIMA */
 async function carregarClima(){
-  try{
-    const rJson = await fetch("./data.json?ts="+Date.now());
-    const json = await rJson.json();
+  const rJson=await fetch("./data.json");
+  const json=await rJson.json();
 
-    const lat = json.clima?.latitude || -28.4667;
-    const lon = json.clima?.longitude || -49.0069;
+  const lat=json.clima?.latitude||-28.4667;
+  const lon=json.clima?.longitude||-49.0069;
 
-    const r = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
-    );
+  const r=await fetch(
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+  );
+  const d=await r.json();
+  const w=d.current_weather;
 
-    const d = await r.json();
-    const w = d.current_weather;
-    const codigo = w.weathercode;
-    const hora = new Date().getHours();
+  const temp=w.temperature;
+  const cidade=json.clima?.cidade||"Tubarão";
 
-    const effects = document.getElementById("weatherEffects");
-    effects.className="";
+  document.getElementById("clima").textContent=
+    `${cidade} • ${temp}°C`;
 
-    document.body.classList.remove(
-      "clima-sol","clima-parcial","clima-nublado",
-      "clima-chuva","clima-tempestade","clima-noite"
-    );
+  const percent=Math.min(100,(temp/40)*100);
+  document.getElementById("tempBarFill").style.width=percent+"%";
+  document.getElementById("tempMarker").style.left=percent+"%";
 
-    if(hora >= 18 || hora <= 5){
-      document.body.classList.add("clima-noite");
-      effects.classList.add("stars");
-    }
-    else{
-      if(codigo === 0){
-        document.body.classList.add("clima-sol");
-        effects.classList.add("sunGlow");
-      }
-      else if(codigo <= 3){
-        document.body.classList.add("clima-parcial");
-        effects.classList.add("fog");
-      }
-      else if(codigo < 60){
-        document.body.classList.add("clima-nublado");
-        effects.classList.add("fog");
-      }
-      else if(codigo < 80){
-        document.body.classList.add("clima-chuva");
-        effects.classList.add("rain");
-      }
-      else{
-        document.body.classList.add("clima-tempestade");
-        effects.classList.add("rain");
-      }
-    }
+  const effects=document.getElementById("weatherEffects");
+  effects.className="";
 
-  }catch(e){
-    console.error("Erro clima:",e);
+  if(w.weathercode>60){
+    document.body.className="clima-chuva";
+    effects.classList.add("rain");
+  }else{
+    document.body.className="clima-sol";
   }
 }
-
 carregarClima();
 setInterval(carregarClima,600000);
+
 </script>
 
 </body>
