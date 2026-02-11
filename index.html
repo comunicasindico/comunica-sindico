@@ -398,47 +398,74 @@ let videosGlobais=[];
 /* RENDER AVISOS */
 function renderAvisos(){
 
-  const container=document.getElementById("avisosContainer");
-  container.innerHTML="";
+  const container = document.getElementById("avisosContainer");
+  container.innerHTML = "";
+
   if(!avisosGlobais.length) return;
 
-  for(let i=0;i<3;i++){
+  let blocosUsados = 0;
+  let i = 0;
 
-    const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
+  while(blocosUsados < 3 && i < avisosGlobais.length){
 
-    /* 🔥 REMOVE ACENTO AUTOMATICAMENTE */
+    const a = avisosGlobais[(avisoIndex + i) % avisosGlobais.length];
+
     const prioridade = (a.prioridade || "media")
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g,"");
 
-    const div=document.createElement("div");
-    div.className="aviso-card prioridade-"+prioridade;
+    const texto = a.descricao || "";
+    const tamanho = texto.length;
 
-    div.innerHTML=`
+    let ocupa = 1;
+
+    if(tamanho > 420){
+      ocupa = 3;
+    }else if(tamanho > 220){
+      ocupa = 2;
+    }
+
+    // se já não houver espaço suficiente, para
+    if(blocosUsados + ocupa > 3) break;
+
+    const div = document.createElement("div");
+    div.className = "aviso-card prioridade-" + prioridade;
+
+    // faz o card ocupar 2 ou 3 linhas se necessário
+    if(ocupa > 1){
+      div.style.gridRow = "span " + ocupa;
+    }
+
+    div.innerHTML = `
       <div>
         <div class="aviso-header">
-          ⚠ ${a.titulo||""}
+          ⚠ ${a.titulo || ""}
         </div>
 
         <div class="aviso-body">
-          ${a.descricao||""}
+          ${texto}
         </div>
       </div>
 
       <div class="aviso-footer">
-        <span>📍 ${a.local||""}</span>
-        <span>🏷 ${a.tipo||""}</span>
+        <span>📍 ${a.local || ""}</span>
+        <span>🏷 ${a.tipo || ""}</span>
         <span class="badge-prioridade badge-${prioridade}">
-          ${(a.prioridade||"").toUpperCase()}
+          ${(a.prioridade || "").toUpperCase()}
         </span>
       </div>
     `;
 
     container.appendChild(div);
+
+    blocosUsados += ocupa;
+    i++;
   }
-  avisoIndex=(avisoIndex+1)%avisosGlobais.length;
+
+  avisoIndex = (avisoIndex + 1) % avisosGlobais.length;
 }
+
 
 function trocarVideo(){
 
