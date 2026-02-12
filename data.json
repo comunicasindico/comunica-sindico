@@ -2,10 +2,12 @@
   "titulo": "Comunica Síndico — Condôminos",
   "subtitulo": "Painel Informativo",
   "referencia": "",
+
   "temaDoDia": {
     "modo": "automatico",
     "temasPorDiaSemana": {}
   },
+
   "rotacao": {
     "ativar": false,
     "intervaloSeg": 12,
@@ -13,12 +15,27 @@
     "pausarNoMouse": true,
     "mostrarProgresso": true
   },
+
   "emergencia": {
     "ativar": true,
     "intervaloSeg": 4,
     "piscar": true,
     "somenteAlta": true
   },
+
+  /* =========================
+     MENSAGENS (FORA DA PUBLICIDADE)
+     ========================= */
+  "mensagens": [
+    {
+      "titulo": "📰 Notícias",
+      "texto": "Sem notícias no momento. (verifique RSS)"
+    }
+  ],
+
+  /* =========================
+     PUBLICIDADE
+     ========================= */
   "publicidade": {
     "ativar": true,
     "shuffle": true,
@@ -58,19 +75,21 @@
         "anunciante": "Livro Físico e Digital",
         "descricao": "SWOT Cristão - O poder dos relacionamentos saudáveis."
       }
-    ],
-    "mensagens": [
-      {
-        "titulo": "📰 Notícias",
-        "texto": "Sem notícias no momento. (verifique RSS)"
-      }
     ]
   },
+
+  /* =========================
+     CLIMA
+     ========================= */
   "clima": {
     "cidade": "Tubarão",
     "latitude": -28.4667,
     "longitude": -49.0069
   },
+
+  /* =========================
+     AVISOS
+     ========================= */
   "avisos": [
     {
       "id": "001",
@@ -86,11 +105,11 @@
     {
       "id": "002",
       "titulo": "Salão de Festas",
-      "descricao": "A regra apenas registra a locação.🔹 Não impede dias consecutivos.🔹 O locatário deve entregar a área limpa.🔹 A chave será entregue diretamente pela síndica ao responsável.",
+      "descricao": "A regra apenas registra a locação. Não impede dias consecutivos. O locatário deve entregar a área limpa. A chave será entregue diretamente pela síndica ao responsável.",
       "prioridade": "Alta",
       "tipo": "",
       "local": "Salão de Festas",
-        "inicio": "11/02/26 - 16:38",
+      "inicio": "11/02/26 - 16:38",
       "fim": "28/04/26 - 16:38",
       "emergencia": false
     },
@@ -101,7 +120,7 @@
       "prioridade": "Média",
       "tipo": "",
       "local": "Piscina",
-        "inicio": "11/02/26 - 16:38",
+      "inicio": "11/02/26 - 16:38",
       "fim": "28/05/26 - 16:38",
       "emergencia": false
     },
@@ -112,7 +131,7 @@
       "prioridade": "Média",
       "tipo": "Reforço",
       "local": "Garagem",
-        "inicio": "11/02/26 - 16:38",
+      "inicio": "11/02/26 - 16:38",
       "fim": "28/06/26 - 16:38",
       "emergencia": false
     },
@@ -123,14 +142,14 @@
       "prioridade": "Baixa",
       "tipo": "Sacolas próprias",
       "local": "Lixeira",
-         "inicio": "11/02/26 - 16:38",
+      "inicio": "11/02/26 - 16:38",
       "fim": "28/07/26 - 16:38",
       "emergencia": false
     },
     {
       "id": "006",
       "titulo": "Segurança",
-      "descricao": ". Teste de Estanqueidade na Canalização de GLP/GN:\n• O teste foi realizado de acordo com as normas técnicas vigentes e os\nprocedimentos estabelecidos. Nenhum vazamento",
+      "descricao": "Teste de Estanqueidade na Canalização de GLP/GN realizado conforme normas técnicas. Nenhum vazamento identificado.",
       "prioridade": "Baixa",
       "tipo": "Informativo",
       "local": "Hall",
