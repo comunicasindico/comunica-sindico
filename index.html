@@ -38,11 +38,11 @@ body{
 
 /* LAYOUT */
 .wrapper{
-  height:100vh;                 /* 🔥 ocupa 100% da tela */
-  padding:16px;
+  height:100vh;              /* 🔥 trava exatamente na altura da tela */
+  padding:1.2vh;
   display:grid;
-  grid-template-rows:auto 1fr auto;
-  gap:16px;
+  grid-template-rows:12vh 1fr 10vh;  /* header | conteúdo | footer */
+  gap:1.2vh;
 }
 
 /* HEADER */
@@ -51,8 +51,9 @@ body{
   justify-content:space-between;
   align-items:center;
   background:#15385c;
-  padding:16px 24px;
-  border-radius:20px;
+  padding:0 2vw;
+  border-radius:2vh;
+  font-size:2vh;
 }
 
 .header h1{
@@ -94,9 +95,8 @@ body{
 .main{
   display:grid;
   grid-template-columns:1.2fr 1.8fr;
-  gap:16px;
-  min-height:0;
-  height:100%; /* ocupa todo espaço disponível */
+  gap:1.2vh;
+  height:100%;
 }
 
 /* ===== AVISOS PREMIUM ===== */
@@ -143,9 +143,9 @@ body{
 }
 
 .aviso-body{
-  margin-top:16px;
-  font-size:clamp(18px,2.2vw,42px);  /* 🔥 proporcional à largura */
-  line-height:1.25;
+  margin-top:1.2vh;
+  font-size:clamp(1.6vh, 2.8vh, 3.8vh);  /* 🔥 escala pela altura */
+  line-height:1.2;
   font-weight:500;
 }
 
@@ -182,14 +182,10 @@ body{
 .videoWrap{
   position:relative;
   width:100%;
-  aspect-ratio:16/9;
-  margin:0 auto;
-  border-radius:20px;
+  height:45vh;              /* 🔥 trava proporcional à tela */
+  border-radius:2vh;
   overflow:hidden;
   background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 
 /* vídeo fosco de fundo */
@@ -258,12 +254,12 @@ body{
   /* ===== RODAPÉ ===== */
 .footer{
   background:#15385c;
-  padding:18px 24px;
-  border-radius:20px;
+  padding:1.2vh 2vw;
+  border-radius:2vh;
   display:flex;
-  flex-direction:column;
-  gap:6px;
-  flex-shrink:0;          /* 🔥 impede subir */
+  justify-content:space-between;
+  align-items:center;
+  font-size:1.8vh;
 }
 
 .footer-versiculo{
@@ -280,7 +276,6 @@ body{
   font-weight:600;
   opacity:.9;
 }
-
 
 /* RESPONSIVO */
 @media(max-width:900px){
@@ -349,7 +344,11 @@ body{
 .videoNav.prev{ left:8px; }
 .videoNav.next{ right:8px; }
 
-  
+  html, body{
+  height:100vh;
+  overflow:hidden;   /* 🔥 garante sem rolagem */
+}
+
 </style>
 </head>
 
