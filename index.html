@@ -310,7 +310,7 @@ html, body{
 <body>
 
 <div class="wrapper">
-
+/* ==================================================== */
 <!-- HEADER -->
 <div class="header">
   <div class="header-left">
@@ -320,7 +320,8 @@ html, body{
   <span class="badge" id="clock">--:--</span>
 </div>
 
-<!-- MAIN -->
+/* ==================================================== */
+   <!-- MAIN -->
 <div class="main">
 
   <div class="avisos" id="avisosContainer"></div>
@@ -338,7 +339,8 @@ html, body{
   </div>
 </div>
 
-<!-- FOOTER -->
+/* ==================================================== */
+   <!-- FOOTER -->
 <div class="footer">
   <div class="footer-linha1" id="versiculo"></div>
  
@@ -353,7 +355,7 @@ html, body{
 </div>
 
 <script>
-
+/* ==================================================== */
 /* RELÓGIO */
 function tick(){
   const d=new Date();
@@ -361,7 +363,7 @@ function tick(){
     d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
 setInterval(tick,1000); tick();
-
+/* ==================================================== */
 /* LIMITADOR 200 */
 function limitarTexto(texto){
   if(!texto) return "";
@@ -508,31 +510,73 @@ function trocarVideo(){
   };
 }
 
-/* CLIMA + ÍCONE */
+/* =========================================================
+   ITEM 020 – CLIMA PREMIUM (OPEN-METEO CORRIGIDO)
+   ========================================================= */
+
 async function carregarClima(){
-  const r=await fetch("./data.json?ts="+Date.now());
-  const json=await r.json();
 
-  const cidade=json.clima?.cidade||"Tubarão";
-  const lat=json.clima?.latitude;
-  const lon=json.clima?.longitude;
+  try{
 
-  const r2=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
-  const d=await r2.json();
-  const w=d.current_weather;
+    const rJson = await fetch("./data.json?ts=" + Date.now());
+    const json  = await rJson.json();
 
-  document.getElementById("cidade").textContent=cidade;
-  document.getElementById("temperatura").textContent=w.temperature+"°C";
-  document.getElementById("vento").textContent="🌬 "+w.windspeed+" km/h";
+    const cidade = json.clima?.cidade || "Tubarão";
+    const lat    = json.clima?.latitude;
+    const lon    = json.clima?.longitude;
 
-  const code=w.weathercode;
-  const iconMap={
-    0:"☀️",1:"🌤",2:"⛅",3:"☁️",
-    61:"🌧",71:"❄️",95:"⛈"
-  };
-  document.getElementById("weatherIcon").textContent=iconMap[code]||"☁️";
+    const r = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+    );
+
+    const d = await r.json();
+    const w = d.current_weather;
+
+    const temp  = Math.round(w.temperature);
+    const vento = Math.round(w.windspeed);
+
+    /* 🔥 cálculo sensação térmica (wind chill simplificado) */
+    const sensacao = Math.round(
+      13.12 + 0.6215*temp - 11.37*Math.pow(vento,0.16) +
+      0.3965*temp*Math.pow(vento,0.16)
+    );
+
+    const cidadeEl    = document.getElementById("cidade");
+    const tempEl      = document.getElementById("temperatura");
+    const sensacaoEl  = document.getElementById("sensacao");
+    const ventoEl     = document.getElementById("vento");
+
+    cidadeEl.textContent = cidade;
+    tempEl.textContent   = `${temp}°C`;
+    ventoEl.textContent  = `🌬 ${vento} km/h`;
+
+    sensacaoEl.textContent = `🌡 Sensação ${sensacao}°C`;
+
+    sensacaoEl.classList.remove("calor","frio");
+
+    if(sensacao > temp){
+      sensacaoEl.classList.add("calor");
+    }
+
+    if(sensacao < temp){
+      sensacaoEl.classList.add("frio");
+    }
+
+    /* animação leve */
+    sensacaoEl.classList.add("clima-update");
+    tempEl.classList.add("clima-update");
+
+    setTimeout(()=>{
+      sensacaoEl.classList.remove("clima-update");
+      tempEl.classList.remove("clima-update");
+    },600);
+
+  }catch(e){
+    console.error("Erro clima:", e);
+  }
 }
 
+/* ==================================================== */
 /* LOAD */
 async function loadData(){
   const r=await fetch("./data.json?ts="+Date.now());
