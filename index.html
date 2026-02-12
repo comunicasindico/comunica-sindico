@@ -438,10 +438,134 @@ let mensagensGlobais=[];
 let mensagemIndex=0;
 let mensagemInterval=null;
 
+  /* =========================
+   RENDER AVISOS
+   ========================= */
+
+function renderAvisos(){
+
+  const container = document.getElementById("avisosContainer");
+  if(!container) return;
+
+  container.innerHTML = "";
+
+  if(!Array.isArray(avisosGlobais) || avisosGlobais.length === 0){
+    container.innerHTML = "<div class='aviso-card'>Sem avisos cadastrados.</div>";
+    return;
+  }
+
+  let blocosUsados = 0;
+  let i = 0;
+
+  while(blocosUsados < 3 && i < avisosGlobais.length){
+
+    const a = avisosGlobais[(avisoIndex + i) % avisosGlobais.length];
+
+    const prioridade = (a.prioridade || "media")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g,"");
+
+    const div = document.createElement("div");
+    div.className = "aviso-card prioridade-" + prioridade;
+
+    div.innerHTML = `
+      <div>
+        <div class="aviso-header">
+          ⚠ ${a.titulo || ""}
+        </div>
+        <div class="aviso-body">
+          ${a.descricao || ""}
+        </div>
+      </div>
+      <div class="aviso-footer">
+        <span>📍 ${a.local || ""}</span>
+        <span>🏷 ${a.tipo || ""}</span>
+        <span class="badge-prioridade badge-${prioridade}">
+          ${(a.prioridade || "").toUpperCase()}
+        </span>
+      </div>
+    `;
+
+    container.appendChild(div);
+    div.style.gridRow = "span 1";
+
+    blocosUsados++;
+    i++;
+  }
+
+  avisoIndex = (avisoIndex + 1) % avisosGlobais.length;
+}
+
+/* =========================
+   VÍDEO
+   ========================= */
+
+let videoTimeout = null;
+
+function trocarVideo(){
+
+  if(!Array.isArray(videosGlobais) || videosGlobais.length === 0) return;
+
+  const videoData = videosGlobais[videoIndex];
+
+  const video = document.getElementById("adVideo");
+  const videoBg = document.getElementById("adVideoBg");
+
+  const anuncianteEl = document.getElementById("videoAnunciante");
+  const textoEl = document.getElementById("videoTexto");
+
+  if(!video || !videoBg) return;
+
+  if(videoTimeout) clearTimeout(videoTimeout);
+
+  video.pause();
+  videoBg.pause();
+
+  const src = videoData.arquivo + "?ts=" + Date.now();
+
+  video.src = src;
+  videoBg.src = src;
+
+  video.load();
+  videoBg.load();
+
+  anuncianteEl.textContent = videoData.anunciante || "";
+  textoEl.textContent = videoData.descricao || "";
+
+  video.play().catch(()=>{});
+  videoBg.play().catch(()=>{});
+
+  video.onloadedmetadata = function(){
+    const duracao = video.duration;
+    const tempoExecucao = duracao > 80 ? 80 : duracao;
+
+    videoTimeout = setTimeout(()=>{
+      videoIndex = (videoIndex + 1) % videosGlobais.length;
+      trocarVideo();
+    }, tempoExecucao * 1000);
+  };
+
+  video.onended = function(){
+    videoIndex = (videoIndex + 1) % videosGlobais.length;
+    trocarVideo();
+  };
+}
+
+function videoProximo(){
+  if(!videosGlobais.length) return;
+  videoIndex = (videoIndex + 1) % videosGlobais.length;
+  trocarVideo();
+}
+
+function videoAnterior(){
+  if(!videosGlobais.length) return;
+  videoIndex = (videoIndex - 1 + videosGlobais.length) % videosGlobais.length;
+  trocarVideo();
+}
 /* =========================
    RSS NOTÍCIAS DA CIDADE
    ========================= */
-
 async function buscarNoticiasCidade(cidade){
 
   try{
@@ -508,11 +632,9 @@ function iniciarMensagens(intervaloSeg){
   renderMensagem();
   mensagemInterval=setInterval(renderMensagem,(intervaloSeg||12)*1000);
 }
-
 /* =========================
    LOAD DATA PRINCIPAL
    ========================= */
-
 async function loadData(){
 
   try{
@@ -526,14 +648,12 @@ async function loadData(){
     avisosGlobais = d.avisos || [];
     avisoIndex = 0;
     renderAvisos();
-
     /* =========================
        VÍDEOS
        ========================= */
     videosGlobais = d.publicidade?.videos || [];
     videoIndex = 0;
     trocarVideo();
-
     /* =========================
        MENSAGENS FIXAS
        ========================= */
@@ -543,14 +663,11 @@ async function loadData(){
     if(Array.isArray(d.mensagens)){
       mensagensGlobais = mensagensGlobais.concat(d.mensagens);
     }
-
     if(Array.isArray(d.publicidade?.mensagens)){
       mensagensGlobais = mensagensGlobais.concat(d.publicidade.mensagens);
     }
-
     // 🔥 renderiza imediatamente (NÃO espera RSS)
     iniciarMensagens(12);
-
     /* =========================
        RSS RODA SEPARADO
        ========================= */
@@ -568,12 +685,9 @@ async function loadData(){
     console.error("Erro loadData:",e);
   }
 }
-
-
 /* =========================
    VERSÍCULO DINÂMICO
    ========================= */
-
 async function carregarVersiculo(){
   try{
     const r = await fetch(
@@ -594,15 +708,12 @@ async function carregarVersiculo(){
     console.error("Erro versículo:",e);
   }
 }
-
 /* =========================
    CLIMA
    ========================= */
-
 async function carregarClima(){
 
   try{
-
     const rJson = await fetch("./data.json?ts="+Date.now());
     const json = await rJson.json();
 
@@ -632,11 +743,9 @@ async function carregarClima(){
     console.error("Erro clima:",e);
   }
 }
-
 /* =========================
    INICIALIZAÇÃO
    ========================= */
-
 loadData();
 carregarVersiculo();
 carregarClima();
@@ -645,7 +754,6 @@ setInterval(renderAvisos,8000);
 setInterval(carregarClima,600000);
 setInterval(loadData,1800000);      // 🔥 atualiza notícias a cada 30 min
 setInterval(carregarVersiculo,3600000);
-
 
 
 </script>
