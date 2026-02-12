@@ -25,12 +25,20 @@
   /* =========================
      MENSAGENS (FORA DA PUBLICIDADE)
      ========================= */
-  "mensagens": [
-    {
-      "titulo": "📰 Notícias",
-      "texto": "Sem notícias no momento. (verifique RSS)"
-    }
-  ],
+ "mensagens": {
+  "ativar": true,
+  "intervaloSeg": 10,
+  "modo": "rotativo",
+  "itens": [
+    { "titulo": "📰 Notícias", "texto": "Sem notícias no momento." },
+    { "titulo": "🌿 Sustentabilidade", "texto": "Separe corretamente seu lixo reciclável." },
+    { "titulo": "🔐 Segurança", "texto": "Nunca compartilhe senhas do condomínio." },
+    { "titulo": "💡 Economia", "texto": "Apague as luzes ao sair das áreas comuns." },
+    { "titulo": "📅 Lembrete", "texto": "Reunião condominial todo fim do mês às 19h." },
+    { "titulo": "📦 Entregas", "texto": "Retire suas encomendas na Caixinha no hall." }
+  ]
+}
+
   /* =========================
      PUBLICIDADE
      ========================= */
