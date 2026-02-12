@@ -87,7 +87,7 @@ body{ overflow:hidden; }
 }
 
 /* =========================================================
-   ITEM 006 – AVISOS CENTRALIZADOS
+   ITEM 006 – AVISOS COM PRIORIDADE VISUAL + TRANSIÇÃO
    ========================================================= */
 .avisos{
   display:grid;
@@ -98,25 +98,84 @@ body{ overflow:hidden; }
 
 .aviso-card{
   background:linear-gradient(145deg,#1b2e4a,#13263f);
-  padding:20px;
+  padding:18px 20px;
   border-radius:20px;
   display:flex;
   flex-direction:column;
-  justify-content:center;  /* 🔥 centraliza vertical */
-  align-items:center;      /* 🔥 centraliza horizontal */
-  text-align:center;
+  justify-content:space-between;
   box-shadow:0 8px 30px rgba(0,0,0,0.5);
+  position:relative;
+  border:4px solid transparent;
+  transition:all .6s ease;
+  opacity:0;
+  transform:translateY(20px);
 }
 
+/* 🔥 animação entrada */
+.aviso-card.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ===== PRIORIDADE ALTA ===== */
+.prioridade-alta{
+  border:6px solid #ff2b2b;
+  box-shadow:
+    0 0 18px rgba(255,0,0,0.8),
+    0 0 40px rgba(255,0,0,0.6),
+    0 8px 30px rgba(0,0,0,0.6);
+}
+
+/* ===== PRIORIDADE MÉDIA ===== */
+.prioridade-media{
+  border:5px solid #ffc107;
+  box-shadow:
+    0 0 14px rgba(255,193,7,0.7),
+    0 8px 30px rgba(0,0,0,0.6);
+}
+
+/* ===== PRIORIDADE BAIXA ===== */
+.prioridade-baixa{
+  border:5px solid #4caf50;
+  box-shadow:
+    0 0 14px rgba(76,175,80,0.7),
+    0 8px 30px rgba(0,0,0,0.6);
+}
+
+/* TÍTULO */
 .aviso-header{
   font-weight:900;
-  font-size:18px;
+  font-size:16px;
+  text-align:left;
 }
 
+/* TEXTO CENTRAL */
 .aviso-body{
-  margin-top:12px;
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
   font-size:clamp(22px,2.2vw,32px);
   line-height:1.3;
+  padding:6px 0;
+}
+
+/* RODAPÉ */
+.aviso-footer{
+  display:flex;
+  justify-content:flex-start;
+  gap:12px;
+  font-size:12px;
+  opacity:.95;
+  flex-wrap:wrap;
+}
+
+.badge-prioridade{
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
 }
 
 /* =========================================================
@@ -281,31 +340,73 @@ function limitarTexto(texto){
   return texto.substring(0,200)+"...";
 }
 
-/* AVISOS */
+/* =========================================================
+   ITEM 019 – AVISOS COM PRIORIDADE + TRANSIÇÃO
+   ========================================================= */
+
 let avisosGlobais=[];
 let avisoIndex=0;
 
 function renderAvisos(){
+
   const container=document.getElementById("avisosContainer");
-  container.innerHTML="";
 
-  for(let i=0;i<3;i++){
-    if(!avisosGlobais.length) return;
-    const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
+  /* 🔥 fade out suave */
+  container.style.opacity="0";
 
-    const div=document.createElement("div");
-    div.className="aviso-card";
-    div.innerHTML=`
-      <div class="aviso-header">${a.titulo||""}</div>
-      <div class="aviso-body">${limitarTexto(a.descricao||"")}</div>
-    `;
-    container.appendChild(div);
-  }
+  setTimeout(()=>{
 
-  avisoIndex=(avisoIndex+1)%avisosGlobais.length;
+    container.innerHTML="";
+
+    for(let i=0;i<3;i++){
+
+      if(!avisosGlobais.length) return;
+
+      const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
+
+      const prioridade=(a.prioridade||"media")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"");
+
+      const div=document.createElement("div");
+      div.className=`aviso-card prioridade-${prioridade}`;
+
+      div.innerHTML=`
+        <div class="aviso-header">
+          ${a.titulo||""}
+        </div>
+
+        <div class="aviso-body">
+          ${limitarTexto(a.descricao||"")}
+        </div>
+
+        <div class="aviso-footer">
+          <span>📍 ${a.local||""}</span>
+          <span>🏷 ${a.tipo||""}</span>
+          <span class="badge-prioridade">
+            ${(a.prioridade||"").toUpperCase()}
+          </span>
+        </div>
+      `;
+
+      container.appendChild(div);
+
+      /* 🔥 animação individual */
+      setTimeout(()=>{
+        div.classList.add("show");
+      },100);
+    }
+
+    avisoIndex=(avisoIndex+1)%avisosGlobais.length;
+
+    container.style.opacity="1";
+
+  },300);
 }
 
-/* VÍDEO */
+
+/* item 020 VÍDEO */
 let videosGlobais=[];
 let videoIndex=0;
 
