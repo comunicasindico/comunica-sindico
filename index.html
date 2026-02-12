@@ -16,39 +16,30 @@
 }
 
 /* =========================================================
-   ITEM 002 – BASE GLOBAL (COR BRANCA DEFINITIVA)
+   ITEM 002 – BODY 100% LIMPO
    ========================================================= */
-body{
+html, body{
   margin:0;
-  background:linear-gradient(180deg,#1e5799,#7db9e8);
+  padding:0;
+  width:100%;
+  height:100%;
   overflow:hidden;
-  position:relative;
-  color:#ffffff;              /* 🔥 força texto branco */
+  background:linear-gradient(180deg,#1e5799,#7db9e8);
   font-family:system-ui,-apple-system,Segoe UI,Roboto;
-}
-
-/* Garante herança branca */
-.wrapper,
-.header,
-.main,
-.footer,
-.aviso-card,
-.videoDescricao,
-.mensagens{
   color:#ffffff;
 }
+
 /* =========================================================
-   ITEM 003 – WRAPPER BASE PROPORCIONAL (SEM TRANSFORM)
+   ITEM 003 – WRAPPER 100% JANELA REAL
    ========================================================= */
 
 .wrapper{
   width:100vw;
   height:100vh;
-  padding:16px;
-
+  padding:12px; /* pode ajustar */
   display:grid;
   grid-template-rows:auto 1fr auto;
-  gap:16px;
+  gap:12px;
 }
 
 /* =========================================================
@@ -527,33 +518,6 @@ carregarClima();
 setInterval(renderAvisos,8000);
 setInterval(loadData,60000);
 setInterval(carregarClima,600000);
-
-/* =========================================================
-   ITEM 024 – ESCALA PROPORCIONAL COM ZOOM (MANTÉM FONTES)
-   ========================================================= */
-
-function ajustarEscala(){
-
-  const baseWidth  = 1600;
-  const baseHeight = 900;
-
-  const scaleX = window.innerWidth  / baseWidth;
-  const scaleY = window.innerHeight / baseHeight;
-
-  let escala = Math.min(scaleX, scaleY);
-
-  const escalaMinima = 0.75;
-
-  if(escala < escalaMinima){
-    escala = escalaMinima;
-  }
-
-  document.body.style.zoom = escala;
-}
-
-window.addEventListener("resize", ajustarEscala);
-window.addEventListener("load", ajustarEscala);
-
 
 
 </script>
