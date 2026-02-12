@@ -26,12 +26,14 @@ body{
 }
 
 /* =========================================================
-   ITEM 003 – WRAPPER ESCALÁVEL CENTRALIZADO
+   ITEM 003 – WRAPPER BASE FULL HD ESCALÁVEL
    ========================================================= */
+
 .wrapper{
-  width:1920px;
-  height:1080px;
+  width:1600px;   /* 🔥 base proporcional real */
+  height:900px;   /* 🔥 base proporcional real */
   padding:16px;
+
   display:grid;
   grid-template-rows:auto 1fr auto;
   gap:16px;
@@ -517,8 +519,8 @@ setInterval(renderAvisos,8000);
 setInterval(loadData,60000);
 setInterval(carregarClima,600000);
 
- /* =========================================================
-   ITEM 024 – ESCALA PROPORCIONAL COM LIMITE MÍNIMO
+/* =========================================================
+   ITEM 024 – ESCALA PROPORCIONAL TOTAL (0.75 MÍNIMO)
    ========================================================= */
 
 function ajustarEscala(){
@@ -531,7 +533,7 @@ function ajustarEscala(){
 
   let escala = Math.min(scaleX, scaleY);
 
-  /* 🔒 ESCALA MÍNIMA PARA NÃO PERDER FORMATAÇÃO */
+  /* 🔒 ESCALA MÍNIMA */
   const escalaMinima = 0.75;
 
   if(escala < escalaMinima){
@@ -542,6 +544,7 @@ function ajustarEscala(){
 
   wrapper.style.transform = `scale(${escala})`;
 
+  /* 🔥 CENTRALIZAÇÃO MATEMÁTICA */
   const larguraFinal  = baseWidth  * escala;
   const alturaFinal   = baseHeight * escala;
 
