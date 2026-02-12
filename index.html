@@ -166,8 +166,9 @@ html,body{
 }
 
 /* =========================================================
-   ITEM 008 – MOLDURA TV PREMIUM + LED INFERIOR
+   ITEM 012 – MOLDURA TV PREMIUM ESTÁVEL
    ========================================================= */
+
 .videoWrap{
   position:relative;
   border-radius:clamp(14px,1.5vw,30px);
@@ -178,24 +179,29 @@ html,body{
     0 40px 80px rgba(0,0,0,.55),
     0 15px 35px rgba(0,0,0,.45),
     inset 0 2px 6px rgba(255,255,255,.05);
+
+  min-height: 300px;   /* 🔥 ESSENCIAL */
+  height: 100%;
+  display:flex;
 }
 
+/* vídeos internos */
 .videoWrap video{
   width:100%;
   height:100%;
-  object-fit:cover;
+  object-fit:contain;
   border-radius:clamp(10px,.8vw,22px);
   background:black;
 }
 
-/* 🔥 LED inferior animado */
+/* LED inferior */
 .videoWrap::after{
   content:"";
   position:absolute;
-  bottom:-12px;
-  left:10%;
-  width:80%;
-  height:20px;
+  bottom:-18px;
+  left:15%;
+  width:70%;
+  height:26px;
 
   background:linear-gradient(
     90deg,
@@ -205,17 +211,18 @@ html,body{
     rgba(255,0,0,.6)
   );
 
-  filter:blur(14px);
-  opacity:.7;
+  filter:blur(18px);
+  opacity:.75;
   border-radius:50%;
-  animation:ledPulse 3s linear infinite;
+  animation:ledPulse 4s linear infinite;
 }
 
 @keyframes ledPulse{
-  0%{ filter:blur(12px) hue-rotate(0deg); }
-  50%{ filter:blur(18px) hue-rotate(90deg); }
-  100%{ filter:blur(12px) hue-rotate(0deg); }
+  0%{ filter:blur(14px) hue-rotate(0deg); }
+  50%{ filter:blur(24px) hue-rotate(120deg); }
+  100%{ filter:blur(14px) hue-rotate(0deg); }
 }
+
 
 /* =========================================================
    ITEM 009 – DESCRIÇÃO E MENSAGENS
@@ -296,7 +303,8 @@ html,body{
 
   <div class="right-col">
     <div class="videoWrap">
-      <video id="adVideo" autoplay muted loop playsinline></video>
+     <video id="adVideoBg" autoplay muted loop playsinline></video>
+     <video id="adVideo" autoplay muted loop playsinline></video>
     </div>
 
     <div class="videoDescricao" id="videoDescricao"></div>
