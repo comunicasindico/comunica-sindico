@@ -310,7 +310,9 @@ html, body{
 <body>
 
 <div class="wrapper">
-/* ==================================================== */
+
+
+   
 <!-- HEADER -->
 <div class="header">
   <div class="header-left">
@@ -320,7 +322,8 @@ html, body{
   <span class="badge" id="clock">--:--</span>
 </div>
 
-/* ==================================================== */
+
+   
    <!-- MAIN -->
 <div class="main">
 
@@ -339,7 +342,8 @@ html, body{
   </div>
 </div>
 
-/* ==================================================== */
+
+   
    <!-- FOOTER -->
 <div class="footer">
   <div class="footer-linha1" id="versiculo"></div>
@@ -355,7 +359,9 @@ html, body{
 </div>
 
 <script>
-/* ==================================================== */
+
+
+   
 /* RELÓGIO */
 function tick(){
   const d=new Date();
@@ -363,7 +369,9 @@ function tick(){
     d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
 setInterval(tick,1000); tick();
-/* ==================================================== */
+
+
+   
 /* LIMITADOR 200 */
 function limitarTexto(texto){
   if(!texto) return "";
@@ -511,7 +519,7 @@ function trocarVideo(){
 }
 
 /* =========================================================
-   ITEM 020 – CLIMA PREMIUM (OPEN-METEO CORRIGIDO)
+   ITEM 020 – CLIMA FINAL CORRIGIDO
    ========================================================= */
 
 async function carregarClima(){
@@ -535,7 +543,7 @@ async function carregarClima(){
     const temp  = Math.round(w.temperature);
     const vento = Math.round(w.windspeed);
 
-    /* 🔥 cálculo sensação térmica (wind chill simplificado) */
+    /* Cálculo sensação térmica */
     const sensacao = Math.round(
       13.12 + 0.6215*temp - 11.37*Math.pow(vento,0.16) +
       0.3965*temp*Math.pow(vento,0.16)
@@ -550,6 +558,7 @@ async function carregarClima(){
     tempEl.textContent   = `${temp}°C`;
     ventoEl.textContent  = `🌬 ${vento} km/h`;
 
+    /* 🔥 Corrige ícone térmico correto */
     sensacaoEl.textContent = `🌡 Sensação ${sensacao}°C`;
 
     sensacaoEl.classList.remove("calor","frio");
@@ -562,21 +571,18 @@ async function carregarClima(){
       sensacaoEl.classList.add("frio");
     }
 
-    /* animação leve */
+    /* animação */
+    sensacaoEl.classList.remove("clima-update");
+    void sensacaoEl.offsetWidth;
     sensacaoEl.classList.add("clima-update");
-    tempEl.classList.add("clima-update");
-
-    setTimeout(()=>{
-      sensacaoEl.classList.remove("clima-update");
-      tempEl.classList.remove("clima-update");
-    },600);
 
   }catch(e){
     console.error("Erro clima:", e);
   }
 }
 
-/* ==================================================== */
+
+
 /* LOAD */
 async function loadData(){
   const r=await fetch("./data.json?ts="+Date.now());
