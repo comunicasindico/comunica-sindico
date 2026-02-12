@@ -30,16 +30,17 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 003 – WRAPPER 100% JANELA REAL
+   ITEM 003 – WRAPPER COM MARGEM REAL SIMÉTRICA
    ========================================================= */
-
 .wrapper{
-  width:100vw;
-  height:100vh;
-  padding:12px; /* pode ajustar */
+  width:100%;
+  height:100%;
+  padding:16px;      /* 🔥 margem uniforme em todos os lados */
+  box-sizing:border-box;
+
   display:grid;
   grid-template-rows:auto 1fr auto;
-  gap:12px;
+  gap:16px;
 }
 
 /* =========================================================
