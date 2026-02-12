@@ -618,26 +618,62 @@ async function loadData(){
     const r = await fetch("./data.json?ts=" + Date.now());
     const d = await r.json();
 
-    /* AVISOS */
+    /* =========================
+       AVISOS
+       ========================= */
     avisosGlobais = d.avisos || [];
     avisoIndex = 0;
     renderAvisos();
 
-    /* VÍDEOS */
+    /* =========================
+       VÍDEOS
+       ========================= */
     videosGlobais = d.publicidade?.videos || [];
     videoIndex = 0;
     trocarVideo();
 
-    /* MENSAGENS */
+    /* =========================
+       MENSAGENS (PROFISSIONAL)
+       ========================= */
     const mc = document.getElementById("mensagensContainer");
     mc.innerHTML = "";
 
-    (d.mensagens || []).forEach(m => {
-      const div = document.createElement("div");
-      div.className = "mensagem-item";
-      div.textContent = m;
-      mc.appendChild(div);
-    });
+    if(Array.isArray(d.mensagens) && d.mensagens.length > 0){
+
+      d.mensagens.forEach(m => {
+
+        const div = document.createElement("div");
+        div.className = "mensagem-item";
+
+        // 🔥 Caso seja objeto {titulo,texto}
+        if(typeof m === "object" && m !== null){
+
+          div.innerHTML = `
+            <div style="font-weight:800; margin-bottom:4px;">
+              ${m.titulo || ""}
+            </div>
+            <div style="opacity:.9;">
+              ${m.texto || ""}
+            </div>
+          `;
+
+        }
+        // 🔥 Caso seja string simples
+        else{
+          div.textContent = m;
+        }
+
+        mc.appendChild(div);
+      });
+
+    }else{
+
+      const vazio = document.createElement("div");
+      vazio.className = "mensagem-item";
+      vazio.textContent = "Nenhuma mensagem no momento.";
+      mc.appendChild(vazio);
+
+    }
 
   }catch(e){
     console.error("Erro loadData:", e);
