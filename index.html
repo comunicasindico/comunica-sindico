@@ -655,31 +655,31 @@ async function loadData(){
     videoIndex = 0;
     trocarVideo();
     /* =========================
-       MENSAGENS FIXAS
-       ========================= */
-    mensagensGlobais = [];
-    mensagemIndex = 0;
+   MENSAGENS 100% AUTOMÁTICAS
+   ========================= */
+mensagensGlobais = [];
+mensagemIndex = 0;
 
-    if(Array.isArray(d.mensagens)){
-      mensagensGlobais = mensagensGlobais.concat(d.mensagens);
-    }
-    if(Array.isArray(d.publicidade?.mensagens)){
-      mensagensGlobais = mensagensGlobais.concat(d.publicidade.mensagens);
-    }
-    // 🔥 renderiza imediatamente (NÃO espera RSS)
-    iniciarMensagens(12);
-    /* =========================
-       RSS RODA SEPARADO
-       ========================= */
-    const cidade = d.clima?.cidade || "Brasil";
+const cidade = d.clima?.cidade || "Brasil";
 
-    buscarNoticiasCidade(cidade)
-      .then(noticias=>{
-        if(noticias.length>0){
-          mensagensGlobais = mensagensGlobais.concat(noticias);
-        }
-      })
-      .catch(()=>{});
+/* 1️⃣ Mensagens fixas do JSON */
+if(Array.isArray(d.mensagens)){
+  mensagensGlobais = mensagensGlobais.concat(d.mensagens);
+}
+/* 2️⃣ Mensagens automáticas do sistema */
+mensagensGlobais = mensagensGlobais.concat(
+  gerarMensagensAutomaticas(cidade)
+);
+/* 🔥 Inicia imediatamente (não espera RSS) */
+iniciarMensagens(12);
+/* 3️⃣ Notícias da cidade (assíncrono) */
+buscarNoticiasCidade(cidade)
+  .then(noticias=>{
+    if(noticias.length > 0){
+      mensagensGlobais = mensagensGlobais.concat(noticias);
+    }
+  })
+  .catch(()=>{});
 
   }catch(e){
     console.error("Erro loadData:",e);
@@ -755,6 +755,31 @@ setInterval(carregarClima,600000);
 setInterval(loadData,1800000);      // 🔥 atualiza notícias a cada 30 min
 setInterval(carregarVersiculo,3600000);
 
+/* =========================
+   GERADOR AUTOMÁTICO DE MENSAGENS
+   ========================= */
+function gerarMensagensAutomaticas(cidade){
+  const hora = new Date().getHours();
+  const base = [
+    { titulo:"🌅 Bom dia", texto:`Desejamos um excelente dia a todos os moradores de ${cidade}.` },
+    { titulo:"🏢 Convivência", texto:"Respeito e cordialidade tornam nosso condomínio melhor." },
+    { titulo:"🔐 Segurança", texto:"Sempre feche o portão e verifique visitantes." },
+    { titulo:"📦 Entregas", texto:"Retire suas encomendas no hall o quanto antes." },
+    { titulo:"🚗 Garagem", texto:"Estacione sempre dentro da sua vaga." },
+    { titulo:"🌿 Sustentabilidade", texto:"Economize água e energia nas áreas comuns." },
+    { titulo:"📢 Comunicação", texto:"Fique atento aos avisos do painel informativo." },
+    { titulo:"💡 Economia", texto:"Luzes acesas sem necessidade geram custos extras." }
+  ];
+  // Mensagens baseadas na hora do dia
+  if(hora < 12){
+    base.push({ titulo:"☀️ Manhã", texto:"Um ótimo período da manhã para todos!" });
+  }else if(hora < 18){
+    base.push({ titulo:"🌤️ Tarde", texto:"Tenham uma excelente tarde!" });
+  }else{
+    base.push({ titulo:"🌙 Boa noite", texto:"Tenham uma noite tranquila e segura." });
+  }
+  return base;
+}
 
 </script>
 
