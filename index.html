@@ -9,16 +9,16 @@
 <style>
 
 /* =========================================================
-   ITEM 001 – VARIÁVEIS
+   ITEM 001 – VARIÁVEIS GLOBAIS
    ========================================================= */
 :root{
   --radius:18px;
 }
 
 /* =========================================================
-   ITEM 002 – BASE FLUIDA RESPONSIVA TOTAL
+   ITEM 002 – BASE FLUIDA TOTAL
    ========================================================= */
-html, body{
+html,body{
   margin:0;
   padding:0;
   width:100%;
@@ -27,25 +27,24 @@ html, body{
   background:linear-gradient(180deg,#1e5799,#7db9e8);
   font-family:system-ui,-apple-system,Segoe UI,Roboto;
   color:#ffffff;
-
-  font-size:clamp(12px, 1vw, 22px); /* 🔥 escala base automática */
+  font-size:clamp(12px,1vw,22px);
 }
 
 /* =========================================================
-   ITEM 003 – WRAPPER TOTALMENTE FLUIDO
+   ITEM 003 – WRAPPER
    ========================================================= */
 .wrapper{
   width:100%;
   height:100%;
   padding:1.2vw;
   box-sizing:border-box;
-
   display:grid;
   grid-template-rows:auto 1fr auto;
   gap:1.2vw;
 }
+
 /* =========================================================
-   ITEM 004 – HEADER (com ícone clima à direita do título)
+   ITEM 004 – HEADER
    ========================================================= */
 .header{
   display:flex;
@@ -64,12 +63,8 @@ html, body{
 
 .header h1{
   margin:0;
-  font-size:clamp(14px, 1.6vw, 28px);
+  font-size:clamp(14px,1.6vw,28px);
   font-weight:900;
-}
-
-#weatherIcon{
-  font-size:26px;
 }
 
 .badge{
@@ -80,7 +75,7 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 005 – GRID FIXO DESKTOP
+   ITEM 005 – GRID PRINCIPAL
    ========================================================= */
 .main{
   display:grid;
@@ -90,13 +85,12 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 006 – AVISOS COM PRIORIDADE VISUAL + TRANSIÇÃO
+   ITEM 006 – AVISOS
    ========================================================= */
 .avisos{
   display:grid;
   grid-template-rows:repeat(3,1fr);
   gap:16px;
-  height:100%;
 }
 
 .aviso-card{
@@ -107,50 +101,42 @@ html, body{
   flex-direction:column;
   justify-content:space-between;
   box-shadow:0 8px 30px rgba(0,0,0,0.5);
-  position:relative;
   border:4px solid transparent;
   transition:all .6s ease;
   opacity:0;
   transform:translateY(20px);
 }
 
-/* 🔥 animação entrada */
 .aviso-card.show{
   opacity:1;
   transform:translateY(0);
 }
 
-/* ===== PRIORIDADE ALTA ===== */
 .prioridade-alta{
   border:6px solid #ff2b2b;
   box-shadow:
-    0 0 18px rgba(255,0,0,0.8),
-    0 0 40px rgba(255,0,0,0.6),
-    0 8px 30px rgba(0,0,0,0.6);
+    0 0 18px rgba(255,0,0,.8),
+    0 0 40px rgba(255,0,0,.6),
+    0 8px 30px rgba(0,0,0,.6);
 }
 
-/* ===== PRIORIDADE MÉDIA ===== */
 .prioridade-media{
   border:5px solid #ffc107;
   box-shadow:
-    0 0 14px rgba(255,193,7,0.7),
-    0 8px 30px rgba(0,0,0,0.6);
+    0 0 14px rgba(255,193,7,.7),
+    0 8px 30px rgba(0,0,0,.6);
 }
 
-/* ===== PRIORIDADE BAIXA ===== */
 .prioridade-baixa{
   border:5px solid #4caf50;
   box-shadow:
-    0 0 14px rgba(76,175,80,0.7),
-    0 8px 30px rgba(0,0,0,0.6);
+    0 0 14px rgba(76,175,80,.7),
+    0 8px 30px rgba(0,0,0,.6);
 }
 
-/* TÍTULO */
 .aviso-header{
   font-weight:900;
-  font-size:16px;
-  text-align:left;
-  color:#ffffff;
+  font-size:clamp(13px,1.2vw,20px);
 }
 
 .aviso-body{
@@ -159,26 +145,15 @@ html, body{
   align-items:center;
   justify-content:center;
   text-align:center;
-  font-size:clamp(14px, 1.4vw, 26px);
+  font-size:clamp(14px,1.4vw,26px);
   line-height:1.3;
 }
 
-/* RODAPÉ */
 .aviso-footer{
+  font-size:clamp(11px,1vw,16px);
   display:flex;
-  justify-content:flex-start;
   gap:12px;
-  font-size:12px;
-  opacity:.95;
   flex-wrap:wrap;
-  color:#ffffff;
-}
-
-.badge-prioridade{
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:800;
 }
 
 /* =========================================================
@@ -188,120 +163,115 @@ html, body{
   display:grid;
   grid-template-rows:1fr auto auto;
   gap:16px;
-  height:100%;
 }
 
 /* =========================================================
-   ITEM 008 – VÍDEO COM FUNDO FOSCO
+   ITEM 008 – MOLDURA TV PREMIUM + LED INFERIOR
    ========================================================= */
 .videoWrap{
   position:relative;
-  border-radius:20px;
-  overflow:hidden;
+  border-radius:clamp(14px,1.5vw,30px);
+  padding:clamp(12px,1.2vw,24px);
+  background:linear-gradient(145deg,#111,#000);
+
+  box-shadow:
+    0 40px 80px rgba(0,0,0,.55),
+    0 15px 35px rgba(0,0,0,.45),
+    inset 0 2px 6px rgba(255,255,255,.05);
 }
 
-#adVideoBg{
-  position:absolute;
-  inset:0;
+.videoWrap video{
   width:100%;
   height:100%;
   object-fit:cover;
-  filter:blur(40px);
-  transform:scale(1.2);
-  opacity:.7;
+  border-radius:clamp(10px,.8vw,22px);
+  background:black;
 }
 
-#adVideo{
+/* 🔥 LED inferior animado */
+.videoWrap::after{
+  content:"";
   position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:contain;
+  bottom:-12px;
+  left:10%;
+  width:80%;
+  height:20px;
+
+  background:linear-gradient(
+    90deg,
+    rgba(255,0,0,.6),
+    rgba(255,193,7,.6),
+    rgba(0,255,200,.6),
+    rgba(255,0,0,.6)
+  );
+
+  filter:blur(14px);
+  opacity:.7;
+  border-radius:50%;
+  animation:ledPulse 3s linear infinite;
+}
+
+@keyframes ledPulse{
+  0%{ filter:blur(12px) hue-rotate(0deg); }
+  50%{ filter:blur(18px) hue-rotate(90deg); }
+  100%{ filter:blur(12px) hue-rotate(0deg); }
 }
 
 /* =========================================================
-   ITEM 009 – DESCRIÇÃO
+   ITEM 009 – DESCRIÇÃO E MENSAGENS
    ========================================================= */
-.videoDescricao{
+.videoDescricao,.mensagens{
   background:#14324f;
   padding:14px;
   border-radius:16px;
-  text-align:center;
+  font-size:clamp(12px,1vw,18px);
 }
 
 /* =========================================================
-   ITEM 010 – MENSAGENS
+   ITEM 010 – FOOTER PREMIUM
    ========================================================= */
-.mensagens{
-  background:#14324f;
-  padding:14px;
-  border-radius:16px;
-  font-size:14px;
-  overflow:auto;
-}
-
-/* =========================================================
-   ITEM 011 – RODAPÉ PREMIUM CLIMA INTELIGENTE
-   ========================================================= */
-
 .footer{
   background:#15385c;
-  padding:clamp(8px, 1.2vh, 24px);
-  border-radius:clamp(8px, 1.2vw, 20px);
-
+  padding:clamp(8px,1.2vh,24px);
+  border-radius:clamp(8px,1.2vw,20px);
   display:flex;
   flex-direction:column;
-  justify-content:center;
-  gap:clamp(4px, .8vh, 12px);
+  gap:6px;
 }
 
 .footer-linha1{
-  font-size:clamp(12px, 1.4vh, 26px);
+  font-size:clamp(12px,1.4vh,26px);
   font-weight:600;
 }
 
 .footer-linha2{
-  font-size:clamp(11px, 1.2vh, 22px);
   display:flex;
   justify-content:flex-end;
-  gap:clamp(8px, 1vw, 18px);
-  align-items:center;
+  gap:14px;
+  font-size:clamp(11px,1.2vh,22px);
 }
 
-/* 🌡 Sensação térmica */
 .sensacao{
   font-weight:700;
   transition:all .4s ease;
 }
 
-/* 🔥 alerta calor */
 .sensacao.calor{
   color:#ffb347;
   text-shadow:0 0 8px rgba(255,150,0,.6);
 }
 
-/* ❄ alerta frio */
 .sensacao.frio{
   color:#6ecbff;
   text-shadow:0 0 8px rgba(100,200,255,.6);
 }
 
-/* 🔄 animação leve */
-.clima-update{
-  animation:climaFade .6s ease;
-}
-
-@keyframes climaFade{
-  from{ opacity:.3; transform:translateY(3px); }
-  to{ opacity:1; transform:translateY(0); }
-}
-
 /* =========================================================
-   ITEM 012 – MOBILE
+   ITEM 011 – RESPONSIVO
    ========================================================= */
-@media (max-width:768px){
-  body{ overflow:auto; }
-  .main{ grid-template-columns:1fr; }
+@media(max-width:768px){
+  body{overflow:auto;}
+  .main{grid-template-columns:1fr;}
 }
 
 </style>
@@ -311,58 +281,46 @@ html, body{
 
 <div class="wrapper">
 
-
-   
 <!-- HEADER -->
 <div class="header">
   <div class="header-left">
     <h1>Comunica Síndico - Condôminos</h1>
-    <span id="weatherIcon">☁️</span>
   </div>
   <span class="badge" id="clock">--:--</span>
 </div>
 
-
-   
-   <!-- MAIN -->
+<!-- MAIN -->
 <div class="main">
 
   <div class="avisos" id="avisosContainer"></div>
 
   <div class="right-col">
-
     <div class="videoWrap">
-      <video id="adVideoBg" autoplay muted loop playsinline></video>
       <video id="adVideo" autoplay muted loop playsinline></video>
     </div>
 
     <div class="videoDescricao" id="videoDescricao"></div>
     <div class="mensagens" id="mensagensContainer"></div>
-
   </div>
+
 </div>
 
-
-   
-   <!-- FOOTER -->
+<!-- FOOTER -->
 <div class="footer">
   <div class="footer-linha1" id="versiculo"></div>
- 
-   <div class="footer-linha2">
-  <span id="cidade"></span>
-  <span id="temperatura"></span>
-  <span id="sensacao" class="sensacao"></span>
-  <span id="vento"></span>
-</div>
+  <div class="footer-linha2">
+    <span id="cidade"></span>
+    <span id="temperatura"></span>
+    <span id="sensacao" class="sensacao"></span>
+    <span id="vento"></span>
+  </div>
 </div>
 
 </div>
 
 <script>
 
-
-   
-/* RELÓGIO */
+/* ITEM 012 – RELÓGIO */
 function tick(){
   const d=new Date();
   document.getElementById("clock").textContent=
@@ -370,336 +328,6 @@ function tick(){
 }
 setInterval(tick,1000); tick();
 
-
-   
-/* LIMITADOR 200 */
-function limitarTexto(texto){
-  if(!texto) return "";
-  if(texto.length<=200) return texto;
-  return texto.substring(0,200)+"...";
-}
-
-/* =========================================================
-   ITEM 019 – AVISOS COM PRIORIDADE + TRANSIÇÃO
-   ========================================================= */
-
-let avisosGlobais=[];
-let avisoIndex=0;
-
-function renderAvisos(){
-
-  const container=document.getElementById("avisosContainer");
-
-  /* 🔥 fade out suave */
-  container.style.opacity="0";
-
-  setTimeout(()=>{
-
-    container.innerHTML="";
-
-    for(let i=0;i<3;i++){
-
-      if(!avisosGlobais.length) return;
-
-      const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
-
-      const prioridade=(a.prioridade||"media")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"");
-
-      const div=document.createElement("div");
-      div.className=`aviso-card prioridade-${prioridade}`;
-
-      div.innerHTML=`
-        <div class="aviso-header">
-          ${a.titulo||""}
-        </div>
-
-        <div class="aviso-body">
-          ${limitarTexto(a.descricao||"")}
-        </div>
-
-        <div class="aviso-footer">
-          <span>📍 ${a.local||""}</span>
-          <span>🏷 ${a.tipo||""}</span>
-          <span class="badge-prioridade">
-            ${(a.prioridade||"").toUpperCase()}
-          </span>
-        </div>
-      `;
-
-      container.appendChild(div);
-
-      /* 🔥 animação individual */
-      setTimeout(()=>{
-        div.classList.add("show");
-      },100);
-    }
-
-    avisoIndex=(avisoIndex+1)%avisosGlobais.length;
-
-    container.style.opacity="1";
-
-  },300);
-}
-
-/* =========================================================
-   ITEM 020 – CLIMA PREMIUM COM SENSAÇÃO INTELIGENTE
-   ========================================================= */
-
-function atualizarClima(dados){
-
-  const temp      = Math.round(dados.main.temp);
-  const sensacao  = Math.round(dados.main.feels_like);
-  const vento     = Math.round(dados.wind.speed);
-
-  const tempEl     = document.getElementById("temperatura");
-  const sensacaoEl = document.getElementById("sensacao");
-  const ventoEl    = document.getElementById("vento");
-
-  tempEl.textContent = `${temp}°C`;
-  ventoEl.textContent = `🌬 ${vento} km/h`;
-
-  /* 🌡 Ícone térmico + texto */
-  sensacaoEl.textContent = `🌡 Sensação ${sensacao}°C`;
-
-  /* Remove classes anteriores */
-  sensacaoEl.classList.remove("calor","frio");
-
-  /* 🔥 Alerta calor */
-  if(sensacao > temp){
-    sensacaoEl.classList.add("calor");
-  }
-
-  /* ❄ Alerta frio */
-  if(sensacao < temp){
-    sensacaoEl.classList.add("frio");
-  }
-
-  /* 🔄 animação leve */
-  sensacaoEl.classList.add("clima-update");
-  tempEl.classList.add("clima-update");
-
-  setTimeout(()=>{
-    sensacaoEl.classList.remove("clima-update");
-    tempEl.classList.remove("clima-update");
-  },600);
-}
-
-/* =========================================================
-   ITEM 021  VÍDEO 
-   ========================================================= */
-let videosGlobais=[];
-let videoIndex=0;
-
-function trocarVideo(){
-  if(!videosGlobais.length) return;
-
-  const v=videosGlobais[videoIndex];
-  const video=document.getElementById("adVideo");
-  const bg=document.getElementById("adVideoBg");
-
-  video.src=v.arquivo+"?ts="+Date.now();
-  bg.src=v.arquivo+"?ts="+Date.now();
-
-  video.load();
-  bg.load();
-
-  video.play().catch(()=>{});
-  bg.play().catch(()=>{});
-
-  document.getElementById("videoDescricao").innerHTML=
-    `<strong>${v.anunciante||""}</strong><br>${v.descricao||""}`;
-
-  video.onended=function(){
-    videoIndex=(videoIndex+1)%videosGlobais.length;
-    trocarVideo();
-  };
-}
-
-/* =========================================================
-   ITEM 020 – CLIMA FINAL CORRIGIDO
-   ========================================================= */
-
-async function carregarClima(){
-
-  try{
-
-    const rJson = await fetch("./data.json?ts=" + Date.now());
-    const json  = await rJson.json();
-
-    const cidade = json.clima?.cidade || "Tubarão";
-    const lat    = json.clima?.latitude;
-    const lon    = json.clima?.longitude;
-
-    const r = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
-    );
-
-    const d = await r.json();
-    const w = d.current_weather;
-
-    const temp  = Math.round(w.temperature);
-    const vento = Math.round(w.windspeed);
-
-    /* Cálculo sensação térmica */
-    const sensacao = Math.round(
-      13.12 + 0.6215*temp - 11.37*Math.pow(vento,0.16) +
-      0.3965*temp*Math.pow(vento,0.16)
-    );
-
-    const cidadeEl    = document.getElementById("cidade");
-    const tempEl      = document.getElementById("temperatura");
-    const sensacaoEl  = document.getElementById("sensacao");
-    const ventoEl     = document.getElementById("vento");
-
-    cidadeEl.textContent = cidade;
-    tempEl.textContent   = `${temp}°C`;
-    ventoEl.textContent  = `🌬 ${vento} km/h`;
-
-    /* 🔥 Corrige ícone térmico correto */
-    sensacaoEl.textContent = `🌡 Sensação ${sensacao}°C`;
-
-    sensacaoEl.classList.remove("calor","frio");
-
-    if(sensacao > temp){
-      sensacaoEl.classList.add("calor");
-    }
-
-    if(sensacao < temp){
-      sensacaoEl.classList.add("frio");
-    }
-
-    /* animação */
-    sensacaoEl.classList.remove("clima-update");
-    void sensacaoEl.offsetWidth;
-    sensacaoEl.classList.add("clima-update");
-
-  }catch(e){
-    console.error("Erro clima:", e);
-  }
-}
-
-
-
-/* LOAD */
-async function loadData(){
-  const r=await fetch("./data.json?ts="+Date.now());
-  const d=await r.json();
-
-  avisosGlobais=d.avisos||[];
-  videosGlobais=d.publicidade?.videos||[];
-
-  renderAvisos();
-  trocarVideo();
-}
-
-   /* =========================================================
-   ITEM 022 – CARREGAR VERSÍCULO
-   ========================================================= */
-async function carregarVersiculo(){
-  try{
-
-    const r = await fetch(
-      "https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json?ts=" + Date.now()
-    );
-
-    const dados = await r.json();
-
-    const hoje = new Date();
-    const chave =
-      String(hoje.getMonth()+1).padStart(2,"0") +
-      "-" +
-      String(hoje.getDate()).padStart(2,"0");
-
-    const versiculo = dados.versos?.[chave] || "Você tem valor diante de Deus.";
-
-    const el = document.getElementById("versiculo");
-
-    if(el){
-      el.textContent = versiculo;
-    }
-
-  }catch(e){
-    console.error("Erro versículo:", e);
-  }
-}
-
-   /* =========================================================
-   ITEM 023 – INICIALIZAÇÃO DO VERSÍCULO
-   ========================================================= */
-carregarVersiculo();
-setInterval(carregarVersiculo,3600000);
-
-loadData();
-carregarClima();
-setInterval(renderAvisos,8000);
-setInterval(loadData,60000);
-setInterval(carregarClima,600000);
-
-/* =========================================================
-   ITEM 030 – MOLDURA TV FLUTUANTE
-   ========================================================= */
-
-.video-wrapper{
-  position:relative;
-  border-radius:clamp(12px, 1.2vw, 28px);
-  padding:clamp(10px, 1vw, 22px);
-  background:linear-gradient(145deg,#111,#000);
-
-  box-shadow:
-    0 30px 60px rgba(0,0,0,.45),
-    0 10px 25px rgba(0,0,0,.35),
-    inset 0 2px 6px rgba(255,255,255,.06);
-
-  transition:all .4s ease;
-}
-
-/* Tela interna */
-.video-wrapper video,
-.video-wrapper img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:clamp(8px, .8vw, 20px);
-  background:black;
-}
-
-/* Leve brilho superior estilo TV */
-.video-wrapper::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:40%;
-  border-radius:inherit;
-
-  background:linear-gradient(
-    to bottom,
-    rgba(255,255,255,.08),
-    rgba(255,255,255,0)
-  );
-
-  pointer-events:none;
-}
-
-   .video-wrapper:hover{
-  transform:translateY(-4px);
-  box-shadow:
-    0 40px 80px rgba(0,0,0,.55),
-    0 15px 35px rgba(0,0,0,.45);
-}
-<div class="video-wrapper">
-   <video id="adVideo" autoplay muted loop playsinline></video>
-</div>
-<div class="video-wrapper">
-   <img id="adImagem" />
-</div>
-
-
-   
 </script>
 
 </body>
