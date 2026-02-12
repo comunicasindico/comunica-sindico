@@ -29,12 +29,12 @@
         "descricao": "Especialistas em rodocalibrador interno e serviços de alta precisão para veículos pesados."
       },
       {
-        "arquivo": "./ads/comunica_sindico_logo.mp4",
+        "arquivo": "./ads/comunica_sindico_city.mp4",
         "anunciante": "Comunica Síndico",
         "descricao": "A solução digital completa para comunicação moderna e eficiente do seu condomínio."
       },
       {
-        "arquivo": "./ads/googlemaps2.mp4",
+        "arquivo": "./ads/googlemapsgde.mp4",
         "anunciante": "Google Maps Business",
         "descricao": "Coloque sua empresa no mapa e seja encontrado por clientes em toda a região."
       },
@@ -49,14 +49,14 @@
         "descricao": "Luísa visitando o papai no trabalho. Um momento especial que marca para sempre."
       },
       {
-        "arquivo": "./ads/03larissa.mp4",
+        "arquivo": "./ads/larissa.mp4",
         "anunciante": "Memórias Especiais",
         "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o coração."
       },
       {
-        "arquivo": "./ads/googlemaps.mp4",
-        "anunciante": "Marketing Digital Estratégico",
-        "descricao": "O poder da publicidade digital para impulsionar sua marca e alcançar novos clientes."
+        "arquivo": "./ads/swotportugues.mp4",
+        "anunciante": "Livro Físico e Digital",
+        "descricao": "O poder dos relacionamentos saudáveis."
       }
     ],
     "mensagens": [
