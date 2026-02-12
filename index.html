@@ -545,38 +545,53 @@ function renderAvisos(){
   avisoIndex = (avisoIndex + 1) % avisosGlobais.length;
 }
 
+let videoTimeout = null;
 
 function trocarVideo(){
 
   if(!videosGlobais.length) return;
 
   const videoData = videosGlobais[videoIndex];
-
   const video = document.getElementById("adVideo");
-  const videoBg = document.getElementById("adVideoBg");
+  const desc  = document.getElementById("videoDescricao");
 
-  const anuncianteEl = document.getElementById("videoAnunciante");
-  const textoEl = document.getElementById("videoTexto");
-
-  const src = videoData.arquivo + "?ts=" + Date.now();
+  // limpa timeout anterior
+  if(videoTimeout) clearTimeout(videoTimeout);
 
   video.pause();
-  videoBg.pause();
-
-  video.src = src;
-  videoBg.src = src;
-
+  video.src = videoData.arquivo + "?ts=" + Date.now();
   video.load();
-  videoBg.load();
+
+  // 🔹 Mostra anunciante + descrição
+  desc.innerHTML = `
+    <div style="font-weight:800; font-size:18px;">
+      ${videoData.anunciante || ""}
+    </div>
+    <div style="font-size:14px; opacity:.85;">
+      ${videoData.descricao || ""}
+    </div>
+  `;
 
   video.play().catch(()=>{});
-  videoBg.play().catch(()=>{});
 
-  // 🔥 NÃO REMOVE NADA
-  anuncianteEl.textContent = videoData.anunciante || "";
-  textoEl.textContent = videoData.descricao || "";
+  video.onloadedmetadata = function(){
 
-  videoIndex = (videoIndex + 1) % videosGlobais.length;
+    const duracao = video.duration;
+
+    // Se for maior que 80s → limitar
+    const tempoExecucao = duracao > 80 ? 80 : duracao;
+
+    videoTimeout = setTimeout(()=>{
+      videoIndex = (videoIndex + 1) % videosGlobais.length;
+      trocarVideo();
+    }, tempoExecucao * 1000);
+  };
+
+  // Se acabar antes de 80s → troca automaticamente
+  video.onended = function(){
+    videoIndex = (videoIndex + 1) % videosGlobais.length;
+    trocarVideo();
+  };
 }
 
   function videoProximo(){
@@ -691,12 +706,11 @@ async function carregarVersiculo(){
    INICIALIZAÇÃO
    ========================= */
 loadData();
+trocarVideo();
 carregarVersiculo();
 carregarClima();
-
 /* ROTACIONAR */
 setInterval(renderAvisos, 8000);
-setInterval(trocarVideo, 12000);
 setInterval(carregarClima, 600000);
 /* ATUALIZAÇÕES */
 setInterval(loadData, 60000);           // Atualiza dados
