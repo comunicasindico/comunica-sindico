@@ -26,23 +26,17 @@ body{
 }
 
 /* =========================================================
-   ITEM 003 – WRAPPER BASE FULL HD ESCALÁVEL
+   ITEM 003 – WRAPPER BASE PROPORCIONAL (SEM TRANSFORM)
    ========================================================= */
 
 .wrapper{
-  width:1600px;   /* 🔥 base proporcional real */
-  height:900px;   /* 🔥 base proporcional real */
+  width:100vw;
+  height:100vh;
   padding:16px;
 
   display:grid;
   grid-template-rows:auto 1fr auto;
   gap:16px;
-
-  position:absolute;
-  top:0;
-  left:0;
-
-  transform-origin: top left;
 }
 
 /* =========================================================
@@ -520,7 +514,7 @@ setInterval(loadData,60000);
 setInterval(carregarClima,600000);
 
 /* =========================================================
-   ITEM 024 – ESCALA PROPORCIONAL TOTAL (0.75 MÍNIMO)
+   ITEM 024 – ESCALA PROPORCIONAL COM ZOOM (MANTÉM FONTES)
    ========================================================= */
 
 function ajustarEscala(){
@@ -533,30 +527,18 @@ function ajustarEscala(){
 
   let escala = Math.min(scaleX, scaleY);
 
-  /* 🔒 ESCALA MÍNIMA */
   const escalaMinima = 0.75;
 
   if(escala < escalaMinima){
     escala = escalaMinima;
   }
 
-  const wrapper = document.querySelector(".wrapper");
-
-  wrapper.style.transform = `scale(${escala})`;
-
-  /* 🔥 CENTRALIZAÇÃO MATEMÁTICA */
-  const larguraFinal  = baseWidth  * escala;
-  const alturaFinal   = baseHeight * escala;
-
-  const sobraX = (window.innerWidth  - larguraFinal)  / 2;
-  const sobraY = (window.innerHeight - alturaFinal)   / 2;
-
-  wrapper.style.left = `${sobraX}px`;
-  wrapper.style.top  = `${sobraY}px`;
+  document.body.style.zoom = escala;
 }
 
 window.addEventListener("resize", ajustarEscala);
 window.addEventListener("load", ajustarEscala);
+
 
 
 </script>
