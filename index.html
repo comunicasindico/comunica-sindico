@@ -95,8 +95,8 @@ body{
   display:grid;
   grid-template-columns:1.2fr 1.8fr;
   gap:16px;
-  height:100%; /* ocupa todo espaço disponível */
   min-height:0;
+  height:100%; /* ocupa todo espaço disponível */
 }
 
 /* ===== AVISOS PREMIUM ===== */
@@ -451,16 +451,36 @@ let videosGlobais=[];
 let mensagensGlobais=[];
 let mensagemIndex=0;
 let mensagemInterval=null;
+/* =========================
+   AJUSTE DINÂMICO DE FONTE DOS AVISOS
+   ========================= */
+
+function ajustarFonteAviso(card){
+
+  const body = card.querySelector(".aviso-body");
+  if(!body) return;
+
+  let tamanhoMax = 48;   // começa grande
+  let tamanhoMin = 22;   // limite mínimo
+
+  body.style.fontSize = tamanhoMax + "px";
+
+  const alturaDisponivel = card.clientHeight - 110;
+
+  while(body.scrollHeight > alturaDisponivel && tamanhoMax > tamanhoMin){
+    tamanhoMax -= 2;
+    body.style.fontSize = tamanhoMax + "px";
+  }
+
+}
 
   /* =========================
    RENDER AVISOS
    ========================= */
 
 function renderAvisos(){
-
   const container = document.getElementById("avisosContainer");
   if(!container) return;
-
   container.innerHTML = "";
 
   if(!Array.isArray(avisosGlobais) || avisosGlobais.length === 0){
@@ -502,6 +522,7 @@ function renderAvisos(){
     `;
 
     container.appendChild(div);
+    ajustarFonteAviso(div);
     div.style.gridRow = "span 1";
 
     blocosUsados++;
