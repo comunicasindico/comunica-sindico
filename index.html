@@ -518,18 +518,25 @@ setInterval(loadData,60000);
 setInterval(carregarClima,600000);
 
  /* =========================================================
-   ITEM 024 – ESCALA AJUSTADA PARA NAVEGADOR
+   ITEM 024 – ESCALA PROPORCIONAL COM LIMITE MÍNIMO
    ========================================================= */
 
 function ajustarEscala(){
 
-  const baseWidth  = 1600;  // 🔥 ajuste real
-  const baseHeight = 900;   // 🔥 ajuste real
+  const baseWidth  = 1600;
+  const baseHeight = 900;
 
   const scaleX = window.innerWidth  / baseWidth;
   const scaleY = window.innerHeight / baseHeight;
 
-  const escala = Math.min(scaleX, scaleY);
+  let escala = Math.min(scaleX, scaleY);
+
+  /* 🔒 ESCALA MÍNIMA PARA NÃO PERDER FORMATAÇÃO */
+  const escalaMinima = 0.75;
+
+  if(escala < escalaMinima){
+    escala = escalaMinima;
+  }
 
   const wrapper = document.querySelector(".wrapper");
 
@@ -547,6 +554,7 @@ function ajustarEscala(){
 
 window.addEventListener("resize", ajustarEscala);
 window.addEventListener("load", ajustarEscala);
+
 
 </script>
 
