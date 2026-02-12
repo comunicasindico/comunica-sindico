@@ -107,14 +107,17 @@ body{
   box-shadow:0 8px 30px rgba(0,0,0,0.5);
   transition:.3s ease;
 }
+
 .prioridade-alta{
   border-color:#ff4d4d;
   box-shadow:0 0 20px rgba(255,0,0,0.6);
 }
+
 .prioridade-media{
   border-color:#ffc107;
   box-shadow:0 0 18px rgba(255,193,7,0.6);
 }
+
 .prioridade-baixa{
   border-color:#4caf50;
   box-shadow:0 0 18px rgba(76,175,80,0.6);
@@ -128,16 +131,16 @@ body{
   font-weight:900;
 }
 
-..aviso-body{
+.aviso-body{
   margin-top:16px;
-  font-size: clamp(28px, 3vw, 42px);
+  font-size:clamp(28px,3vw,42px);
   line-height:1.3;
   font-weight:500;
 }
 
 .aviso-footer{
   margin-top:12px;
-  font-size:11px;      /* <<< menor */
+  font-size:11px;
   display:flex;
   flex-wrap:wrap;
   gap:10px;
@@ -156,18 +159,21 @@ body{
 .badge-media{ background:#ffc107; color:#000; }
 .badge-baixa{ background:#4caf50; }
 
-/* DIREITA */
+/* ===== COLUNA DIREITA ===== */
+
 .right-col{
   display:grid;
-  grid-template-rows:1fr auto auto;
+  grid-template-rows:auto auto auto;
   gap:16px;
-  min-height:0;
 }
+
+/* ===== VIDEO PROFISSIONAL ===== */
 
 .videoWrap{
   position:relative;
   width:100%;
-  max-width:100%;
+  aspect-ratio:16/9;
+  margin:0 auto;
   border-radius:20px;
   overflow:hidden;
   background:#000;
@@ -176,34 +182,31 @@ body{
   justify-content:center;
 }
 
+/* vídeo fosco de fundo */
+.videoBg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:blur(40px);
+  transform:scale(1.2);
+  opacity:.5;
+  z-index:1;
+  pointer-events:none;
+}
+
 /* vídeo principal */
-.videoWrap video{
-  max-width:100%;
-  max-height:100%;
+.videoMain{
+  position:relative;
+  width:100%;
+  height:100%;
   object-fit:contain;
-  display:block;
+  z-index:2;
+  transition:opacity .6s ease;
 }
 
-/* 🔥 MOBILE FIXO */
-@media(max-width:900px){
-
-  .right-col{
-    width:100%;
-  }
-
-  .videoWrap{
-    width:100%;
-    aspect-ratio:16/9; /* mantém proporção base */
-    margin:0 auto;     /* centraliza */
-  }
-
-  .videoWrap video{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-  }
-}
-
+/* ===== DESCRIÇÃO DO VÍDEO ===== */
 
 .videoDescricao{
   background:#14324f;
@@ -211,22 +214,21 @@ body{
   border-radius:16px;
   text-align:center;
   display:flex;
-  flex-direction:column;   /* 🔥 força uma linha embaixo da outra */
+  flex-direction:column;
   gap:6px;
 }
 
 .videoAnunciante{
   font-size:20px;
   font-weight:900;
-  line-height:1.2;
 }
 
 .videoTexto{
   font-size:14px;
-  font-weight:400;
   opacity:.9;
-  line-height:1.3;
 }
+
+/* ===== MENSAGENS ===== */
 
 .mensagens{
   background:#14324f;
@@ -237,6 +239,8 @@ body{
   overflow:auto;
 }
 
+/* ===== RODAPÉ ===== */
+
 .footer{
   background:#15385c;
   padding:22px 28px;
@@ -245,18 +249,18 @@ body{
   flex-direction:column;
   gap:8px;
 }
-/* Linha do versículo */
+
 .footer-versiculo{
   display:flex;
   justify-content:flex-start;
   font-size:18px;
   font-weight:700;
 }
-/* Linha do clima */
+
 .footer-clima{
   display:flex;
   justify-content:flex-end;
-  font-size:15px;
+  font-size:16px;
   font-weight:600;
   opacity:.9;
 }
@@ -266,7 +270,6 @@ body{
 @media(max-width:900px){
   .main{ grid-template-columns:1fr; }
 }
-
 
   .videoDescricao{
   background:#14324f;
@@ -323,15 +326,12 @@ body{
   transition:.3s ease;
   z-index:3;
 }
-
 .videoNav:hover{
   opacity:.7;
   background:rgba(0,0,0,0.4);
 }
-
 .videoNav.prev{ left:8px; }
 .videoNav.next{ right:8px; }
-
 
   
 </style>
@@ -369,25 +369,29 @@ body{
 
 </div>
 
-
 <div class="main">
 
   <div class="avisos" id="avisosContainer"></div>
 
   <div class="right-col">
 
-  <div class="videoWrap">
-
+ <div class="videoWrap">
   <!-- Fundo desfocado -->
-  <video id="adVideoBg" autoplay muted loop playsinline></video>
-
+  <video id="adVideoBg"
+         class="videoBg"
+         autoplay
+         muted
+         playsinline></video>
   <!-- Vídeo principal -->
-  <video id="adVideo" autoplay muted loop playsinline></video>
-
+  <video id="adVideo"
+         class="videoMain"
+         autoplay
+         muted
+         playsinline></video>
   <button class="videoNav prev" onclick="videoAnterior()">‹</button>
   <button class="videoNav next" onclick="videoProximo()">›</button>
-
 </div>
+
 
 <!-- BLOCO DESCRIÇÃO -->
 <div class="videoDescricao" id="videoDescricao">
@@ -553,32 +557,32 @@ function trocarVideo(){
 
   const videoData = videosGlobais[videoIndex];
   const video = document.getElementById("adVideo");
-  const desc  = document.getElementById("videoDescricao");
+  const videoBg = document.getElementById("adVideoBg");
+  const anuncianteEl = document.getElementById("videoAnunciante");
+  const textoEl = document.getElementById("videoTexto");
 
-  // limpa timeout anterior
   if(videoTimeout) clearTimeout(videoTimeout);
 
   video.pause();
-  video.src = videoData.arquivo + "?ts=" + Date.now();
-  video.load();
+  videoBg.pause();
 
-  // 🔹 Mostra anunciante + descrição
-  desc.innerHTML = `
-    <div style="font-weight:800; font-size:18px;">
-      ${videoData.anunciante || ""}
-    </div>
-    <div style="font-size:14px; opacity:.85;">
-      ${videoData.descricao || ""}
-    </div>
-  `;
+  const src = videoData.arquivo + "?ts=" + Date.now();
+
+  video.src = src;
+  videoBg.src = src;
+
+  video.load();
+  videoBg.load();
+
+  anuncianteEl.textContent = videoData.anunciante || "";
+  textoEl.textContent = videoData.descricao || "";
 
   video.play().catch(()=>{});
+  videoBg.play().catch(()=>{});
 
   video.onloadedmetadata = function(){
 
     const duracao = video.duration;
-
-    // Se for maior que 80s → limitar
     const tempoExecucao = duracao > 80 ? 80 : duracao;
 
     videoTimeout = setTimeout(()=>{
@@ -587,7 +591,6 @@ function trocarVideo(){
     }, tempoExecucao * 1000);
   };
 
-  // Se acabar antes de 80s → troca automaticamente
   video.onended = function(){
     videoIndex = (videoIndex + 1) % videosGlobais.length;
     trocarVideo();
@@ -706,7 +709,6 @@ async function carregarVersiculo(){
    INICIALIZAÇÃO
    ========================= */
 loadData();
-trocarVideo();
 carregarVersiculo();
 carregarClima();
 /* ROTACIONAR */
