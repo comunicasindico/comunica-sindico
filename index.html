@@ -517,13 +517,14 @@ setInterval(renderAvisos,8000);
 setInterval(loadData,60000);
 setInterval(carregarClima,600000);
 
-  /* =========================================================
-   ITEM 024 – ESCALA AUTOMÁTICA CENTRALIZADA
+ /* =========================================================
+   ITEM 024 – ESCALA AJUSTADA PARA NAVEGADOR
    ========================================================= */
+
 function ajustarEscala(){
 
-  const baseWidth  = 1920;
-  const baseHeight = 1080;
+  const baseWidth  = 1600;  // 🔥 ajuste real
+  const baseHeight = 900;   // 🔥 ajuste real
 
   const scaleX = window.innerWidth  / baseWidth;
   const scaleY = window.innerHeight / baseHeight;
@@ -534,7 +535,6 @@ function ajustarEscala(){
 
   wrapper.style.transform = `scale(${escala})`;
 
-  /* 🔥 CENTRALIZAÇÃO REAL */
   const larguraFinal  = baseWidth  * escala;
   const alturaFinal   = baseHeight * escala;
 
@@ -544,9 +544,9 @@ function ajustarEscala(){
   wrapper.style.left = `${sobraX}px`;
   wrapper.style.top  = `${sobraY}px`;
 }
+
 window.addEventListener("resize", ajustarEscala);
 window.addEventListener("load", ajustarEscala);
-
 
 </script>
 
