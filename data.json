@@ -2,12 +2,10 @@
   "titulo": "Comunica Síndico — Condôminos",
   "subtitulo": "Painel Informativo",
   "referencia": "",
-
   "temaDoDia": {
     "modo": "automatico",
     "temasPorDiaSemana": {}
   },
-
   "rotacao": {
     "ativar": false,
     "intervaloSeg": 12,
@@ -15,13 +13,12 @@
     "pausarNoMouse": true,
     "mostrarProgresso": true
   },
-
   "emergencia": {
     "ativar": true,
     "intervaloSeg": 4,
     "piscar": true,
     "somenteAlta": true
-  },
+  }
   /* =========================
      MENSAGENS (FORA DA PUBLICIDADE)
      ========================= */
@@ -39,7 +36,6 @@
     { "titulo": "📦 Entregas", "texto": "Retire suas encomendas na Caixinha no hall." }
   ]
 }
-
   /* =========================
      PUBLICIDADE
      ========================= */
