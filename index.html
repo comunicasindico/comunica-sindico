@@ -9,19 +9,15 @@
 <style>
 
 /* =========================================================
-   ITEM 001 – VARIÁVEIS GLOBAIS
+   ITEM 001 – VARIÁVEIS
    ========================================================= */
-
 :root{
-  --bg:#0e1c2f;
-  --card:#13263f;
   --radius:18px;
 }
 
 /* =========================================================
-   ITEM 002 – RESET BASE
+   ITEM 002 – BASE
    ========================================================= */
-
 *{box-sizing:border-box}
 
 html,body{
@@ -32,14 +28,11 @@ html,body{
   color:#fff;
 }
 
-body{
-  overflow:hidden; /* 🔒 trava reorganização */
-}
+body{ overflow:hidden; }
 
 /* =========================================================
-   ITEM 003 – WRAPPER PRINCIPAL
+   ITEM 003 – WRAPPER
    ========================================================= */
-
 .wrapper{
   height:100vh;
   padding:16px;
@@ -49,9 +42,8 @@ body{
 }
 
 /* =========================================================
-   ITEM 004 – HEADER
+   ITEM 004 – HEADER (com ícone clima à direita do título)
    ========================================================= */
-
 .header{
   display:flex;
   justify-content:space-between;
@@ -61,10 +53,20 @@ body{
   border-radius:20px;
 }
 
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
 .header h1{
   margin:0;
   font-size:24px;
   font-weight:900;
+}
+
+#weatherIcon{
+  font-size:26px;
 }
 
 .badge{
@@ -75,9 +77,8 @@ body{
 }
 
 /* =========================================================
-   ITEM 005 – GRID FIXO DESKTOP 2x2
+   ITEM 005 – GRID FIXO DESKTOP
    ========================================================= */
-
 .main{
   display:grid;
   grid-template-columns:1.2fr 1.8fr;
@@ -86,9 +87,8 @@ body{
 }
 
 /* =========================================================
-   ITEM 006 – AVISOS (COLUNA ESQUERDA)
+   ITEM 006 – AVISOS CENTRALIZADOS
    ========================================================= */
-
 .avisos{
   display:grid;
   grid-template-rows:repeat(3,1fr);
@@ -102,7 +102,9 @@ body{
   border-radius:20px;
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
+  justify-content:center;  /* 🔥 centraliza vertical */
+  align-items:center;      /* 🔥 centraliza horizontal */
+  text-align:center;
   box-shadow:0 8px 30px rgba(0,0,0,0.5);
 }
 
@@ -120,7 +122,6 @@ body{
 /* =========================================================
    ITEM 007 – COLUNA DIREITA
    ========================================================= */
-
 .right-col{
   display:grid;
   grid-template-rows:1fr auto auto;
@@ -129,14 +130,12 @@ body{
 }
 
 /* =========================================================
-   ITEM 008 – VÍDEO
+   ITEM 008 – VÍDEO COM FUNDO FOSCO
    ========================================================= */
-
 .videoWrap{
   position:relative;
   border-radius:20px;
   overflow:hidden;
-  background:#000;
 }
 
 #adVideoBg{
@@ -159,9 +158,8 @@ body{
 }
 
 /* =========================================================
-   ITEM 009 – DESCRIÇÃO DO VÍDEO
+   ITEM 009 – DESCRIÇÃO
    ========================================================= */
-
 .videoDescricao{
   background:#14324f;
   padding:14px;
@@ -172,7 +170,6 @@ body{
 /* =========================================================
    ITEM 010 – MENSAGENS
    ========================================================= */
-
 .mensagens{
   background:#14324f;
   padding:14px;
@@ -182,50 +179,38 @@ body{
 }
 
 /* =========================================================
-   ITEM 011 – RODAPÉ
+   ITEM 011 – RODAPÉ REORGANIZADO
    ========================================================= */
-
 .footer{
   background:#15385c;
-  padding:20px 28px;
+  padding:18px 28px;
   border-radius:20px;
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:4px;
+}
+
+.footer-linha1{
+  display:flex;
+  justify-content:flex-start;
+  font-weight:700;
+}
+
+.footer-linha2{
+  display:flex;
+  justify-content:flex-end;
+  gap:12px;
+  font-size:14px;
+  align-items:center;
 }
 
 /* =========================================================
-   ITEM 012 – MOBILE REAL APENAS
+   ITEM 012 – MOBILE
    ========================================================= */
-
-@media (max-width: 768px){
+@media (max-width:768px){
   body{ overflow:auto; }
-
-  .main{
-    grid-template-columns:1fr;
-  }
+  .main{ grid-template-columns:1fr; }
 }
-
-/* =========================================================
-   ITEM 013 – BOTÕES VÍDEO
-   ========================================================= */
-
-.videoNav{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  width:36px;
-  height:60px;
-  border:none;
-  border-radius:10px;
-  background:rgba(0,0,0,0.25);
-  color:#fff;
-  font-size:24px;
-  cursor:pointer;
-}
-
-.videoNav.prev{ left:8px; }
-.videoNav.next{ right:8px; }
 
 </style>
 </head>
@@ -234,19 +219,16 @@ body{
 
 <div class="wrapper">
 
-<!-- =========================================================
-     ITEM 014 – HEADER HTML
-     ========================================================= -->
-
+<!-- HEADER -->
 <div class="header">
-  <h1>Comunica Síndico - Condôminos</h1>
+  <div class="header-left">
+    <h1>Comunica Síndico - Condôminos</h1>
+    <span id="weatherIcon">☁️</span>
+  </div>
   <span class="badge" id="clock">--:--</span>
 </div>
 
-<!-- =========================================================
-     ITEM 015 – MAIN
-     ========================================================= -->
-
+<!-- MAIN -->
 <div class="main">
 
   <div class="avisos" id="avisosContainer"></div>
@@ -256,35 +238,29 @@ body{
     <div class="videoWrap">
       <video id="adVideoBg" autoplay muted loop playsinline></video>
       <video id="adVideo" autoplay muted loop playsinline></video>
-      <button class="videoNav prev" onclick="videoAnterior()">‹</button>
-      <button class="videoNav next" onclick="videoProximo()">›</button>
     </div>
 
     <div class="videoDescricao" id="videoDescricao"></div>
-
     <div class="mensagens" id="mensagensContainer"></div>
 
   </div>
-
 </div>
 
-<!-- =========================================================
-     ITEM 016 – FOOTER
-     ========================================================= -->
-
+<!-- FOOTER -->
 <div class="footer">
-  <div id="versiculo"></div>
-  <div id="clima"></div>
+  <div class="footer-linha1" id="versiculo"></div>
+  <div class="footer-linha2">
+    <span id="cidade"></span>
+    <span id="temperatura"></span>
+    <span id="vento"></span>
+  </div>
 </div>
 
 </div>
 
 <script>
 
-/* =========================================================
-   ITEM 017 – RELÓGIO
-   ========================================================= */
-
+/* RELÓGIO */
 function tick(){
   const d=new Date();
   document.getElementById("clock").textContent=
@@ -292,65 +268,56 @@ function tick(){
 }
 setInterval(tick,1000); tick();
 
-/* =========================================================
-   ITEM 018 – LIMITADOR DE TEXTO (200 CARACTERES)
-   ========================================================= */
-
+/* LIMITADOR 200 */
 function limitarTexto(texto){
   if(!texto) return "";
-  if(texto.length <= 200) return texto;
-  return texto.substring(0,200) + "...";
+  if(texto.length<=200) return texto;
+  return texto.substring(0,200)+"...";
 }
 
-/* =========================================================
-   ITEM 019 – AVISOS
-   ========================================================= */
-
+/* AVISOS */
 let avisosGlobais=[];
 let avisoIndex=0;
 
 function renderAvisos(){
-
   const container=document.getElementById("avisosContainer");
   container.innerHTML="";
 
   for(let i=0;i<3;i++){
-
     if(!avisosGlobais.length) return;
-
     const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
 
     const div=document.createElement("div");
     div.className="aviso-card";
-
     div.innerHTML=`
-      <div class="aviso-header">⚠ ${a.titulo||""}</div>
+      <div class="aviso-header">${a.titulo||""}</div>
       <div class="aviso-body">${limitarTexto(a.descricao||"")}</div>
     `;
-
     container.appendChild(div);
   }
 
   avisoIndex=(avisoIndex+1)%avisosGlobais.length;
 }
 
-/* =========================================================
-   ITEM 020 – VÍDEOS
-   ========================================================= */
-
+/* VÍDEO */
 let videosGlobais=[];
 let videoIndex=0;
 
 function trocarVideo(){
-
   if(!videosGlobais.length) return;
 
   const v=videosGlobais[videoIndex];
   const video=document.getElementById("adVideo");
+  const bg=document.getElementById("adVideoBg");
 
   video.src=v.arquivo+"?ts="+Date.now();
+  bg.src=v.arquivo+"?ts="+Date.now();
+
   video.load();
+  bg.load();
+
   video.play().catch(()=>{});
+  bg.play().catch(()=>{});
 
   document.getElementById("videoDescricao").innerHTML=
     `<strong>${v.anunciante||""}</strong><br>${v.descricao||""}`;
@@ -358,23 +325,35 @@ function trocarVideo(){
   video.onended=function(){
     videoIndex=(videoIndex+1)%videosGlobais.length;
     trocarVideo();
-  }
+  };
 }
 
-function videoProximo(){
-  videoIndex=(videoIndex+1)%videosGlobais.length;
-  trocarVideo();
+/* CLIMA + ÍCONE */
+async function carregarClima(){
+  const r=await fetch("./data.json?ts="+Date.now());
+  const json=await r.json();
+
+  const cidade=json.clima?.cidade||"Tubarão";
+  const lat=json.clima?.latitude;
+  const lon=json.clima?.longitude;
+
+  const r2=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+  const d=await r2.json();
+  const w=d.current_weather;
+
+  document.getElementById("cidade").textContent=cidade;
+  document.getElementById("temperatura").textContent=w.temperature+"°C";
+  document.getElementById("vento").textContent="🌬 "+w.windspeed+" km/h";
+
+  const code=w.weathercode;
+  const iconMap={
+    0:"☀️",1:"🌤",2:"⛅",3:"☁️",
+    61:"🌧",71:"❄️",95:"⛈"
+  };
+  document.getElementById("weatherIcon").textContent=iconMap[code]||"☁️";
 }
 
-function videoAnterior(){
-  videoIndex=(videoIndex-1+videosGlobais.length)%videosGlobais.length;
-  trocarVideo();
-}
-
-/* =========================================================
-   ITEM 021 – LOAD DATA
-   ========================================================= */
-
+/* LOAD */
 async function loadData(){
   const r=await fetch("./data.json?ts="+Date.now());
   const d=await r.json();
@@ -387,8 +366,10 @@ async function loadData(){
 }
 
 loadData();
+carregarClima();
 setInterval(renderAvisos,8000);
 setInterval(loadData,60000);
+setInterval(carregarClima,600000);
 
 </script>
 
