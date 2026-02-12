@@ -38,11 +38,13 @@ body{
 
 /* LAYOUT */
 .wrapper{
-  height:100vh; /* ocupa exatamente a tela */
+  width:1920px;
+  height:1080px;
   padding:16px;
   display:grid;
   grid-template-rows:auto 1fr auto;
   gap:16px;
+  transform-origin:top left;
 }
 
 /* HEADER */
@@ -778,12 +780,34 @@ async function carregarClima(){
     console.error("Erro clima:",e);
   }
 }
+  
+  /* =========================
+   ESCALA GLOBAL DO PAINEL
+   ========================= */
+function ajustarEscalaPainel(){
+  const wrapper = document.querySelector(".wrapper");
+  if(!wrapper) return;
+
+  const larguraBase = 1920;
+  const alturaBase = 1080;
+
+  const escalaX = window.innerWidth / larguraBase;
+  const escalaY = window.innerHeight / alturaBase;
+
+  const escala = Math.min(escalaX, escalaY);
+
+  wrapper.style.transform = `scale(${escala})`;
+}
+
 /* =========================
    INICIALIZAÇÃO
    ========================= */
 loadData();
 carregarVersiculo();
 carregarClima();
+ajustarEscalaPainel();
+window.addEventListener("resize", ajustarEscalaPainel);
+
 
 setInterval(renderAvisos,8000);
 setInterval(carregarClima,600000);
