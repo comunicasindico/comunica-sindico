@@ -16,37 +16,33 @@
 }
 
 /* =========================================================
-   ITEM 002 – BASE
+   ITEM 002 – BODY CENTRALIZADOR
    ========================================================= */
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  height:100%;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
-  background:linear-gradient(180deg,#1e5799,#7db9e8);
-  color:#fff;
-}
 body{
+  margin:0;
+  background:linear-gradient(180deg,#1e5799,#7db9e8);
   overflow:hidden;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
+  position:relative;
 }
 
 /* =========================================================
-   ITEM 003 – WRAPPER ESCALÁVEL
+   ITEM 003 – WRAPPER ESCALÁVEL CENTRALIZADO
    ========================================================= */
 .wrapper{
-  width:1920px;   /* 🔥 base padrão FullHD */
-  height:1080px;  /* 🔥 base padrão FullHD */
+  width:1920px;
+  height:1080px;
   padding:16px;
   display:grid;
   grid-template-rows:auto 1fr auto;
   gap:16px;
+
+  position:absolute;
+  top:0;
+  left:0;
+
   transform-origin: top left;
 }
-   
+
 /* =========================================================
    ITEM 004 – HEADER (com ícone clima à direita do título)
    ========================================================= */
@@ -521,8 +517,8 @@ setInterval(renderAvisos,8000);
 setInterval(loadData,60000);
 setInterval(carregarClima,600000);
 
-   /* =========================================================
-   ITEM 024 – ESCALA AUTOMÁTICA DO PAINEL
+  /* =========================================================
+   ITEM 024 – ESCALA AUTOMÁTICA CENTRALIZADA
    ========================================================= */
 function ajustarEscala(){
 
@@ -537,9 +533,20 @@ function ajustarEscala(){
   const wrapper = document.querySelector(".wrapper");
 
   wrapper.style.transform = `scale(${escala})`;
+
+  /* 🔥 CENTRALIZAÇÃO REAL */
+  const larguraFinal  = baseWidth  * escala;
+  const alturaFinal   = baseHeight * escala;
+
+  const sobraX = (window.innerWidth  - larguraFinal)  / 2;
+  const sobraY = (window.innerHeight - alturaFinal)   / 2;
+
+  wrapper.style.left = `${sobraX}px`;
+  wrapper.style.top  = `${sobraY}px`;
 }
 window.addEventListener("resize", ajustarEscala);
 window.addEventListener("load", ajustarEscala);
+
 
 </script>
 
