@@ -27,20 +27,26 @@ html,body{
   background:linear-gradient(180deg,#1e5799,#7db9e8);
   color:#fff;
 }
-
-body{ overflow:hidden; }
+body{
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
 
 /* =========================================================
-   ITEM 003 – WRAPPER
+   ITEM 003 – WRAPPER ESCALÁVEL
    ========================================================= */
 .wrapper{
-  height:100vh;
+  width:1920px;   /* 🔥 base padrão FullHD */
+  height:1080px;  /* 🔥 base padrão FullHD */
   padding:16px;
   display:grid;
   grid-template-rows:auto 1fr auto;
   gap:16px;
+  transform-origin: top left;
 }
-
+   
 /* =========================================================
    ITEM 004 – HEADER (com ícone clima à direita do título)
    ========================================================= */
@@ -514,6 +520,26 @@ carregarClima();
 setInterval(renderAvisos,8000);
 setInterval(loadData,60000);
 setInterval(carregarClima,600000);
+
+   /* =========================================================
+   ITEM 024 – ESCALA AUTOMÁTICA DO PAINEL
+   ========================================================= */
+function ajustarEscala(){
+
+  const baseWidth  = 1920;
+  const baseHeight = 1080;
+
+  const scaleX = window.innerWidth  / baseWidth;
+  const scaleY = window.innerHeight / baseHeight;
+
+  const escala = Math.min(scaleX, scaleY);
+
+  const wrapper = document.querySelector(".wrapper");
+
+  wrapper.style.transform = `scale(${escala})`;
+}
+window.addEventListener("resize", ajustarEscala);
+window.addEventListener("load", ajustarEscala);
 
 </script>
 
