@@ -520,47 +520,55 @@ async function loadData(){
     const r = await fetch("./data.json?ts="+Date.now());
     const d = await r.json();
 
-    /* AVISOS */
+    /* =========================
+       AVISOS
+       ========================= */
     avisosGlobais = d.avisos || [];
-    avisoIndex=0;
+    avisoIndex = 0;
     renderAvisos();
 
-    /* VÍDEOS */
+    /* =========================
+       VÍDEOS
+       ========================= */
     videosGlobais = d.publicidade?.videos || [];
-    videoIndex=0;
+    videoIndex = 0;
     trocarVideo();
 
     /* =========================
-       MENSAGENS + NOTÍCIAS
+       MENSAGENS FIXAS
        ========================= */
+    mensagensGlobais = [];
+    mensagemIndex = 0;
 
-    mensagensGlobais=[];
-    mensagemIndex=0;
-
-    const cidade = d.clima?.cidade || "Brasil";
-
-    // 1️⃣ mensagens fixas (raiz)
     if(Array.isArray(d.mensagens)){
       mensagensGlobais = mensagensGlobais.concat(d.mensagens);
     }
 
-    // 2️⃣ mensagens dentro de publicidade (compatível com seu JSON)
     if(Array.isArray(d.publicidade?.mensagens)){
       mensagensGlobais = mensagensGlobais.concat(d.publicidade.mensagens);
     }
 
-    // 3️⃣ notícias automáticas
-    const noticias = await buscarNoticiasCidade(cidade);
-    if(noticias.length>0){
-      mensagensGlobais = mensagensGlobais.concat(noticias);
-    }
-
+    // 🔥 renderiza imediatamente (NÃO espera RSS)
     iniciarMensagens(12);
+
+    /* =========================
+       RSS RODA SEPARADO
+       ========================= */
+    const cidade = d.clima?.cidade || "Brasil";
+
+    buscarNoticiasCidade(cidade)
+      .then(noticias=>{
+        if(noticias.length>0){
+          mensagensGlobais = mensagensGlobais.concat(noticias);
+        }
+      })
+      .catch(()=>{});
 
   }catch(e){
     console.error("Erro loadData:",e);
   }
 }
+
 
 /* =========================
    VERSÍCULO DINÂMICO
