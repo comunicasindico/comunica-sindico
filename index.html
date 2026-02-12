@@ -8,16 +8,9 @@
 <style>
 
 /* =========================================================
-   ITEM 001 – VARIÁVEIS
+   ITEM 001 – BASE
    ========================================================= */
-:root{
-  --radius:18px;
-}
-
-/* =========================================================
-   ITEM 002 – BASE
-   ========================================================= */
-html, body{
+html,body{
   margin:0;
   padding:0;
   width:100%;
@@ -25,13 +18,10 @@ html, body{
   overflow:hidden;
   background:linear-gradient(180deg,#1e5799,#7db9e8);
   font-family:system-ui,-apple-system,Segoe UI,Roboto;
-  color:#ffffff;
+  color:#fff;
   font-size:clamp(12px,1vw,22px);
 }
 
-/* =========================================================
-   ITEM 003 – WRAPPER
-   ========================================================= */
 .wrapper{
   width:100%;
   height:100%;
@@ -43,7 +33,7 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 004 – HEADER
+   ITEM 002 – HEADER
    ========================================================= */
 .header{
   display:flex;
@@ -51,13 +41,7 @@ html, body{
   align-items:center;
   background:#15385c;
   padding:1vw 1.5vw;
-  border-radius:1.2vw;
-}
-
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:14px;
+  border-radius:18px;
 }
 
 .header h1{
@@ -74,7 +58,7 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 005 – GRID
+   ITEM 003 – GRID PRINCIPAL
    ========================================================= */
 .main{
   display:grid;
@@ -84,7 +68,7 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 006 – AVISOS
+   ITEM 004 – AVISOS
    ========================================================= */
 .avisos{
   display:grid;
@@ -94,16 +78,16 @@ html, body{
 
 .aviso-card{
   background:linear-gradient(145deg,#1b2e4a,#13263f);
-  padding:18px 20px;
+  padding:18px;
   border-radius:20px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  box-shadow:0 8px 30px rgba(0,0,0,0.5);
   border:4px solid transparent;
-  transition:all .6s ease;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);
+  transition:.5s;
   opacity:0;
-  transform:translateY(20px);
+  transform:translateY(15px);
 }
 
 .aviso-card.show{
@@ -113,7 +97,7 @@ html, body{
 
 .prioridade-alta{
   border:6px solid #ff2b2b;
-  box-shadow:0 0 18px rgba(255,0,0,0.8);
+  box-shadow:0 0 20px rgba(255,0,0,.8);
 }
 
 .prioridade-media{
@@ -124,10 +108,7 @@ html, body{
   border:5px solid #4caf50;
 }
 
-.aviso-header{
-  font-weight:900;
-}
-
+.aviso-header{ font-weight:900; }
 .aviso-body{
   flex:1;
   display:flex;
@@ -138,7 +119,7 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 007 – COLUNA DIREITA
+   ITEM 005 – COLUNA DIREITA
    ========================================================= */
 .right-col{
   display:grid;
@@ -147,7 +128,7 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 008 – VÍDEO
+   ITEM 006 – VÍDEO
    ========================================================= */
 .videoWrap{
   position:relative;
@@ -163,7 +144,7 @@ html, body{
   object-fit:cover;
   filter:blur(40px);
   transform:scale(1.2);
-  opacity:.7;
+  opacity:.6;
 }
 
 #adVideo{
@@ -174,9 +155,6 @@ html, body{
   object-fit:contain;
 }
 
-/* =========================================================
-   ITEM 009 – DESCRIÇÃO E MENSAGENS
-   ========================================================= */
 .videoDescricao,
 .mensagens{
   background:#14324f;
@@ -185,15 +163,15 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 010 – FOOTER
+   ITEM 007 – FOOTER
    ========================================================= */
 .footer{
   background:#15385c;
-  padding:clamp(8px,1.2vh,24px);
-  border-radius:clamp(8px,1.2vw,20px);
+  padding:12px;
+  border-radius:18px;
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:6px;
 }
 
 .footer-linha2{
@@ -218,13 +196,12 @@ html, body{
 <div class="wrapper">
 
 <div class="header">
-  <div class="header-left">
-    <h1>Comunica Síndico - Condôminos</h1>
-  </div>
+  <h1>Comunica Síndico - Condôminos</h1>
   <span class="badge" id="clock">--:--</span>
 </div>
 
 <div class="main">
+
   <div class="avisos" id="avisosContainer"></div>
 
   <div class="right-col">
@@ -232,9 +209,11 @@ html, body{
       <video id="adVideoBg" autoplay muted loop playsinline></video>
       <video id="adVideo" autoplay muted loop playsinline></video>
     </div>
+
     <div class="videoDescricao" id="videoDescricao"></div>
     <div class="mensagens" id="mensagensContainer"></div>
   </div>
+
 </div>
 
 <div class="footer">
@@ -251,7 +230,7 @@ html, body{
 
 <script>
 
-/* ITEM 011 – RELÓGIO */
+/* RELÓGIO */
 function tick(){
   const d=new Date();
   document.getElementById("clock").textContent=
@@ -259,14 +238,13 @@ function tick(){
 }
 setInterval(tick,1000); tick();
 
-/* ITEM 012 – LIMITADOR */
-function limitarTexto(texto){
-  if(!texto) return "";
-  if(texto.length<=200) return texto;
-  return texto.substring(0,200)+"...";
+/* LIMITADOR */
+function limitarTexto(t){
+  if(!t) return "";
+  return t.length>200 ? t.substring(0,200)+"..." : t;
 }
 
-/* ITEM 013 – AVISOS */
+/* AVISOS */
 let avisosGlobais=[];
 let avisoIndex=0;
 
@@ -288,7 +266,7 @@ function renderAvisos(){
   avisoIndex=(avisoIndex+1)%avisosGlobais.length;
 }
 
-/* ITEM 014 – VÍDEO */
+/* VÍDEO */
 let videosGlobais=[];
 let videoIndex=0;
 
@@ -304,33 +282,60 @@ function trocarVideo(){
   videoIndex=(videoIndex+1)%videosGlobais.length;
 }
 
-/* ITEM 015 – CLIMA */
+/* CLIMA */
 async function carregarClima(){
   try{
     const r=await fetch("./data.json");
     const j=await r.json();
     const cidade=j.clima?.cidade||"Tubarão";
+    const lat=j.clima?.latitude;
+    const lon=j.clima?.longitude;
+
+    const r2=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+    const d=await r2.json();
+    const w=d.current_weather;
+
+    const temp=Math.round(w.temperature);
+    const vento=Math.round(w.windspeed);
+
     document.getElementById("cidade").textContent=cidade;
+    document.getElementById("temperatura").textContent=`${temp}°C`;
+    document.getElementById("vento").textContent=`🌬 ${vento} km/h`;
+
   }catch(e){ console.log(e); }
 }
 
-/* ITEM 016 – LOAD */
-async function loadData(){
+/* VERSÍCULO */
+async function carregarVersiculo(){
   try{
-    const r=await fetch("./data.json");
-    const d=await r.json();
-    avisosGlobais=d.avisos||[];
-    videosGlobais=d.publicidade?.videos||[];
-    renderAvisos();
-    trocarVideo();
+    const r=await fetch("https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json");
+    const dados=await r.json();
+    const hoje=new Date();
+    const chave=
+      String(hoje.getMonth()+1).padStart(2,"0")+"-"+
+      String(hoje.getDate()).padStart(2,"0");
+    document.getElementById("versiculo").textContent=
+      dados.versos?.[chave]||"Você tem valor diante de Deus.";
   }catch(e){ console.log(e); }
+}
+
+/* LOAD */
+async function loadData(){
+  const r=await fetch("./data.json");
+  const d=await r.json();
+  avisosGlobais=d.avisos||[];
+  videosGlobais=d.publicidade?.videos||[];
+  renderAvisos();
+  trocarVideo();
 }
 
 loadData();
 carregarClima();
+carregarVersiculo();
 setInterval(renderAvisos,8000);
+setInterval(loadData,60000);
+setInterval(carregarClima,600000);
 
 </script>
-
 </body>
 </html>
