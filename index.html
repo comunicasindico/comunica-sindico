@@ -434,281 +434,168 @@ let avisoIndex=0;
 let avisosGlobais=[];
 let videoIndex=0;
 let videosGlobais=[];
+let mensagensGlobais=[];
+let mensagemIndex=0;
+let mensagemInterval=null;
 
-function ajustarFonteParaCabimento(card){
+/* =========================
+   RSS NOTÍCIAS DA CIDADE
+   ========================= */
 
-  const body = card.querySelector(".aviso-body");
-  if(!body) return;
+async function buscarNoticiasCidade(cidade){
 
-  const prioridade = card.className.includes("prioridade-alta");
+  try{
 
-  let tamanhoBase = prioridade ? 42 : 36;
-  let tamanhoMin  = prioridade ? 32 : 26;
+    const urlRSS = `https://news.google.com/rss/search?q=${encodeURIComponent(cidade)}&hl=pt-BR&gl=BR&ceid=BR:pt-419`;
+    const api = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(urlRSS)}`;
 
-  body.style.fontSize = tamanhoBase + "px";
+    const r = await fetch(api);
+    const dados = await r.json();
 
-  const maxAltura = card.clientHeight - 120; // margem header/footer
+    if(dados.items && dados.items.length > 0){
 
-  if(body.scrollHeight <= maxAltura){
-    return; // NÃO reduz se couber
+      return dados.items.slice(0,5).map(n => ({
+        titulo: "📰 Notícias de " + cidade,
+        texto: n.title
+      }));
+    }
+
+  }catch(e){
+    console.error("Erro RSS:", e);
   }
 
-  while(body.scrollHeight > maxAltura && tamanhoBase > tamanhoMin){
-    tamanhoBase -= 2;
-    body.style.fontSize = tamanhoBase + "px";
-  }
+  return [];
 }
 
-function renderAvisos(){
+/* =========================
+   MENSAGENS ROTATIVAS
+   ========================= */
 
-  const container = document.getElementById("avisosContainer");
-  container.innerHTML = "";
+function renderMensagem(){
 
-  if(!avisosGlobais.length) return;
+  const mc = document.getElementById("mensagensContainer");
+  mc.innerHTML="";
 
-  let blocosUsados = 0;
-  let i = 0;
+  if(!mensagensGlobais.length){
+    mc.innerHTML="<div>Nenhuma mensagem no momento.</div>";
+    return;
+  }
 
-  while(blocosUsados < 3 && i < avisosGlobais.length){
+  const m = mensagensGlobais[mensagemIndex];
 
-    const a = avisosGlobais[(avisoIndex + i) % avisosGlobais.length];
+  const div=document.createElement("div");
 
-    const prioridade = (a.prioridade || "media")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g,"");
-
-    const div = document.createElement("div");
-    div.className = "aviso-card prioridade-" + prioridade;
-
-    div.innerHTML = `
-      <div>
-        <div class="aviso-header">
-          ⚠ ${a.titulo || ""}
-        </div>
-        <div class="aviso-body">
-          ${a.descricao || ""}
-        </div>
+  if(typeof m === "object"){
+    div.innerHTML=`
+      <div style="font-weight:800;margin-bottom:4px;">
+        ${m.titulo||""}
       </div>
-      <div class="aviso-footer">
-        <span>📍 ${a.local || ""}</span>
-        <span>🏷 ${a.tipo || ""}</span>
-        <span class="badge-prioridade badge-${prioridade}">
-          ${(a.prioridade || "").toUpperCase()}
-        </span>
+      <div style="opacity:.9;">
+        ${m.texto||""}
       </div>
     `;
-
-    container.appendChild(div);
-
-    /* =========================
-       LÓGICA PROFISSIONAL DE OCUPAÇÃO
-       ========================= */
-
-    let ocupa = 1;
-    const tamanhoTexto = (a.descricao || "").length;
-
-    if(prioridade === "alta"){
-
-      if(tamanhoTexto > 220){
-        ocupa = 3;
-      }
-      else if(tamanhoTexto > 120){
-        ocupa = 2;
-      }
-      else{
-        ocupa = 1; // 🔥 Alta curta = 1 campo
-      }
-
-    }else{
-
-      if(tamanhoTexto > 260){
-        ocupa = 3;
-      }
-      else if(tamanhoTexto > 160){
-        ocupa = 2;
-      }
-      else{
-        ocupa = 1;
-      }
-
-    }
-
-    if(blocosUsados + ocupa > 3){
-      container.removeChild(div);
-      break;
-    }
-
-    div.style.gridRow = "span " + ocupa;
-
-    ajustarFonteParaCabimento(div, prioridade);
-
-    blocosUsados += ocupa;
-    i++;
+  }else{
+    div.textContent=m;
   }
 
-  avisoIndex = (avisoIndex + 1) % avisosGlobais.length;
+  mc.appendChild(div);
+
+  mensagemIndex=(mensagemIndex+1)%mensagensGlobais.length;
 }
 
-let videoTimeout = null;
-
-function trocarVideo(){
-
-  if(!videosGlobais.length) return;
-
-  const videoData = videosGlobais[videoIndex];
-  const video = document.getElementById("adVideo");
-  const videoBg = document.getElementById("adVideoBg");
-  const anuncianteEl = document.getElementById("videoAnunciante");
-  const textoEl = document.getElementById("videoTexto");
-
-  if(videoTimeout) clearTimeout(videoTimeout);
-
-  video.pause();
-  videoBg.pause();
-
-  const src = videoData.arquivo + "?ts=" + Date.now();
-
-  video.src = src;
-  videoBg.src = src;
-
-  video.load();
-  videoBg.load();
-
-  anuncianteEl.textContent = videoData.anunciante || "";
-  textoEl.textContent = videoData.descricao || "";
-
-  video.play().catch(()=>{});
-  videoBg.play().catch(()=>{});
-
-  video.onloadedmetadata = function(){
-
-    const duracao = video.duration;
-    const tempoExecucao = duracao > 80 ? 80 : duracao;
-
-    videoTimeout = setTimeout(()=>{
-      videoIndex = (videoIndex + 1) % videosGlobais.length;
-      trocarVideo();
-    }, tempoExecucao * 1000);
-  };
-
-  video.onended = function(){
-    videoIndex = (videoIndex + 1) % videosGlobais.length;
-    trocarVideo();
-  };
-}
-
-  function videoProximo(){
-  if(!videosGlobais.length) return;
-  videoIndex = (videoIndex + 1) % videosGlobais.length;
-  trocarVideo();
-}
-
-function videoAnterior(){
-  if(!videosGlobais.length) return;
-  videoIndex = (videoIndex - 1 + videosGlobais.length) % videosGlobais.length;
-  trocarVideo();
+function iniciarMensagens(intervaloSeg){
+  if(mensagemInterval) clearInterval(mensagemInterval);
+  renderMensagem();
+  mensagemInterval=setInterval(renderMensagem,(intervaloSeg||12)*1000);
 }
 
 /* =========================
    LOAD DATA PRINCIPAL
    ========================= */
+
 async function loadData(){
+
   try{
-    const r = await fetch("./data.json?ts=" + Date.now());
+
+    const r = await fetch("./data.json?ts="+Date.now());
     const d = await r.json();
 
-    /* =========================
-       AVISOS
-       ========================= */
+    /* AVISOS */
     avisosGlobais = d.avisos || [];
-    avisoIndex = 0;
+    avisoIndex=0;
     renderAvisos();
 
-    /* =========================
-       VÍDEOS
-       ========================= */
+    /* VÍDEOS */
     videosGlobais = d.publicidade?.videos || [];
-    videoIndex = 0;
+    videoIndex=0;
     trocarVideo();
 
     /* =========================
-       MENSAGENS (PROFISSIONAL)
+       MENSAGENS + NOTÍCIAS
        ========================= */
-    const mc = document.getElementById("mensagensContainer");
-    mc.innerHTML = "";
 
-    if(Array.isArray(d.mensagens) && d.mensagens.length > 0){
+    mensagensGlobais=[];
+    mensagemIndex=0;
 
-      d.mensagens.forEach(m => {
+    const cidade = d.clima?.cidade || "Brasil";
 
-        const div = document.createElement("div");
-        div.className = "mensagem-item";
-
-        // 🔥 Caso seja objeto {titulo,texto}
-        if(typeof m === "object" && m !== null){
-
-          div.innerHTML = `
-            <div style="font-weight:800; margin-bottom:4px;">
-              ${m.titulo || ""}
-            </div>
-            <div style="opacity:.9;">
-              ${m.texto || ""}
-            </div>
-          `;
-
-        }
-        // 🔥 Caso seja string simples
-        else{
-          div.textContent = m;
-        }
-
-        mc.appendChild(div);
-      });
-
-    }else{
-
-      const vazio = document.createElement("div");
-      vazio.className = "mensagem-item";
-      vazio.textContent = "Nenhuma mensagem no momento.";
-      mc.appendChild(vazio);
-
+    // 1️⃣ mensagens fixas (raiz)
+    if(Array.isArray(d.mensagens)){
+      mensagensGlobais = mensagensGlobais.concat(d.mensagens);
     }
 
+    // 2️⃣ mensagens dentro de publicidade (compatível com seu JSON)
+    if(Array.isArray(d.publicidade?.mensagens)){
+      mensagensGlobais = mensagensGlobais.concat(d.publicidade.mensagens);
+    }
+
+    // 3️⃣ notícias automáticas
+    const noticias = await buscarNoticiasCidade(cidade);
+    if(noticias.length>0){
+      mensagensGlobais = mensagensGlobais.concat(noticias);
+    }
+
+    iniciarMensagens(12);
+
   }catch(e){
-    console.error("Erro loadData:", e);
+    console.error("Erro loadData:",e);
   }
 }
 
 /* =========================
    VERSÍCULO DINÂMICO
    ========================= */
+
 async function carregarVersiculo(){
   try{
     const r = await fetch(
-      "https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json?ts=" + Date.now()
+      "https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json?ts="+Date.now()
     );
-
     const dados = await r.json();
 
     const hoje = new Date();
     const chave =
-      String(hoje.getMonth()+1).padStart(2,"0") +
-      "-" +
+      String(hoje.getMonth()+1).padStart(2,"0")+
+      "-"+
       String(hoje.getDate()).padStart(2,"0");
 
     const versiculo = dados.versos?.[chave] || "—";
-
     document.getElementById("versiculo").textContent = versiculo;
+
   }catch(e){
-    console.error("Erro versículo:", e);
+    console.error("Erro versículo:",e);
   }
 }
 
-  async function carregarClima(){
+/* =========================
+   CLIMA
+   ========================= */
+
+async function carregarClima(){
+
   try{
 
-    const rJson = await fetch("./data.json?ts=" + Date.now());
+    const rJson = await fetch("./data.json?ts="+Date.now());
     const json = await rJson.json();
 
     const cidade = json.clima?.cidade || "Tubarão";
@@ -730,30 +617,28 @@ async function carregarVersiculo(){
       0.3965*temp*Math.pow(vento,0.16)
     );
 
-    const climaEl = document.getElementById("clima");
-
-    if(climaEl){
-      climaEl.textContent =
-        `${cidade} • ${temp}°C (Sensação ${sensacao}°C) • Vento ${vento} km/h`;
-    }
+    document.getElementById("clima").textContent =
+      `${cidade} • ${temp}°C (Sensação ${sensacao}°C) • Vento ${vento} km/h`;
 
   }catch(e){
-    console.error("Erro clima:", e);
+    console.error("Erro clima:",e);
   }
 }
 
 /* =========================
    INICIALIZAÇÃO
    ========================= */
+
 loadData();
 carregarVersiculo();
 carregarClima();
-/* ROTACIONAR */
-setInterval(renderAvisos, 8000);
-setInterval(carregarClima, 600000);
-/* ATUALIZAÇÕES */
-setInterval(loadData, 60000);           // Atualiza dados
-setInterval(carregarVersiculo, 3600000); // Atualiza versículo a cada hora
+
+setInterval(renderAvisos,8000);
+setInterval(carregarClima,600000);
+setInterval(loadData,1800000);      // 🔥 atualiza notícias a cada 30 min
+setInterval(carregarVersiculo,3600000);
+
+
 
 </script>
 
