@@ -3,74 +3,73 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Comunica Síndico - Condôminos</title>
 
 <style>
+
+/* =========================================================
+   ITEM 001 – VARIÁVEIS
+   ========================================================= */
 :root{
-  --bg:#0e1c2f;
-  --card:#13263f;
   --radius:18px;
 }
 
-*{box-sizing:border-box}
-
-html,body{
+/* =========================================================
+   ITEM 002 – BASE FLUIDA RESPONSIVA TOTAL
+   ========================================================= */
+html, body{
   margin:0;
-  min-height:100vh;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
   background:linear-gradient(180deg,#1e5799,#7db9e8);
-  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+  color:#ffffff;
+
+  font-size:clamp(12px, 1vw, 22px); /* 🔥 escala base automática */
 }
 
-body{
-  overflow-x:hidden;
-}
-
-/* LAYOUT */
+/* =========================================================
+   ITEM 003 – WRAPPER TOTALMENTE FLUIDO
+   ========================================================= */
 .wrapper{
-  min-height:100vh;
-  padding:16px;
+  width:100%;
+  height:100%;
+  padding:1.2vw;
+  box-sizing:border-box;
+
   display:grid;
   grid-template-rows:auto 1fr auto;
-  gap:16px;
+  gap:1.2vw;
 }
-
-/* HEADER */
+/* =========================================================
+   ITEM 004 – HEADER (com ícone clima à direita do título)
+   ========================================================= */
 .header{
   display:flex;
   justify-content:space-between;
   align-items:center;
   background:#15385c;
-  padding:16px 24px;
-  border-radius:20px;
+  padding:1vw 1.5vw;
+  border-radius:1.2vw;
 }
 
-.header h1{
-  margin:0;
-  font-size:24px;
-  font-weight:900;
-}
 .header-left{
   display:flex;
   align-items:center;
   gap:14px;
 }
 
-.weather-icon{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.header h1{
+  margin:0;
+  font-size:clamp(14px, 1.6vw, 28px);
+  font-weight:900;
 }
 
-/* animação suave da nuvem */
-#cloudGroup{
-  animation:cloudSpin 18s linear infinite;
-  transform-origin:50% 50%;
-}
-
-@keyframes cloudSpin{
-  from{transform:rotate(0deg);}
-  to{transform:rotate(360deg);}
+#weatherIcon{
+  font-size:26px;
 }
 
 .badge{
@@ -80,15 +79,19 @@ body{
   font-weight:700;
 }
 
-/* MAIN GRID */
+/* =========================================================
+   ITEM 005 – GRID FIXO DESKTOP
+   ========================================================= */
 .main{
   display:grid;
   grid-template-columns:1.2fr 1.8fr;
   gap:16px;
-  min-height:0;
+  height:100%;
 }
-/* ===== AVISOS PREMIUM ===== */
 
+/* =========================================================
+   ITEM 006 – AVISOS COM PRIORIDADE VISUAL + TRANSIÇÃO
+   ========================================================= */
 .avisos{
   display:grid;
   grid-template-rows:repeat(3,1fr);
@@ -98,190 +101,105 @@ body{
 
 .aviso-card{
   background:linear-gradient(145deg,#1b2e4a,#13263f);
-  padding:24px;
+  padding:18px 20px;
   border-radius:20px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  border:2px solid transparent;
   box-shadow:0 8px 30px rgba(0,0,0,0.5);
-  transition:.3s ease;
-}
-.prioridade-alta{
-  border-color:#ff4d4d;
-  box-shadow:0 0 20px rgba(255,0,0,0.6);
-}
-.prioridade-media{
-  border-color:#ffc107;
-  box-shadow:0 0 18px rgba(255,193,7,0.6);
-}
-.prioridade-baixa{
-  border-color:#4caf50;
-  box-shadow:0 0 18px rgba(76,175,80,0.6);
+  position:relative;
+  border:4px solid transparent;
+  transition:all .6s ease;
+  opacity:0;
+  transform:translateY(20px);
 }
 
+/* 🔥 animação entrada */
+.aviso-card.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ===== PRIORIDADE ALTA ===== */
+.prioridade-alta{
+  border:6px solid #ff2b2b;
+  box-shadow:
+    0 0 18px rgba(255,0,0,0.8),
+    0 0 40px rgba(255,0,0,0.6),
+    0 8px 30px rgba(0,0,0,0.6);
+}
+
+/* ===== PRIORIDADE MÉDIA ===== */
+.prioridade-media{
+  border:5px solid #ffc107;
+  box-shadow:
+    0 0 14px rgba(255,193,7,0.7),
+    0 8px 30px rgba(0,0,0,0.6);
+}
+
+/* ===== PRIORIDADE BAIXA ===== */
+.prioridade-baixa{
+  border:5px solid #4caf50;
+  box-shadow:
+    0 0 14px rgba(76,175,80,0.7),
+    0 8px 30px rgba(0,0,0,0.6);
+}
+
+/* TÍTULO */
 .aviso-header{
+  font-weight:900;
+  font-size:16px;
+  text-align:left;
+  color:#ffffff;
+}
+
+.aviso-body{
+  flex:1;
   display:flex;
   align-items:center;
-  gap:10px;
-  font-size:20px;
-  font-weight:900;
-}
-
-..aviso-body{
-  margin-top:16px;
-  font-size: clamp(28px, 3vw, 42px);
+  justify-content:center;
+  text-align:center;
+  font-size:clamp(14px, 1.4vw, 26px);
   line-height:1.3;
-  font-weight:500;
 }
 
+/* RODAPÉ */
 .aviso-footer{
-  margin-top:12px;
-  font-size:11px;      /* <<< menor */
   display:flex;
+  justify-content:flex-start;
+  gap:12px;
+  font-size:12px;
+  opacity:.95;
   flex-wrap:wrap;
-  gap:10px;
-  opacity:.9;
-  font-weight:600;
+  color:#ffffff;
 }
 
 .badge-prioridade{
-  padding:4px 12px;
+  padding:4px 10px;
   border-radius:999px;
-  font-size:12px;
-  font-weight:900;
+  font-size:11px;
+  font-weight:800;
 }
 
-.badge-alta{ background:#ff4d4d; }
-.badge-media{ background:#ffc107; color:#000; }
-.badge-baixa{ background:#4caf50; }
-
-/* DIREITA */
+/* =========================================================
+   ITEM 007 – COLUNA DIREITA
+   ========================================================= */
 .right-col{
   display:grid;
   grid-template-rows:1fr auto auto;
   gap:16px;
-  min-height:0;
+  height:100%;
 }
 
+/* =========================================================
+   ITEM 008 – VÍDEO COM FUNDO FOSCO
+   ========================================================= */
 .videoWrap{
   position:relative;
-  width:100%;
-  max-width:100%;
   border-radius:20px;
   overflow:hidden;
-  background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 
-/* vídeo principal */
-.videoWrap video{
-  max-width:100%;
-  max-height:100%;
-  object-fit:contain;
-  display:block;
-}
-
-/* 🔥 MOBILE FIXO */
-@media(max-width:900px){
-
-  .right-col{
-    width:100%;
-  }
-
-  .videoWrap{
-    width:100%;
-    aspect-ratio:16/9; /* mantém proporção base */
-    margin:0 auto;     /* centraliza */
-  }
-
-  .videoWrap video{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-  }
-}
-
-
-.videoDescricao{
-  background:#14324f;
-  padding:16px 20px;
-  border-radius:16px;
-  text-align:center;
-  display:flex;
-  flex-direction:column;   /* 🔥 força uma linha embaixo da outra */
-  gap:6px;
-}
-
-.videoAnunciante{
-  font-size:20px;
-  font-weight:900;
-  line-height:1.2;
-}
-
-.videoTexto{
-  font-size:14px;
-  font-weight:400;
-  opacity:.9;
-  line-height:1.3;
-}
-
-.mensagens{
-  background:#14324f;
-  padding:14px;
-  border-radius:16px;
-  font-size:14px;
-  max-height:200px;
-  overflow:auto;
-}
-
-.footer{
-  background:#15385c;
-  padding:22px 28px;
-  border-radius:20px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-/* Linha do versículo */
-.footer-versiculo{
-  display:flex;
-  justify-content:flex-start;
-  font-size:18px;
-  font-weight:700;
-}
-/* Linha do clima */
-.footer-clima{
-  display:flex;
-  justify-content:flex-end;
-  font-size:15px;
-  font-weight:600;
-  opacity:.9;
-}
-
-
-/* RESPONSIVO */
-@media(max-width:900px){
-  .main{ grid-template-columns:1fr; }
-}
-
-
-  .videoDescricao{
-  background:#14324f;
-  padding:14px 18px;
-  border-radius:16px;
-  font-size:15px;
-  font-weight:600;
-  text-align:center;
-  min-height:48px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-/* FUNDO DESFOCADO */
 #adVideoBg{
   position:absolute;
   inset:0;
@@ -291,49 +209,101 @@ body{
   filter:blur(40px);
   transform:scale(1.2);
   opacity:.7;
-  z-index:1;
 }
 
-/* VÍDEO PRINCIPAL */
 #adVideo{
   position:absolute;
   inset:0;
   width:100%;
   height:100%;
   object-fit:contain;
-  z-index:2;
 }
 
-/* BOTÕES */
-.videoNav{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  width:38px;
-  height:70px;
-  border:none;
-  border-radius:10px;
-  background:rgba(0,0,0,0.25);
-  backdrop-filter:blur(6px);
-  color:#fff;
-  font-size:28px;
-  font-weight:300;
-  cursor:pointer;
-  opacity:.25;
-  transition:.3s ease;
-  z-index:3;
+/* =========================================================
+   ITEM 009 – DESCRIÇÃO
+   ========================================================= */
+.videoDescricao{
+  background:#14324f;
+  padding:14px;
+  border-radius:16px;
+  text-align:center;
 }
 
-.videoNav:hover{
-  opacity:.7;
-  background:rgba(0,0,0,0.4);
+/* =========================================================
+   ITEM 010 – MENSAGENS
+   ========================================================= */
+.mensagens{
+  background:#14324f;
+  padding:14px;
+  border-radius:16px;
+  font-size:14px;
+  overflow:auto;
 }
 
-.videoNav.prev{ left:8px; }
-.videoNav.next{ right:8px; }
+/* =========================================================
+   ITEM 011 – RODAPÉ PREMIUM CLIMA INTELIGENTE
+   ========================================================= */
 
+.footer{
+  background:#15385c;
+  padding:clamp(8px, 1.2vh, 24px);
+  border-radius:clamp(8px, 1.2vw, 20px);
 
-  
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:clamp(4px, .8vh, 12px);
+}
+
+.footer-linha1{
+  font-size:clamp(12px, 1.4vh, 26px);
+  font-weight:600;
+}
+
+.footer-linha2{
+  font-size:clamp(11px, 1.2vh, 22px);
+  display:flex;
+  justify-content:flex-end;
+  gap:clamp(8px, 1vw, 18px);
+  align-items:center;
+}
+
+/* 🌡 Sensação térmica */
+.sensacao{
+  font-weight:700;
+  transition:all .4s ease;
+}
+
+/* 🔥 alerta calor */
+.sensacao.calor{
+  color:#ffb347;
+  text-shadow:0 0 8px rgba(255,150,0,.6);
+}
+
+/* ❄ alerta frio */
+.sensacao.frio{
+  color:#6ecbff;
+  text-shadow:0 0 8px rgba(100,200,255,.6);
+}
+
+/* 🔄 animação leve */
+.clima-update{
+  animation:climaFade .6s ease;
+}
+
+@keyframes climaFade{
+  from{ opacity:.3; transform:translateY(3px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+/* =========================================================
+   ITEM 012 – MOBILE
+   ========================================================= */
+@media (max-width:768px){
+  body{ overflow:auto; }
+  .main{ grid-template-columns:1fr; }
+}
+
 </style>
 </head>
 
@@ -341,81 +311,57 @@ body{
 
 <div class="wrapper">
 
-<div class="header">
 
+   
+<!-- HEADER -->
+<div class="header">
   <div class="header-left">
     <h1>Comunica Síndico - Condôminos</h1>
-
-    <div class="weather-icon">
-      <svg viewBox="0 0 100 100" width="34" height="34">
-        <defs>
-          <radialGradient id="cloudGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#ffffff"/>
-            <stop offset="100%" stop-color="#b3e5fc"/>
-          </radialGradient>
-        </defs>
-
-        <g id="cloudGroup">
-          <ellipse cx="50" cy="55" rx="30" ry="18" fill="url(#cloudGrad)"/>
-          <ellipse cx="35" cy="45" rx="18" ry="14" fill="url(#cloudGrad)"/>
-          <ellipse cx="65" cy="45" rx="18" ry="14" fill="url(#cloudGrad)"/>
-        </g>
-      </svg>
-    </div>
-
+    <span id="weatherIcon">☁️</span>
   </div>
-
   <span class="badge" id="clock">--:--</span>
-
 </div>
 
 
+   
+   <!-- MAIN -->
 <div class="main">
 
   <div class="avisos" id="avisosContainer"></div>
 
   <div class="right-col">
 
-  <div class="videoWrap">
+    <div class="videoWrap">
+      <video id="adVideoBg" autoplay muted loop playsinline></video>
+      <video id="adVideo" autoplay muted loop playsinline></video>
+    </div>
 
-  <!-- Fundo desfocado -->
-  <video id="adVideoBg" autoplay muted loop playsinline></video>
-
-  <!-- Vídeo principal -->
-  <video id="adVideo" autoplay muted loop playsinline></video>
-
-  <button class="videoNav prev" onclick="videoAnterior()">‹</button>
-  <button class="videoNav next" onclick="videoProximo()">›</button>
-
-</div>
-
-<!-- BLOCO DESCRIÇÃO -->
-<div class="videoDescricao" id="videoDescricao">
-  <div class="videoAnunciante" id="videoAnunciante"></div>
-  <div class="videoTexto" id="videoTexto"></div>
-</div>
-
-
+    <div class="videoDescricao" id="videoDescricao"></div>
     <div class="mensagens" id="mensagensContainer"></div>
+
+  </div>
 </div>
 
-</div>
 
+   
+   <!-- FOOTER -->
 <div class="footer">
-  <!-- LINHA 1 – VERSÍCULO -->
-  <div class="footer-line footer-versiculo">
-    <span id="versiculo"></span>
-  </div>
-  <!-- LINHA 2 – CLIMA -->
-  <div class="footer-line footer-clima">
-    <span id="clima"></span>
-  </div>
-
+  <div class="footer-linha1" id="versiculo"></div>
+ 
+   <div class="footer-linha2">
+  <span id="cidade"></span>
+  <span id="temperatura"></span>
+  <span id="sensacao" class="sensacao"></span>
+  <span id="vento"></span>
+</div>
 </div>
 
+</div>
 
 <script>
 
+
+   
 /* RELÓGIO */
 function tick(){
   const d=new Date();
@@ -424,227 +370,237 @@ function tick(){
 }
 setInterval(tick,1000); tick();
 
-/* VARIÁVEIS */
-let avisoIndex=0;
-let avisosGlobais=[];
-let videoIndex=0;
-let videosGlobais=[];
 
-function ajustarFonteParaCabimento(card){
-
-  const body = card.querySelector(".aviso-body");
-  if(!body) return;
-
-  const prioridade = card.className.includes("prioridade-alta");
-
-  let tamanhoBase = prioridade ? 42 : 36;
-  let tamanhoMin  = prioridade ? 32 : 26;
-
-  body.style.fontSize = tamanhoBase + "px";
-
-  const maxAltura = card.clientHeight - 120; // margem header/footer
-
-  if(body.scrollHeight <= maxAltura){
-    return; // NÃO reduz se couber
-  }
-
-  while(body.scrollHeight > maxAltura && tamanhoBase > tamanhoMin){
-    tamanhoBase -= 2;
-    body.style.fontSize = tamanhoBase + "px";
-  }
+   
+/* LIMITADOR 200 */
+function limitarTexto(texto){
+  if(!texto) return "";
+  if(texto.length<=200) return texto;
+  return texto.substring(0,200)+"...";
 }
+
+/* =========================================================
+   ITEM 019 – AVISOS COM PRIORIDADE + TRANSIÇÃO
+   ========================================================= */
+
+let avisosGlobais=[];
+let avisoIndex=0;
 
 function renderAvisos(){
 
-  const container = document.getElementById("avisosContainer");
-  container.innerHTML = "";
+  const container=document.getElementById("avisosContainer");
 
-  if(!avisosGlobais.length) return;
+  /* 🔥 fade out suave */
+  container.style.opacity="0";
 
-  let blocosUsados = 0;
-  let i = 0;
+  setTimeout(()=>{
 
-  while(blocosUsados < 3 && i < avisosGlobais.length){
+    container.innerHTML="";
 
-    const a = avisosGlobais[(avisoIndex + i) % avisosGlobais.length];
+    for(let i=0;i<3;i++){
 
-    const prioridade = (a.prioridade || "media")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g,"");
+      if(!avisosGlobais.length) return;
 
-    const div = document.createElement("div");
-    div.className = "aviso-card prioridade-" + prioridade;
+      const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
 
-    div.innerHTML = `
-      <div>
+      const prioridade=(a.prioridade||"media")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"");
+
+      const div=document.createElement("div");
+      div.className=`aviso-card prioridade-${prioridade}`;
+
+      div.innerHTML=`
         <div class="aviso-header">
-          ⚠ ${a.titulo || ""}
+          ${a.titulo||""}
         </div>
+
         <div class="aviso-body">
-          ${a.descricao || ""}
+          ${limitarTexto(a.descricao||"")}
         </div>
-      </div>
-      <div class="aviso-footer">
-        <span>📍 ${a.local || ""}</span>
-        <span>🏷 ${a.tipo || ""}</span>
-        <span class="badge-prioridade badge-${prioridade}">
-          ${(a.prioridade || "").toUpperCase()}
-        </span>
-      </div>
-    `;
 
-    container.appendChild(div);
+        <div class="aviso-footer">
+          <span>📍 ${a.local||""}</span>
+          <span>🏷 ${a.tipo||""}</span>
+          <span class="badge-prioridade">
+            ${(a.prioridade||"").toUpperCase()}
+          </span>
+        </div>
+      `;
 
-    /* =========================
-       LÓGICA PROFISSIONAL DE OCUPAÇÃO
-       ========================= */
+      container.appendChild(div);
 
-    let ocupa = 1;
-    const tamanhoTexto = (a.descricao || "").length;
-
-    if(prioridade === "alta"){
-
-      if(tamanhoTexto > 220){
-        ocupa = 3;
-      }
-      else if(tamanhoTexto > 120){
-        ocupa = 2;
-      }
-      else{
-        ocupa = 1; // 🔥 Alta curta = 1 campo
-      }
-
-    }else{
-
-      if(tamanhoTexto > 260){
-        ocupa = 3;
-      }
-      else if(tamanhoTexto > 160){
-        ocupa = 2;
-      }
-      else{
-        ocupa = 1;
-      }
-
+      /* 🔥 animação individual */
+      setTimeout(()=>{
+        div.classList.add("show");
+      },100);
     }
 
-    if(blocosUsados + ocupa > 3){
-      container.removeChild(div);
-      break;
-    }
+    avisoIndex=(avisoIndex+1)%avisosGlobais.length;
 
-    div.style.gridRow = "span " + ocupa;
+    container.style.opacity="1";
 
-    ajustarFonteParaCabimento(div, prioridade);
-
-    blocosUsados += ocupa;
-    i++;
-  }
-
-  avisoIndex = (avisoIndex + 1) % avisosGlobais.length;
+  },300);
 }
 
-let videoTimeout = null;
+/* =========================================================
+   ITEM 020 – CLIMA PREMIUM COM SENSAÇÃO INTELIGENTE
+   ========================================================= */
+
+function atualizarClima(dados){
+
+  const temp      = Math.round(dados.main.temp);
+  const sensacao  = Math.round(dados.main.feels_like);
+  const vento     = Math.round(dados.wind.speed);
+
+  const tempEl     = document.getElementById("temperatura");
+  const sensacaoEl = document.getElementById("sensacao");
+  const ventoEl    = document.getElementById("vento");
+
+  tempEl.textContent = `${temp}°C`;
+  ventoEl.textContent = `🌬 ${vento} km/h`;
+
+  /* 🌡 Ícone térmico + texto */
+  sensacaoEl.textContent = `🌡 Sensação ${sensacao}°C`;
+
+  /* Remove classes anteriores */
+  sensacaoEl.classList.remove("calor","frio");
+
+  /* 🔥 Alerta calor */
+  if(sensacao > temp){
+    sensacaoEl.classList.add("calor");
+  }
+
+  /* ❄ Alerta frio */
+  if(sensacao < temp){
+    sensacaoEl.classList.add("frio");
+  }
+
+  /* 🔄 animação leve */
+  sensacaoEl.classList.add("clima-update");
+  tempEl.classList.add("clima-update");
+
+  setTimeout(()=>{
+    sensacaoEl.classList.remove("clima-update");
+    tempEl.classList.remove("clima-update");
+  },600);
+}
+
+/* =========================================================
+   ITEM 021  VÍDEO 
+   ========================================================= */
+let videosGlobais=[];
+let videoIndex=0;
 
 function trocarVideo(){
-
   if(!videosGlobais.length) return;
 
-  const videoData = videosGlobais[videoIndex];
-  const video = document.getElementById("adVideo");
-  const desc  = document.getElementById("videoDescricao");
+  const v=videosGlobais[videoIndex];
+  const video=document.getElementById("adVideo");
+  const bg=document.getElementById("adVideoBg");
 
-  // limpa timeout anterior
-  if(videoTimeout) clearTimeout(videoTimeout);
+  video.src=v.arquivo+"?ts="+Date.now();
+  bg.src=v.arquivo+"?ts="+Date.now();
 
-  video.pause();
-  video.src = videoData.arquivo + "?ts=" + Date.now();
   video.load();
-
-  // 🔹 Mostra anunciante + descrição
-  desc.innerHTML = `
-    <div style="font-weight:800; font-size:18px;">
-      ${videoData.anunciante || ""}
-    </div>
-    <div style="font-size:14px; opacity:.85;">
-      ${videoData.descricao || ""}
-    </div>
-  `;
+  bg.load();
 
   video.play().catch(()=>{});
+  bg.play().catch(()=>{});
 
-  video.onloadedmetadata = function(){
+  document.getElementById("videoDescricao").innerHTML=
+    `<strong>${v.anunciante||""}</strong><br>${v.descricao||""}`;
 
-    const duracao = video.duration;
-
-    // Se for maior que 80s → limitar
-    const tempoExecucao = duracao > 80 ? 80 : duracao;
-
-    videoTimeout = setTimeout(()=>{
-      videoIndex = (videoIndex + 1) % videosGlobais.length;
-      trocarVideo();
-    }, tempoExecucao * 1000);
-  };
-
-  // Se acabar antes de 80s → troca automaticamente
-  video.onended = function(){
-    videoIndex = (videoIndex + 1) % videosGlobais.length;
+  video.onended=function(){
+    videoIndex=(videoIndex+1)%videosGlobais.length;
     trocarVideo();
   };
 }
 
-  function videoProximo(){
-  if(!videosGlobais.length) return;
-  videoIndex = (videoIndex + 1) % videosGlobais.length;
-  trocarVideo();
-}
+/* =========================================================
+   ITEM 020 – CLIMA FINAL CORRIGIDO
+   ========================================================= */
 
-function videoAnterior(){
-  if(!videosGlobais.length) return;
-  videoIndex = (videoIndex - 1 + videosGlobais.length) % videosGlobais.length;
-  trocarVideo();
-}
+async function carregarClima(){
 
-/* =========================
-   LOAD DATA PRINCIPAL
-   ========================= */
-async function loadData(){
   try{
-    const r = await fetch("./data.json?ts=" + Date.now());
+
+    const rJson = await fetch("./data.json?ts=" + Date.now());
+    const json  = await rJson.json();
+
+    const cidade = json.clima?.cidade || "Tubarão";
+    const lat    = json.clima?.latitude;
+    const lon    = json.clima?.longitude;
+
+    const r = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+    );
+
     const d = await r.json();
+    const w = d.current_weather;
 
-    /* AVISOS */
-    avisosGlobais = d.avisos || [];
-    avisoIndex = 0;
-    renderAvisos();
+    const temp  = Math.round(w.temperature);
+    const vento = Math.round(w.windspeed);
 
-    /* VÍDEOS */
-    videosGlobais = d.publicidade?.videos || [];
-    videoIndex = 0;
-    trocarVideo();
+    /* Cálculo sensação térmica */
+    const sensacao = Math.round(
+      13.12 + 0.6215*temp - 11.37*Math.pow(vento,0.16) +
+      0.3965*temp*Math.pow(vento,0.16)
+    );
 
-    /* MENSAGENS */
-    const mc = document.getElementById("mensagensContainer");
-    mc.innerHTML = "";
+    const cidadeEl    = document.getElementById("cidade");
+    const tempEl      = document.getElementById("temperatura");
+    const sensacaoEl  = document.getElementById("sensacao");
+    const ventoEl     = document.getElementById("vento");
 
-    (d.mensagens || []).forEach(m => {
-      const div = document.createElement("div");
-      div.className = "mensagem-item";
-      div.textContent = m;
-      mc.appendChild(div);
-    });
+    cidadeEl.textContent = cidade;
+    tempEl.textContent   = `${temp}°C`;
+    ventoEl.textContent  = `🌬 ${vento} km/h`;
+
+    /* 🔥 Corrige ícone térmico correto */
+    sensacaoEl.textContent = `🌡 Sensação ${sensacao}°C`;
+
+    sensacaoEl.classList.remove("calor","frio");
+
+    if(sensacao > temp){
+      sensacaoEl.classList.add("calor");
+    }
+
+    if(sensacao < temp){
+      sensacaoEl.classList.add("frio");
+    }
+
+    /* animação */
+    sensacaoEl.classList.remove("clima-update");
+    void sensacaoEl.offsetWidth;
+    sensacaoEl.classList.add("clima-update");
 
   }catch(e){
-    console.error("Erro loadData:", e);
+    console.error("Erro clima:", e);
   }
 }
 
-/* =========================
-   VERSÍCULO DINÂMICO
-   ========================= */
+
+
+/* LOAD */
+async function loadData(){
+  const r=await fetch("./data.json?ts="+Date.now());
+  const d=await r.json();
+
+  avisosGlobais=d.avisos||[];
+  videosGlobais=d.publicidade?.videos||[];
+
+  renderAvisos();
+  trocarVideo();
+}
+
+   /* =========================================================
+   ITEM 022 – CARREGAR VERSÍCULO
+   ========================================================= */
 async function carregarVersiculo(){
   try{
+
     const r = await fetch(
       "https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json?ts=" + Date.now()
     );
@@ -657,65 +613,81 @@ async function carregarVersiculo(){
       "-" +
       String(hoje.getDate()).padStart(2,"0");
 
-    const versiculo = dados.versos?.[chave] || "—";
+    const versiculo = dados.versos?.[chave] || "Você tem valor diante de Deus.";
 
-    document.getElementById("versiculo").textContent = versiculo;
+    const el = document.getElementById("versiculo");
+
+    if(el){
+      el.textContent = versiculo;
+    }
+
   }catch(e){
     console.error("Erro versículo:", e);
   }
 }
 
-  async function carregarClima(){
-  try{
+   /* =========================================================
+   ITEM 023 – INICIALIZAÇÃO DO VERSÍCULO
+   ========================================================= */
+carregarVersiculo();
+setInterval(carregarVersiculo,3600000);
 
-    const rJson = await fetch("./data.json?ts=" + Date.now());
-    const json = await rJson.json();
+loadData();
+carregarClima();
+setInterval(renderAvisos,8000);
+setInterval(loadData,60000);
+setInterval(carregarClima,600000);
 
-    const cidade = json.clima?.cidade || "Tubarão";
-    const lat = json.clima?.latitude || -28.4667;
-    const lon = json.clima?.longitude || -49.0069;
+/* =========================================================
+   ITEM 030 – MOLDURA TV FLUTUANTE
+   ========================================================= */
 
-    const r = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
-    );
+.video-wrapper{
+  position:relative;
+  border-radius:clamp(12px, 1.2vw, 28px);
+  padding:clamp(10px, 1vw, 22px);
+  background:linear-gradient(145deg,#111,#000);
 
-    const d = await r.json();
-    const w = d.current_weather;
+  box-shadow:
+    0 30px 60px rgba(0,0,0,.45),
+    0 10px 25px rgba(0,0,0,.35),
+    inset 0 2px 6px rgba(255,255,255,.06);
 
-    const temp = w.temperature;
-    const vento = w.windspeed;
-
-    const sensacao = Math.round(
-      13.12 + 0.6215*temp - 11.37*Math.pow(vento,0.16) +
-      0.3965*temp*Math.pow(vento,0.16)
-    );
-
-    const climaEl = document.getElementById("clima");
-
-    if(climaEl){
-      climaEl.textContent =
-        `${cidade} • ${temp}°C (Sensação ${sensacao}°C) • Vento ${vento} km/h`;
-    }
-
-  }catch(e){
-    console.error("Erro clima:", e);
-  }
+  transition:all .4s ease;
 }
 
-/* =========================
-   INICIALIZAÇÃO
-   ========================= */
-loadData();
-trocarVideo();
-carregarVersiculo();
-carregarClima();
-/* ROTACIONAR */
-setInterval(renderAvisos, 8000);
-setInterval(carregarClima, 600000);
-/* ATUALIZAÇÕES */
-setInterval(loadData, 60000);           // Atualiza dados
-setInterval(carregarVersiculo, 3600000); // Atualiza versículo a cada hora
+/* Tela interna */
+.video-wrapper video,
+.video-wrapper img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:clamp(8px, .8vw, 20px);
+  background:black;
+}
 
+/* Leve brilho superior estilo TV */
+.video-wrapper::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:40%;
+  border-radius:inherit;
+
+  background:linear-gradient(
+    to bottom,
+    rgba(255,255,255,.08),
+    rgba(255,255,255,0)
+  );
+
+  pointer-events:none;
+}
+
+
+
+   
 </script>
 
 </body>
