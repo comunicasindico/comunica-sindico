@@ -411,10 +411,9 @@ html, body{
 }
 
 /* =========================================================
-   MOBILE LANDSCAPE – AJUSTE DEFINITIVO
+   MOBILE LANDSCAPE – 2 AVISOS + VÍDEO COMPACTO
    ========================================================= */
 @media (max-width:768px) and (orientation: landscape){
-
   html, body{
     height:100vh;
     overflow:hidden;
@@ -423,27 +422,40 @@ html, body{
     height:100vh;
     padding:6px;
   }
-  /* 🔥 ESCALA GLOBAL AUTOMÁTICA */
-  .wrapper{
-    transform:scale(.82);
-    transform-origin:top center;
-  }
-  /* Ajuste de grid */
+  /* Layout widescreen */
   .main{
     height:100%;
     grid-template-columns:1.1fr 1.6fr;
     gap:8px;
   }
+  /* 🔥 MOSTRAR APENAS 2 AVISOS */
   .avisos{
-    grid-template-rows:repeat(3,1fr);
+    grid-template-rows:repeat(2,1fr);
     gap:8px;
+  }
+  /* Oculta o 3º aviso */
+  .avisos .aviso-card:nth-child(3){
+    display:none;
   }
   .aviso-card{
     padding:8px;
   }
   .right-col{
-    grid-template-rows:1fr auto auto;
+    grid-template-rows:auto auto auto;
     gap:8px;
+  }
+  /* 🔥 VÍDEO MAIS COMPACTO */
+  .videoWrap{
+    aspect-ratio:16/9;
+    max-height:38vh;
+  }
+  .videoDescricao{
+    font-size:12px;
+    padding:6px;
+  }
+  .mensagens{
+    font-size:11px;
+    padding:6px;
   }
   .header{
     padding:6px 10px;
@@ -451,11 +463,11 @@ html, body{
   .footer{
     padding:6px 10px;
   }
-  .videoWrap{
-    height:100%;
-    aspect-ratio:auto;
+  body{
+    font-size:clamp(10px,1.2vw,13px);
   }
 }
+
 
 
 .videoNav{
