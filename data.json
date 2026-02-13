@@ -101,7 +101,7 @@
     {
       "id": "001",
       "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme.",
+      "descricao": "Não informe a ninguém o código do alarme. É sua segurança.",
       "prioridade": "Alta",
       "tipo": "",
       "local": "Hall de Entrada",
