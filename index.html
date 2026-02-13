@@ -210,13 +210,18 @@ async function loadData(){
 try{
 const r=await fetch("./data.json?ts="+Date.now(),{cache:"no-store"});
 const d=await r.json();
+
 avisosGlobais=(d.avisos||[]).filter(a=>!avisoExpirado(a));
 videosGlobais = d.publicidade?.videos || [];
+  
 if(avisosGlobais.length){
   avisoIndex = Math.floor(Math.random()*avisosGlobais.length);
 }
+
 if(videosGlobais.length){videoIndex = Math.floor(Math.random()*videosGlobais.length);trocarVideo();}
+
 renderAvisos();
+
 catch(e){console.error(e);}
 }
 /* ITEM 021 – VERSÍCULO */
