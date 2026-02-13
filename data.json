@@ -136,8 +136,18 @@
       "fim": "28/07/26 - 16:38",
       "emergencia": false
     },
+    "id": "006",
+      "titulo": "TESTE",
+      "descricao": "VAI SUMIR.",
+      "prioridade": "Baixa",
+      "tipo": "EXCLUIR",
+      "local": "Lixeira",
+      "inicio": "11/02/26 - 16:38",
+      "fim": "13/02/26 - 00:15",
+      "emergencia": false
+    },
     {
-      "id": "006",
+      "id": "007",
       "titulo": "Segurança",
       "descricao": "Teste de Estanqueidade na Canalização de GLP/GN realizado conforme normas técnicas. Nenhum vazamento identificado.",
       "prioridade": "Baixa",
