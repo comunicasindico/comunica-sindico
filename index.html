@@ -685,15 +685,22 @@ async function carregarClima(){
 
 /* LOAD */
 async function loadData(){
-  const r=await fetch("./data.json?ts="+Date.now());
-  const d=await r.json();
-
-  avisosGlobais=d.avisos||[];
-  videosGlobais=d.publicidade?.videos||[];
-
-  renderAvisos();
-  trocarVideo();
+  try{
+    const r = await fetch("./data.json?ts=" + Date.now(), {
+      cache: "no-store"
+    });
+    const d = await r.json();
+    avisosGlobais = d.avisos || [];
+    videosGlobais = d.publicidade?.videos || [];
+    renderAvisos();
+    if(videosGlobais.length){
+      trocarVideo();
+    }
+  }catch(e){
+    console.error("Erro loadData:", e);
+  }
 }
+
 
    /* =========================================================
    ITEM 022 – CARREGAR VERSÍCULO
@@ -769,6 +776,10 @@ if(videoPrincipal){
   });
 }
 
+/* 🔄 RELOAD COMPLETO A CADA 1 HORA */
+setInterval(()=>{
+  location.reload();
+}, 3600000);
 
 
    
