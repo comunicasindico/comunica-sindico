@@ -99,15 +99,6 @@
   },
   "avisos": [
     {
-      "id": "a_669f16a1d5fba_1770955028411",
-      "titulo": "SUMIR DATA AVISO",
-      "descricao": "SUMIR AVISO",
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-13T03:57:08.411Z",
-      "fim": "13/02/26 - 01:02"
-    },
-    {
       "id": "001",
       "titulo": "Alarme no Hall",
       "descricao": "Não informe a ninguém o código do alarme.",
