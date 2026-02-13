@@ -598,6 +598,12 @@ function trocarVideo(){
   video.play().catch(()=>{});
   bg.play().catch(()=>{});
 
+   video.style.opacity = "0";
+      video.onloadeddata = () => {
+      video.style.opacity = "1";
+};
+
+
   document.getElementById("videoDescricao").innerHTML=
     `<strong>${v.anunciante||""}</strong><br>${v.descricao||""}`;
 /* 🔵 LED DINÂMICO AUTOMÁTICO */
