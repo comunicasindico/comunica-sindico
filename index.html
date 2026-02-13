@@ -380,27 +380,23 @@ html, body{
     height:auto;
     grid-template-rows:auto auto auto;
   }
- /* =========================================================
-   VÍDEO ESTILO IPHONE – MOBILE
+/* =========================================================
+   VÍDEO MOBILE – EQUIVALENTE A 2 AVISOS
    ========================================================= */
 .videoWrap{
-  width:92%;
-  max-width:420px;
-  margin:20px auto;
-  aspect-ratio:9/19.5; /* proporção iPhone */
-  border-radius:40px;
-  padding:10px;
-  background:#000;
-  box-shadow:
-    0 20px 40px rgba(0,0,0,.5),
-    inset 0 0 10px rgba(255,255,255,.05);
-  overflow:hidden;
-}
-   #adVideo,
-#adVideoBg{
-  object-fit:cover;
-}
+  width:100%;
+  max-width:100%;
 
+  aspect-ratio:16/9;   /* volta para horizontal */
+  max-height:50vh;     /* controla altura */
+  
+  margin:10px 0;
+}
+   
+   #adVideo,
+   #adVideoBg{
+     object-fit:contain;   /* não corta conteúdo */
+}
 }
 
 .videoNav{
