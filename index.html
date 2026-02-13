@@ -615,13 +615,7 @@ const cor = cores[videoIndex % cores.length];
 
   document.querySelector(".videoWrap")
     .style.setProperty("--led-color", cor);
-
-  /* 🔥 TROCA AUTOMÁTICA AO TERMINAR */
-  video.onended = () => {
-    videoIndex = (videoIndex + 1) % videosGlobais.length;
-    trocarVideo();
-  };
-}
+ }
 
 
 /* =========================================================
@@ -758,6 +752,18 @@ if(prev){
 if(next){
   next.addEventListener("click", ()=>{
     if(!videosGlobais.length) return;
+    videoIndex = (videoIndex + 1) % videosGlobais.length;
+    trocarVideo();
+  });
+}
+   
+/* 🔥 TROCA AUTOMÁTICA QUANDO TERMINA */
+const videoPrincipal = document.getElementById("adVideo");
+
+if(videoPrincipal){
+  videoPrincipal.addEventListener("ended", ()=>{
+    if(!videosGlobais.length) return;
+
     videoIndex = (videoIndex + 1) % videosGlobais.length;
     trocarVideo();
   });
