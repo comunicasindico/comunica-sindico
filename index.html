@@ -192,46 +192,71 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 008 – TV LED PREMIUM REALISTA
+   ITEM 008 – TV LED PREMIUM COM LED STANDBY
    ========================================================= */
 .videoWrap{
   position:relative;
-  border-radius:26px;
-  padding:1.2%;
+  border-radius:28px;
+  padding:1.4%;
   background:linear-gradient(145deg,#000,#111,#000);
   box-shadow:
     0 0 0 4px #000,
-    0 20px 50px rgba(0,0,0,.8),
-    inset 0 0 30px rgba(255,255,255,.05);
+    0 25px 60px rgba(0,0,0,.85),
+    inset 0 0 40px rgba(255,255,255,.04);
   overflow:hidden;
 }
 
 /* Reflexo superior leve */
-.videoWrap::after{
+.videoWrap::before{
   content:"";
   position:absolute;
   top:0;
   left:0;
   right:0;
-  height:28%;
-  border-radius:26px;
+  height:30%;
+  border-radius:28px;
   background:linear-gradient(to bottom,
     rgba(255,255,255,.12),
     transparent);
   pointer-events:none;
 }
 
-/* Fundo fosco */
+/* 🔵 LED azul inferior central */
+.videoWrap::after{
+  content:"";
+  position:absolute;
+  bottom:6px;
+  left:50%;
+  transform:translateX(-50%);
+  width:80px;
+  height:6px;
+  border-radius:20px;
+  background:linear-gradient(to right,#0ff,#00aaff,#0ff);
+  box-shadow:
+    0 0 10px #00aaff,
+    0 0 25px #00aaff,
+    0 0 45px rgba(0,170,255,.8);
+  animation:ledPulse 2.5s infinite ease-in-out;
+}
+
+/* animação sutil do LED */
+@keyframes ledPulse{
+  0%{ opacity:.6; }
+  50%{ opacity:1; }
+  100%{ opacity:.6; }
+}
+
+/* Fundo fosco preenchendo toda área */
 #adVideoBg{
   position:absolute;
   inset:2%;
   width:96%;
   height:96%;
   object-fit:cover;
-  filter:blur(40px);
-  transform:scale(1.2);
-  opacity:.6;
-  border-radius:16px;
+  filter:blur(45px);
+  transform:scale(1.3);
+  opacity:.65;
+  border-radius:18px;
 }
 
 /* Tela principal */
@@ -241,9 +266,10 @@ html, body{
   width:96%;
   height:96%;
   object-fit:contain;
-  border-radius:16px;
+  border-radius:18px;
   background:#000;
 }
+
 
 /* =========================================================
    ITEM 009 – DESCRIÇÃO
