@@ -826,26 +826,31 @@ const GH_TOKEN_SESSION_KEY = "CS_GH_TOKEN_SESSION";
 const GH_TOKEN_LOCAL_KEY   = "CS_GH_TOKEN_LOCAL";
 
 function getToken(){
-  const v = ($("token").value || "").trim();
-  if(v) return v;
-
   try{
-    return (
-      (sessionStorage.getItem(GH_TOKEN_SESSION_KEY)||"").trim() ||
-      (localStorage.getItem(GH_TOKEN_LOCAL_KEY)||"").trim() ||
-      ""
-    );
+    // prioridade: localStorage persistente
+    const local = (localStorage.getItem(GH_TOKEN_LOCAL_KEY) || "").trim();
+    if(local) return local;
+
+    // fallback session
+    const sess = (sessionStorage.getItem(GH_TOKEN_SESSION_KEY) || "").trim();
+    if(sess) return sess;
+
+    // fallback campo digitado
+    const input = ($("token").value || "").trim();
+    return input || "";
+
   }catch(e){
     return "";
   }
 }
+
 
 function saveToken(){
   const v = ($("token").value || "").trim();
   if(!v){ alert("Cole seu token primeiro."); return; }
 
   try{
-    // Salva sempre de forma persistente
+    // salvar permanente
     localStorage.setItem(GH_TOKEN_LOCAL_KEY, v);
     sessionStorage.setItem(GH_TOKEN_SESSION_KEY, v);
   }catch(e){}
@@ -853,6 +858,7 @@ function saveToken(){
   $("token").value = "";
   alert("✅ Token salvo permanentemente neste navegador.");
 }
+
 
 function clearToken(){
   try{ sessionStorage.removeItem(GH_TOKEN_SESSION_KEY); }catch(e){}
@@ -870,6 +876,7 @@ function initTokenUI(){
     }
   }catch(e){}
 }
+
 
 /* ============================
    AUTOCARREGAR
