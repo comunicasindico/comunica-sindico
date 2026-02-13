@@ -138,13 +138,13 @@
     },
      {
     "id": "006",
-      "titulo": "TESTE",
+      "titulo": "TESTE 00:24",
       "descricao": "VAI SUMIR.",
       "prioridade": "Baixa",
       "tipo": "EXCLUIR",
       "local": "Lixeira",
       "inicio": "11/02/26 - 16:38",
-      "fim": "13/02/26 - 00:17",
+      "fim": "13/02/26 - 00:24",
       "emergencia": false
     },
     {
