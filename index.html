@@ -354,9 +354,45 @@ html, body{
    ITEM 012 – MOBILE
    ========================================================= */
 @media (max-width:768px){
-  body{ overflow:auto; }
-  .main{ grid-template-columns:1fr; }
+
+  /* 🔓 Libera rolagem real */
+  html, body{
+    height:auto;
+    overflow:auto;
+  }
+
+  .wrapper{
+    height:auto;
+    min-height:100vh;
+  }
+
+  /* Layout em coluna */
+  .main{
+    grid-template-columns:1fr;
+    grid-template-rows:auto;
+    height:auto;
+  }
+
+  /* Avisos empilhados */
+  .avisos{
+    height:auto;
+    grid-template-rows:repeat(3, auto);
+  }
+
+  /* Coluna direita flui naturalmente */
+  .right-col{
+    height:auto;
+    grid-template-rows:auto auto auto;
+  }
+
+  /* 🔥 VÍDEO GRANDE (equivalente a 2 avisos) */
+  .videoWrap{
+    min-height:60vh;
+    aspect-ratio:16/9;
+  }
+
 }
+
 
 .videoNav{
   position:absolute;
