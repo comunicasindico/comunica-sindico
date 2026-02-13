@@ -467,7 +467,45 @@ function limitarTexto(texto){
   if(texto.length<=200) return texto;
   return texto.substring(0,200)+"...";
 }
-   
+
+   /* =========================================================
+   FILTRO – EXPIRAÇÃO BASEADO EM "fim"
+   ========================================================= */
+
+function avisoExpirado(aviso){
+  try{
+
+    if(!aviso.fim) return false;
+
+    const partes = aviso.fim.split(" - ");
+    if(partes.length !== 2) return false;
+
+    const [dataStr, horaStr] = partes;
+
+    const [dia, mes, ano] = dataStr.split("/");
+    const [hora, minuto]  = horaStr.split(":");
+
+    const anoCompleto = Number(ano) < 100
+      ? 2000 + Number(ano)
+      : Number(ano);
+
+    const dataFim = new Date(
+      anoCompleto,
+      Number(mes) - 1,
+      Number(dia),
+      Number(hora),
+      Number(minuto)
+    );
+
+    if(isNaN(dataFim.getTime())) return false;
+
+    return new Date() > dataFim;
+
+  }catch(e){
+    return false;
+  }
+}
+
 /* =========================================================
    FILTRO – EXPIRAÇÃO AUTOMÁTICA
    ========================================================= */
