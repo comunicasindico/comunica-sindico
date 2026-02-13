@@ -473,10 +473,9 @@ function limitarTexto(texto){
    ========================================================= */
 
 function avisoExpirado(aviso){
+  if(!aviso.fim) return false;
+
   try{
-
-    if(!aviso.fim) return false;
-
     const partes = aviso.fim.split(" - ");
     if(partes.length !== 2) return false;
 
@@ -485,26 +484,24 @@ function avisoExpirado(aviso){
     const [dia, mes, ano] = dataStr.split("/");
     const [hora, minuto]  = horaStr.split(":");
 
-    const anoCompleto = Number(ano) < 100
-      ? 2000 + Number(ano)
-      : Number(ano);
+    const anoCompleto = 2000 + Number(ano);
 
     const dataFim = new Date(
       anoCompleto,
       Number(mes) - 1,
       Number(dia),
       Number(hora),
-      Number(minuto)
+      Number(minuto),
+      0
     );
 
-    if(isNaN(dataFim.getTime())) return false;
-
-    return new Date() > dataFim;
+    return Date.now() > dataFim.getTime();
 
   }catch(e){
     return false;
   }
 }
+
 
 /* =========================================================
    FILTRO – EXPIRAÇÃO AUTOMÁTICA
@@ -534,7 +531,7 @@ let avisosGlobais=[];
 let avisoIndex=0;
 
 function renderAvisos(){
-
+  avisosGlobais = avisosGlobais.filter(a => !avisoExpirado(a));
   const container=document.getElementById("avisosContainer");
 
   /* 🔥 fade out suave */
