@@ -198,7 +198,7 @@ html, body{
   position:relative;
   border-radius:28px;
   padding:1.4%;
-  background:#000;
+  background:transparent;
   box-shadow:
     0 0 0 4px #000,
     0 25px 60px rgba(0,0,0,.85),
@@ -245,30 +245,28 @@ html, body{
   100%{ opacity:.6; }
 }
 
-/* 🎬 Fundo fosco preto usando o próprio vídeo */
+/* Fundo fosco REAL dentro da tela */
 #adVideoBg{
   position:absolute;
-  top:-15%;
-  left:-15%;
-  width:130%;
-  height:130%;
+  inset:0;
+  width:100%;
+  height:100%;
   object-fit:cover;
 
-  filter:blur(80px) brightness(.18) contrast(1.2);
-  transform:scale(1.2);
+  filter:blur(70px) brightness(.35);
+  transform:scale(1.4);
 
-  z-index:0;
+  z-index:1;
 }
 
-/* Tela principal */
+/* Vídeo principal */
 #adVideo{
   position:absolute;
   inset:0;
   width:100%;
   height:100%;
   object-fit:contain;
-  border-radius:18px;
-  background:#000;
+  background:transparent; /* REMOVE O PRETO */
   z-index:2;
 }
 
