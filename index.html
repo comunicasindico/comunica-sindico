@@ -360,37 +360,45 @@ html, body{
     height:auto;
     overflow:auto;
   }
-
   .wrapper{
     height:auto;
     min-height:100vh;
   }
-
   /* Layout em coluna */
   .main{
     grid-template-columns:1fr;
     grid-template-rows:auto;
     height:auto;
   }
-
   /* Avisos empilhados */
   .avisos{
     height:auto;
     grid-template-rows:repeat(3, auto);
   }
-
   /* Coluna direita flui naturalmente */
   .right-col{
     height:auto;
     grid-template-rows:auto auto auto;
   }
-
- /* 🔥 VÍDEO EQUILIBRADO */
+ /* =========================================================
+   VÍDEO ESTILO IPHONE – MOBILE
+   ========================================================= */
 .videoWrap{
-  width:100%;
-  aspect-ratio:16/9;
-  max-height:45vh;
-  margin:0 auto;
+  width:92%;
+  max-width:420px;
+  margin:20px auto;
+  aspect-ratio:9/19.5; /* proporção iPhone */
+  border-radius:40px;
+  padding:10px;
+  background:#000;
+  box-shadow:
+    0 20px 40px rgba(0,0,0,.5),
+    inset 0 0 10px rgba(255,255,255,.05);
+  overflow:hidden;
+}
+   #adVideo,
+#adVideoBg{
+  object-fit:cover;
 }
 
 }
