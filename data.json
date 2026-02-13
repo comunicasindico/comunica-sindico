@@ -2,36 +2,49 @@
   "titulo": "Comunica Síndico — Condôminos",
   "subtitulo": "Painel Informativo",
   "referencia": "",
-
   "temaDoDia": {
     "modo": "automatico",
     "temasPorDiaSemana": {}
   },
-
   "rotacao": {
     "ativar": false,
     "intervaloSeg": 12,
-    "quantidadePorTela": 1,
+    "quantidadePorTela": 3,
     "pausarNoMouse": true,
     "mostrarProgresso": true
   },
-
   "emergencia": {
     "ativar": true,
     "intervaloSeg": 4,
     "piscar": true,
     "somenteAlta": true
   },
-
   "mensagens": [
-    { "titulo": "🌿 Sustentabilidade", "texto": "Separe corretamente seu lixo reciclável." },
-    { "titulo": "🔐 Segurança", "texto": "Nunca compartilhe senhas do condomínio." },
-    { "titulo": "📰 Notícias", "texto": "Sem notícias no momento." },
-    { "titulo": "💡 Economia", "texto": "Apague as luzes ao sair das áreas comuns." },
-    { "titulo": "📅 Lembrete", "texto": "Reunião condominial todo fim do mês às 19h." },
-    { "titulo": "📦 Entregas", "texto": "Retire suas encomendas na Caixinha no hall." }
+    {
+      "titulo": "🌿 Sustentabilidade",
+      "texto": "Separe corretamente seu lixo reciclável."
+    },
+    {
+      "titulo": "🔐 Segurança",
+      "texto": "Nunca compartilhe senhas do condomínio."
+    },
+    {
+      "titulo": "📰 Notícias",
+      "texto": "Sem notícias no momento."
+    },
+    {
+      "titulo": "💡 Economia",
+      "texto": "Apague as luzes ao sair das áreas comuns."
+    },
+    {
+      "titulo": "📅 Lembrete",
+      "texto": "Reunião condominial todo fim do mês às 19h."
+    },
+    {
+      "titulo": "📦 Entregas",
+      "texto": "Retire suas encomendas na Caixinha no hall."
+    }
   ],
-
   "publicidade": {
     "ativar": true,
     "shuffle": true,
@@ -71,15 +84,19 @@
         "anunciante": "Livro Físico e Digital",
         "descricao": "SWOT Cristão - O poder dos relacionamentos saudáveis."
       }
-    ]
+    ],
+    "cidadeTitulo": "Mensagens no Brasil",
+    "cabecalhoImagem": {
+      "ativar": false,
+      "url": ""
+    }
   },
-
   "clima": {
     "cidade": "Tubarão",
     "latitude": -28.4667,
-    "longitude": -49.0069
+    "longitude": -49.0069,
+    "timezone": "America/Sao_Paulo"
   },
-
   "avisos": [
     {
       "id": "001",
@@ -90,7 +107,10 @@
       "local": "Hall de Entrada",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/03/26 - 16:38",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-13T03:45:23.752Z"
     },
     {
       "id": "002",
@@ -101,7 +121,10 @@
       "local": "Salão de Festas",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/04/26 - 16:38",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-13T03:45:23.752Z"
     },
     {
       "id": "003",
@@ -112,7 +135,10 @@
       "local": "Piscina",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/05/26 - 16:38",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-13T03:45:23.752Z"
     },
     {
       "id": "004",
@@ -123,7 +149,10 @@
       "local": "Garagem",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/06/26 - 16:38",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-13T03:45:23.752Z"
     },
     {
       "id": "005",
@@ -134,18 +163,24 @@
       "local": "Lixeira",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/07/26 - 16:38",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-13T03:45:23.752Z"
     },
-     {
-    "id": "006",
+    {
+      "id": "006",
       "titulo": "TESTE 00:24",
       "descricao": "VAI SUMIR.",
       "prioridade": "Baixa",
       "tipo": "EXCLUIR",
       "local": "Lixeira",
       "inicio": "11/02/26 - 16:38",
-      "fim": "13/02/26 - 00:24",
-      "emergencia": false
+      "fim": "13/02/26 - 00:48",
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-13T03:45:23.752Z"
     },
     {
       "id": "007",
@@ -156,7 +191,17 @@
       "local": "Hall",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/03/26 - 16:38",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-02-13T03:45:23.752Z"
     }
-  ]
+  ],
+  "condominio": "Comunica Síndico",
+  "alertaUrgente": {
+    "ativar": false,
+    "titulo": "ALERTA URGENTE",
+    "mensagem": "",
+    "piscar": true
+  }
 }
