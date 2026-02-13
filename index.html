@@ -411,7 +411,7 @@ html, body{
 }
 
 /* =========================================================
-   MOBILE LANDSCAPE (CELULAR DEITADO)
+   MOBILE LANDSCAPE – AJUSTE DEFINITIVO
    ========================================================= */
 @media (max-width:768px) and (orientation: landscape){
 
@@ -419,60 +419,43 @@ html, body{
     height:100vh;
     overflow:hidden;
   }
-
   .wrapper{
     height:100vh;
-    padding:8px;
+    padding:6px;
+  }
+  /* 🔥 ESCALA GLOBAL AUTOMÁTICA */
+  .wrapper{
+    transform:scale(.88);
+    transform-origin:top center;
   }
 
-  /* Compactação automática */
-  body{
-    font-size:clamp(10px,1.2vw,14px);
-  }
-
-  .header{
-    padding:6px 10px;
-  }
-
-  .footer{
-    padding:6px 10px;
-  }
-
+  /* Ajuste de grid */
   .main{
     height:100%;
     grid-template-columns:1.1fr 1.6fr;
-    gap:10px;
+    gap:8px;
   }
-
   .avisos{
-    height:100%;
     grid-template-rows:repeat(3,1fr);
-    gap:10px;
+    gap:8px;
   }
 
   .aviso-card{
-    padding:10px;
+    padding:8px;
   }
-
   .right-col{
-    height:100%;
     grid-template-rows:1fr auto auto;
-    gap:10px;
+    gap:8px;
   }
-
+  .header{
+    padding:6px 10px;
+  }
+  .footer{
+    padding:6px 10px;
+  }
   .videoWrap{
     height:100%;
     aspect-ratio:auto;
-    max-height:none;
-  }
-
-  .videoDescricao{
-    padding:8px;
-    font-size:13px;
-  }
-
-  .mensagens{
-    font-size:12px;
   }
 }
 
