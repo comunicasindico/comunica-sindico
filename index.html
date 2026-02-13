@@ -410,14 +410,12 @@ html, body{
 }
 
 /* =========================================================
-   MOBILE LANDSCAPE – ESCALA TOTAL DO PAINEL
+   MOBILE LANDSCAPE – ESCALA DINÂMICA PRECISA
    ========================================================= */
 @media (max-width:768px) and (orientation: landscape){
   html,body{height:100vh;overflow:hidden;}
   .wrapper{
-    height:100vh;
-    padding:0;
-    transform:scale(calc(100vh / 1000));
+    height:auto;
     transform-origin:top center;
   }
 }
@@ -900,6 +898,24 @@ setInterval(()=>{
   location.reload();
 }, 3600000);
 
+/* =========================================================
+   ESCALA DINÂMICA AUTOMÁTICA – MOBILE LANDSCAPE
+   ========================================================= */
+function ajustarEscalaLandscape(){
+  if(window.innerWidth <= 768 && window.innerWidth > window.innerHeight){
+    const wrapper = document.querySelector(".wrapper");
+    wrapper.style.transform = "scale(1)";
+    const alturaReal = wrapper.scrollHeight;
+    const alturaTela = window.innerHeight;
+    const escala = alturaTela / alturaReal;
+    wrapper.style.transform = `scale(${escala})`;
+  }else{
+    const wrapper = document.querySelector(".wrapper");
+    wrapper.style.transform = "scale(1)";
+  }
+}
+window.addEventListener("load",ajustarEscalaLandscape);
+window.addEventListener("resize",ajustarEscalaLandscape);
 
    
 </script>
