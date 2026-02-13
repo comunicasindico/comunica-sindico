@@ -638,6 +638,74 @@ function setStatus(text, type){
 function safeClone(obj){ return JSON.parse(JSON.stringify(obj ?? null)); }
 function prettyJson(obj){ return JSON.stringify(obj, null, 2); }
 
+  /* ============================
+   LIMPAR AVISOS EXPIRADOS (campo "fim")
+   ============================ */
+function removerAvisosExpirados(){
+
+  if(!DATA || !Array.isArray(DATA.avisos)) return;
+
+  DATA.avisos = DATA.avisos.filter(aviso => {
+
+    if(!aviso.fim) return true;
+
+    try{
+      const [dataStr, horaStr] = aviso.fim.split("-").map(p => p.trim());
+      const [dia, mes, ano] = dataStr.split("/").map(n => parseInt(n.trim()));
+      const [hora, minuto]  = horaStr.split(":").map(n => parseInt(n.trim()));
+
+      const anoCompleto = ano < 100 ? 2000 + ano : ano;
+
+      const dataFim = new Date(
+        anoCompleto,
+        mes - 1,
+        dia,
+        hora,
+        minuto,
+        0
+      );
+
+      return Date.now() <= dataFim.getTime();
+
+    }catch(e){
+      return true;
+    }
+
+  });
+
+}
+
+  /* ============================
+   VERIFICA SE AVISO ESTÁ VENCIDO
+   ============================ */
+function avisoEstaVencido(aviso){
+
+  if(!aviso.fim) return false;
+
+  try{
+    const [dataStr, horaStr] = aviso.fim.split("-").map(p => p.trim());
+    const [dia, mes, ano] = dataStr.split("/").map(n => parseInt(n.trim()));
+    const [hora, minuto]  = horaStr.split(":").map(n => parseInt(n.trim()));
+
+    const anoCompleto = ano < 100 ? 2000 + ano : ano;
+
+    const dataFim = new Date(
+      anoCompleto,
+      mes - 1,
+      dia,
+      hora,
+      minuto,
+      0
+    );
+
+    return Date.now() > dataFim.getTime();
+
+  }catch(e){
+    return false;
+  }
+}
+
+  
 /* ============================
    LOGIN (senha local)
    ✅ AJUSTE: sempre pedir senha ao abrir (sessão não persiste)
@@ -1066,15 +1134,30 @@ function renderAvisos(){
   }
 
   DATA.avisos.forEach((a, idx)=>{
-    const wrap = document.createElement("div");
-    wrap.className = "item";
+   const wrap = document.createElement("div");
+wrap.className = "item";
+
+if(avisoEstaVencido(a)){
+  wrap.style.border = "2px solid rgba(255,90,90,.75)";
+  wrap.style.background = "linear-gradient(180deg, rgba(255,0,0,.18), rgba(40,0,0,.35))";
+}
 
     const col = document.createElement("div");
     col.className = "col";
 
     const chip = document.createElement("div");
     chip.className = "chip";
-    chip.textContent = `#${idx+1}  ${a.nivel}  •  ${a.ativo ? "ATIVO" : "INATIVO"}  •  id: ${a.id}`;
+   
+    const vencido = avisoEstaVencido(a);
+    chip.textContent =
+      `#${idx+1}  ${a.nivel}  •  ${a.ativo ? "ATIVO" : "INATIVO"}`
+      + (vencido ? "  •  VENCIDO" : "")
+      + `  •  id: ${a.id}`;
+    if(vencido){
+      chip.style.color = "rgba(255,200,200,.95)";
+      chip.style.borderColor = "rgba(255,90,90,.55)";
+    }    
+
     col.appendChild(chip);
 
     const row1 = document.createElement("div");
@@ -1429,7 +1512,12 @@ async function publishToGitHub(){
   }
 
   rebuildJsonView();
-  const contentStr = prettyJson(DATA);
+
+/* 🔥 LIMPA AVISOS VENCIDOS ANTES DE PUBLICAR */
+removerAvisosExpirados();
+
+const contentStr = prettyJson(DATA);
+
 
   try{
     setStatus("Publicando…","");
