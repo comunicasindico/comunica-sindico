@@ -198,7 +198,7 @@ html, body{
   position:relative;
   border-radius:28px;
   padding:1.4%;
-  background:transparent;
+  background:#000;   /* 🔥 FUNDO REAL */
   box-shadow:
     0 0 0 4px #000,
     0 25px 60px rgba(0,0,0,.85),
@@ -247,14 +247,14 @@ html, body{
 
 /* Fundo fosco interno */
 #adVideoBg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+ position:absolute;
+  inset:-20%;
+  width:140%;
+  height:140%;
   object-fit:cover;
 
-  filter:blur(60px) brightness(.35);
-  transform:scale(1.3);
+  filter:blur(80px) brightness(.25);
+  transform:scale(1.2);
 
   z-index:0;              /* 🔥 FICA ATRÁS */
   pointer-events:none;    /* 🔥 NÃO BLOQUEIA */
@@ -771,16 +771,6 @@ if(next){
   });
 }
 
-  if(!videosGlobais.length) return;
-  videoIndex = (videoIndex - 1 + videosGlobais.length) % videosGlobais.length;
-  trocarVideo();
-});
-
-document.querySelector(".nextBtn").addEventListener("click", ()=>{
-  if(!videosGlobais.length) return;
-  videoIndex = (videoIndex + 1) % videosGlobais.length;
-  trocarVideo();
-});
 
 
    
