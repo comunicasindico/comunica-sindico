@@ -873,6 +873,7 @@ function initTokenUI(){
     const saved = (localStorage.getItem(GH_TOKEN_LOCAL_KEY)||"").trim();
     if(saved){
       sessionStorage.setItem(GH_TOKEN_SESSION_KEY, saved);
+      $("token").value = saved; // apenas visual
     }
   }catch(e){}
 }
