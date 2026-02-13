@@ -560,24 +560,23 @@ function trocarVideo(){
 
   document.getElementById("videoDescricao").innerHTML=
     `<strong>${v.anunciante||""}</strong><br>${v.descricao||""}`;
-/* 🔵 LED DINÂMICO POR TIPO */
-const tipo = (v.tipo || "").toLowerCase();
+/* 🔵 LED DINÂMICO AUTOMÁTICO */
+const nome = (v.anunciante || "").toLowerCase();
 
-let cor = "#00aaff"; // padrão azul
+let cor = "#00aaff"; // azul padrão
 
-if(tipo.includes("promo")){
-  cor = "#00ff88"; // verde promoção
+if(nome.includes("calibra")){
+  cor = "#00ff88"; // verde
 }
-else if(tipo.includes("institucional")){
-  cor = "#00aaff"; // azul institucional
+else if(nome.includes("newpet")){
+  cor = "#ff2b2b"; // vermelho
 }
-else if(tipo.includes("alerta")){
-  cor = "#ff2b2b"; // vermelho alerta
+else if(nome.includes("farmacia")){
+  cor = "#ffd700"; // dourado
 }
-else if(tipo.includes("premium")){
-  cor = "#ffd700"; // dourado premium
+else{
+  cor = "#00aaff"; // azul institucional padrão
 }
-
 document.querySelector(".videoWrap")
   .style.setProperty("--led-color", cor);
 
