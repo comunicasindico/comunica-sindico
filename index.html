@@ -192,31 +192,57 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 008 – VÍDEO COM FUNDO FOSCO
+   ITEM 008 – TV LED PREMIUM REALISTA
    ========================================================= */
 .videoWrap{
   position:relative;
-  border-radius:20px;
+  border-radius:26px;
+  padding:1.2%;
+  background:linear-gradient(145deg,#000,#111,#000);
+  box-shadow:
+    0 0 0 4px #000,
+    0 20px 50px rgba(0,0,0,.8),
+    inset 0 0 30px rgba(255,255,255,.05);
   overflow:hidden;
 }
 
+/* Reflexo superior leve */
+.videoWrap::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:28%;
+  border-radius:26px;
+  background:linear-gradient(to bottom,
+    rgba(255,255,255,.12),
+    transparent);
+  pointer-events:none;
+}
+
+/* Fundo fosco */
 #adVideoBg{
   position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+  inset:2%;
+  width:96%;
+  height:96%;
   object-fit:cover;
   filter:blur(40px);
   transform:scale(1.2);
-  opacity:.7;
+  opacity:.6;
+  border-radius:16px;
 }
 
+/* Tela principal */
 #adVideo{
   position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+  inset:2%;
+  width:96%;
+  height:96%;
   object-fit:contain;
+  border-radius:16px;
+  background:#000;
 }
 
 /* =========================================================
