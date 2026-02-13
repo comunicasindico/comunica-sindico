@@ -398,6 +398,43 @@ html, body{
      object-fit:contain;   /* não corta conteúdo */
 }
 }
+/* =========================================================
+   MOBILE LANDSCAPE (CELULAR DEITADO)
+   ========================================================= */
+@media (max-width:768px) and (orientation: landscape){
+
+  html, body{
+    height:100vh;
+    overflow:hidden;
+  }
+
+  .wrapper{
+    height:100vh;
+  }
+
+  .main{
+    grid-template-columns:1.2fr 1.8fr;
+    grid-template-rows:1fr;
+    height:100%;
+  }
+
+  .avisos{
+    grid-template-rows:repeat(3,1fr);
+    height:100%;
+  }
+
+  .right-col{
+    grid-template-rows:1fr auto auto;
+    height:100%;
+  }
+
+  .videoWrap{
+    aspect-ratio:auto;
+    height:100%;
+    max-height:none;
+  }
+
+}
 
 .videoNav{
   position:absolute;
