@@ -140,11 +140,13 @@ body{font-size:clamp(8px,1.4vh,12px);}
 
 <script>
 /* ITEM 014 – RELÓGIO */
-function tick(){const d=new Date();document.getElementById("clock").textContent=d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}setInterval(tick,1000);tick();
+function tick(){const d=new Date();document.getElementById("clock").textContent=d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}
+  setInterval(tick,1000);tick();
 /* ITEM 015 – LIMITADOR */
 function limitarTexto(t){if(!t)return"";return t.length<=200?t:t.substring(0,200)+"...";}
 /* ITEM 016 – EXPIRAÇÃO */
-function avisoExpirado(a){try{if(!a.expira_em)return false;const agora=new Date();const exp=new Date(a.expira_em);if(!exp||isNaN(exp.getTime()))return false;return agora>exp;}catch(e){return false;}}
+function avisoExpirado(a){try{if(!a.expira_em)return false;const agora=new Date();const exp=new Date(a.expira_em);if(!exp||isNaN(exp.getTime()))return false;
+                              return agora>exp;}catch(e){return false;}}
 /* ITEM 017 – AVISOS */
 let avisosGlobais=[];
 let avisoIndex=Math.floor(Math.random()*1000);
@@ -160,7 +162,9 @@ const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
 const p=(a.prioridade||"media").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 const div=document.createElement("div");
 div.className=`aviso-card prioridade-${p}`;
-div.innerHTML=`<div class="aviso-header">${a.titulo||""}</div><div class="aviso-body">${limitarTexto(a.descricao||"")}</div><div class="aviso-footer"><span>📍 ${a.local||""}</span><span>🏷 ${a.tipo||""}</span><span class="badge-prioridade">${(a.prioridade||"").toUpperCase()}</span></div>`;
+div.innerHTML=`<div class="aviso-header">${a.titulo||""}</div><div class="aviso-body">${limitarTexto(a.descricao||"")}
+</div><div class="aviso-footer"><span>📍 ${a.local||""}</span><span>🏷 ${a.tipo||""}</span><span class="badge-prioridade">${(a.prioridade||"").toUpperCase()}
+</span></div>`;
 c.appendChild(div);
 setTimeout(()=>{div.classList.add("show");},100);
 }
@@ -222,7 +226,7 @@ if(videosGlobais.length){videoIndex = Math.floor(Math.random()*videosGlobais.len
 
 renderAvisos();
 
-catch(e){console.error(e);}
+}catch(e){console.error(e);}
 }
 /* ITEM 021 – VERSÍCULO */
 async function carregarVersiculo(){
