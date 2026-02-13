@@ -192,13 +192,13 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 008 – TV LED PREMIUM COM LED STANDBY
+   ITEM 008 – TV LED INTELIGENTE DINÂMICA
    ========================================================= */
 .videoWrap{
   position:relative;
   border-radius:28px;
   padding:1.4%;
-  background:linear-gradient(145deg,#000,#111,#000);
+  background:#000;
   box-shadow:
     0 0 0 4px #000,
     0 25px 60px rgba(0,0,0,.85),
@@ -206,7 +206,7 @@ html, body{
   overflow:hidden;
 }
 
-/* Reflexo superior leve */
+/* Reflexo superior */
 .videoWrap::before{
   content:"";
   position:absolute;
@@ -216,46 +216,44 @@ html, body{
   height:30%;
   border-radius:28px;
   background:linear-gradient(to bottom,
-    rgba(255,255,255,.12),
+    rgba(255,255,255,.08),
     transparent);
   pointer-events:none;
 }
 
-/* 🔵 LED azul inferior central */
+/* 🔴🔵🟢 LED dinâmico */
 .videoWrap::after{
   content:"";
   position:absolute;
   bottom:6px;
   left:50%;
   transform:translateX(-50%);
-  width:80px;
+  width:90px;
   height:6px;
   border-radius:20px;
-  background:linear-gradient(to right,#0ff,#00aaff,#0ff);
+  background:var(--led-color, #00aaff);
   box-shadow:
-    0 0 10px #00aaff,
-    0 0 25px #00aaff,
-    0 0 45px rgba(0,170,255,.8);
-  animation:ledPulse 2.5s infinite ease-in-out;
+    0 0 12px var(--led-color, #00aaff),
+    0 0 28px var(--led-color, #00aaff),
+    0 0 55px rgba(0,0,0,.4);
+  animation:ledPulse 2.2s infinite ease-in-out;
 }
 
-/* animação sutil do LED */
 @keyframes ledPulse{
   0%{ opacity:.6; }
   50%{ opacity:1; }
   100%{ opacity:.6; }
 }
 
-/* Fundo fosco preenchendo toda área */
+/* 🎬 Fundo fosco preto usando o próprio vídeo */
 #adVideoBg{
   position:absolute;
   inset:2%;
   width:96%;
   height:96%;
   object-fit:cover;
-  filter:blur(45px);
+  filter:blur(35px) brightness(.35);
   transform:scale(1.3);
-  opacity:.65;
   border-radius:18px;
 }
 
@@ -269,7 +267,6 @@ html, body{
   border-radius:18px;
   background:#000;
 }
-
 
 /* =========================================================
    ITEM 009 – DESCRIÇÃO
@@ -563,6 +560,26 @@ function trocarVideo(){
 
   document.getElementById("videoDescricao").innerHTML=
     `<strong>${v.anunciante||""}</strong><br>${v.descricao||""}`;
+/* 🔵 LED DINÂMICO POR TIPO */
+const tipo = (v.tipo || "").toLowerCase();
+
+let cor = "#00aaff"; // padrão azul
+
+if(tipo.includes("promo")){
+  cor = "#00ff88"; // verde promoção
+}
+else if(tipo.includes("institucional")){
+  cor = "#00aaff"; // azul institucional
+}
+else if(tipo.includes("alerta")){
+  cor = "#ff2b2b"; // vermelho alerta
+}
+else if(tipo.includes("premium")){
+  cor = "#ffd700"; // dourado premium
+}
+
+document.querySelector(".videoWrap")
+  .style.setProperty("--led-color", cor);
 
   video.onended=function(){
     videoIndex=(videoIndex+1)%videosGlobais.length;
