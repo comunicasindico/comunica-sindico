@@ -467,6 +467,26 @@ function limitarTexto(texto){
   if(texto.length<=200) return texto;
   return texto.substring(0,200)+"...";
 }
+   
+/* =========================================================
+   FILTRO – EXPIRAÇÃO AUTOMÁTICA
+   ========================================================= */
+
+function avisoExpirado(aviso){
+  try{
+    if(!aviso.expira_em) return false;
+
+    const agora = new Date();
+    const exp   = new Date(aviso.expira_em);
+
+    if(!exp || isNaN(exp.getTime())) return false;
+
+    return agora > exp;
+
+  }catch(e){
+    return false;
+  }
+}
 
 /* =========================================================
    ITEM 019 – AVISOS COM PRIORIDADE + TRANSIÇÃO
@@ -690,7 +710,7 @@ async function loadData(){
       cache: "no-store"
     });
     const d = await r.json();
-    avisosGlobais = d.avisos || [];
+    avisosGlobais = (d.avisos || []).filter(a => !avisoExpirado(a));
     videosGlobais = d.publicidade?.videos || [];
     renderAvisos();
     if(videosGlobais.length){
