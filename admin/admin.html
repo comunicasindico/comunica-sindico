@@ -1201,6 +1201,17 @@ if(avisoEstaVencido(a)){
     inpCriado.value = String(a.criadoEm || "");
     inpCriado.oninput = ()=>{ a.criadoEm = inpCriado.value.trim(); rebuildJsonView(); };
 
+    const inpFim = document.createElement("input");
+    inpFim.placeholder = "fim (DD/MM/AA - HH:MM)";
+    inpFim.value = String(a.fim || "");
+    inpFim.oninput = ()=>{
+      a.fim = inpFim.value.trim();
+      rebuildJsonView();
+    };
+
+row2.appendChild(inpFim);
+
+
     row2.appendChild(selAtivo);
     row2.appendChild(inpCriado);
 
