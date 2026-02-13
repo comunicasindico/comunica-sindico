@@ -471,27 +471,25 @@ function limitarTexto(texto){
    /* =========================================================
    FILTRO – EXPIRAÇÃO BASEADO EM "fim"
    ========================================================= */
-
 function avisoExpirado(aviso){
+
   if(!aviso.fim) return false;
 
   try{
-    const partes = aviso.fim.split(" - ");
-    if(partes.length !== 2) return false;
 
-    const [dataStr, horaStr] = partes;
+    const [dataStr, horaStr] = aviso.fim.split("-").map(p => p.trim());
 
-    const [dia, mes, ano] = dataStr.split("/");
-    const [hora, minuto]  = horaStr.split(":");
+    const [dia, mes, ano] = dataStr.split("/").map(n => parseInt(n.trim()));
+    const [hora, minuto]  = horaStr.split(":").map(n => parseInt(n.trim()));
 
-    const anoCompleto = 2000 + Number(ano);
+    const anoCompleto = ano < 100 ? 2000 + ano : ano;
 
     const dataFim = new Date(
       anoCompleto,
-      Number(mes) - 1,
-      Number(dia),
-      Number(hora),
-      Number(minuto),
+      mes - 1,
+      dia,
+      hora,
+      minuto,
       0
     );
 
