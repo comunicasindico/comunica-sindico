@@ -802,6 +802,12 @@ async function handleChangePass(){
   }
   const newH = await sha256Hex(newP);
   setPassHash(newH);
+  // 🔐 Segurança: limpa token ao trocar senha
+try{
+  localStorage.removeItem(GH_TOKEN_LOCAL_KEY);
+  sessionStorage.removeItem(GH_TOKEN_SESSION_KEY);
+}catch(e){}
+
   $("oldPass").value = "";
   $("newPass").value = "";
   alert("✅ Senha alterada neste navegador.");
@@ -838,21 +844,14 @@ function saveToken(){
   const v = ($("token").value || "").trim();
   if(!v){ alert("Cole seu token primeiro."); return; }
 
-  // ✅ FORÇAR lembrar sempre neste navegador (para não pedir token toda hora)
-  const remember = true;
-  if($("rememberToken")) $("rememberToken").checked = true;
-
   try{
-    // sempre salva em session (uso imediato)
+    // Salva sempre de forma persistente
+    localStorage.setItem(GH_TOKEN_LOCAL_KEY, v);
     sessionStorage.setItem(GH_TOKEN_SESSION_KEY, v);
-
-    // e também em localStorage (persistente)
-    if(remember) localStorage.setItem(GH_TOKEN_LOCAL_KEY, v);
-    else localStorage.removeItem(GH_TOKEN_LOCAL_KEY);
   }catch(e){}
 
   $("token").value = "";
-  alert("✅ Token salvo neste navegador (não será solicitado novamente aqui).");
+  alert("✅ Token salvo permanentemente neste navegador.");
 }
 
 function clearToken(){
@@ -865,8 +864,10 @@ function clearToken(){
 
 function initTokenUI(){
   try{
-    const hasLocal = (localStorage.getItem(GH_TOKEN_LOCAL_KEY)||"").trim().length > 0;
-    if($("rememberToken")) $("rememberToken").checked = hasLocal;
+    const saved = (localStorage.getItem(GH_TOKEN_LOCAL_KEY)||"").trim();
+    if(saved){
+      sessionStorage.setItem(GH_TOKEN_SESSION_KEY, saved);
+    }
   }catch(e){}
 }
 
