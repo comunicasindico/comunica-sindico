@@ -3,937 +3,257 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
 <title>Comunica Síndico - Condôminos</title>
-
 <style>
 
 /* =========================================================
-   ITEM 001 – VARIÁVEIS
-   ========================================================= */
-:root{
-  --radius:18px;
+ITEM 001 – VARIÁVEIS
+========================================================= */
+:root{--radius:18px;}
+
+/* =========================================================
+ITEM 002 – BASE GLOBAL
+========================================================= */
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:linear-gradient(180deg,#1e5799,#7db9e8);font-family:system-ui,-apple-system,Segoe UI,Roboto;color:#fff;font-size:clamp(12px,1vw,22px);}
+
+/* =========================================================
+ITEM 003 – WRAPPER
+========================================================= */
+.wrapper{width:100%;height:100%;padding:1.2vw;box-sizing:border-box;display:grid;grid-template-rows:auto 1fr auto;gap:1.2vw;}
+
+/* =========================================================
+ITEM 004 – HEADER
+========================================================= */
+.header{display:flex;justify-content:space-between;align-items:center;background:#15385c;padding:1vw 1.5vw;border-radius:1.2vw;}
+.header-left{display:flex;align-items:center;gap:14px;}
+.header h1{margin:0;font-size:clamp(14px,1.6vw,28px);font-weight:900;}
+#weatherIcon{font-size:26px;}
+.badge{background:#0f2f4d;padding:8px 14px;border-radius:999px;font-weight:700;}
+
+/* =========================================================
+ITEM 005 – GRID DESKTOP
+========================================================= */
+.main{display:grid;grid-template-columns:1.2fr 1.8fr;gap:16px;height:100%;}
+
+/* =========================================================
+ITEM 006 – AVISOS
+========================================================= */
+.avisos{display:grid;grid-template-rows:repeat(3,1fr);gap:16px;height:100%;}
+.aviso-card{background:linear-gradient(145deg,#1b2e4a,#13263f);padding:18px 20px;border-radius:20px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 8px 30px rgba(0,0,0,.5);position:relative;border:4px solid transparent;transition:.6s ease;opacity:0;transform:translateY(20px);}
+.aviso-card.show{opacity:1;transform:translateY(0);}
+.prioridade-alta{border:6px solid #ff2b2b;box-shadow:0 0 18px rgba(255,0,0,.8),0 0 40px rgba(255,0,0,.6),0 8px 30px rgba(0,0,0,.6);}
+.prioridade-media{border:5px solid #ffc107;box-shadow:0 0 14px rgba(255,193,7,.7),0 8px 30px rgba(0,0,0,.6);}
+.prioridade-baixa{border:5px solid #4caf50;box-shadow:0 0 14px rgba(76,175,80,.7),0 8px 30px rgba(0,0,0,.6);}
+.aviso-header{font-weight:900;font-size:16px;text-align:left;}
+.aviso-body{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(14px,1.4vw,26px);line-height:1.3;}
+.aviso-footer{display:flex;gap:12px;font-size:12px;flex-wrap:wrap;}
+.badge-prioridade{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;}
+
+/* =========================================================
+ITEM 007 – COLUNA DIREITA
+========================================================= */
+.right-col{display:grid;grid-template-rows:1fr auto auto;gap:16px;height:100%;}
+
+/* =========================================================
+ITEM 008 – VÍDEO
+========================================================= */
+.videoWrap{position:relative;border-radius:28px;padding:1.4%;background:#000;box-shadow:0 0 0 4px #000,0 25px 60px rgba(0,0,0,.85),inset 0 0 40px rgba(255,255,255,.04);overflow:hidden;}
+.videoWrap::before{content:"";position:absolute;top:0;left:0;right:0;height:30%;border-radius:28px;background:linear-gradient(to bottom,rgba(255,255,255,.08),transparent);pointer-events:none;}
+.videoWrap::after{content:"";position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:60px;height:4px;border-radius:20px;background:var(--led-color,#00aaff);box-shadow:0 0 12px var(--led-color,#00aaff),0 0 28px var(--led-color,#00aaff),0 0 55px rgba(0,0,0,.4);animation:ledPulse 2.2s infinite ease-in-out;}
+@keyframes ledPulse{0%{opacity:.6;}50%{opacity:1;}100%{opacity:.6;}}
+#adVideoBg{position:absolute;inset:-20%;width:140%;height:140%;object-fit:cover;filter:blur(80px) brightness(.25);transform:scale(1.2);z-index:0;pointer-events:none;}
+#adVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:transparent;z-index:1;}
+
+/* =========================================================
+ITEM 009 – DESCRIÇÃO
+========================================================= */
+.videoDescricao{background:#14324f;padding:14px;border-radius:16px;text-align:center;}
+
+/* =========================================================
+ITEM 010 – MENSAGENS
+========================================================= */
+.mensagens{background:#14324f;padding:14px;border-radius:16px;font-size:14px;overflow:auto;}
+
+/* =========================================================
+ITEM 011 – FOOTER
+========================================================= */
+.footer{background:#15385c;padding:clamp(8px,1.2vh,24px);border-radius:clamp(8px,1.2vw,20px);display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,.8vh,12px);}
+.footer-linha1{font-size:clamp(12px,1.4vh,26px);font-weight:600;}
+.footer-linha2{font-size:clamp(11px,1.2vh,22px);display:flex;justify-content:flex-end;gap:clamp(8px,1vw,18px);align-items:center;}
+.sensacao{font-weight:700;transition:.4s;}
+.sensacao.calor{color:#ffb347;text-shadow:0 0 8px rgba(255,150,0,.6);}
+.sensacao.frio{color:#6ecbff;text-shadow:0 0 8px rgba(100,200,255,.6);}
+.clima-update{animation:climaFade .6s ease;}
+@keyframes climaFade{from{opacity:.3;transform:translateY(3px);}to{opacity:1;transform:translateY(0);}}
+
+/* =========================================================
+ITEM 012 – MOBILE VERTICAL
+========================================================= */
+@media(max-width:768px){
+html,body{height:auto;overflow-x:hidden;overflow-y:auto;}
+.wrapper{height:auto;min-height:100vh;padding:12px;}
+.main{grid-template-columns:1fr;height:auto;gap:14px;}
+.avisos{grid-template-rows:repeat(3,auto);height:auto;gap:14px;}
+.right-col{grid-template-rows:auto auto auto;height:auto;gap:14px;}
+.videoWrap{aspect-ratio:16/9;max-height:48vh;}
 }
 
 /* =========================================================
-   ITEM 002 – BASE FLUIDA RESPONSIVA TOTAL
-   ========================================================= */
-html, body{
-  margin:0;
-  padding:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:linear-gradient(180deg,#1e5799,#7db9e8);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
-  color:#ffffff;
-
-  font-size:clamp(12px, 1vw, 22px); /* 🔥 escala base automática */
+ITEM 013 – MOBILE LANDSCAPE DEFINITIVO
+========================================================= */
+@media(max-width:768px) and (orientation:landscape){
+html,body{height:100vh;overflow:hidden;}
+.wrapper{height:100vh;padding:1vh;display:flex;flex-direction:column;}
+.header{flex:0 0 auto;}
+.main{flex:1 1 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:.8vh;min-height:0;}
+.avisos{grid-template-rows:repeat(2,1fr);gap:.8vh;min-height:0;}
+.avisos .aviso-card:nth-child(3){display:none;}
+.right-col{grid-template-rows:1.6fr .8fr .8fr;gap:.8vh;min-height:0;}
+.videoWrap{aspect-ratio:16/9;width:100%;}
+.footer{flex:0 0 auto;}
+body{font-size:clamp(8px,1.4vh,12px);}
 }
 
-/* =========================================================
-   ITEM 003 – WRAPPER TOTALMENTE FLUIDO
-   ========================================================= */
-.wrapper{
-  width:100%;
-  height:100%;
-  padding:1.2vw;
-  box-sizing:border-box;
+.videoNav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.25);border:none;color:#fff;font-size:28px;width:42px;height:42px;border-radius:50%;cursor:pointer;opacity:.25;transition:.3s;z-index:3;}
+.videoNav:hover{opacity:.8;background:rgba(0,0,0,.5);}
+.prevBtn{left:12px;}
+.nextBtn{right:12px;}
 
-  display:grid;
-  grid-template-rows:auto 1fr auto;
-  gap:1.2vw;
-}
-/* =========================================================
-   ITEM 004 – HEADER (com ícone clima à direita do título)
-   ========================================================= */
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:#15385c;
-  padding:1vw 1.5vw;
-  border-radius:1.2vw;
-}
-
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-.header h1{
-  margin:0;
-  font-size:clamp(14px, 1.6vw, 28px);
-  font-weight:900;
-}
-
-#weatherIcon{
-  font-size:26px;
-}
-
-.badge{
-  background:#0f2f4d;
-  padding:8px 14px;
-  border-radius:999px;
-  font-weight:700;
-}
-
-/* =========================================================
-   ITEM 005 – GRID FIXO DESKTOP
-   ========================================================= */
-.main{
-  display:grid;
-  grid-template-columns:1.2fr 1.8fr;
-  gap:16px;
-  height:100%;
-}
-
-/* =========================================================
-   ITEM 006 – AVISOS COM PRIORIDADE VISUAL + TRANSIÇÃO
-   ========================================================= */
-.avisos{
-  display:grid;
-  grid-template-rows:repeat(3,1fr);
-  gap:16px;
-  height:100%;
-}
-
-.aviso-card{
-  background:linear-gradient(145deg,#1b2e4a,#13263f);
-  padding:18px 20px;
-  border-radius:20px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  box-shadow:0 8px 30px rgba(0,0,0,0.5);
-  position:relative;
-  border:4px solid transparent;
-  transition:all .6s ease;
-  opacity:0;
-  transform:translateY(20px);
-}
-
-/* 🔥 animação entrada */
-.aviso-card.show{
-  opacity:1;
-  transform:translateY(0);
-}
-
-/* ===== PRIORIDADE ALTA ===== */
-.prioridade-alta{
-  border:6px solid #ff2b2b;
-  box-shadow:
-    0 0 18px rgba(255,0,0,0.8),
-    0 0 40px rgba(255,0,0,0.6),
-    0 8px 30px rgba(0,0,0,0.6);
-}
-
-/* ===== PRIORIDADE MÉDIA ===== */
-.prioridade-media{
-  border:5px solid #ffc107;
-  box-shadow:
-    0 0 14px rgba(255,193,7,0.7),
-    0 8px 30px rgba(0,0,0,0.6);
-}
-
-/* ===== PRIORIDADE BAIXA ===== */
-.prioridade-baixa{
-  border:5px solid #4caf50;
-  box-shadow:
-    0 0 14px rgba(76,175,80,0.7),
-    0 8px 30px rgba(0,0,0,0.6);
-}
-
-/* TÍTULO */
-.aviso-header{
-  font-weight:900;
-  font-size:16px;
-  text-align:left;
-  color:#ffffff;
-}
-
-.aviso-body{
-  flex:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  font-size:clamp(14px, 1.4vw, 26px);
-  line-height:1.3;
-}
-
-/* RODAPÉ */
-.aviso-footer{
-  display:flex;
-  justify-content:flex-start;
-  gap:12px;
-  font-size:12px;
-  opacity:.95;
-  flex-wrap:wrap;
-  color:#ffffff;
-}
-
-.badge-prioridade{
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:800;
-}
-
-/* =========================================================
-   ITEM 007 – COLUNA DIREITA
-   ========================================================= */
-.right-col{
-  display:grid;
-  grid-template-rows:1fr auto auto;
-  gap:16px;
-  height:100%;
-}
-
-/* =========================================================
-   ITEM 008 – TV LED INTELIGENTE DINÂMICA
-   ========================================================= */
-.videoWrap{
-  position:relative;
-  border-radius:28px;
-  padding:1.4%;
-  background:#000;   /* 🔥 FUNDO REAL */
-  box-shadow:
-    0 0 0 4px #000,
-    0 25px 60px rgba(0,0,0,.85),
-    inset 0 0 40px rgba(255,255,255,.04);
-  overflow:hidden;
-}
-
-/* Reflexo superior */
-.videoWrap::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  height:30%;
-  border-radius:28px;
-  background:linear-gradient(to bottom,
-    rgba(255,255,255,.08),
-    transparent);
-  pointer-events:none;
-}
-
-/* 🔴🔵🟢 LED dinâmico */
-.videoWrap::after{
-  content:"";
-  position:absolute;
-  bottom:6px;
-  left:50%;
-  transform:translateX(-50%);
-  width:60px;
-  height:4px;
-  border-radius:20px;
-  background:var(--led-color, #00aaff);
-  box-shadow:
-    0 0 12px var(--led-color, #00aaff),
-    0 0 28px var(--led-color, #00aaff),
-    0 0 55px rgba(0,0,0,.4);
-  animation:ledPulse 2.2s infinite ease-in-out;
-}
-
-@keyframes ledPulse{
-  0%{ opacity:.6; }
-  50%{ opacity:1; }
-  100%{ opacity:.6; }
-}
-
-/* Fundo fosco interno */
-#adVideoBg{
- position:absolute;
-  inset:-20%;
-  width:140%;
-  height:140%;
-  object-fit:cover;
-
-  filter:blur(80px) brightness(.25);
-  transform:scale(1.2);
-
-  z-index:0;              /* 🔥 FICA ATRÁS */
-  pointer-events:none;    /* 🔥 NÃO BLOQUEIA */
-}
-
-/* Vídeo principal */
-#adVideo{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-
-  background:transparent; /* 🔥 REMOVE PRETO */
-  z-index:1;              /* 🔥 FICA NA FRENTE */
-}
-
-
-/* =========================================================
-   ITEM 009 – DESCRIÇÃO
-   ========================================================= */
-.videoDescricao{
-  background:#14324f;
-  padding:14px;
-  border-radius:16px;
-  text-align:center;
-}
-
-/* =========================================================
-   ITEM 010 – MENSAGENS
-   ========================================================= */
-.mensagens{
-  background:#14324f;
-  padding:14px;
-  border-radius:16px;
-  font-size:14px;
-  overflow:auto;
-}
-
-/* =========================================================
-   ITEM 011 – RODAPÉ PREMIUM CLIMA INTELIGENTE
-   ========================================================= */
-
-.footer{
-  background:#15385c;
-  padding:clamp(8px, 1.2vh, 24px);
-  border-radius:clamp(8px, 1.2vw, 20px);
-
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:clamp(4px, .8vh, 12px);
-}
-
-.footer-linha1{
-  font-size:clamp(12px, 1.4vh, 26px);
-  font-weight:600;
-}
-
-.footer-linha2{
-  font-size:clamp(11px, 1.2vh, 22px);
-  display:flex;
-  justify-content:flex-end;
-  gap:clamp(8px, 1vw, 18px);
-  align-items:center;
-}
-
-/* 🌡 Sensação térmica */
-.sensacao{
-  font-weight:700;
-  transition:all .4s ease;
-}
-
-/* 🔥 alerta calor */
-.sensacao.calor{
-  color:#ffb347;
-  text-shadow:0 0 8px rgba(255,150,0,.6);
-}
-
-/* ❄ alerta frio */
-.sensacao.frio{
-  color:#6ecbff;
-  text-shadow:0 0 8px rgba(100,200,255,.6);
-}
-
-/* 🔄 animação leve */
-.clima-update{
-  animation:climaFade .6s ease;
-}
-
-@keyframes climaFade{
-  from{ opacity:.3; transform:translateY(3px); }
-  to{ opacity:1; transform:translateY(0); }
-}
-
-/* =========================================================
-   ITEM 012 – MOBILE (VERTICAL)
-   ========================================================= */
-@media (max-width:768px){
-
-  /* 🔓 Rolagem real apenas no vertical */
-  html, body{
-    height:auto;
-    overflow-x:hidden;   /* impede ultrapassar lateral */
-    overflow-y:auto;
-  }
-
-  .wrapper{
-    height:auto;
-    min-height:100vh;
-    padding:12px;
-  }
-
-  /* Layout em coluna */
-  .main{
-    grid-template-columns:1fr;
-    grid-template-rows:auto;
-    height:auto;
-    gap:14px;
-  }
-
-  /* Avisos empilhados */
-  .avisos{
-    height:auto;
-    grid-template-rows:repeat(3, auto);
-    gap:14px;
-  }
-
-  /* Coluna direita flui */
-  .right-col{
-    height:auto;
-    grid-template-rows:auto auto auto;
-    gap:14px;
-  }
-
-  /* =========================================================
-     VÍDEO MOBILE – ALTURA ≈ 2 AVISOS
-     ========================================================= */
-  .videoWrap{
-    width:100%;
-    box-sizing:border-box;
-
-    aspect-ratio:16/9;
-    max-height:48vh;   /* equilíbrio ideal */
-
-    margin:8px 0;
-  }
-
-  #adVideo,
-  #adVideoBg{
-    object-fit:contain;
-  }
-}
-/* =========================================================
-   MOBILE LANDSCAPE – PAINEL COMPLETO UNIVERSAL
-   ========================================================= */
-@media (max-width:768px) and (orientation:landscape){
-  html,body{height:auto;overflow:hidden;}
-  .wrapper{height:auto;padding:1vh;display:flex;flex-direction:column;}
-  .header{padding:.8vh 2vh;}
-  .main{display:grid;grid-template-columns:1fr 1.4fr;gap:.8vh;}
-  .avisos{display:grid;grid-template-rows:repeat(2,1fr);gap:.8vh;}
-  .avisos .aviso-card:nth-child(3){display:none;}
-  .aviso-card{padding:.8vh;}
-  .right-col{display:grid;grid-template-rows:1.6fr .8fr .8fr;gap:.8vh;}
-  .videoWrap{aspect-ratio:16/9;width:100%;}
-  .videoDescricao{font-size:1.5vh;padding:.6vh;}
-  .mensagens{font-size:1.3vh;padding:.6vh;overflow:hidden;}
-  .footer{padding:.8vh 2vh;}
-  body{font-size:clamp(8px,1.4vh,12px);}
-}
-
-
-
-.videoNav{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  background:rgba(0,0,0,.25);
-  border:none;
-  color:#fff;
-  font-size:28px;
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  cursor:pointer;
-  opacity:.25;
-  transition:.3s ease;
-  z-index:3;
-}
-
-.videoNav:hover{
-  opacity:.8;
-  background:rgba(0,0,0,.5);
-}
-
-.prevBtn{
-  left:12px;
-}
-
-.nextBtn{
-  right:12px;
-}
-
-
-   
 </style>
 </head>
-
 <body>
-
 <div class="wrapper">
-
-
-   
-<!-- HEADER -->
-<div class="header">
-  <div class="header-left">
-    <h1>Comunica Síndico - Condôminos</h1>
-    <span id="weatherIcon">☁️</span>
-  </div>
-  <span class="badge" id="clock">--:--</span>
-</div>
-
-
-   
-   <!-- MAIN -->
+<div class="header"><div class="header-left"><h1>Comunica Síndico - Condôminos</h1><span id="weatherIcon">☁️</span></div><span class="badge" id="clock">--:--</span></div>
 <div class="main">
-
-  <div class="avisos" id="avisosContainer"></div>
-
-  <div class="right-col">
-
-    <div class="videoWrap">
-      <video id="adVideoBg" autoplay muted playsinline></video>
-      <video id="adVideo" autoplay muted playsinline></video>
-
-       <button class="videoNav prevBtn">&#10094;</button>
-       <button class="videoNav nextBtn">&#10095;</button>
-    </div>
-
-    <div class="videoDescricao" id="videoDescricao"></div>
-    <div class="mensagens" id="mensagensContainer"></div>
-
-  </div>
+<div class="avisos" id="avisosContainer"></div>
+<div class="right-col">
+<div class="videoWrap">
+<video id="adVideoBg" autoplay muted playsinline></video>
+<video id="adVideo" autoplay muted playsinline></video>
+<button class="videoNav prevBtn">&#10094;</button>
+<button class="videoNav nextBtn">&#10095;</button>
 </div>
-
-
-   
-   <!-- FOOTER -->
+<div class="videoDescricao" id="videoDescricao"></div>
+<div class="mensagens" id="mensagensContainer"></div>
+</div>
+</div>
 <div class="footer">
-  <div class="footer-linha1" id="versiculo"></div>
- 
-   <div class="footer-linha2">
-  <span id="cidade"></span>
-  <span id="temperatura"></span>
-  <span id="sensacao" class="sensacao"></span>
-  <span id="vento"></span>
+<div class="footer-linha1" id="versiculo"></div>
+<div class="footer-linha2">
+<span id="cidade"></span>
+<span id="temperatura"></span>
+<span id="sensacao" class="sensacao"></span>
+<span id="vento"></span>
 </div>
 </div>
-
 </div>
 
 <script>
 
+/* ITEM 014 – RELÓGIO */
+function tick(){const d=new Date();document.getElementById("clock").textContent=d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}setInterval(tick,1000);tick();
 
-   
-/* RELÓGIO */
-function tick(){
-  const d=new Date();
-  document.getElementById("clock").textContent=
-    d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
-}
-setInterval(tick,1000); tick();
+/* ITEM 015 – LIMITADOR */
+function limitarTexto(t){if(!t)return"";return t.length<=200?t:t.substring(0,200)+"...";}
 
+/* ITEM 016 – EXPIRAÇÃO */
+function avisoExpirado(a){try{if(!a.expira_em)return false;const agora=new Date();const exp=new Date(a.expira_em);if(!exp||isNaN(exp.getTime()))return false;return agora>exp;}catch(e){return false;}}
 
-   
-/* LIMITADOR 200 */
-function limitarTexto(texto){
-  if(!texto) return "";
-  if(texto.length<=200) return texto;
-  return texto.substring(0,200)+"...";
-}
-
-   /* =========================================================
-   FILTRO – EXPIRAÇÃO BASEADO EM "fim"
-   ========================================================= */
-function avisoExpirado(aviso){
-
-  if(!aviso.fim) return false;
-
-  try{
-
-    const [dataStr, horaStr] = aviso.fim.split("-").map(p => p.trim());
-
-    const [dia, mes, ano] = dataStr.split("/").map(n => parseInt(n.trim()));
-    const [hora, minuto]  = horaStr.split(":").map(n => parseInt(n.trim()));
-
-    const anoCompleto = ano < 100 ? 2000 + ano : ano;
-
-    const dataFim = new Date(
-      anoCompleto,
-      mes - 1,
-      dia,
-      hora,
-      minuto,
-      0
-    );
-
-    return Date.now() > dataFim.getTime();
-
-  }catch(e){
-    return false;
-  }
-}
-
-
-/* =========================================================
-   FILTRO – EXPIRAÇÃO AUTOMÁTICA
-   ========================================================= */
-
-function avisoExpirado(aviso){
-  try{
-    if(!aviso.expira_em) return false;
-
-    const agora = new Date();
-    const exp   = new Date(aviso.expira_em);
-
-    if(!exp || isNaN(exp.getTime())) return false;
-
-    return agora > exp;
-
-  }catch(e){
-    return false;
-  }
-}
-
-/* =========================================================
-   ITEM 019 – AVISOS COM PRIORIDADE + TRANSIÇÃO
-   ========================================================= */
-
-let avisosGlobais=[];
-let avisoIndex=0;
-
+/* ITEM 017 – AVISOS */
+let avisosGlobais=[];let avisoIndex=0;
 function renderAvisos(){
-  avisosGlobais = avisosGlobais.filter(a => !avisoExpirado(a));
-  const container=document.getElementById("avisosContainer");
-
-  /* 🔥 fade out suave */
-  container.style.opacity="0";
-
-  setTimeout(()=>{
-
-    container.innerHTML="";
-
-    for(let i=0;i<3;i++){
-
-      if(!avisosGlobais.length) return;
-
-      const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
-
-      const prioridade=(a.prioridade||"media")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"");
-
-      const div=document.createElement("div");
-      div.className=`aviso-card prioridade-${prioridade}`;
-
-      div.innerHTML=`
-        <div class="aviso-header">
-          ${a.titulo||""}
-        </div>
-
-        <div class="aviso-body">
-          ${limitarTexto(a.descricao||"")}
-        </div>
-
-        <div class="aviso-footer">
-          <span>📍 ${a.local||""}</span>
-          <span>🏷 ${a.tipo||""}</span>
-          <span class="badge-prioridade">
-            ${(a.prioridade||"").toUpperCase()}
-          </span>
-        </div>
-      `;
-
-      container.appendChild(div);
-
-      /* 🔥 animação individual */
-      setTimeout(()=>{
-        div.classList.add("show");
-      },100);
-    }
-
-    avisoIndex=(avisoIndex+1)%avisosGlobais.length;
-
-    container.style.opacity="1";
-
-  },300);
+avisosGlobais=avisosGlobais.filter(a=>!avisoExpirado(a));
+const c=document.getElementById("avisosContainer");
+c.style.opacity="0";
+setTimeout(()=>{
+c.innerHTML="";
+for(let i=0;i<3;i++){
+if(!avisosGlobais.length)return;
+const a=avisosGlobais[(avisoIndex+i)%avisosGlobais.length];
+const p=(a.prioridade||"media").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+const div=document.createElement("div");
+div.className=`aviso-card prioridade-${p}`;
+div.innerHTML=`<div class="aviso-header">${a.titulo||""}</div><div class="aviso-body">${limitarTexto(a.descricao||"")}</div><div class="aviso-footer"><span>📍 ${a.local||""}</span><span>🏷 ${a.tipo||""}</span><span class="badge-prioridade">${(a.prioridade||"").toUpperCase()}</span></div>`;
+c.appendChild(div);
+setTimeout(()=>{div.classList.add("show");},100);
+}
+avisoIndex=(avisoIndex+1)%avisosGlobais.length;
+c.style.opacity="1";
+},300);
 }
 
-/* =========================================================
-   ITEM 020 – CLIMA PREMIUM COM SENSAÇÃO INTELIGENTE
-   ========================================================= */
-
-function atualizarClima(dados){
-
-  const temp      = Math.round(dados.main.temp);
-  const sensacao  = Math.round(dados.main.feels_like);
-  const vento     = Math.round(dados.wind.speed);
-
-  const tempEl     = document.getElementById("temperatura");
-  const sensacaoEl = document.getElementById("sensacao");
-  const ventoEl    = document.getElementById("vento");
-
-  tempEl.textContent = `${temp}°C`;
-  ventoEl.textContent = `🌬 ${vento} km/h`;
-
-  /* 🌡 Ícone térmico + texto */
-  sensacaoEl.textContent = `🌡 Sensação ${sensacao}°C`;
-
-  /* Remove classes anteriores */
-  sensacaoEl.classList.remove("calor","frio");
-
-  /* 🔥 Alerta calor */
-  if(sensacao > temp){
-    sensacaoEl.classList.add("calor");
-  }
-
-  /* ❄ Alerta frio */
-  if(sensacao < temp){
-    sensacaoEl.classList.add("frio");
-  }
-
-  /* 🔄 animação leve */
-  sensacaoEl.classList.add("clima-update");
-  tempEl.classList.add("clima-update");
-
-  setTimeout(()=>{
-    sensacaoEl.classList.remove("clima-update");
-    tempEl.classList.remove("clima-update");
-  },600);
-}
-
-/* =========================================================
-   ITEM 021  VÍDEO 
-   ========================================================= */
-let videosGlobais=[];
-let videoIndex=0;
-
+/* ITEM 018 – VÍDEOS */
+let videosGlobais=[];let videoIndex=0;
 function trocarVideo(){
-  if(!videosGlobais.length) return;
+if(!videosGlobais.length)return;
+const v=videosGlobais[videoIndex];
+const video=document.getElementById("adVideo");
+const bg=document.getElementById("adVideoBg");
+video.src=v.arquivo+"?ts="+Date.now();
+bg.src=v.arquivo+"?ts="+Date.now();
+video.load();bg.load();
+video.play().catch(()=>{});bg.play().catch(()=>{});
+document.getElementById("videoDescricao").innerHTML=`<strong>${v.anunciante||""}</strong><br>${v.descricao||""}`;
+const cores=["#00aaff","#00ff88","#ff2b2b","#ffd700","#9b59b6","#ff7f50"];
+document.querySelector(".videoWrap").style.setProperty("--led-color",cores[videoIndex%cores.length]);
+}
 
-  const v = videosGlobais[videoIndex];
-  const video = document.getElementById("adVideo");
-  const bg = document.getElementById("adVideoBg");
-
-  video.src = v.arquivo + "?ts=" + Date.now();
-  bg.src = v.arquivo + "?ts=" + Date.now();
-
-  video.load();
-  bg.load();
-
-  video.play().catch(()=>{});
-  bg.play().catch(()=>{});
-
-  document.getElementById("videoDescricao").innerHTML =
-    `<strong>${v.anunciante||""}</strong><br>${v.descricao||""}`;
-
- /* 🔵 LED AUTOMÁTICO POR ORDEM */
-const cores = [
-  "#00aaff", // azul
-  "#00ff88", // verde
-  "#ff2b2b", // vermelho
-  "#ffd700", // dourado
-  "#9b59b6", // roxo
-  "#ff7f50"  // coral
-];
-
-const cor = cores[videoIndex % cores.length];
-
-  document.querySelector(".videoWrap")
-    .style.setProperty("--led-color", cor);
- }
-
-
-/* =========================================================
-   ITEM 020 – CLIMA FINAL CORRIGIDO
-   ========================================================= */
-
+/* ITEM 019 – CLIMA */
 async function carregarClima(){
-
-  try{
-
-    const rJson = await fetch("./data.json?ts=" + Date.now());
-    const json  = await rJson.json();
-
-    const cidade = json.clima?.cidade || "Tubarão";
-    const lat    = json.clima?.latitude;
-    const lon    = json.clima?.longitude;
-
-    const r = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
-    );
-
-    const d = await r.json();
-    const w = d.current_weather;
-
-    const temp  = Math.round(w.temperature);
-    const vento = Math.round(w.windspeed);
-
-    /* Cálculo sensação térmica */
-    const sensacao = Math.round(
-      13.12 + 0.6215*temp - 11.37*Math.pow(vento,0.16) +
-      0.3965*temp*Math.pow(vento,0.16)
-    );
-
-    const cidadeEl    = document.getElementById("cidade");
-    const tempEl      = document.getElementById("temperatura");
-    const sensacaoEl  = document.getElementById("sensacao");
-    const ventoEl     = document.getElementById("vento");
-
-    cidadeEl.textContent = cidade;
-    tempEl.textContent   = `${temp}°C`;
-    ventoEl.textContent  = `🌬 ${vento} km/h`;
-
-    /* 🔥 Corrige ícone térmico correto */
-    sensacaoEl.textContent = `🌡 Sensação ${sensacao}°C`;
-
-    sensacaoEl.classList.remove("calor","frio");
-
-    if(sensacao > temp){
-      sensacaoEl.classList.add("calor");
-    }
-
-    if(sensacao < temp){
-      sensacaoEl.classList.add("frio");
-    }
-
-    /* animação */
-    sensacaoEl.classList.remove("clima-update");
-    void sensacaoEl.offsetWidth;
-    sensacaoEl.classList.add("clima-update");
-
-  }catch(e){
-    console.error("Erro clima:", e);
-  }
+try{
+const rJson=await fetch("./data.json?ts="+Date.now());
+const json=await rJson.json();
+const cidade=json.clima?.cidade||"Tubarão";
+const lat=json.clima?.latitude;const lon=json.clima?.longitude;
+const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+const d=await r.json();const w=d.current_weather;
+const temp=Math.round(w.temperature);const vento=Math.round(w.windspeed);
+const sensacao=Math.round(13.12+0.6215*temp-11.37*Math.pow(vento,0.16)+0.3965*temp*Math.pow(vento,0.16));
+document.getElementById("cidade").textContent=cidade;
+document.getElementById("temperatura").textContent=`${temp}°C`;
+document.getElementById("vento").textContent=`🌬 ${vento} km/h`;
+const s=document.getElementById("sensacao");
+s.textContent=`🌡 Sensação ${sensacao}°C`;
+s.classList.remove("calor","frio");
+if(sensacao>temp)s.classList.add("calor");
+if(sensacao<temp)s.classList.add("frio");
+}catch(e){console.error(e);}
 }
 
-
-
-/* LOAD */
+/* ITEM 020 – LOAD */
 async function loadData(){
-  try{
-    const r = await fetch("./data.json?ts=" + Date.now(), {
-      cache: "no-store"
-    });
-    const d = await r.json();
-    avisosGlobais = (d.avisos || []).filter(a => !avisoExpirado(a));
-    videosGlobais = d.publicidade?.videos || [];
-    renderAvisos();
-    if(videosGlobais.length){
-      trocarVideo();
-    }
-  }catch(e){
-    console.error("Erro loadData:", e);
-  }
+try{
+const r=await fetch("./data.json?ts="+Date.now(),{cache:"no-store"});
+const d=await r.json();
+avisosGlobais=(d.avisos||[]).filter(a=>!avisoExpirado(a));
+videosGlobais=d.publicidade?.videos||[];
+renderAvisos();
+if(videosGlobais.length)trocarVideo();
+}catch(e){console.error(e);}
 }
 
-
-   /* =========================================================
-   ITEM 022 – CARREGAR VERSÍCULO
-   ========================================================= */
+/* ITEM 021 – VERSÍCULO */
 async function carregarVersiculo(){
-  try{
-
-    const r = await fetch(
-      "https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json?ts=" + Date.now()
-    );
-
-    const dados = await r.json();
-
-    const hoje = new Date();
-    const chave =
-      String(hoje.getMonth()+1).padStart(2,"0") +
-      "-" +
-      String(hoje.getDate()).padStart(2,"0");
-
-    const versiculo = dados.versos?.[chave] || "Você tem valor diante de Deus.";
-
-    const el = document.getElementById("versiculo");
-
-    if(el){
-      el.textContent = versiculo;
-    }
-
-  }catch(e){
-    console.error("Erro versículo:", e);
-  }
+try{
+const r=await fetch("https://raw.githubusercontent.com/comunicasindico/comunica-sindico/main/versiculos.json?ts="+Date.now());
+const dados=await r.json();
+const hoje=new Date();
+const chave=String(hoje.getMonth()+1).padStart(2,"0")+"-"+String(hoje.getDate()).padStart(2,"0");
+document.getElementById("versiculo").textContent=dados.versos?.[chave]||"Você tem valor diante de Deus.";
+}catch(e){console.error(e);}
 }
 
-   /* =========================================================
-   ITEM 023 – INICIALIZAÇÃO DO VERSÍCULO
-   ========================================================= */
-carregarVersiculo();
-setInterval(carregarVersiculo,3600000);
-
-loadData();
-carregarClima();
+carregarVersiculo();setInterval(carregarVersiculo,3600000);
+loadData();carregarClima();
 setInterval(renderAvisos,8000);
 setInterval(loadData,60000);
 setInterval(carregarClima,600000);
 
-const prev = document.querySelector(".prevBtn");
-const next = document.querySelector(".nextBtn");
+document.querySelector(".prevBtn").addEventListener("click",()=>{if(!videosGlobais.length)return;videoIndex=(videoIndex-1+videosGlobais.length)%videosGlobais.length;trocarVideo();});
+document.querySelector(".nextBtn").addEventListener("click",()=>{if(!videosGlobais.length)return;videoIndex=(videoIndex+1)%videosGlobais.length;trocarVideo();});
+document.getElementById("adVideo").addEventListener("ended",()=>{if(!videosGlobais.length)return;videoIndex=(videoIndex+1)%videosGlobais.length;trocarVideo();});
+setInterval(()=>{location.reload();},3600000);
 
-if(prev){
-  prev.addEventListener("click", ()=>{
-    if(!videosGlobais.length) return;
-    videoIndex = (videoIndex - 1 + videosGlobais.length) % videosGlobais.length;
-    trocarVideo();
-  });
-}
-
-if(next){
-  next.addEventListener("click", ()=>{
-    if(!videosGlobais.length) return;
-    videoIndex = (videoIndex + 1) % videosGlobais.length;
-    trocarVideo();
-  });
-}
-   
-/* 🔥 TROCA AUTOMÁTICA QUANDO TERMINA */
-const videoPrincipal = document.getElementById("adVideo");
-
-if(videoPrincipal){
-  videoPrincipal.addEventListener("ended", ()=>{
-    if(!videosGlobais.length) return;
-
-    videoIndex = (videoIndex + 1) % videosGlobais.length;
-    trocarVideo();
-  });
-}
-
-/* 🔄 RELOAD COMPLETO A CADA 1 HORA */
-setInterval(()=>{
-  location.reload();
-}, 3600000);
-
-/* =========================================================
-   ESCALA DINÂMICA AUTOMÁTICA – MOBILE LANDSCAPE
-   ========================================================= */
-function ajustarEscalaLandscape(){
-  if(window.innerWidth <= 768 && window.innerWidth > window.innerHeight){
-    const wrapper = document.querySelector(".wrapper");
-    wrapper.style.transform = "scale(1)";
-    const alturaReal = wrapper.scrollHeight;
-    const alturaTela = window.innerHeight;
-    const escala = alturaTela / alturaReal;
-    wrapper.style.transform = `scale(${escala})`;
-  }else{
-    const wrapper = document.querySelector(".wrapper");
-    wrapper.style.transform = "scale(1)";
-  }
-}
-window.addEventListener("load",ajustarEscalaLandscape);
-window.addEventListener("resize",ajustarEscalaLandscape);
-
-   /* Força recálculo ao virar o celular */
-window.addEventListener("orientationchange",()=>{
-  setTimeout(()=>{
-    document.body.style.height="100dvh";
-  },200);
-});
-
-   
-   
 </script>
-
 </body>
 </html>
