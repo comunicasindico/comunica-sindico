@@ -115,7 +115,7 @@
     {
       "id": "002",
       "titulo": "Salão de Festas",
-      "descricao": "A regra apenas registra a locação. Não impede dias consecutivos. O locatário deve entregar a área limpa. A chave será entregue diretamente pela síndica ao responsável.",
+      "descricao": "1. A regra apenas registra a locação. 2. Não impede dias consecutivos. 3. O locatário deve entregar a área limpa. 4. A chave será entregue diretamente pela síndica ao responsável.",
       "prioridade": "Alta",
       "tipo": "",
       "local": "Salão de Festas",
