@@ -418,8 +418,8 @@ html, body{
   <div class="right-col">
 
     <div class="videoWrap">
-      <video id="adVideoBg" autoplay muted loop playsinline></video>
-      <video id="adVideo" autoplay muted loop playsinline></video>
+      <video id="adVideoBg" autoplay muted playsinline></video>
+      <video id="adVideo" autoplay muted playsinline></video>
 
        <button class="videoNav prevBtn">&#10094;</button>
        <button class="videoNav nextBtn">&#10095;</button>
@@ -585,12 +585,12 @@ let videoIndex=0;
 function trocarVideo(){
   if(!videosGlobais.length) return;
 
-  const v=videosGlobais[videoIndex];
-  const video=document.getElementById("adVideo");
-  const bg=document.getElementById("adVideoBg");
+  const v = videosGlobais[videoIndex];
+  const video = document.getElementById("adVideo");
+  const bg = document.getElementById("adVideoBg");
 
-  video.src=v.arquivo+"?ts="+Date.now();
-  bg.src=v.arquivo+"?ts="+Date.now();
+  video.src = v.arquivo + "?ts=" + Date.now();
+  bg.src = v.arquivo + "?ts=" + Date.now();
 
   video.load();
   bg.load();
@@ -598,39 +598,31 @@ function trocarVideo(){
   video.play().catch(()=>{});
   bg.play().catch(()=>{});
 
-   video.style.opacity = "0";
-      video.onloadeddata = () => {
-      video.style.opacity = "1";
-};
-
-
-  document.getElementById("videoDescricao").innerHTML=
+  document.getElementById("videoDescricao").innerHTML =
     `<strong>${v.anunciante||""}</strong><br>${v.descricao||""}`;
-/* 🔵 LED DINÂMICO AUTOMÁTICO */
-const nome = (v.anunciante || "").toLowerCase();
 
-let cor = "#00aaff"; // azul padrão
+ /* 🔵 LED AUTOMÁTICO POR ORDEM */
+const cores = [
+  "#00aaff", // azul
+  "#00ff88", // verde
+  "#ff2b2b", // vermelho
+  "#ffd700", // dourado
+  "#9b59b6", // roxo
+  "#ff7f50"  // coral
+];
 
-if(nome.includes("calibra")){
-  cor = "#00ff88"; // verde
-}
-else if(nome.includes("newpet")){
-  cor = "#ff2b2b"; // vermelho
-}
-else if(nome.includes("farmacia")){
-  cor = "#ffd700"; // dourado
-}
-else{
-  cor = "#00aaff"; // azul institucional padrão
-}
-document.querySelector(".videoWrap")
-  .style.setProperty("--led-color", cor);
+const cor = cores[videoIndex % cores.length];
 
-  video.onended=function(){
-    videoIndex=(videoIndex+1)%videosGlobais.length;
+  document.querySelector(".videoWrap")
+    .style.setProperty("--led-color", cor);
+
+  /* 🔥 TROCA AUTOMÁTICA AO TERMINAR */
+  video.onended = () => {
+    videoIndex = (videoIndex + 1) % videosGlobais.length;
     trocarVideo();
   };
 }
+
 
 /* =========================================================
    ITEM 020 – CLIMA FINAL CORRIGIDO
