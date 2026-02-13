@@ -146,7 +146,8 @@ function limitarTexto(t){if(!t)return"";return t.length<=200?t:t.substring(0,200
 /* ITEM 016 – EXPIRAÇÃO */
 function avisoExpirado(a){try{if(!a.expira_em)return false;const agora=new Date();const exp=new Date(a.expira_em);if(!exp||isNaN(exp.getTime()))return false;return agora>exp;}catch(e){return false;}}
 /* ITEM 017 – AVISOS */
-let avisosGlobais=[];let avisoIndex=0;
+let avisosGlobais=[];
+let avisoIndex=Math.floor(Math.random()*1000);
 function renderAvisos(){
 avisosGlobais=avisosGlobais.filter(a=>!avisoExpirado(a));
 const c=document.getElementById("avisosContainer");
@@ -168,7 +169,8 @@ c.style.opacity="1";
 },300);
 }
 /* ITEM 018 – VÍDEOS */
-let videosGlobais=[];let videoIndex=0;
+let videosGlobais=[];
+let videoIndex=Math.floor(Math.random()*1000);
 function trocarVideo(){
 if(!videosGlobais.length)return;
 const v=videosGlobais[videoIndex];
@@ -209,10 +211,13 @@ try{
 const r=await fetch("./data.json?ts="+Date.now(),{cache:"no-store"});
 const d=await r.json();
 avisosGlobais=(d.avisos||[]).filter(a=>!avisoExpirado(a));
-videosGlobais=d.publicidade?.videos||[];
+videosGlobais = d.publicidade?.videos || [];
+if(avisosGlobais.length){
+  avisoIndex = Math.floor(Math.random()*avisosGlobais.length);
+}
+if(videosGlobais.length){videoIndex = Math.floor(Math.random()*videosGlobais.length);trocarVideo();}
 renderAvisos();
-if(videosGlobais.length)trocarVideo();
-}catch(e){console.error(e);}
+catch(e){console.error(e);}
 }
 /* ITEM 021 – VERSÍCULO */
 async function carregarVersiculo(){
