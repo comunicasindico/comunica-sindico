@@ -351,53 +351,65 @@ html, body{
 }
 
 /* =========================================================
-   ITEM 012 – MOBILE
+   ITEM 012 – MOBILE (VERTICAL)
    ========================================================= */
 @media (max-width:768px){
 
-  /* 🔓 Libera rolagem real */
+  /* 🔓 Rolagem real apenas no vertical */
   html, body{
     height:auto;
-    overflow:auto;
+    overflow-x:hidden;   /* impede ultrapassar lateral */
+    overflow-y:auto;
   }
+
   .wrapper{
     height:auto;
     min-height:100vh;
+    padding:12px;
   }
+
   /* Layout em coluna */
   .main{
     grid-template-columns:1fr;
     grid-template-rows:auto;
     height:auto;
+    gap:14px;
   }
+
   /* Avisos empilhados */
   .avisos{
     height:auto;
     grid-template-rows:repeat(3, auto);
+    gap:14px;
   }
-  /* Coluna direita flui naturalmente */
+
+  /* Coluna direita flui */
   .right-col{
     height:auto;
     grid-template-rows:auto auto auto;
+    gap:14px;
   }
-/* =========================================================
-   VÍDEO MOBILE – EQUIVALENTE A 2 AVISOS
-   ========================================================= */
-.videoWrap{
-  width:100%;
-  max-width:100%;
 
-  aspect-ratio:16/9;   /* volta para horizontal */
-  max-height:50vh;     /* controla altura */
-  
-  margin:10px 0;
+  /* =========================================================
+     VÍDEO MOBILE – ALTURA ≈ 2 AVISOS
+     ========================================================= */
+  .videoWrap{
+    width:100%;
+    box-sizing:border-box;
+
+    aspect-ratio:16/9;
+    max-height:48vh;   /* equilíbrio ideal */
+
+    margin:8px 0;
+  }
+
+  #adVideo,
+  #adVideoBg{
+    object-fit:contain;
+  }
+
 }
-   
-   #adVideo,
-   #adVideoBg{
-     object-fit:contain;   /* não corta conteúdo */
-}
-}
+
 /* =========================================================
    MOBILE LANDSCAPE (CELULAR DEITADO)
    ========================================================= */
@@ -410,31 +422,60 @@ html, body{
 
   .wrapper{
     height:100vh;
+    padding:8px;
+  }
+
+  /* Compactação automática */
+  body{
+    font-size:clamp(10px,1.2vw,14px);
+  }
+
+  .header{
+    padding:6px 10px;
+  }
+
+  .footer{
+    padding:6px 10px;
   }
 
   .main{
-    grid-template-columns:1.2fr 1.8fr;
-    grid-template-rows:1fr;
     height:100%;
+    grid-template-columns:1.1fr 1.6fr;
+    gap:10px;
   }
 
   .avisos{
-    grid-template-rows:repeat(3,1fr);
     height:100%;
+    grid-template-rows:repeat(3,1fr);
+    gap:10px;
+  }
+
+  .aviso-card{
+    padding:10px;
   }
 
   .right-col{
-    grid-template-rows:1fr auto auto;
     height:100%;
+    grid-template-rows:1fr auto auto;
+    gap:10px;
   }
 
   .videoWrap{
-    aspect-ratio:auto;
     height:100%;
+    aspect-ratio:auto;
     max-height:none;
   }
 
+  .videoDescricao{
+    padding:8px;
+    font-size:13px;
+  }
+
+  .mensagens{
+    font-size:12px;
+  }
 }
+
 
 .videoNav{
   position:absolute;
