@@ -410,15 +410,23 @@ html, body{
 }
 
 /* =========================================================
-   MOBILE LANDSCAPE – ESCALA DINÂMICA PRECISA
+   MOBILE LANDSCAPE – UNIVERSAL DEFINITIVO (SEM CORTE)
    ========================================================= */
-@media (max-width:768px) and (orientation: landscape){
-  html,body{height:100vh;overflow:hidden;}
-  .wrapper{
-    height:auto;
-    transform-origin:top center;
-  }
+@media (max-width:768px) and (orientation:landscape){
+  html,body{height:100dvh;overflow:hidden;}
+  .wrapper{height:100dvh;padding:1vh;display:flex;flex-direction:column;}
+  .header{flex:0 0 auto;padding:1vh 2vh;}
+  .main{flex:1 1 auto;display:grid;grid-template-columns:1.1fr 1.6fr;gap:1vh;min-height:0;}
+  .avisos{display:grid;grid-template-rows:repeat(3,1fr);gap:1vh;min-height:0;}
+  .aviso-card{padding:1vh;}
+  .right-col{display:grid;grid-template-rows:2fr 1fr 1fr;gap:1vh;min-height:0;}
+  .videoWrap{aspect-ratio:16/9;max-height:100%;}
+  .videoDescricao{font-size:1.8vh;padding:.8vh;}
+  .mensagens{font-size:1.6vh;padding:.8vh;overflow:hidden;}
+  .footer{flex:0 0 auto;padding:1vh 2vh;}
+  body{font-size:clamp(10px,1.6vh,14px);}
 }
+
 
 
 
