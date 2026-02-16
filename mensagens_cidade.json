@@ -1,12 +1,6 @@
 {
-  "updatedAt": "2026-02-16T16:58:57-03:00",
+  "updatedAt": "2026-02-16T17:58:55-03:00",
   "items": [
-    {
-      "titulo": "Inadimplência zero não existe - O Antagonista",
-      "texto": "Inadimplência zero não existe &nbsp;&nbsp; O Antagonista",
-      "fonte": "news.google.com",
-      "data": "16-02-2026"
-    },
     {
       "titulo": "Síndica detalha medidas após denúncia de abuso em condomínio de Araçatuba - RP10",
       "texto": "Síndica detalha medidas após denúncia de abuso em condomínio de Araçatuba &nbsp;&nbsp; RP10",
@@ -16,6 +10,12 @@
     {
       "titulo": "Juíza manda condomínio realizar eleição com segurança reforçada - MidiaNews",
       "texto": "Juíza manda condomínio realizar eleição com segurança reforçada &nbsp;&nbsp; MidiaNews",
+      "fonte": "news.google.com",
+      "data": "13-02-2026"
+    },
+    {
+      "titulo": "Em Bangu, um condomínio sem água vive um 'climão' por não confiar no síndico - O Globo",
+      "texto": "Em Bangu, um condomínio sem água vive um 'climão' por não confiar no síndico &nbsp;&nbsp; O Globo",
       "fonte": "news.google.com",
       "data": "13-02-2026"
     },
