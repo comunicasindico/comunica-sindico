@@ -1,6 +1,12 @@
 {
-  "updatedAt": "2026-02-18T15:59:05-03:00",
+  "updatedAt": "2026-02-18T16:58:56-03:00",
   "items": [
+    {
+      "titulo": "Entenda seu condomínio usando I.A. - O Antagonista",
+      "texto": "Entenda seu condomínio usando I.A. &nbsp;&nbsp; O Antagonista",
+      "fonte": "news.google.com",
+      "data": "18-02-2026"
+    },
     {
       "titulo": "Condomínio Parque Aspen volta a lançar esgoto e síndico é encaminhado para a delegacia - Portal de Americana",
       "texto": "Condomínio Parque Aspen volta a lançar esgoto e síndico é encaminhado para a delegacia &nbsp;&nbsp; Portal de Americana",
@@ -16,12 +22,6 @@
     {
       "titulo": "Juíza manda condomínio realizar eleição com segurança reforçada - MidiaNews",
       "texto": "Juíza manda condomínio realizar eleição com segurança reforçada &nbsp;&nbsp; MidiaNews",
-      "fonte": "news.google.com",
-      "data": "13-02-2026"
-    },
-    {
-      "titulo": "Em Bangu, um condomínio sem água vive um 'climão' por não confiar no síndico - O Globo",
-      "texto": "Em Bangu, um condomínio sem água vive um 'climão' por não confiar no síndico &nbsp;&nbsp; O Globo",
       "fonte": "news.google.com",
       "data": "13-02-2026"
     }
