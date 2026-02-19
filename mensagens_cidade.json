@@ -1,6 +1,12 @@
 {
-  "updatedAt": "2026-02-19T07:59:09-03:00",
+  "updatedAt": "2026-02-19T08:59:02-03:00",
   "items": [
+    {
+      "titulo": "Máfia dos Condomínios: casos de assédio moral e perseguição crescem em ambientes residenciais - O Dia",
+      "texto": "Máfia dos Condomínios: casos de assédio moral e perseguição crescem em ambientes residenciais &nbsp;&nbsp; O Dia",
+      "fonte": "news.google.com",
+      "data": "19-02-2026"
+    },
     {
       "titulo": "Violência entre vizinhos cresce e acende alerta jurídico: quando o condomínio pode ser responsabilizado - Rota Jurídica",
       "texto": "Violência entre vizinhos cresce e acende alerta jurídico: quando o condomínio pode ser responsabilizado &nbsp;&nbsp; Rota Jurídica",
@@ -18,12 +24,6 @@
       "texto": "Condomínio Parque Aspen volta a lançar esgoto e síndico é encaminhado para a delegacia &nbsp;&nbsp; Portal de Americana",
       "fonte": "news.google.com",
       "data": "17-02-2026"
-    },
-    {
-      "titulo": "Inadimplência zero não existe - O Antagonista",
-      "texto": "Inadimplência zero não existe &nbsp;&nbsp; O Antagonista",
-      "fonte": "news.google.com",
-      "data": "16-02-2026"
     }
   ]
 }
