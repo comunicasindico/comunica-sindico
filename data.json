@@ -19,32 +19,6 @@
     "piscar": true,
     "somenteAlta": true
   },
-  "mensagens": [
-    {
-      "titulo": "🌿 Sustentabilidade",
-      "texto": "Separe corretamente seu lixo reciclável."
-    },
-    {
-      "titulo": "🔐 Segurança",
-      "texto": "Nunca compartilhe senhas do condomínio."
-    },
-    {
-      "titulo": "📰 Notícias",
-      "texto": "Sem notícias no momento."
-    },
-    {
-      "titulo": "💡 Economia",
-      "texto": "Apague as luzes ao sair das áreas comuns."
-    },
-    {
-      "titulo": "📅 Lembrete",
-      "texto": "Reunião condominial todo fim do mês às 19h."
-    },
-    {
-      "titulo": "📦 Entregas",
-      "texto": "Retire suas encomendas na Caixinha no hall."
-    }
-  ],
   "publicidade": {
     "ativar": true,
     "shuffle": true,
@@ -94,7 +68,13 @@
     "cabecalhoImagem": {
       "ativar": false,
       "url": ""
-    }
+    },
+    "mensagens": [
+      {
+        "titulo": "📰 Notícias",
+        "texto": "Sem notícias no momento. (verifique RSS)"
+      }
+    ]
   },
   "clima": {
     "cidade": "Tubarão",
@@ -106,16 +86,13 @@
     {
       "id": "001",
       "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme. É nossa segurança.",
+      "descricao": "Não informe a ninguém o código do alarme. É nossa segurança. Cuidado",
       "prioridade": "Alta",
       "tipo": "",
       "local": "Hall de Entrada",
-      "inicio": "11/02/26 - 16:38",
-      "fim": "28/03/26 - 16:38",
-      "emergencia": false,
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-13T03:45:23.752Z"
+      "inicio": "",
+      "fim": "",
+      "emergencia": false
     },
     {
       "id": "002",
@@ -126,10 +103,7 @@
       "local": "Salão de Festas",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/04/26 - 16:38",
-      "emergencia": false,
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-13T03:45:23.752Z"
+      "emergencia": false
     },
     {
       "id": "003",
@@ -140,10 +114,7 @@
       "local": "Piscina",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/05/26 - 16:38",
-      "emergencia": false,
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-13T03:45:23.752Z"
+      "emergencia": false
     },
     {
       "id": "004",
@@ -154,10 +125,7 @@
       "local": "Garagem",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/06/26 - 16:38",
-      "emergencia": false,
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-13T03:45:23.752Z"
+      "emergencia": false
     },
     {
       "id": "005",
@@ -168,13 +136,10 @@
       "local": "Lixeira",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/07/26 - 16:38",
-      "emergencia": false,
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-13T03:45:23.752Z"
+      "emergencia": false
     },
     {
-      "id": "007",
+      "id": "006",
       "titulo": "Segurança",
       "descricao": "Teste de Estanqueidade na Canalização de GLP/GN realizado conforme normas técnicas. Nenhum vazamento identificado.",
       "prioridade": "Baixa",
@@ -182,17 +147,7 @@
       "local": "Hall",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/03/26 - 16:38",
-      "emergencia": false,
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-02-13T03:45:23.752Z"
+      "emergencia": false
     }
-  ],
-  "condominio": "Comunica Síndico",
-  "alertaUrgente": {
-    "ativar": false,
-    "titulo": "ALERTA URGENTE",
-    "mensagem": "",
-    "piscar": true
-  }
+  ]
 }
