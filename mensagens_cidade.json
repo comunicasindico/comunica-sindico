@@ -1,6 +1,12 @@
 {
-  "updatedAt": "2026-02-20T14:58:58-03:00",
+  "updatedAt": "2026-02-20T15:58:58-03:00",
   "items": [
+    {
+      "titulo": "Vídeo revela ataque de síndico a corretora em Goiás - Correio do Povo Penedo",
+      "texto": "Vídeo revela ataque de síndico a corretora em Goiás &nbsp;&nbsp; Correio do Povo Penedo",
+      "fonte": "news.google.com",
+      "data": "20-02-2026"
+    },
     {
       "titulo": "Síndico que matou corretora usou dinheiro do condomínio para pagar advogados, diz polícia - Terra",
       "texto": "Síndico que matou corretora usou dinheiro do condomínio para pagar advogados, diz polícia &nbsp;&nbsp; Terra",
@@ -16,12 +22,6 @@
     {
       "titulo": "Síndico que matou corretora usou dinheiro do condomínio para pagar despesas com advogado, diz polícia - Direito News",
       "texto": "Síndico que matou corretora usou dinheiro do condomínio para pagar despesas com advogado, diz polícia &nbsp;&nbsp; Direito News",
-      "fonte": "news.google.com",
-      "data": "20-02-2026"
-    },
-    {
-      "titulo": "Síndico usou dinheiro de condomínio para pagar advogado após matar corretora Daiane, aponta polícia - Diário da Manhã",
-      "texto": "Síndico usou dinheiro de condomínio para pagar advogado após matar corretora Daiane, aponta polícia &nbsp;&nbsp; Diário da Manhã",
       "fonte": "news.google.com",
       "data": "20-02-2026"
     }
