@@ -1,9 +1,15 @@
 {
-  "updatedAt": "2026-02-23T14:59:07-03:00",
+  "updatedAt": "2026-02-23T15:58:56-03:00",
   "items": [
     {
-      "titulo": "Quadrilha faz família refém e rouba R$ 100 mil em condomínio - sindiconet.com.br",
-      "texto": "Quadrilha faz família refém e rouba R$ 100 mil em condomínio &nbsp;&nbsp; sindiconet.com.br",
+      "titulo": "Justiça reconduz síndico alvo de protestos em condomínio de Anápolis - Diário de Goiás",
+      "texto": "Justiça reconduz síndico alvo de protestos em condomínio de Anápolis &nbsp;&nbsp; Diário de Goiás",
+      "fonte": "news.google.com",
+      "data": "23-02-2026"
+    },
+    {
+      "titulo": "Quadrilha faz família refém e rouba R$ 100 mil em condomínio - SíndicoNet",
+      "texto": "Quadrilha faz família refém e rouba R$ 100 mil em condomínio &nbsp;&nbsp; SíndicoNet",
       "fonte": "news.google.com",
       "data": "23-02-2026"
     },
@@ -18,12 +24,6 @@
       "texto": "CONDOMÍNIO RESIDENCIAL JARDIM ATLÂNTICO RUA SYLVIO RIBEIRO ARAGÃO, 260, JÓQUEI CLUBE &nbsp;&nbsp; Tribuna de Minas",
       "fonte": "news.google.com",
       "data": "22-02-2026"
-    },
-    {
-      "titulo": "Randerson Aguiar consegue liminar e volta ao comando do Condomínio Torres do Mirante - Portal 6",
-      "texto": "Randerson Aguiar consegue liminar e volta ao comando do Condomínio Torres do Mirante &nbsp;&nbsp; Portal 6",
-      "fonte": "news.google.com",
-      "data": "20-02-2026"
     }
   ]
 }
