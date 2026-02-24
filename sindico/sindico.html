@@ -87,7 +87,29 @@ ITEM 005 — LOGIN
   color:#fff;
 }
 .btn:hover{filter:brightness(1.1)}
+/* =====================================================
+ITEM 005A — CAMPO SENHA COM VISUALIZAR
+===================================================== */
+.senha-box{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
 
+.senha-box input{
+  width:210px;
+}
+
+.btn-eye{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  background:#1a4d78;
+  color:#fff;
+  font-size:16px;
+}
 /* =====================================================
 ITEM 006 — PAINEL
 ===================================================== */
@@ -157,8 +179,10 @@ ITEM 009 — LOGIN
 ===================================================== -->
 <div class="login" id="loginArea">
   <h2>Painel do Síndico</h2>
+ <div class="senha-box">
   <input type="password" id="senha" placeholder="Senha">
-
+  <button class="btn-eye" type="button" onclick="toggleSenha()">👁</button>
+</div>
   <button class="btn" onclick="acessar()">Acessar</button>
   <button class="btn" onclick="registrarFace()">Registrar FaceID</button>
   <button class="btn" onclick="entrarFace()">Entrar com FaceID</button>
@@ -274,7 +298,13 @@ ITEM 012 — DETECTAR MODO TV (?tv=1)
 if(new URLSearchParams(window.location.search).get("tv") === "1"){
   document.body.classList.add("tv");
 }
-
+/* =====================================================
+ITEM 013 — MOSTRAR / OCULTAR SENHA
+===================================================== */
+function toggleSenha(){
+  const campo = document.getElementById("senha");
+  campo.type = campo.type === "password" ? "text" : "password";
+}
 </script>
 
 </body>
