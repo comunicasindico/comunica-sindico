@@ -12,24 +12,28 @@ ITEM 001 — MANIFEST E META
 <meta name="theme-color" content="#0c2338">
 
 <!-- =====================================================
-ITEM 002 — VARIÁVEIS GLOBAIS
+ITEM 002 — VARIÁVEIS
 ===================================================== -->
 <style>
 :root{
-  --bg:#061726;
-  --card:rgba(12,35,56,.85);
+  --bg:#081a2b;
+  --card:#0f2f4f;
   --txt:#ffffff;
   --line:rgba(255,255,255,.15);
   --radius:18px;
+
+  --alta:#ff3b3b;
+  --media:#ffb300;
+  --baixa:#00d084;
 }
 
 /* =====================================================
-ITEM 003 — BASE GLOBAL
+ITEM 003 — BASE
 ===================================================== */
 *{box-sizing:border-box}
 body{
   margin:0;
-  background:linear-gradient(180deg,#081a2b,#061726);
+  background:linear-gradient(180deg,#061726,#081a2b);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
   color:var(--txt);
   display:flex;
@@ -40,14 +44,14 @@ body{
 }
 
 /* =====================================================
-ITEM 004 — CARD PRINCIPAL
+ITEM 004 — CARD
 ===================================================== */
 .card{
-  width:min(1100px,100%);
-  height:min(95vh,700px);
+  width:min(1200px,100%);
+  height:95vh;
   background:var(--card);
   border-radius:var(--radius);
-  padding:25px;
+  padding:22px;
   display:flex;
   flex-direction:column;
   gap:18px;
@@ -55,7 +59,7 @@ ITEM 004 — CARD PRINCIPAL
 }
 
 /* =====================================================
-ITEM 005 — LOGIN VERTICAL
+ITEM 005 — LOGIN
 ===================================================== */
 .login{
   display:flex;
@@ -65,32 +69,27 @@ ITEM 005 — LOGIN VERTICAL
   justify-content:center;
   height:100%;
 }
-
 .login input{
   width:260px;
   padding:14px;
   border-radius:999px;
   border:none;
   text-align:center;
-  font-size:16px;
 }
-
 .btn{
   width:260px;
   padding:14px;
   border-radius:999px;
   border:none;
   font-weight:700;
-  font-size:15px;
   cursor:pointer;
-  background:#113b63;
+  background:#123b63;
   color:#fff;
 }
-
 .btn:hover{filter:brightness(1.1)}
 
 /* =====================================================
-ITEM 006 — PAINEL HORIZONTAL
+ITEM 006 — PAINEL
 ===================================================== */
 .painel{
   display:none;
@@ -98,47 +97,53 @@ ITEM 006 — PAINEL HORIZONTAL
   height:100%;
 }
 
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
 .registros{
   flex:1;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
   gap:14px;
   overflow:hidden;
 }
 
 .registro{
-  background:rgba(255,255,255,.05);
-  border:1px solid var(--line);
   border-radius:14px;
   padding:14px;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  font-size:14px;
-  overflow:hidden;
 }
 
-.registro h3{
-  margin:0 0 6px 0;
-  font-size:16px;
-}
+.registro.alta{border-left:6px solid var(--alta)}
+.registro.media{border-left:6px solid var(--media)}
+.registro.baixa{border-left:6px solid var(--baixa)}
 
-.small{
-  font-size:12px;
-  opacity:.8;
+.small{font-size:12px;opacity:.8}
+
+/* =====================================================
+ITEM 007 — MODO TV
+===================================================== */
+.tv .card{
+  border-radius:0;
+  height:100vh;
+}
+.tv .registros{
+  grid-template-columns:repeat(4,1fr);
 }
 
 /* =====================================================
-ITEM 007 — RESPONSIVIDADE CELULAR
+ITEM 008 — RESPONSIVO
 ===================================================== */
 @media(max-width:768px){
-  .card{
-    height:100vh;
-    border-radius:0;
-  }
-  .registros{
-    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  }
+  .card{height:100vh;border-radius:0}
+  .registros{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
 }
 </style>
 </head>
@@ -148,71 +153,47 @@ ITEM 007 — RESPONSIVIDADE CELULAR
 <div class="card">
 
 <!-- =====================================================
-ITEM 008 — BLOCO LOGIN
+ITEM 009 — LOGIN
 ===================================================== -->
 <div class="login" id="loginArea">
   <h2>Painel do Síndico</h2>
-
   <input type="password" id="senha" placeholder="Senha">
 
   <button class="btn" onclick="acessar()">Acessar</button>
-
   <button class="btn" onclick="registrarFace()">Registrar FaceID</button>
-
   <button class="btn" onclick="entrarFace()">Entrar com FaceID</button>
 </div>
 
 <!-- =====================================================
-ITEM 009 — BLOCO PAINEL
+ITEM 010 — PAINEL PRINCIPAL
 ===================================================== -->
 <div class="painel" id="painelArea">
 
-  <h2>Registros do Condomínio</h2>
-
-  <div class="registros">
-
-    <div class="registro">
-      <div>
-        <h3>Título</h3>
-        <div>Prioridade: Alta</div>
-        <div>Emergência: Sim</div>
-      </div>
-      <div class="small">
-        Local: Garagem<br>
-        Início: 08:00<br>
-        Fim: 12:00
-      </div>
-    </div>
-
-    <div class="registro">
-      <div>
-        <h3>Manutenção Elevador</h3>
-        <div>Prioridade: Média</div>
-        <div>Emergência: Não</div>
-      </div>
-      <div class="small">
-        Local: Bloco B<br>
-        Início: 14:00<br>
-        Fim: 18:00
-      </div>
-    </div>
-
+  <div class="header">
+    <h2>Registros do Condomínio</h2>
+    <div id="hora"></div>
   </div>
+
+  <div class="registros" id="listaRegistros"></div>
 
 </div>
 
 </div>
 
 <!-- =====================================================
-ITEM 010 — SCRIPT LOGIN
+ITEM 011 — SCRIPT PRINCIPAL
 ===================================================== -->
 <script>
 
+// 🔐 ALTERAR DEPOIS
+const SENHA_PADRAO = "1234";
+
+// 🌐 URL DO APPS SCRIPT
+const API_URL = "https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec";
+
 function acessar(){
-  const senha = document.getElementById("senha").value;
-  if(senha === "1234"){ // 🔐 altere aqui depois
-    document.getElementById("loginArea").style.display="none";
-    document.getElementById("painelArea").style.display="flex";
+  if(document.getElementById("senha").value === SENHA_PADRAO){
+    abrirPainel();
   }else{
     alert("Senha incorreta");
   }
@@ -220,16 +201,78 @@ function acessar(){
 
 function registrarFace(){
   localStorage.setItem("faceID","ok");
-  alert("FaceID registrado neste dispositivo.");
+  alert("FaceID registrado.");
 }
 
 function entrarFace(){
   if(localStorage.getItem("faceID")==="ok"){
-    document.getElementById("loginArea").style.display="none";
-    document.getElementById("painelArea").style.display="flex";
+    abrirPainel();
   }else{
     alert("FaceID não registrado.");
   }
+}
+
+function abrirPainel(){
+  document.getElementById("loginArea").style.display="none";
+  document.getElementById("painelArea").style.display="flex";
+  carregarRegistros();
+  setInterval(atualizarHora,1000);
+}
+
+function atualizarHora(){
+  document.getElementById("hora").textContent =
+    new Date().toLocaleTimeString("pt-BR");
+}
+
+async function carregarRegistros(){
+  try{
+    const res = await fetch(API_URL + "?ts=" + Date.now());
+    const dados = await res.json();
+    renderizar(dados);
+  }catch(e){
+    console.log("Erro API, usando demo");
+    renderizar(dadosDemo());
+  }
+}
+
+function renderizar(lista){
+  const container = document.getElementById("listaRegistros");
+  container.innerHTML="";
+
+  lista.forEach(item=>{
+    const div = document.createElement("div");
+    div.className = "registro " + item.prioridade.toLowerCase();
+
+    div.innerHTML = `
+      <div>
+        <h3>${item.titulo}</h3>
+        <div>Prioridade: ${item.prioridade}</div>
+        <div>Emergência: ${item.emergencia}</div>
+      </div>
+      <div class="small">
+        Local: ${item.local}<br>
+        Início: ${item.inicio}<br>
+        Fim: ${item.fim}
+      </div>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+function dadosDemo(){
+  return [
+    {titulo:"Vazamento Garagem",prioridade:"Alta",emergencia:"Sim",local:"Garagem",inicio:"08:00",fim:"12:00"},
+    {titulo:"Limpeza Piscina",prioridade:"Média",emergencia:"Não",local:"Piscina",inicio:"14:00",fim:"16:00"},
+    {titulo:"Troca Lâmpadas",prioridade:"Baixa",emergencia:"Não",local:"Bloco C",inicio:"10:00",fim:"11:00"}
+  ];
+}
+
+/* =====================================================
+ITEM 012 — DETECTAR MODO TV (?tv=1)
+===================================================== */
+if(new URLSearchParams(window.location.search).get("tv") === "1"){
+  document.body.classList.add("tv");
 }
 
 </script>
