@@ -3,307 +3,219 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
 <title>Síndico — Comunica Síndico</title>
 
-<!-- =====================================================
-ITEM 001 — MANIFEST E META
-===================================================== -->
 <link rel="manifest" href="./manifest-sindico.json">
 <meta name="theme-color" content="#0c2338">
 
-<!-- =====================================================
-ITEM 002 — VARIÁVEIS
-===================================================== -->
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192x192.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Síndico">
+
 <style>
 :root{
-  --bg:#081a2b;
-  --card:#0f2f4f;
-  --txt:#ffffff;
+  --bg:#061726;
+  --txt:#eaf2ff;
   --line:rgba(255,255,255,.15);
-  --radius:18px;
-
-  --alta:#ff3b3b;
-  --media:#ffb300;
-  --baixa:#00d084;
+  --card:rgba(12,35,56,.88);
 }
 
-/* =====================================================
-ITEM 003 — BASE
-===================================================== */
 *{box-sizing:border-box}
+
 body{
   margin:0;
-  background:linear-gradient(180deg,#061726,#081a2b);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)),
+    url("../tubarao01.jpg") center/cover no-repeat fixed;
   color:var(--txt);
   display:flex;
-  justify-content:center;
   align-items:center;
-  height:100vh;
-  overflow:hidden;
+  justify-content:center;
+  padding:18px;
 }
 
-/* =====================================================
-ITEM 004 — CARD
-===================================================== */
+/* ✅ CARD COM ALTURA CONTROLADA */
 .card{
-  width:min(1200px,100%);
-  height:95vh;
+  width:min(980px,100%);
+  max-height:95vh;
+  overflow:auto; /* 🔥 permite mostrar tudo */
   background:var(--card);
-  border-radius:var(--radius);
-  padding:22px;
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-  overflow:hidden;
-}
-
-/* =====================================================
-ITEM 005 — LOGIN
-===================================================== */
-.login{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  align-items:center;
-  justify-content:center;
-  height:100%;
-}
-.login input{
-  width:260px;
-  padding:14px;
-  border-radius:999px;
-  border:none;
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:26px;
+  box-shadow:0 14px 40px rgba(0,0,0,.45);
   text-align:center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
-.btn{
-  width:260px;
-  padding:14px;
+
+/* SCROLL BONITO */
+.card::-webkit-scrollbar{
+  width:8px;
+}
+.card::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.3);
+  border-radius:10px;
+}
+
+.badge{
+  display:inline-block;
+  padding:8px 12px;
   border-radius:999px;
-  border:none;
-  font-weight:700;
-  cursor:pointer;
-  background:#123b63;
-  color:#fff;
-}
-.btn:hover{filter:brightness(1.1)}
-/* =====================================================
-ITEM 005A — CAMPO SENHA COM VISUALIZAR
-===================================================== */
-.senha-box{
-  display:flex;
-  align-items:center;
-  gap:8px;
+  border:1px solid rgba(255,255,255,.2);
+  font-size:12px;
+  margin-bottom:12px;
+  opacity:.9;
 }
 
-.senha-box input{
-  width:210px;
+h1{
+  margin:0 0 10px 0;
+  font-size:28px;
+  font-weight:900;
 }
 
-.btn-eye{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  border:none;
-  cursor:pointer;
-  background:#1a4d78;
-  color:#fff;
+p{
+  margin:0 0 16px 0;
+  opacity:.9;
+  line-height:1.4;
   font-size:16px;
 }
-/* =====================================================
-ITEM 006 — PAINEL
-===================================================== */
-.painel{
-  display:none;
-  flex-direction:column;
-  height:100%;
+
+/* 🔥 BOTÕES SEMPRE VISÍVEIS */
+.actions{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:14px;
 }
 
-.header{
-  display:flex;
-  justify-content:space-between;
+.btn{
+  display:inline-flex;
   align-items:center;
+  justify-content:center;
+  gap:10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(15,47,79,.95);
+  color:var(--txt);
+  padding:14px 22px;
+  font-weight:900;
+  font-size:15px;
+  text-decoration:none;
+  cursor:pointer;
+  min-width:220px;
+  transition:.2s;
 }
 
-.registros{
-  flex:1;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:14px;
-  overflow:hidden;
+.btn:hover{
+  filter:brightness(1.1);
+  transform:scale(1.03);
 }
 
-.registro{
-  border-radius:14px;
-  padding:14px;
-  background:rgba(255,255,255,.05);
-  border:1px solid var(--line);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
+.mini{
+  margin-top:16px;
+  font-size:13px;
+  opacity:.75;
 }
 
-.registro.alta{border-left:6px solid var(--alta)}
-.registro.media{border-left:6px solid var(--media)}
-.registro.baixa{border-left:6px solid var(--baixa)}
-
-.small{font-size:12px;opacity:.8}
-
-/* =====================================================
-ITEM 007 — MODO TV
-===================================================== */
-.tv .card{
-  border-radius:0;
-  height:100vh;
-}
-.tv .registros{
-  grid-template-columns:repeat(4,1fr);
-}
-
-/* =====================================================
-ITEM 008 — RESPONSIVO
-===================================================== */
+/* ✅ RESPONSIVO CELULAR */
 @media(max-width:768px){
-  .card{height:100vh;border-radius:0}
-  .registros{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+
+  body{
+    padding:10px;
+    align-items:flex-start;
+  }
+
+  .card{
+    max-height:none;
+    height:auto;
+    border-radius:14px;
+  }
+
+  .actions{
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .btn{
+    width:100%;
+    max-width:320px;
+  }
+
+  h1{
+    font-size:22px;
+  }
+
+  p{
+    font-size:14px;
+  }
 }
 </style>
 </head>
 
 <body>
-
 <div class="card">
 
-<!-- =====================================================
-ITEM 009 — LOGIN
-===================================================== -->
-<div class="login" id="loginArea">
-  <h2>Painel do Síndico</h2>
- <div class="senha-box">
-  <input type="password" id="senha" placeholder="Senha">
-  <button class="btn-eye" type="button" onclick="toggleSenha()">👁</button>
-</div>
-  <button class="btn" onclick="acessar()">Acessar</button>
-  <button class="btn" onclick="registrarFace()">Registrar FaceID</button>
-  <button class="btn" onclick="entrarFace()">Entrar com FaceID</button>
-</div>
+  <div class="badge" id="mode">Carregando...</div>
 
-<!-- =====================================================
-ITEM 010 — PAINEL PRINCIPAL
-===================================================== -->
-<div class="painel" id="painelArea">
+  <h1>🏢 Síndico — Comunica Síndico</h1>
 
-  <div class="header">
-    <h2>Registros do Condomínio</h2>
-    <div id="hora"></div>
+  <p>
+    Painel do Síndico para acompanhamento do condomínio,
+    alertas, avisos, vídeos e informações em tempo real.
+  </p>
+
+  <div class="actions">
+    <a class="btn" href="/comunica-sindico/index.html?ts=1">
+      📣 Condôminos
+    </a>
+
+    <a class="btn" href="#" id="btnPainelSindico">
+      🛠️ Painel do Síndico
+    </a>
   </div>
 
-  <div class="registros" id="listaRegistros"></div>
+  <p class="mini" id="hint">
+    Instale este app pelo menu do navegador (Adicionar à tela inicial).
+  </p>
 
 </div>
 
-</div>
-
-<!-- =====================================================
-ITEM 011 — SCRIPT PRINCIPAL
-===================================================== -->
 <script>
+(function(){
+  const mode = document.getElementById("mode");
+  const hint = document.getElementById("hint");
 
-// 🔐 ALTERAR DEPOIS
-const SENHA_PADRAO = "neto";
+  const isStandalone =
+    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+    (window.navigator.standalone === true);
 
-// 🌐 URL DO APPS SCRIPT
-const API_URL = "https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec";
+  mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
+  hint.textContent = isStandalone
+    ? "App do Síndico instalado. Use os botões acima."
+    : "Instale este app pelo menu do navegador (Adicionar à tela inicial).";
+})();
 
-function acessar(){
-  if(document.getElementById("senha").value === SENHA_PADRAO){
-    abrirPainel();
-  }else{
-    alert("Senha incorreta");
-  }
-}
+const PAINEL_SINDICO_URL =
+"https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec";
 
-function registrarFace(){
-  localStorage.setItem("faceID","ok");
-  alert("FaceID registrado.");
-}
+document.getElementById("btnPainelSindico")
+.addEventListener("click", function(e){
+  e.preventDefault();
+  const url = PAINEL_SINDICO_URL + "?ts=" + Date.now();
+  window.open(url, "_blank", "noopener");
+});
 
-function entrarFace(){
-  if(localStorage.getItem("faceID")==="ok"){
-    abrirPainel();
-  }else{
-    alert("FaceID não registrado.");
-  }
-}
-
-function abrirPainel(){
-  document.getElementById("loginArea").style.display="none";
-  document.getElementById("painelArea").style.display="flex";
-  carregarRegistros();
-  setInterval(atualizarHora,1000);
-}
-
-function atualizarHora(){
-  document.getElementById("hora").textContent =
-    new Date().toLocaleTimeString("pt-BR");
-}
-
-async function carregarRegistros(){
-  try{
-    const res = await fetch(API_URL + "?ts=" + Date.now());
-    const dados = await res.json();
-    renderizar(dados);
-  }catch(e){
-    console.log("Erro API, usando demo");
-    renderizar(dadosDemo());
-  }
-}
-
-function renderizar(lista){
-  const container = document.getElementById("listaRegistros");
-  container.innerHTML="";
-
-  lista.forEach(item=>{
-    const div = document.createElement("div");
-    div.className = "registro " + item.prioridade.toLowerCase();
-
-    div.innerHTML = `
-      <div>
-        <h3>${item.titulo}</h3>
-        <div>Prioridade: ${item.prioridade}</div>
-        <div>Emergência: ${item.emergencia}</div>
-      </div>
-      <div class="small">
-        Local: ${item.local}<br>
-        Início: ${item.inicio}<br>
-        Fim: ${item.fim}
-      </div>
-    `;
-
-    container.appendChild(div);
-  });
-}
-
-function dadosDemo(){
-  return [
-    {titulo:"Vazamento Garagem",prioridade:"Alta",emergencia:"Sim",local:"Garagem",inicio:"08:00",fim:"12:00"},
-    {titulo:"Limpeza Piscina",prioridade:"Média",emergencia:"Não",local:"Piscina",inicio:"14:00",fim:"16:00"},
-    {titulo:"Troca Lâmpadas",prioridade:"Baixa",emergencia:"Não",local:"Bloco C",inicio:"10:00",fim:"11:00"}
-  ];
-}
-
-/* =====================================================
-ITEM 012 — DETECTAR MODO TV (?tv=1)
-===================================================== */
-if(new URLSearchParams(window.location.search).get("tv") === "1"){
-  document.body.classList.add("tv");
-}
-/* =====================================================
-ITEM 013 — MOSTRAR / OCULTAR SENHA
-===================================================== */
-function toggleSenha(){
-  const campo = document.getElementById("senha");
-  campo.type = campo.type === "password" ? "text" : "password";
+if ("serviceWorker" in navigator) {
+  const base = "/comunica-sindico/";
+  navigator.serviceWorker.register(base + "sw.js", { scope: base });
 }
 </script>
 
