@@ -1,150 +1,238 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
-  <title>Síndico — Comunica Síndico</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Síndico — Comunica Síndico</title>
 
-  <!-- MANIFEST DO SÍNDICO -->
-  <link rel="manifest" href="./manifest-sindico.json">
-  <meta name="theme-color" content="#0c2338">
+<!-- =====================================================
+ITEM 001 — MANIFEST E META
+===================================================== -->
+<link rel="manifest" href="./manifest-sindico.json">
+<meta name="theme-color" content="#0c2338">
 
-  <!-- ÍCONES -->
-  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192x192.png">
-  <link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192x192.png">
+<!-- =====================================================
+ITEM 002 — VARIÁVEIS GLOBAIS
+===================================================== -->
+<style>
+:root{
+  --bg:#061726;
+  --card:rgba(12,35,56,.85);
+  --txt:#ffffff;
+  --line:rgba(255,255,255,.15);
+  --radius:18px;
+}
 
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Síndico">
+/* =====================================================
+ITEM 003 — BASE GLOBAL
+===================================================== */
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#081a2b,#061726);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  color:var(--txt);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+}
 
-  <style>
-    :root{
-      --bg:#061726;
-      --txt:#eaf2ff;
-      --line:rgba(255,255,255,.15);
-      --card:rgba(12,35,56,.78);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      min-height:100vh;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)),
-        url("../tubarao01.jpg") center/cover no-repeat fixed;
-      color:var(--txt);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-    }
-    .card{
-      width:min(980px,100%);
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:22px;
-      padding:26px 26px 20px;
-      box-shadow:0 14px 40px rgba(0,0,0,.45);
-      text-align:center;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-    .badge{
-      display:inline-block;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.2);
-      font-size:12px;
-      margin-bottom:12px;
-      opacity:.9;
-    }
-    h1{margin:0 0 10px 0;font-size:30px;font-weight:900}
-    p{margin:0 0 16px 0;opacity:.9;line-height:1.4;font-size:16px}
-    .actions{
-      display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:10px
-    }
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;
-      border-radius:999px;border:1px solid rgba(255,255,255,.22);
-      background:rgba(15,47,79,.85);color:var(--txt);
-      padding:14px 22px;font-weight:900;font-size:15px;text-decoration:none;cursor:pointer;
-      min-width:220px;
-    }
-    .btn:hover{filter:brightness(1.08)}
-    .mini{margin-top:14px;font-size:13px;opacity:.75}
-  </style>
+/* =====================================================
+ITEM 004 — CARD PRINCIPAL
+===================================================== */
+.card{
+  width:min(1100px,100%);
+  height:min(95vh,700px);
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:25px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  overflow:hidden;
+}
+
+/* =====================================================
+ITEM 005 — LOGIN VERTICAL
+===================================================== */
+.login{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+}
+
+.login input{
+  width:260px;
+  padding:14px;
+  border-radius:999px;
+  border:none;
+  text-align:center;
+  font-size:16px;
+}
+
+.btn{
+  width:260px;
+  padding:14px;
+  border-radius:999px;
+  border:none;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
+  background:#113b63;
+  color:#fff;
+}
+
+.btn:hover{filter:brightness(1.1)}
+
+/* =====================================================
+ITEM 006 — PAINEL HORIZONTAL
+===================================================== */
+.painel{
+  display:none;
+  flex-direction:column;
+  height:100%;
+}
+
+.registros{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+  overflow:hidden;
+}
+
+.registro{
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  font-size:14px;
+  overflow:hidden;
+}
+
+.registro h3{
+  margin:0 0 6px 0;
+  font-size:16px;
+}
+
+.small{
+  font-size:12px;
+  opacity:.8;
+}
+
+/* =====================================================
+ITEM 007 — RESPONSIVIDADE CELULAR
+===================================================== */
+@media(max-width:768px){
+  .card{
+    height:100vh;
+    border-radius:0;
+  }
+  .registros{
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  }
+}
+</style>
 </head>
 
 <body>
-  <div class="card">
-    <div class="badge" id="mode">Carregando...</div>
 
-    <h1>🏢 Síndico — Comunica Síndico</h1>
-    <p>Painel do Síndico para acompanhamento do condomínio, alertas, avisos, vídeos e informações em tempo real.</p>
+<div class="card">
 
-    <div class="actions">
-      <!-- 1º botão: mantém condôminos -->
-      <a class="btn" href="/comunica-sindico/index.html?ts=1" id="btnCondominos">📣 Condôminos</a>
+<!-- =====================================================
+ITEM 008 — BLOCO LOGIN
+===================================================== -->
+<div class="login" id="loginArea">
+  <h2>Painel do Síndico</h2>
 
-      <!-- 2º botão: AGORA VAI PARA O PAINEL DO SÍNDICO (Apps Script) -->
-      <a class="btn" href="#" id="btnPainelSindico">🛠️ Painel do Síndico</a>
+  <input type="password" id="senha" placeholder="Senha">
+
+  <button class="btn" onclick="acessar()">Acessar</button>
+
+  <button class="btn" onclick="registrarFace()">Registrar FaceID</button>
+
+  <button class="btn" onclick="entrarFace()">Entrar com FaceID</button>
+</div>
+
+<!-- =====================================================
+ITEM 009 — BLOCO PAINEL
+===================================================== -->
+<div class="painel" id="painelArea">
+
+  <h2>Registros do Condomínio</h2>
+
+  <div class="registros">
+
+    <div class="registro">
+      <div>
+        <h3>Título</h3>
+        <div>Prioridade: Alta</div>
+        <div>Emergência: Sim</div>
+      </div>
+      <div class="small">
+        Local: Garagem<br>
+        Início: 08:00<br>
+        Fim: 12:00
+      </div>
     </div>
 
-    <p class="mini" id="hint">Instale este app pelo menu do navegador (Adicionar à tela inicial).</p>
+    <div class="registro">
+      <div>
+        <h3>Manutenção Elevador</h3>
+        <div>Prioridade: Média</div>
+        <div>Emergência: Não</div>
+      </div>
+      <div class="small">
+        Local: Bloco B<br>
+        Início: 14:00<br>
+        Fim: 18:00
+      </div>
+    </div>
+
   </div>
 
-  <script>
-  (function(){
-    const mode = document.getElementById("mode");
-    const hint = document.getElementById("hint");
+</div>
 
-    const isStandalone =
-      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
-      (window.navigator.standalone === true);
+</div>
 
-    mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
-    hint.textContent = isStandalone
-      ? "App do Síndico instalado. Use os botões acima."
-      : "Instale este app pelo menu do navegador (Adicionar à tela inicial).";
-  })();
+<!-- =====================================================
+ITEM 010 — SCRIPT LOGIN
+===================================================== -->
+<script>
 
-  // ✅ LINK REAL DO PAINEL DO SÍNDICO (Apps Script)
-  const PAINEL_SINDICO_URL =
-    "https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec";
-
-  // 2º botão: abre certo (no app abre normal; no navegador abre nova aba)
-  (function(){
-    const btn = document.getElementById("btnPainelSindico");
-
-    const isStandalone =
-      (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
-      (window.navigator.standalone === true);
-
-    btn.addEventListener("click", (e)=>{
-      e.preventDefault();
-      const url = PAINEL_SINDICO_URL + (PAINEL_SINDICO_URL.includes("?") ? "&" : "?") + "ts=" + Date.now();
-
-      if(isStandalone){
-        location.href = url;
-      }else{
-        window.open(url, "_blank", "noopener");
-      }
-    });
-  })();
-
-  // Service Worker GLOBAL (um só para todo o projeto)
-  if ("serviceWorker" in navigator) {
-    const base = "/comunica-sindico/";
-    const swUrl = base + "sw.js";
-    window.addEventListener("load", async () => {
-      try{
-        const reg = await navigator.serviceWorker.register(swUrl, { scope: base });
-        // força atualizar SW quando você muda versão
-        if (reg && reg.waiting) reg.waiting.postMessage("SKIP_WAITING");
-      }catch(e){}
-    });
+function acessar(){
+  const senha = document.getElementById("senha").value;
+  if(senha === "1234"){ // 🔐 altere aqui depois
+    document.getElementById("loginArea").style.display="none";
+    document.getElementById("painelArea").style.display="flex";
+  }else{
+    alert("Senha incorreta");
   }
-  </script>
+}
+
+function registrarFace(){
+  localStorage.setItem("faceID","ok");
+  alert("FaceID registrado neste dispositivo.");
+}
+
+function entrarFace(){
+  if(localStorage.getItem("faceID")==="ok"){
+    document.getElementById("loginArea").style.display="none";
+    document.getElementById("painelArea").style.display="flex";
+  }else{
+    alert("FaceID não registrado.");
+  }
+}
+
+</script>
+
 </body>
 </html>
