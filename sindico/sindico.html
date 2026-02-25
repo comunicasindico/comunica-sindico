@@ -2,7 +2,10 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!-- 🔥 Permite zoom no celular -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Síndico — Comunica Síndico</title>
 
 <link rel="manifest" href="./manifest-sindico.json">
@@ -10,52 +13,62 @@
 
 <style>
 :root{
-  --card:rgba(12,35,56,.92);
+  --card:rgba(12,35,56,.95);
   --line:rgba(255,255,255,.15);
   --txt:#eaf2ff;
 }
 
 *{box-sizing:border-box}
 
-body{
+html, body{
   margin:0;
-  min-height:100vh;
+  padding:0;
+  min-height:100%;
+  overflow:auto; /* 🔥 libera rolagem */
+  -webkit-overflow-scrolling:touch;
+}
+
+body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
   background:
-    linear-gradient(180deg, rgba(0,0,0,.3), rgba(0,0,0,.6)),
+    linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.65)),
     url("../tubarao01.jpg") center/cover no-repeat fixed;
   display:flex;
-  align-items:center;
   justify-content:center;
-  padding:20px;
+  align-items:center;
+  padding:16px;
   color:var(--txt);
 }
 
+/* 🔥 Card ajustado para mobile */
 .card{
-  width:min(480px,100%);
+  width:100%;
+  max-width:480px;
   background:var(--card);
   border-radius:20px;
-  padding:40px 30px;
+  padding:28px 22px;
   text-align:center;
   border:1px solid var(--line);
   backdrop-filter:blur(8px);
 }
 
 h1{
-  margin:0 0 30px 0;
-  font-size:24px;
+  margin:0 0 24px 0;
+  font-size:22px;
 }
 
+/* 🔥 Botões sempre verticais */
 .actions{
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:16px;
 }
 
 .btn{
-  padding:16px;
+  width:100%;
+  padding:14px;
   border-radius:14px;
-  font-size:16px;
+  font-size:15px;
   font-weight:700;
   border:none;
   cursor:pointer;
@@ -73,7 +86,13 @@ h1{
 }
 
 .btn:hover{
-  transform:scale(1.03);
+  transform:scale(1.02);
+}
+
+/* 🔥 Ajuste fino para telas pequenas */
+@media(max-width:480px){
+  h1{font-size:18px;}
+  .btn{font-size:14px; padding:12px;}
 }
 </style>
 </head>
@@ -86,13 +105,11 @@ h1{
 
 <div class="actions">
 
-<button class="btn btn-cond"
-onclick="irCondominos()">
+<button class="btn btn-cond" onclick="irCondominos()">
 📣 Entrar em Condôminos
 </button>
 
-<button class="btn btn-sind"
-onclick="irSindico()">
+<button class="btn btn-sind" onclick="irSindico()">
 🛠️ Entrar no Painel do Síndico
 </button>
 
