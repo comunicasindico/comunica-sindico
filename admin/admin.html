@@ -1803,9 +1803,12 @@ setTab("tAlerta"); // pode deixar já na aba, mas ainda bloqueado pelo overlay
    ============================ */
 if ("serviceWorker" in navigator) {
   const base = "/comunica-sindico/";
-  const swUrl = base + "sw.js";
+  const swUrl = base + "sw.js?v=20260224"; // 🔥 versão fixa
+
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register(swUrl, { scope: base }).catch(() => {});
+    navigator.serviceWorker.register(swUrl, { scope: base })
+      .then(reg => reg.update())
+      .catch(() => {});
   });
 }
 </script>
