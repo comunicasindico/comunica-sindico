@@ -86,12 +86,12 @@
     {
       "id": "001",
       "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme. É nossa segurança. Cuidado",
+      "descricao": "Não informe a ninguém o código do alarme. É nossa segurança. Cuidado! Não deixe desarmado o código à noite.",
       "prioridade": "Alta",
-      "tipo": "",
+      "tipo": "Informativo",
       "local": "Hall de Entrada",
-      "inicio": "",
-      "fim": "",
+      "inicio": "25/02/26 - 14:03",
+      "fim": "14/03/26 - 14:03",
       "emergencia": false
     },
     {
