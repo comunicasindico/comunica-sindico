@@ -18,10 +18,9 @@
 
 <style>
 :root{
-  --bg:#061726;
   --txt:#eaf2ff;
   --line:rgba(255,255,255,.15);
-  --card:rgba(12,35,56,.88);
+  --card:rgba(12,35,56,.92);
 }
 
 *{box-sizing:border-box}
@@ -40,121 +39,95 @@ body{
   padding:18px;
 }
 
-/* ✅ CARD COM ALTURA CONTROLADA */
 .card{
-  width:min(980px,100%);
-  max-height:95vh;
-  overflow:auto; /* 🔥 permite mostrar tudo */
+  width:min(500px,100%);
   background:var(--card);
   border:1px solid var(--line);
   border-radius:22px;
-  padding:26px;
+  padding:32px;
   box-shadow:0 14px 40px rgba(0,0,0,.45);
   text-align:center;
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-/* SCROLL BONITO */
-.card::-webkit-scrollbar{
-  width:8px;
-}
-.card::-webkit-scrollbar-thumb{
-  background:rgba(255,255,255,.3);
-  border-radius:10px;
-}
-
-.badge{
-  display:inline-block;
-  padding:8px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.2);
-  font-size:12px;
-  margin-bottom:12px;
-  opacity:.9;
 }
 
 h1{
-  margin:0 0 10px 0;
-  font-size:28px;
+  margin:0 0 25px 0;
+  font-size:26px;
   font-weight:900;
 }
 
-p{
-  margin:0 0 16px 0;
-  opacity:.9;
-  line-height:1.4;
+/* LOGIN VERTICAL */
+.login{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+}
+
+.senha-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  justify-content:center;
+}
+
+.senha-box input{
+  width:100%;
+  max-width:280px;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  font-size:16px;
+  text-align:center;
+}
+
+.btn-eye{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  background:#f1c40f;
   font-size:16px;
 }
 
-/* 🔥 BOTÕES SEMPRE VISÍVEIS */
-.actions{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-top:14px;
-}
-
 .btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.22);
-  background:rgba(15,47,79,.95);
-  color:var(--txt);
-  padding:14px 22px;
-  font-weight:900;
-  font-size:15px;
-  text-decoration:none;
+  width:100%;
+  max-width:280px;
+  padding:14px;
+  border-radius:14px;
+  font-size:16px;
+  font-weight:700;
+  border:none;
   cursor:pointer;
-  min-width:220px;
   transition:.2s;
 }
 
+.btn-primary{
+  background:#2ecc71;
+  color:#fff;
+}
+
+.btn-warning{
+  background:#f1c40f;
+  color:#000;
+}
+
 .btn:hover{
-  filter:brightness(1.1);
   transform:scale(1.03);
 }
 
-.mini{
-  margin-top:16px;
+.status{
+  margin-top:10px;
   font-size:13px;
-  opacity:.75;
+  opacity:.8;
 }
 
-/* ✅ RESPONSIVO CELULAR */
 @media(max-width:768px){
-
-  body{
-    padding:10px;
-    align-items:flex-start;
-  }
-
   .card{
-    max-height:none;
-    height:auto;
-    border-radius:14px;
-  }
-
-  .actions{
-    flex-direction:column;
-    align-items:center;
-  }
-
-  .btn{
     width:100%;
-    max-width:320px;
-  }
-
-  h1{
-    font-size:22px;
-  }
-
-  p{
-    font-size:14px;
+    border-radius:16px;
   }
 }
 </style>
@@ -163,60 +136,79 @@ p{
 <body>
 <div class="card">
 
-  <div class="badge" id="mode">Carregando...</div>
+<h1>🏢 Síndico — Comunica Síndico</h1>
 
-  <h1>🏢 Síndico — Comunica Síndico</h1>
+<div class="login">
 
-  <p>
-    Painel do Síndico para acompanhamento do condomínio,
-    alertas, avisos, vídeos e informações em tempo real.
-  </p>
-
-  <div class="actions">
-    <a class="btn" href="/comunica-sindico/index.html?ts=1">
-      📣 Condôminos
-    </a>
-
-    <a class="btn" href="#" id="btnPainelSindico">
-      🛠️ Painel do Síndico
-    </a>
+  <div class="senha-box">
+    <input type="password" id="senha" placeholder="Senha">
+    <button class="btn-eye" type="button" onclick="toggleSenha()">👁</button>
   </div>
 
-  <p class="mini" id="hint">
-    Instale este app pelo menu do navegador (Adicionar à tela inicial).
-  </p>
+  <button class="btn btn-primary" onclick="acessar()">
+    ✔ Acessar
+  </button>
+
+  <button class="btn btn-warning" onclick="registrarFace()">
+    📲 Registrar FaceID
+  </button>
+
+  <button class="btn btn-warning" onclick="entrarFace()">
+    🔐 Entrar com FaceID
+  </button>
+
+  <div class="status" id="status"></div>
+
+</div>
 
 </div>
 
 <script>
-(function(){
-  const mode = document.getElementById("mode");
-  const hint = document.getElementById("hint");
 
-  const isStandalone =
-    (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
-    (window.navigator.standalone === true);
+/* 🔐 ALTERE SUA SENHA AQUI */
+const SENHA_PADRAO = "1234";
 
-  mode.textContent = isStandalone ? "Modo App (instalado)" : "Modo Navegador";
-  hint.textContent = isStandalone
-    ? "App do Síndico instalado. Use os botões acima."
-    : "Instale este app pelo menu do navegador (Adicionar à tela inicial).";
-})();
-
+/* URL DO APPS SCRIPT */
 const PAINEL_SINDICO_URL =
 "https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec";
 
-document.getElementById("btnPainelSindico")
-.addEventListener("click", function(e){
-  e.preventDefault();
-  const url = PAINEL_SINDICO_URL + "?ts=" + Date.now();
-  window.open(url, "_blank", "noopener");
-});
-
-if ("serviceWorker" in navigator) {
-  const base = "/comunica-sindico/";
-  navigator.serviceWorker.register(base + "sw.js", { scope: base });
+/* MOSTRAR/OCULTAR SENHA */
+function toggleSenha(){
+  const campo = document.getElementById("senha");
+  campo.type = campo.type === "password" ? "text" : "password";
 }
+
+/* LOGIN NORMAL */
+function acessar(){
+  const senha = document.getElementById("senha").value;
+  if(senha === SENHA_PADRAO){
+    abrirPainel();
+  }else{
+    document.getElementById("status").innerText = "Senha incorreta.";
+  }
+}
+
+/* REGISTRAR FACE */
+function registrarFace(){
+  localStorage.setItem("faceID","ok");
+  document.getElementById("status").innerText = "FaceID registrado neste dispositivo.";
+}
+
+/* ENTRAR COM FACE */
+function entrarFace(){
+  if(localStorage.getItem("faceID")==="ok"){
+    abrirPainel();
+  }else{
+    document.getElementById("status").innerText = "FaceID não registrado.";
+  }
+}
+
+/* ABRIR PAINEL */
+function abrirPainel(){
+  const url = PAINEL_SINDICO_URL + "?ts=" + Date.now();
+  window.location.href = url;
+}
+
 </script>
 
 </body>
