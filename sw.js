@@ -4,12 +4,22 @@
    Escopo: /comunica-sindico/
    ========================================================== */
 
-const CACHE_NAME = "cs-enterprise-v2";
+const CACHE_NAME = "cs-enterprise-v3";
 
 /* ============================
-   INSTALL
+   INSTALL + PRECACHE
 ============================ */
 self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll([
+        "/comunica-sindico/",
+        "/comunica-sindico/index.html",
+        "/comunica-sindico/admin/admin.html",
+        "/comunica-sindico/sindico/sindico.html"
+      ]);
+    })
+  );
   self.skipWaiting();
 });
 
@@ -41,7 +51,9 @@ self.addEventListener("fetch", (event) => {
 
   if (req.method !== "GET") return;
   if (url.origin !== location.origin) return;
-  if (!url.pathname.startsWith("/comunica-sindico/")) return;
+  if (!url.pathname.startsWith("/comunica-sindico/")) {
+   return;
+  }
 
   /* ============================
      HTML → NETWORK ONLY (iOS SAFE)
