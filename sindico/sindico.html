@@ -2,25 +2,17 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Síndico — Comunica Síndico</title>
 
 <link rel="manifest" href="./manifest-sindico.json">
 <meta name="theme-color" content="#0c2338">
 
-<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192x192.png">
-<link rel="apple-touch-icon" sizes="192x192" href="./icons/icon-192x192.png">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Síndico">
-
 <style>
 :root{
-  --txt:#eaf2ff;
-  --line:rgba(255,255,255,.15);
   --card:rgba(12,35,56,.92);
+  --line:rgba(255,255,255,.15);
+  --txt:#eaf2ff;
 }
 
 *{box-sizing:border-box}
@@ -28,74 +20,40 @@
 body{
   margin:0;
   min-height:100vh;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
   background:
-    linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)),
+    linear-gradient(180deg, rgba(0,0,0,.3), rgba(0,0,0,.6)),
     url("../tubarao01.jpg") center/cover no-repeat fixed;
-  color:var(--txt);
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:18px;
+  padding:20px;
+  color:var(--txt);
 }
 
 .card{
-  width:min(500px,100%);
+  width:min(480px,100%);
   background:var(--card);
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:32px;
-  box-shadow:0 14px 40px rgba(0,0,0,.45);
+  border-radius:20px;
+  padding:40px 30px;
   text-align:center;
-  backdrop-filter: blur(8px);
+  border:1px solid var(--line);
+  backdrop-filter:blur(8px);
 }
 
 h1{
-  margin:0 0 25px 0;
-  font-size:26px;
-  font-weight:900;
+  margin:0 0 30px 0;
+  font-size:24px;
 }
 
-/* LOGIN VERTICAL */
-.login{
+.actions{
   display:flex;
   flex-direction:column;
-  align-items:center;
   gap:18px;
 }
 
-.senha-box{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  width:100%;
-  justify-content:center;
-}
-
-.senha-box input{
-  width:100%;
-  max-width:280px;
-  padding:14px;
-  border-radius:14px;
-  border:none;
-  font-size:16px;
-  text-align:center;
-}
-
-.btn-eye{
-  width:46px;
-  height:46px;
-  border-radius:50%;
-  border:none;
-  cursor:pointer;
-  background:#f1c40f;
-  font-size:16px;
-}
-
 .btn{
-  width:100%;
-  max-width:280px;
-  padding:14px;
+  padding:16px;
   border-radius:14px;
   font-size:16px;
   font-weight:700;
@@ -104,60 +62,39 @@ h1{
   transition:.2s;
 }
 
-.btn-primary{
-  background:#2ecc71;
+.btn-cond{
+  background:#3498db;
   color:#fff;
 }
 
-.btn-warning{
-  background:#f1c40f;
-  color:#000;
+.btn-sind{
+  background:#2ecc71;
+  color:#fff;
 }
 
 .btn:hover{
   transform:scale(1.03);
 }
-
-.status{
-  margin-top:10px;
-  font-size:13px;
-  opacity:.8;
-}
-
-@media(max-width:768px){
-  .card{
-    width:100%;
-    border-radius:16px;
-  }
-}
 </style>
 </head>
 
 <body>
+
 <div class="card">
 
-<h1>🏢 Síndico — Comunica Síndico</h1>
+<h1>🏢 Comunica Síndico</h1>
 
-<div class="login">
+<div class="actions">
 
-  <div class="senha-box">
-    <input type="password" id="senha" placeholder="Senha">
-    <button class="btn-eye" type="button" onclick="toggleSenha()">👁</button>
-  </div>
+<button class="btn btn-cond"
+onclick="irCondominos()">
+📣 Entrar em Condôminos
+</button>
 
-  <button class="btn btn-primary" onclick="acessar()">
-    ✔ Acessar
-  </button>
-
-  <button class="btn btn-warning" onclick="registrarFace()">
-    📲 Registrar FaceID
-  </button>
-
-  <button class="btn btn-warning" onclick="entrarFace()">
-    🔐 Entrar com FaceID
-  </button>
-
-  <div class="status" id="status"></div>
+<button class="btn btn-sind"
+onclick="irSindico()">
+🛠️ Entrar no Painel do Síndico
+</button>
 
 </div>
 
@@ -165,48 +102,14 @@ h1{
 
 <script>
 
-/* 🔐 ALTERE SUA SENHA AQUI */
-const SENHA_PADRAO = "1234";
-
-/* URL DO APPS SCRIPT */
-const PAINEL_SINDICO_URL =
-"https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec";
-
-/* MOSTRAR/OCULTAR SENHA */
-function toggleSenha(){
-  const campo = document.getElementById("senha");
-  campo.type = campo.type === "password" ? "text" : "password";
+function irCondominos(){
+  window.location.href =
+  "/comunica-sindico/index.html?ts=" + Date.now();
 }
 
-/* LOGIN NORMAL */
-function acessar(){
-  const senha = document.getElementById("senha").value;
-  if(senha === SENHA_PADRAO){
-    abrirPainel();
-  }else{
-    document.getElementById("status").innerText = "Senha incorreta.";
-  }
-}
-
-/* REGISTRAR FACE */
-function registrarFace(){
-  localStorage.setItem("faceID","ok");
-  document.getElementById("status").innerText = "FaceID registrado neste dispositivo.";
-}
-
-/* ENTRAR COM FACE */
-function entrarFace(){
-  if(localStorage.getItem("faceID")==="ok"){
-    abrirPainel();
-  }else{
-    document.getElementById("status").innerText = "FaceID não registrado.";
-  }
-}
-
-/* ABRIR PAINEL */
-function abrirPainel(){
-  const url = PAINEL_SINDICO_URL + "?ts=" + Date.now();
-  window.location.href = url;
+function irSindico(){
+  window.location.href =
+  "https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec?ts=" + Date.now();
 }
 
 </script>
