@@ -129,6 +129,17 @@
     },
     {
       "id": "005",
+      "titulo": "Aviso Geral",
+      "descricao": "Em breve, faremos uso do melhor APP e sistema visual de comunicação oferecido aos condôminos e aos administradores (síndicos). AGUARDEM!",
+      "prioridade": "Média",
+      "tipo": "Informativo",
+      "local": "Hall de Entrada",
+      "inicio": "25/02/26 - 10:06",
+      "fim": "26/03/26 - 10:06",
+      "emergencia": false
+    },
+    {
+      "id": "006",
       "titulo": "Limpeza",
       "descricao": "Utilizem sacolas reforçadas próprias para lixo.",
       "prioridade": "Baixa",
@@ -139,7 +150,7 @@
       "emergencia": false
     },
     {
-      "id": "006",
+      "id": "007",
       "titulo": "Segurança",
       "descricao": "Teste de Estanqueidade na Canalização de GLP/GN realizado conforme normas técnicas. Nenhum vazamento identificado.",
       "prioridade": "Baixa",
