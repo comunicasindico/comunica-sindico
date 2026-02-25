@@ -1798,18 +1798,26 @@ setUploadStatus("—", "");
 showLogin(); // sempre pede ao abrir
 setTab("tAlerta"); // pode deixar já na aba, mas ainda bloqueado pelo overlay
 
-/* ============================
-   SERVICE WORKER GLOBAL
-   ============================ */
-if ("serviceWorker" in navigator) {
-  const base = "/comunica-sindico/";
-  const swUrl = base + "sw.js?v=20260224"; // 🔥 versão fixa
 
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register(swUrl, { scope: base })
-      .then(reg => reg.update())
-      .catch(() => {});
+if ("serviceWorker" in navigator) {
+
+  navigator.serviceWorker.register("/comunica-sindico/sw.js", {
+    scope: "/comunica-sindico/"
+  }).then(reg => {
+
+    // 🔥 força checagem de update
+    reg.update();
+
   });
+
+  // 🔥 auto reload quando nova versão ativar
+  navigator.serviceWorker.addEventListener("message", event => {
+    if (event.data && event.data.type === "NEW_VERSION") {
+      window.location.reload();
+    }
+  });
+
 }
+
 </script>
 
