@@ -1,270 +1,113 @@
 /* ==========================================================
-   Comunica Síndico — sw.js (GLOBAL) — 3 PAINÉIS
-   - Escopo: /comunica-sindico/
-   - Condôminos + Síndico + Admin
-   - HTML: network-first + fallback offline por área
-   - JSON DINÂMICO: network-only (sempre tenta rede) + fallback cache
-   - Vídeos/Range: não cachear
-   - Não interfere em cross-domain (script.google.com etc.)
+   Comunica Síndico — SW ENTERPRISE iOS AUTO UPDATE
+   Atualização automática real + reload invisível
+   Escopo: /comunica-sindico/
    ========================================================== */
 
-/* ==============================
-   AUTO UPDATE CACHE
-============================== */
+const CACHE_NAME = "cs-enterprise-v2";
 
-const CACHE_PREFIX = "cs-global-";
-const CACHE_NAME = CACHE_PREFIX + Date.now(); 
+/* ============================
+   INSTALL
+============================ */
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
+});
 
-// Pré-cache essencial (sem depender de /sindico/manifest etc.)
-const ASSETS = [
-  "./",
-  "./index.html",
-  "./admin.html",
-  "./sindico/",
-  "./sindico/index.html",
-  "./manifest.json",
-  "./data.json",
-  "./versiculos.json",
-  "./assets/icons/icon-192.png",
-  "./assets/icons/icon-512.png"
-];
-
-// Offline (Condôminos/Admin)
-const OFFLINE_MAIN = `<!doctype html>
-<html lang="pt-BR"><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Comunica Síndico — Offline</title>
-<style>
-  body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#061726;color:#eaf2ff;
-  display:flex;min-height:100vh;align-items:center;justify-content:center}
-  .c{max-width:560px;padding:22px;border:1px solid rgba(255,255,255,.12);
-  border-radius:16px;background:rgba(12,35,56,.35)}
-  h1{margin:0 0 10px 0;font-size:20px}
-  p{margin:0;opacity:.85;line-height:1.35}
-</style>
-<div class="c">
-  <h1>Sem internet no momento</h1>
-  <p>Você pode abrir parcialmente com dados em cache. Assim que a conexão voltar, ele se atualiza.</p>
-</div></html>`;
-
-// Offline (Síndico)
-const OFFLINE_SINDICO = `<!doctype html>
-<html lang="pt-BR"><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Síndico(a) — Offline</title>
-<style>
-  body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#061726;color:#eaf2ff;
-  display:flex;min-height:100vh;align-items:center;justify-content:center}
-  .c{max-width:560px;padding:22px;border:1px solid rgba(255,255,255,.12);
-  border-radius:16px;background:rgba(12,35,56,.35)}
-  h1{margin:0 0 10px 0;font-size:20px}
-  p{margin:0;opacity:.85;line-height:1.35}
-</style>
-<div class="c">
-  <h1>Sem internet no momento</h1>
-  <p>O app do Síndico abre, mas o painel online (Apps Script) precisa de conexão.</p>
-</div></html>`;
-
-function sameOrigin(url){
-  return url.origin === self.location.origin;
-}
-function isNavigation(req){
-  return req.mode === "navigate";
-}
-function isVideoRequest(req, url){
-  const p = url.pathname.toLowerCase();
-  return p.endsWith(".mp4") || p.endsWith(".webm") || req.destination === "video";
-}
-function hasRangeHeader(req){
-  return req.headers && req.headers.has("range");
-}
-
-// ✅ JSON dinâmico (não pode “grudar” cache velho)
-function isDynamicJson(url){
-  const p = url.pathname.toLowerCase();
-  return (
-    p.endsWith("/data.json") ||
-    p.endsWith("/versiculos.json") ||
-    p.endsWith("/mensagens_cidade.json")
-  );
-}
-
-function isAnyJson(url){
-  return url.pathname.toLowerCase().endsWith(".json");
-}
-function isSindicoPath(url){
-  return url.pathname.includes("/sindico/");
-}
-
-// normaliza: remove query/hash e transforma em "./arquivo"
-function toRelativePath(url){
-  const p = url.pathname;
-  const last = p.split("/").pop() || "";
-  return `./${last}`;
-}
-
-// chave limpa para navegação (sem query) evita duplicação
-function navKeyFrom(url){
-  return new Request(url.pathname, { method: "GET" });
-}
-
-async function addAllSafe(cache, assets){
-  await Promise.all(
-    assets.map(async (path) => {
-      try{
-        const res = await fetch(new Request(path, { cache:"reload" }));
-        if (res && res.ok) await cache.put(path, res.clone());
-      }catch(e){}
-    })
-  );
-}
-
-/* ==============================
-   FORÇA ATUALIZAÇÃO AUTOMÁTICA
-============================== */
-
-self.addEventListener("install", event => {
+/* ============================
+   ACTIVATE
+============================ */
+self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    await addAllSafe(cache, ASSETS);
-    self.skipWaiting();
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+    await self.clients.claim();
+
+    // 🔥 avisa páginas abertas para recarregar
+    const clients = await self.clients.matchAll({ type: "window" });
+    clients.forEach(client => {
+      client.postMessage({ type: "NEW_VERSION" });
+    });
+
   })());
 });
 
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys
-          .filter(key => key.startsWith(CACHE_PREFIX))
-          .map(key => caches.delete(key))
-      )
-    )
-  );
-  self.clients.claim();
-});
-
-self.addEventListener("message", (event) => {
-  if (event.data === "SKIP_WAITING") self.skipWaiting();
-});
-
+/* ============================
+   FETCH
+============================ */
 self.addEventListener("fetch", (event) => {
+
   const req = event.request;
   const url = new URL(req.url);
 
   if (req.method !== "GET") return;
-  if (!sameOrigin(url)) return;
-
-  // ✅ só atua dentro do app (evita pegar outras coisas do domínio)
+  if (url.origin !== location.origin) return;
   if (!url.pathname.startsWith("/comunica-sindico/")) return;
 
-  // vídeos e Range: não cachear
-  if (isVideoRequest(req, url) || hasRangeHeader(req)) {
+  /* ============================
+     HTML → NETWORK ONLY (iOS SAFE)
+  ============================ */
+  if (req.mode === "navigate") {
+    event.respondWith(
+      fetch(req, { cache: "no-store" })
+        .catch(() => new Response("Offline", { status: 503 }))
+    );
+    return;
+  }
+
+  /* ============================
+     JSON → SEM CACHE
+  ============================ */
+  if (url.pathname.endsWith(".json")) {
+    event.respondWith(
+      fetch(req, { cache: "no-store" })
+        .catch(() =>
+          new Response("{}", {
+            headers: { "Content-Type": "application/json" }
+          })
+        )
+    );
+    return;
+  }
+
+  /* ============================
+     VÍDEOS → SEM CACHE
+  ============================ */
+  if (
+    req.destination === "video" ||
+    url.pathname.endsWith(".mp4") ||
+    url.pathname.endsWith(".webm")
+  ) {
     event.respondWith(fetch(req));
     return;
   }
 
-  // ✅ JSON DINÂMICO — NETWORK-ONLY + fallback cache (resolve “não atualiza”)
-  // Regra: sempre tenta rede primeiro; se falhar, usa cache; NÃO deixa “grudar” versão antiga.
-  if (isDynamicJson(url)) {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const rel = toRelativePath(url); // "./data.json" etc.
-
-      try{
-        const fresh = await fetch(req, { cache:"no-store" });
-        if (fresh && fresh.ok) {
-          // salva somente a versão "boa"
-          await cache.put(rel, fresh.clone());
-        }
-        return fresh;
-      }catch(e){
-        // fallback: tenta o relativo (sem query), depois ignoreSearch
-        return (await cache.match(rel)) ||
-               (await cache.match(req, { ignoreSearch: true })) ||
-               new Response("{}", { headers: { "Content-Type":"application/json; charset=utf-8" }});
-      }
-    })());
-    return;
-  }
-
-  // NAVEGAÇÃO (HTML) — network-first + fallback (sem duplicar por query)
-  if (isNavigation(req)) {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const navKey = navKeyFrom(url);
-
-      try{
-        const fresh = await fetch(req, { cache:"no-store" });
-        if (fresh && fresh.ok) await cache.put(navKey, fresh.clone());
-
-        // atualiza shell principal/síndico para fallback rápido
-        try{
-          const shellPath = isSindicoPath(url) ? "./sindico/index.html" : "./index.html";
-          const freshShell = await fetch(shellPath, { cache:"no-store" });
-          if (freshShell && freshShell.ok) await cache.put(shellPath, freshShell.clone());
-        }catch(e){}
-
-        return fresh;
-      }catch(e){
-        const cachedNav = await cache.match(navKey);
-        if (cachedNav) return cachedNav;
-
-        // fallback shell por área
-        const shellPath = isSindicoPath(url) ? "./sindico/index.html" : "./index.html";
-        const cachedShell = await cache.match(shellPath);
-        if (cachedShell) return cachedShell;
-
-        // offline por área
-        const offlinePath = isSindicoPath(url) ? "./offline-sindico.html" : "./offline.html";
-        return (await cache.match(offlinePath)) || new Response("Offline", { status:503, statusText:"Offline" });
-      }
-    })());
-    return;
-  }
-
-  // OUTROS JSON (não-dinâmicos) — network-first + fallback (resolve query)
-  if (isAnyJson(url)) {
-    event.respondWith((async () => {
-      const cache = await caches.open(CACHE_NAME);
-      const rel = toRelativePath(url);
-
-      try{
-        const fresh = await fetch(req, { cache:"no-store" });
-        if (fresh && fresh.ok) {
-          await cache.put(rel, fresh.clone());
-        }
-        return fresh;
-      }catch(e){
-        return (await cache.match(rel)) ||
-               (await cache.match(req, { ignoreSearch: true })) ||
-               new Response("{}", { headers: { "Content-Type":"application/json; charset=utf-8" }});
-      }
-    })());
-    return;
-  }
-
-  // OUTROS (stale-while-revalidate) — rápido
+  /* ============================
+     OUTROS ARQUIVOS → CACHE LEVE
+  ============================ */
   event.respondWith((async () => {
+
     const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(req, { ignoreSearch: true });
+    const cached = await cache.match(req);
 
     if (cached) {
-      event.waitUntil((async () => {
-        try{
-          const fresh = await fetch(req, { cache:"no-store" });
-          if (fresh && fresh.ok) await cache.put(req, fresh.clone());
-        }catch(e){}
-      })());
+      event.waitUntil(
+        fetch(req, { cache: "no-store" })
+          .then(res => {
+            if (res.ok) cache.put(req, res.clone());
+          })
+          .catch(() => {})
+      );
       return cached;
     }
 
-    try{
-      const fresh = await fetch(req, { cache:"no-store" });
-      if (fresh && fresh.ok) await cache.put(req, fresh.clone());
+    try {
+      const fresh = await fetch(req, { cache: "no-store" });
+      if (fresh.ok) cache.put(req, fresh.clone());
       return fresh;
-    }catch(e){
-      return new Response("Offline", { status:503, statusText:"Offline" });
+    } catch {
+      return new Response("Offline", { status: 503 });
     }
+
   })());
+
 });
