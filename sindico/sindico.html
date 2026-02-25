@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Síndico — Comunica Síndico</title>
 
 <link rel="manifest" href="./manifest-sindico.json">
@@ -15,7 +16,9 @@
   --txt:#eaf2ff;
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 html, body{
   margin:0;
@@ -34,10 +37,10 @@ body{
   padding:20px;
 }
 
-/* =====================================================
-DESKTOP
-===================================================== */
-@media (min-width: 769px){
+/* ============================
+   DESKTOP CENTRALIZADO
+============================ */
+@media (min-width:769px){
   body{
     display:flex;
     justify-content:center;
@@ -45,23 +48,43 @@ DESKTOP
   }
 }
 
-/* =====================================================
-MOBILE
-===================================================== */
-@media (max-width: 768px){
+/* ============================
+   MOBILE VERTICAL AJUSTADO
+============================ */
+@media (max-width:768px){
+
   body{
-    display:block;        /* 🔥 Remove centralização vertical */
+    display:block;
     padding:16px;
   }
 
   .card{
-    margin-top:20px;      /* 🔥 Começa do topo */
+    width:100%;
+    max-width:100%;
+    margin:0 auto;
+    padding:20px;
+  }
+
+  h1{
+    font-size:20px;
+  }
+
+  .actions{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .btn{
+    width:100%;
+    font-size:15px;
+    padding:14px;
   }
 }
 
-/* =====================================================
-CARD
-===================================================== */
+/* ============================
+   CARD
+============================ */
 .card{
   width:100%;
   max-width:480px;
@@ -74,14 +97,17 @@ CARD
   backdrop-filter:blur(8px);
 }
 
+/* ============================
+   TÍTULO
+============================ */
 h1{
   margin:0 0 24px 0;
   font-size:22px;
 }
 
-/* =====================================================
-BOTÕES
-===================================================== */
+/* ============================
+   BOTÕES
+============================ */
 .actions{
   display:flex;
   flex-direction:column;
@@ -112,66 +138,6 @@ BOTÕES
 .btn:hover{
   transform:scale(1.02);
 }
-
-/* Ajuste fino para telas muito pequenas */
-@media(max-width:480px){
-  h1{font-size:18px;}
-  .btn{font-size:14px; padding:12px;}
-}
-  <style>
-
-  /* todo seu CSS atual */
-
-  /* =====================================================
-     AJUSTE MOBILE VERTICAL
-  ===================================================== */
-
-  @media screen and (max-width: 768px) and (orientation: portrait){
-
-    html, body{
-      margin:0;
-      padding:0;
-      overflow:auto;
-      font-size:14px;
-    }
-
-    body{
-      display:block !important;
-    }
-
-    .login-container,
-    .login,
-    .actions{
-      display:flex !important;
-      flex-direction:column !important;
-      align-items:stretch !important;
-      gap:10px !important;
-      width:100% !important;
-    }
-
-    input, select, textarea{
-      width:100% !important;
-      font-size:14px !important;
-      padding:8px !important;
-    }
-
-    button{
-      width:100% !important;
-      padding:10px !important;
-      font-size:14px !important;
-    }
-
-    .container,
-    .wrapper,
-    .card{
-      width:100% !important;
-      max-width:100% !important;
-      padding:10px !important;
-    }
-
-  }
-
-</style>
 </style>
 </head>
 
@@ -196,7 +162,6 @@ BOTÕES
 </div>
 
 <script>
-
 function irCondominos(){
   window.location.href =
   "/comunica-sindico/index.html?ts=" + Date.now();
@@ -206,7 +171,6 @@ function irSindico(){
   window.location.href =
   "https://script.google.com/macros/s/AKfycbyBHEhubiPa5Oif5T68PzrahDbYHpw5LDfZ0oHD_E7ozCYEk62xCVGk648ITzH-eehQ/exec?ts=" + Date.now();
 }
-
 </script>
 
 </body>
