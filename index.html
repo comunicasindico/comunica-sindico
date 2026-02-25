@@ -251,5 +251,17 @@ document.getElementById("adVideo").addEventListener("ended",()=>{if(!videosGloba
 setInterval(()=>{location.reload();},3600000);
 
 </script>
+<script>
+if ("serviceWorker" in navigator) {
+  const base = "/comunica-sindico/";
+  const swUrl = base + "sw.js?v=20260224";
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register(swUrl, { scope: base })
+      .then(reg => reg.update())
+      .catch(() => {});
+  });
+}
+</script>
 </body>
 </html>
