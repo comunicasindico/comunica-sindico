@@ -118,6 +118,60 @@ BOTÕES
   h1{font-size:18px;}
   .btn{font-size:14px; padding:12px;}
 }
+  <style>
+
+  /* todo seu CSS atual */
+
+  /* =====================================================
+     AJUSTE MOBILE VERTICAL
+  ===================================================== */
+
+  @media screen and (max-width: 768px) and (orientation: portrait){
+
+    html, body{
+      margin:0;
+      padding:0;
+      overflow:auto;
+      font-size:14px;
+    }
+
+    body{
+      display:block !important;
+    }
+
+    .login-container,
+    .login,
+    .actions{
+      display:flex !important;
+      flex-direction:column !important;
+      align-items:stretch !important;
+      gap:10px !important;
+      width:100% !important;
+    }
+
+    input, select, textarea{
+      width:100% !important;
+      font-size:14px !important;
+      padding:8px !important;
+    }
+
+    button{
+      width:100% !important;
+      padding:10px !important;
+      font-size:14px !important;
+    }
+
+    .container,
+    .wrapper,
+    .card{
+      width:100% !important;
+      max-width:100% !important;
+      padding:10px !important;
+    }
+
+  }
+
+</style>
 </style>
 </head>
 
