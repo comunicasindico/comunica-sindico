@@ -8,9 +8,12 @@
    - Não interfere em cross-domain (script.google.com etc.)
    ========================================================== */
 
-const CACHE_VERSION = "v15"; // ✅ bump para forçar atualização
-const CACHE_PREFIX  = "cs-global-";
-const CACHE_NAME    = `${CACHE_PREFIX}${CACHE_VERSION}`;
+/* ==============================
+   AUTO UPDATE CACHE
+============================== */
+
+const CACHE_PREFIX = "cs-global-";
+const CACHE_NAME = CACHE_PREFIX + Date.now(); 
 
 // Pré-cache essencial (sem depender de /sindico/manifest etc.)
 const ASSETS = [
@@ -116,31 +119,29 @@ async function addAllSafe(cache, assets){
   );
 }
 
-self.addEventListener("install", (event) => {
+/* ==============================
+   FORÇA ATUALIZAÇÃO AUTOMÁTICA
+============================== */
+
+self.addEventListener("install", event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
     await addAllSafe(cache, ASSETS);
-
-    await cache.put("./offline.html", new Response(OFFLINE_MAIN, {
-      headers: { "Content-Type":"text/html; charset=utf-8" }
-    }));
-
-    await cache.put("./offline-sindico.html", new Response(OFFLINE_SINDICO, {
-      headers: { "Content-Type":"text/html; charset=utf-8" }
-    }));
-
     self.skipWaiting();
   })());
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(
-      keys.map(k => (k.startsWith(CACHE_PREFIX) && k !== CACHE_NAME) ? caches.delete(k) : null)
-    );
-    await self.clients.claim();
-  })());
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key => key.startsWith(CACHE_PREFIX))
+          .map(key => caches.delete(key))
+      )
+    )
+  );
+  self.clients.claim();
 });
 
 self.addEventListener("message", (event) => {
