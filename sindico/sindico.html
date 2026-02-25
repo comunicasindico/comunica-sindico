@@ -2,10 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8" />
-
-<!-- 🔥 Permite zoom no celular -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Síndico — Comunica Síndico</title>
 
 <link rel="manifest" href="./manifest-sindico.json">
@@ -24,7 +21,7 @@ html, body{
   margin:0;
   padding:0;
   min-height:100%;
-  overflow:auto; /* 🔥 libera rolagem */
+  overflow:auto;
   -webkit-overflow-scrolling:touch;
 }
 
@@ -33,17 +30,42 @@ body{
   background:
     linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.65)),
     url("../tubarao01.jpg") center/cover no-repeat fixed;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:16px;
   color:var(--txt);
+  padding:20px;
 }
 
-/* 🔥 Card ajustado para mobile */
+/* =====================================================
+DESKTOP
+===================================================== */
+@media (min-width: 769px){
+  body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+}
+
+/* =====================================================
+MOBILE
+===================================================== */
+@media (max-width: 768px){
+  body{
+    display:block;        /* 🔥 Remove centralização vertical */
+    padding:16px;
+  }
+
+  .card{
+    margin-top:20px;      /* 🔥 Começa do topo */
+  }
+}
+
+/* =====================================================
+CARD
+===================================================== */
 .card{
   width:100%;
   max-width:480px;
+  margin:0 auto;
   background:var(--card);
   border-radius:20px;
   padding:28px 22px;
@@ -57,7 +79,9 @@ h1{
   font-size:22px;
 }
 
-/* 🔥 Botões sempre verticais */
+/* =====================================================
+BOTÕES
+===================================================== */
 .actions{
   display:flex;
   flex-direction:column;
@@ -89,7 +113,7 @@ h1{
   transform:scale(1.02);
 }
 
-/* 🔥 Ajuste fino para telas pequenas */
+/* Ajuste fino para telas muito pequenas */
 @media(max-width:480px){
   h1{font-size:18px;}
   .btn{font-size:14px; padding:12px;}
