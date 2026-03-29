@@ -150,17 +150,6 @@
       "emergencia": false
     },
     {
-      "id": "007",
-      "titulo": "Seguran?a",
-      "descricao": "Teste de estanqueidade na canaliza??o de GLP/GN realizado conforme normas t?cnicas. Nenhum vazamento identificado.",
-      "prioridade": "Baixa",
-      "tipo": "Informativo",
-      "local": "Hall",
-      "inicio": "2026-03-29T00:00",
-      "fim": "2026-05-30T00:00",
-      "emergencia": false
-    },
-    {
       "id": "eaf920b4-84e4-4f97-ac34-46e51182b3e4",
       "titulo": "Lavanderia",
       "descricao": "Alterei o script admin.js editado pelo script.google.",
