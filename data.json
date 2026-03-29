@@ -1,5 +1,5 @@
 {
-  "titulo": "Comunica Síndico — Condôminos",
+  "titulo": "Comunica S?ndico ? Cond?minos",
   "subtitulo": "Painel Informativo",
   "referencia": "",
   "temaDoDia": {
@@ -25,43 +25,43 @@
     "videos": [
       {
         "arquivo": "./ads/calibra.mp4",
-        "anunciante": "Calibra Ltda – (48) 3628-1414 – BR-101, Km 336",
-        "descricao": "Especialistas em rodocalibrador interno e serviços de alta precisão para veículos pesados."
+        "anunciante": "Calibra Ltda ? (48) 3628-1414 ? BR-101, Km 336",
+        "descricao": "Especialistas em rodocalibrador interno e servi?os de alta precis?o para ve?culos pesados."
       },
       {
         "arquivo": "./ads/comunicasindicocity.mp4",
-        "anunciante": "Comunica Síndico",
-        "descricao": "A solução digital completa para comunicação moderna e eficiente do seu condomínio."
+        "anunciante": "Comunica S?ndico",
+        "descricao": "A solu??o digital completa para comunica??o moderna e eficiente do seu condom?nio."
       },
       {
         "arquivo": "./ads/googlemapsgde.mp4",
         "anunciante": "Google Maps Business",
-        "descricao": "Coloque sua empresa na propaganda e seja encontrado por clientes em toda a região."
+        "descricao": "Coloque sua empresa na propaganda e seja encontrado por clientes em toda a regi?o."
       },
       {
         "arquivo": "./ads/cslogo.mp4",
-        "anunciante": "Comunica Síndico",
-        "descricao": "Tecnologia, transparência e responsabilidade social para condomínios inteligentes."
+        "anunciante": "Comunica S?ndico",
+        "descricao": "Tecnologia, transpar?ncia e responsabilidade social para condom?nios inteligentes."
       },
       {
         "arquivo": "./ads/luisa.mp4",
-        "anunciante": "Momento Família",
+        "anunciante": "Momento Fam?lia",
         "descricao": "Luisa visitando o papai no trabalho. Um momento especial que marca para sempre."
       },
       {
         "arquivo": "./ads/larissa.mp4",
-        "anunciante": "Memórias Especiais",
-        "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o coração."
+        "anunciante": "Mem?rias Especiais",
+        "descricao": "Larissa em seu primeiro aninho. Recorda??es que aquecem o cora??o."
       },
       {
         "arquivo": "./ads/keyon.mp4",
-        "anunciante": "Imobiliária de referência em SC",
-        "descricao": "Tenha confiança, segurança e solidez na hora de adquirir seu imóvel KeyOn."
+        "anunciante": "Imobili?ria de refer?ncia em SC",
+        "descricao": "Tenha confian?a, seguran?a e solidez na hora de adquirir seu im?vel KeyOn."
       },
       {
         "arquivo": "./ads/swotportugues.mp4",
-        "anunciante": "Livro Físico e Digital",
-        "descricao": "SWOT Cristão - O poder dos relacionamentos saudáveis."
+        "anunciante": "Livro F?sico e Digital",
+        "descricao": "SWOT Crist?o - O poder dos relacionamentos saud?veis."
       }
     ],
     "cidadeTitulo": "Mensagens no Brasil",
@@ -71,13 +71,13 @@
     },
     "mensagens": [
       {
-        "titulo": "📰 Notícias",
-        "texto": "Sem notícias no momento. (verifique RSS)"
+        "titulo": "? Not?cias",
+        "texto": "Sem not?cias no momento. (verifique RSS)"
       }
     ]
   },
   "clima": {
-    "cidade": "Tubarão",
+    "cidade": "Tubar?o",
     "latitude": -28.4667,
     "longitude": -49.0069,
     "timezone": "America/Sao_Paulo"
@@ -86,7 +86,7 @@
     {
       "id": "001",
       "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme. É nossa segurança. Cuidado! Não deixe desarmado o código à noite.",
+      "descricao": "N?o informe a ningu?m o c?digo do alarme. ? nossa seguran?a. Cuidado! N?o deixe desarmado o c?digo ? noite.",
       "prioridade": "Alta",
       "tipo": "Informativo",
       "local": "Hall de Entrada",
@@ -96,11 +96,11 @@
     },
     {
       "id": "002",
-      "titulo": "Salão de Festas",
-      "descricao": "1. A regra apenas registra a locação. 2. Não impede dias consecutivos. 3. O locatário deve entregar a área limpa. 4. A chave será entregue diretamente pela síndica ao responsável.",
+      "titulo": "Sal?o de Festas",
+      "descricao": "1. A regra apenas registra a loca??o. 2. N?o impede dias consecutivos. 3. O locat?rio deve entregar a ?rea limpa. 4. A chave ser? entregue diretamente pela s?ndica ao respons?vel.",
       "prioridade": "Alta",
       "tipo": "",
-      "local": "Salão de Festas",
+      "local": "Sal?o de Festas",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/04/26 - 16:38",
       "emergencia": false
@@ -109,7 +109,7 @@
       "id": "003",
       "titulo": "Piscina",
       "descricao": "Evite nadar sozinho. Previna acidentes!",
-      "prioridade": "Média",
+      "prioridade": "M?dia",
       "tipo": "",
       "local": "Piscina",
       "inicio": "11/02/26 - 16:38",
@@ -119,9 +119,9 @@
     {
       "id": "004",
       "titulo": "Sacolas maiores",
-      "descricao": "Sacos grandes devem ir direto à lixeira externa.",
-      "prioridade": "Média",
-      "tipo": "Reforço",
+      "descricao": "Sacos grandes devem ir direto ? lixeira externa.",
+      "prioridade": "M?dia",
+      "tipo": "Refor?o",
       "local": "Garagem",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/06/26 - 16:38",
@@ -130,8 +130,8 @@
     {
       "id": "005",
       "titulo": "Aviso Geral",
-      "descricao": "Em breve, faremos uso do melhor APP e sistema visual de comunicação oferecido aos condôminos e aos administradores (síndicos). AGUARDEM!",
-      "prioridade": "Média",
+      "descricao": "Em breve, faremos uso do melhor APP e sistema visual de comunica??o oferecido aos cond?minos e aos administradores (s?ndicos). AGUARDEM!",
+      "prioridade": "M?dia",
       "tipo": "Informativo",
       "local": "Hall de Entrada",
       "inicio": "25/02/26 - 10:06",
@@ -141,9 +141,9 @@
     {
       "id": "006",
       "titulo": "Limpeza",
-      "descricao": "Utilizem sacolas reforçadas próprias para lixo.",
+      "descricao": "Utilizem sacolas refor?adas pr?prias para lixo.",
       "prioridade": "Baixa",
-      "tipo": "Sacolas próprias",
+      "tipo": "Sacolas pr?prias",
       "local": "Lixeira",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/07/26 - 16:38",
@@ -151,13 +151,24 @@
     },
     {
       "id": "007",
-      "titulo": "Segurança",
-      "descricao": "Teste de Estanqueidade na Canalização de GLP/GN realizado conforme normas técnicas. Nenhum vazamento identificado.",
+      "titulo": "Seguran?a",
+      "descricao": "Teste de Estanqueidade na Canaliza??o de GLP/GN realizado conforme normas t?cnicas. Nenhum vazamento identificado.",
       "prioridade": "Baixa",
       "tipo": "Informativo",
       "local": "Hall",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/03/26 - 16:38",
+      "emergencia": false
+    },
+    {
+      "id": "dd2207b5-e996-4948-91ea-ebe1a42f5c13",
+      "titulo": "Garagem / Vagas",
+      "descricao": "?gua",
+      "prioridade": "Baixa",
+      "tipo": "Assembleia",
+      "local": "Academia",
+      "inicio": "2026-03-28T23:31",
+      "fim": "2026-04-04T23:31",
       "emergencia": false
     }
   ]
