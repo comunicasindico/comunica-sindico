@@ -148,17 +148,6 @@
       "inicio": "11/02/26 - 16:38",
       "fim": "28/07/26 - 16:38",
       "emergencia": false
-    },
-    {
-      "id": "eaf920b4-84e4-4f97-ac34-46e51182b3e4",
-      "titulo": "Lavanderia",
-      "descricao": "Alterei o script admin.js editado pelo script.google.",
-      "prioridade": "Baixa",
-      "tipo": "Regulamento",
-      "local": "Entrada de Servi?o",
-      "inicio": "2026-03-28T23:44",
-      "fim": "2026-04-04T23:44",
-      "emergencia": false
     }
   ]
 }
