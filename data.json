@@ -170,6 +170,17 @@
       "inicio": "2026-03-28T23:31",
       "fim": "2026-04-04T23:31",
       "emergencia": false
+    },
+    {
+      "id": "eaf920b4-84e4-4f97-ac34-46e51182b3e4",
+      "titulo": "Lavanderia",
+      "descricao": "alterei o script adminjs",
+      "prioridade": "Baixa",
+      "tipo": "Regulamento",
+      "local": "Entrada de Servi?o",
+      "inicio": "2026-03-28T23:44",
+      "fim": "2026-04-04T23:44",
+      "emergencia": false
     }
   ]
 }
