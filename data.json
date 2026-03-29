@@ -1,5 +1,5 @@
 {
-  "titulo": "Comunica S?ndico ? Cond?minos",
+  "titulo": "Comunica Síndico – Condôminos",
   "subtitulo": "Painel Informativo",
   "referencia": "",
   "temaDoDia": {
@@ -26,42 +26,42 @@
       {
         "arquivo": "./ads/calibra.mp4",
         "anunciante": "Calibra Ltda - (48) 3628-1414 - BR-101, Km 336",
-        "descricao": "Especialistas em rodocalibrador interno e servi?os de alta precis?o para ve?culos pesados."
+        "descricao": "Especialistas em rodocalibrador interno e serviços de alta precisão para veículos pesados."
       },
       {
         "arquivo": "./ads/comunicasindicocity.mp4",
-        "anunciante": "Comunica S?ndico",
-        "descricao": "A solu??o digital completa para comunica??o moderna e eficiente do seu condom?nio."
+        "anunciante": "Comunica Síndico",
+        "descricao": "A solução digital completa para comunicação moderna e eficiente do seu condomínio."
       },
       {
         "arquivo": "./ads/googlemapsgde.mp4",
         "anunciante": "Google Maps Business",
-        "descricao": "Coloque sua empresa na propaganda e seja encontrado por clientes em toda a regi?o."
+        "descricao": "Coloque sua empresa na propaganda e seja encontrado por clientes em toda a região."
       },
       {
         "arquivo": "./ads/cslogo.mp4",
-        "anunciante": "Comunica S?ndico",
-        "descricao": "Tecnologia, transpar?ncia e responsabilidade social para condom?nios inteligentes."
+        "anunciante": "Comunica Síndico",
+        "descricao": "Tecnologia, transparência e responsabilidade social para condomínios inteligentes."
       },
       {
         "arquivo": "./ads/luisa.mp4",
-        "anunciante": "Momento Fam?lia",
+        "anunciante": "Momento Família",
         "descricao": "Luisa visitando o papai no trabalho. Um momento especial que marca para sempre."
       },
       {
         "arquivo": "./ads/larissa.mp4",
-        "anunciante": "Mem?rias Especiais",
-        "descricao": "Larissa em seu primeiro aninho. Recorda??es que aquecem o cora??o."
+        "anunciante": "Memórias Especiais",
+        "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o coração."
       },
       {
         "arquivo": "./ads/keyon.mp4",
-        "anunciante": "Imobili?ria de refer?ncia em SC?",
-        "descricao": "Tenha confian?a, seguran?a e solidez na hora de adquirir seu im?vel com a KeyOn."
+        "anunciante": "Imobiliária de referência em SC",
+        "descricao": "Tenha confiança, segurança e solidez na hora de adquirir seu imóvel com a KeyOn."
       },
       {
         "arquivo": "./ads/swotportugues.mp4",
-        "anunciante": "Livro F?sico e Digital",
-        "descricao": "SWOT Crist?o - O poder dos relacionamentos saud?veis."
+        "anunciante": "Livro físico e digital",
+        "descricao": "SWOT Cristão - O poder dos relacionamentos saudáveis."
       }
     ],
     "cidadeTitulo": "Mensagens no Brasil",
@@ -71,13 +71,13 @@
     },
     "mensagens": [
       {
-        "titulo": "? Not?cias",
-        "texto": "Sem not?cias no momento. (verifique RSS)"
+        "titulo": "📢 Notícias",
+        "texto": "Sem notícias no momento. (verifique RSS)"
       }
     ]
   },
   "clima": {
-    "cidade": "Tubar?o",
+    "cidade": "Tubarão",
     "latitude": -28.4667,
     "longitude": -49.0069,
     "timezone": "America/Sao_Paulo"
@@ -86,46 +86,58 @@
     {
       "id": "001",
       "titulo": "Alarme no Hall",
-      "descricao": "N?o informe a ningu?m o c?digo do alarme. ? nossa seguran?a. Cuidado! N?o deixe o alarme desarmado ? noite.",
+      "descricao": "Não informe a ninguém o código do alarme. É nossa segurança. Cuidado! Não deixe o alarme desarmado à noite.",
       "prioridade": "Alta",
       "tipo": "Informativo",
       "local": "Hall de Entrada",
       "inicio": "25/02/26 - 14:03",
       "fim": "14/03/26 - 14:03",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-03-29T23:13:03.843Z"
     },
     {
       "id": "002",
-      "titulo": "Sal?o de Festas",
-      "descricao": "1. A regra apenas registra a loca??o. 2. N?o impede dias consecutivos. 3. O locat?rio deve entregar a ?rea limpa. 4. A chave ser? entregue diretamente pela s?ndica ao respons?vel.",
+      "titulo": "Salão de Festas",
+      "descricao": "1. A regra apenas registra a locação. 2. Não impede dias consecutivos. 3. O locatário deve entregar a área limpa. 4. A chave será entregue diretamente pela síndica ao responsável.",
       "prioridade": "Alta",
       "tipo": "",
-      "local": "Sal?o de Festas",
+      "local": "Salão de Festas",
       "inicio": "",
       "fim": "",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-03-29T23:13:03.843Z"
     },
     {
       "id": "004",
       "titulo": "Sacolas maiores",
-      "descricao": "Sacos grandes devem ir direto ? lixeira externa.",
-      "prioridade": "M?dia",
-      "tipo": "Refor?o",
+      "descricao": "Sacos grandes devem ir direto à lixeira externa.",
+      "prioridade": "Média",
+      "tipo": "Reforço",
       "local": "Garagem",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/06/26 - 16:38",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-03-29T23:13:03.843Z"
     },
     {
       "id": "005",
       "titulo": "Aviso Geral",
-      "descricao": "Em breve, faremos uso do melhor app e sistema visual de comunica??o oferecido aos cond?minos e aos administradores (s?ndicos). AGUARDEM!",
-      "prioridade": "M?dia",
+      "descricao": "Em breve, faremos uso do melhor app e sistema visual de comunicação oferecido aos condôminos e aos administradores (síndicos). AGUARDEM!",
+      "prioridade": "Média",
       "tipo": "Informativo",
       "local": "Hall de Entrada",
       "inicio": "25/02/26 - 10:06",
       "fim": "26/03/26 - 10:06",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-03-29T23:13:03.843Z"
     },
     {
       "id": "003",
@@ -136,18 +148,31 @@
       "local": "Piscina",
       "inicio": "2026-03-28T23:52",
       "fim": "2026-05-31T23:52",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-03-29T23:13:03.843Z"
     },
     {
       "id": "006",
       "titulo": "Limpeza",
-      "descricao": "Utilizem sacolas refor?adas pr?prias para lixo.",
+      "descricao": "Utilizem sacolas reforçadas próprias para lixo.",
       "prioridade": "Baixa",
-      "tipo": "Sacolas pr?prias",
+      "tipo": "Sacolas próprias",
       "local": "Lixeira",
       "inicio": "11/02/26 - 16:38",
       "fim": "28/07/26 - 16:38",
-      "emergencia": false
+      "emergencia": false,
+      "nivel": "MEDIA",
+      "ativo": true,
+      "criadoEm": "2026-03-29T23:13:03.843Z"
     }
-  ]
+  ],
+  "condominio": "Comunica Síndico",
+  "alertaUrgente": {
+    "ativar": false,
+    "titulo": "ALERTA URGENTE",
+    "mensagem": "",
+    "piscar": true
+  }
 }
