@@ -930,7 +930,25 @@ async function maybeAutoCarregar(){
     await loadData("auto");
   }
 }
-
+/* ============================
+   NORMALIZAR UTF-8 (ANTI-ACENTO BUG)
+============================ */
+function normalizarTextoUTF8(obj){
+if(typeof obj==="string"){
+return obj.normalize("NFC")
+}
+if(Array.isArray(obj)){
+return obj.map(normalizarTextoUTF8)
+}
+if(typeof obj==="object"&&obj!==null){
+let novo={}
+for(let k in obj){
+novo[k]=normalizarTextoUTF8(obj[k])
+}
+return novo
+}
+return obj
+}
 /* ============================
    BASE SHAPE
    ============================ */
@@ -1532,12 +1550,11 @@ async function publishToGitHub(){
   }
 
   rebuildJsonView();
-
+  DATA = normalizarTextoUTF8(DATA)
 /* 🔥 LIMPA AVISOS VENCIDOS ANTES DE PUBLICAR */
 removerAvisosExpirados();
 
-const contentStr = prettyJson(DATA);
-
+const contentStr = JSON.stringify(DATA,null,2);
 
   try{
     setStatus("Publicando…","");
