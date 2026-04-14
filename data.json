@@ -62,6 +62,10 @@
         "arquivo": "./ads/swotportugues.mp4",
         "anunciante": "Livro físico e digital",
         "descricao": "SWOT Cristão - O poder dos relacionamentos saudáveis."
+      },
+      {
+        "arquivo": "./ads/novo.mp4",
+        "anunciante": "Fumante passivo- fuja disso!!!"
       }
     ],
     "cidadeTitulo": "Mensagens no Brasil",
@@ -138,17 +142,6 @@
       "nivel": "MEDIA",
       "ativo": true,
       "criadoEm": "2026-03-29T23:13:03.843Z"
-    },
-    {
-      "id": "003",
-      "titulo": "Piscina",
-      "descricao": "Evite nadar sozinho. Previna acidentes! Sempre esteja acompanhado.",
-      "prioridade": "Baixa",
-      "tipo": "",
-      "local": "Piscina",
-      "inicio": "2026-03-28T23:52",
-      "fim": "2026-05-31T23:52",
-      "emergencia": false
     },
     {
       "id": "006",
