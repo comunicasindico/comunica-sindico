@@ -49,18 +49,9 @@
         "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o coração."
       },
       {
-        "arquivo": "./ads/keyon.mp4",
-        "anunciante": "Imobiliária de referência em SC",
-        "descricao": "Tenha confiança, segurança e solidez na hora de adquirir seu imóvel com a KeyOn."
-      },
-      {
         "arquivo": "./ads/swotportugues.mp4",
         "anunciante": "Livro físico e digital",
         "descricao": "SWOT Cristão - O poder dos relacionamentos saudáveis."
-      },
-      {
-        "arquivo": "./ads/novo.mp4",
-        "anunciante": "Fumante passivo- fuja disso!!!"
       }
     ],
     "cidadeTitulo": "Mensagens no Brasil",
@@ -76,10 +67,10 @@
     ]
   },
   "clima": {
-    "cidade": "Tubarão",
-    "latitude": -28.4667,
-    "longitude": -49.0069,
-    "timezone": "America/Sao_Paulo"
+    "cidade": "Porto Velho - Rondônia - Brasil",
+    "latitude": -8.76194,
+    "longitude": -63.90389,
+    "timezone": "America/Porto_Velho"
   },
   "avisos": [
     {
