@@ -24,11 +24,6 @@
     "shuffle": true,
     "videos": [
       {
-        "arquivo": "./ads/calibra.mp4",
-        "anunciante": "Calibra Ltda - (48) 3628-1414 - BR-101, Km 336",
-        "descricao": "Especialistas em rodocalibrador interno e serviços de alta precisão para veículos pesados."
-      },
-      {
         "arquivo": "./ads/comunicasindicocity.mp4",
         "anunciante": "Comunica Síndico",
         "descricao": "A solução digital completa para comunicação moderna e eficiente do seu condomínio."
@@ -54,18 +49,9 @@
         "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o coração."
       },
       {
-        "arquivo": "./ads/keyon.mp4",
-        "anunciante": "Imobiliária de referência em SC",
-        "descricao": "Tenha confiança, segurança e solidez na hora de adquirir seu imóvel com a KeyOn."
-      },
-      {
         "arquivo": "./ads/swotportugues.mp4",
         "anunciante": "Livro físico e digital",
         "descricao": "SWOT Cristão - O poder dos relacionamentos saudáveis."
-      },
-      {
-        "arquivo": "./ads/novo.mp4",
-        "anunciante": "Fumante passivo- fuja disso!!!"
       }
     ],
     "cidadeTitulo": "Mensagens no Brasil",
