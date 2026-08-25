@@ -41,12 +41,12 @@
       {
         "arquivo": "./ads/larissa.mp4",
         "anunciante": "Memórias Especiais",
-        "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o cora??o."
+        "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o coração."
       },
       {
         "arquivo": "./ads/swotportugues.mp4",
         "anunciante": "Livro físico e digital",
-        "descricao": "SWOT Cristão - O poder dos relacionamentos saud?veis."
+        "descricao": "SWOT Cristão - O poder dos relacionamentos saudáveis."
       },
       {
         "arquivo": "./ads/novo.mp4",
@@ -60,7 +60,7 @@
     },
     "mensagens": [
       {
-        "titulo": "? Notícias",
+        "titulo": "📰 Notícias",
         "texto": "Sem notícias no momento. (verifique RSS)"
       }
     ]
