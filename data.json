@@ -89,16 +89,13 @@
     {
       "id": "002",
       "titulo": "Sal?o de Festas",
-      "descricao": "1. A regra apenas registra a loca??o. 2. N?o impede dias consecutivos. 3. O locat?rio deve entregar a ?rea limpa. 4. A chave ser? entregue diretamente pela s?ndica ao respons?vel.",
+      "descricao": "1. A regra apenas registra a loca??o. 2. N?o impede dias consecutivos. 3. O locat?rio deve entregar a ?rea limpa. 4. A chave ser? entregue diretamente pelo s?ndico ao respons?vel.",
       "prioridade": "Alta",
       "tipo": "",
       "local": "Sal?o de Festas",
       "inicio": "",
       "fim": "",
-      "emergencia": false,
-      "nivel": "MEDIA",
-      "ativo": true,
-      "criadoEm": "2026-03-29T23:13:03.843Z"
+      "emergencia": false
     },
     {
       "id": "c39439f5-53ae-40f5-8e54-1675ff085d2b",
