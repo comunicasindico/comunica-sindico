@@ -1,5 +1,5 @@
 {
-  "titulo": "Comunica Síndico - Condôminos",
+  "titulo": "Comunica S?ndico - Cond?minos",
   "subtitulo": "Painel Informativo",
   "referencia": "",
   "temaDoDia": {
@@ -26,31 +26,31 @@
       {
         "arquivo": "./ads/googlemapsgde.mp4",
         "anunciante": "Google Maps Business",
-        "descricao": "Coloque sua empresa na propaganda e seja encontrado por clientes em toda a região."
+        "descricao": "Coloque sua empresa na propaganda e seja encontrado por clientes em toda a regi?o."
       },
       {
         "arquivo": "./ads/cslogo.mp4",
-        "anunciante": "Comunica Síndico",
-        "descricao": "Tecnologia, transparência e responsabilidade social para condomínios inteligentes."
+        "anunciante": "Comunica S?ndico",
+        "descricao": "Tecnologia, transpar?ncia e responsabilidade social para condom?nios inteligentes."
       },
       {
         "arquivo": "./ads/luisa.mp4",
-        "anunciante": "Momento Família",
+        "anunciante": "Momento Fam?lia",
         "descricao": "Luisa visitando o papai no trabalho. Um momento especial que marca para sempre."
       },
       {
         "arquivo": "./ads/larissa.mp4",
-        "anunciante": "Memórias Especiais",
-        "descricao": "Larissa em seu primeiro aninho. Recordações que aquecem o coração."
+        "anunciante": "Mem?rias Especiais",
+        "descricao": "Larissa em seu primeiro aninho. Recorda??es que aquecem o cora??o."
       },
       {
         "arquivo": "./ads/swotportugues.mp4",
-        "anunciante": "Livro físico e digital",
-        "descricao": "SWOT Cristão - O poder dos relacionamentos saudáveis."
+        "anunciante": "Livro f?sico e digital",
+        "descricao": "SWOT Crist?o - O poder dos relacionamentos saud?veis."
       },
       {
         "arquivo": "./ads/novo.mp4",
-        "anunciante": "HabitaMais, Sempre a melhor!!! Estamos à disposição."
+        "anunciante": "HabitaMais, Sempre a melhor!!! Estamos ? disposi??o."
       }
     ],
     "cidadeTitulo": "Mensagens no Brasil",
@@ -60,13 +60,13 @@
     },
     "mensagens": [
       {
-        "titulo": "📢 Notícias",
-        "texto": "Sem notícias no momento. (verifique RSS)"
+        "titulo": "? Not?cias",
+        "texto": "Sem not?cias no momento. (verifique RSS)"
       }
     ]
   },
   "clima": {
-    "cidade": "Porto Velho - Rondônia - Brasil",
+    "cidade": "Porto Velho - Rond?nia - Brasil",
     "latitude": -8.76194,
     "longitude": -63.90389,
     "timezone": "America/Porto_Velho"
@@ -75,7 +75,7 @@
     {
       "id": "001",
       "titulo": "Alarme no Hall",
-      "descricao": "Não informe a ninguém o código do alarme. É nossa segurança. Cuidado! Não deixe o alarme desarmado à noite.",
+      "descricao": "N?o informe a ningu?m o c?digo do alarme. ? nossa seguran?a. Cuidado! N?o deixe o alarme desarmado ? noite.",
       "prioridade": "Alta",
       "tipo": "Informativo",
       "local": "Hall de Entrada",
@@ -88,11 +88,11 @@
     },
     {
       "id": "002",
-      "titulo": "Salão de Festas",
-      "descricao": "1. A regra apenas registra a locação. 2. Não impede dias consecutivos. 3. O locatário deve entregar a área limpa. 4. A chave será entregue diretamente pela síndica ao responsável.",
+      "titulo": "Sal?o de Festas",
+      "descricao": "1. A regra apenas registra a loca??o. 2. N?o impede dias consecutivos. 3. O locat?rio deve entregar a ?rea limpa. 4. A chave ser? entregue diretamente pela s?ndica ao respons?vel.",
       "prioridade": "Alta",
       "tipo": "",
-      "local": "Salão de Festas",
+      "local": "Sal?o de Festas",
       "inicio": "",
       "fim": "",
       "emergencia": false,
@@ -101,10 +101,21 @@
       "criadoEm": "2026-03-29T23:13:03.843Z"
     },
     {
+      "id": "c39439f5-53ae-40f5-8e54-1675ff085d2b",
+      "titulo": "Comunicado",
+      "descricao": "Contrata??o da melhor equipe de administradora de condom?nios. Seremos mais que bem cuidados a partir de hoje. \nHABITAMAIS",
+      "prioridade": "Alta",
+      "tipo": "Administra??o ",
+      "local": "Porto Velho",
+      "inicio": "2026-08-25T13:13",
+      "fim": "2026-08-26T13:13",
+      "emergencia": false
+    },
+    {
       "id": "005",
       "titulo": "Aviso Geral",
-      "descricao": "Em breve, faremos uso do melhor app e sistema visual de comunicação oferecido aos condôminos e aos administradores (síndicos). AGUARDEM!",
-      "prioridade": "Média",
+      "descricao": "Em breve, faremos uso do melhor app e sistema visual de comunica??o oferecido aos cond?minos e aos administradores (s?ndicos). AGUARDEM!",
+      "prioridade": "M?dia",
       "tipo": "Informativo",
       "local": "Hall de Entrada",
       "inicio": "25/02/26 - 10:06",
@@ -115,7 +126,7 @@
       "criadoEm": "2026-03-29T23:13:03.843Z"
     }
   ],
-  "condominio": "Comunica Síndico",
+  "condominio": "Comunica S?ndico",
   "alertaUrgente": {
     "ativar": false,
     "titulo": "ALERTA URGENTE",
