@@ -109,6 +109,17 @@
       "emergencia": false
     },
     {
+      "id": "389c07ec-1ade-4d52-8aba-0ba8aef4f559",
+      "titulo": "Comunicado",
+      "descricao": "Estamos com a melhor administradora de condom?nios do Brasil. Agora, seremos c?leres e teremos as informa??es mais eficazes e atualizadas poss?veis. Gratid?o a HABITAMAIS.",
+      "prioridade": "Alta",
+      "tipo": "Informativo",
+      "local": "?rea Comum",
+      "inicio": "2026-08-25T13:22",
+      "fim": "2026-08-26T13:22",
+      "emergencia": false
+    },
+    {
       "id": "005",
       "titulo": "Aviso Geral",
       "descricao": "Em breve, faremos uso do melhor app e sistema visual de comunica??o oferecido aos cond?minos e aos administradores (s?ndicos). AGUARDEM!",
