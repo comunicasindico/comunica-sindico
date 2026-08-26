@@ -98,28 +98,6 @@
       "emergencia": false
     },
     {
-      "id": "c39439f5-53ae-40f5-8e54-1675ff085d2b",
-      "titulo": "Comunicado",
-      "descricao": "Contratação da melhor equipe de administradora de condomínios. Seremos mais que bem cuidados a partir de hoje. \nHABITAMAIS",
-      "prioridade": "Alta",
-      "tipo": "Administração ",
-      "local": "Porto Velho",
-      "inicio": "2026-08-25T13:13",
-      "fim": "2026-08-26T13:13",
-      "emergencia": false
-    },
-    {
-      "id": "389c07ec-1ade-4d52-8aba-0ba8aef4f559",
-      "titulo": "Comunicado",
-      "descricao": "Estamos com a melhor administradora de condomínios do Brasil. Agora, seremos céleres e teremos as informações mais eficazes e atualizadas possíveis. Gratidão a HABITAMAIS.",
-      "prioridade": "Alta",
-      "tipo": "Informativo",
-      "local": "Área Comum",
-      "inicio": "2026-08-25T13:22",
-      "fim": "2026-08-26T13:22",
-      "emergencia": false
-    },
-    {
       "id": "005",
       "titulo": "Aviso Geral",
       "descricao": "Em breve, faremos uso do melhor app e sistema visual de comunicação oferecido aos condôminos e aos administradores (síndicos). AGUARDEM!",
