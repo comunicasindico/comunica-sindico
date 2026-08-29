@@ -98,6 +98,17 @@
       "emergencia": false
     },
     {
+      "id": "659e1d09-51d2-4a10-b91b-d6057920676f",
+      "titulo": "Aviso Geral",
+      "descricao": "ENCON 2026 – Encontro Condominial de Porto Velho, um evento muito especial para nós e que já faz parte da história da HABITAMAIS.",
+      "prioridade": "Alta",
+      "tipo": "Evento",
+      "local": "Espaço Gourmet",
+      "inicio": "2026-08-29T15:25",
+      "fim": "2026-08-30T15:25",
+      "emergencia": false
+    },
+    {
       "id": "005",
       "titulo": "Aviso Geral",
       "descricao": "Em breve, faremos uso do melhor app e sistema visual de comunicação oferecido aos condôminos e aos administradores (síndicos). AGUARDEM!",
